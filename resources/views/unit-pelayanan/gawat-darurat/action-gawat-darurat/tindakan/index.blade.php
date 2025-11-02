@@ -88,6 +88,10 @@
             @include('components.navigation')
 
             <x-content-card>
+                @include('components.page-header', [
+                    'title' => 'Daftar Data Tindakan',
+                    'description' => 'Berikut daftar data tindakan gawat darurat.',
+                ])
                 <div class="row">
                     <div class="col-md-10">
                         <!-- Select Option -->
@@ -184,8 +188,8 @@
                                         <button class="btn btn-sm btn-warning btn-edit-tindakan"
                                             data-bs-target="#editTindakanModal" data-produk="{{ $tdk->kd_produk }}"
                                             data-urut="{{ $tdk->urut_list }}"><i class="bi bi-pencil-square"></i></button>
-                                        <button class="btn btn-sm btn-danger btn-delete-tindakan" data-produk="{{ $tdk->kd_produk }}"
-                                            data-urut="{{ $tdk->urut_list }}"><i
+                                        <button class="btn btn-sm btn-danger btn-delete-tindakan"
+                                            data-produk="{{ $tdk->kd_produk }}" data-urut="{{ $tdk->urut_list }}"><i
                                                 class="bi bi-x-circle-fill"></i></button>
                                     </td>
                                 </tr>

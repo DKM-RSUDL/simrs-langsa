@@ -89,6 +89,18 @@
                 </div>
             </div>
         </div>
+
+        {{-- CHECK BUTTON I-CARE --}}
+
+        @if (in_array(($dataMedis->unit->kd_bagian ?? null), [2,3]))
+            <div class="px-3 pt-3">
+                {{-- <form action="{{ route('rawat-jalan.pelayanan.icare', [$dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk]) }}" method="get"> --}}
+                <button class="btn btn-warning w-100" id="btnIcare" type="button">
+                    <i class="bi bi-info-circle me-2"></i> I-Care
+                </button>
+                {{-- </form> --}}
+            </div>
+        @endif
     </div>
 
     {{-- Card Footer - Tombol Menu & Offcanvas --}}
@@ -319,6 +331,52 @@
                         });
                     }
                 });
+            });
+        });
+
+        $('#btnIcare').click(function() {
+            let $this = $(this);
+            let kd_unit = "{{ $dataMedis->kd_unit }}";
+            let kd_pasien = "{{ $dataMedis->kd_pasien }}";
+            let tgl_masuk = "{{ date('Y-m-d', strtotime($dataMedis->tgl_masuk)) }}";
+            let urut_masuk = "{{ $dataMedis->urut_masuk }}";
+
+            $.ajax({
+                type: "POST",
+                url: "{{ route('bpjs.icare') }}",
+                data: {
+                    '_token': "{{ csrf_token() }}",
+                    'kd_unit': kd_unit,
+                    'kd_pasien': kd_pasien,
+                    'tgl_masuk': tgl_masuk,
+                    'urut_masuk': urut_masuk,
+                },
+                dataType: "json",
+                beforeSend: function() {
+                    $this.prop('disabled', true);
+                    $this.text('Memproses');
+                },
+                success: function(res) {
+                    let status = res.status;
+                    let msg = res.message;
+                    let data = res.data;
+
+                    if (status == 'error') {
+                        showToast('error', msg);
+                        return false;
+                    }
+
+                    window.open(data, "_blank");
+
+                },
+                error: function() {
+                    $this.prop('disabled', true);
+                    $this.html('<i class="bi bi-info-circle me-2"></i> I-Care');
+                },
+                complete: function() {
+                    $this.prop('disabled', false);
+                    $this.html('<i class="bi bi-info-circle me-2"></i> I-Care');
+                }
             });
         });
     </script>

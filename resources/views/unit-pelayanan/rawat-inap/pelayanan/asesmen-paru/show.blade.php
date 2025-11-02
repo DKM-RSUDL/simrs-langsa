@@ -148,10 +148,13 @@
                     </div>
 
                     <!-- 4. Kebiasaan -->
-                   
+
                     <div class="section-separator" id="kebiasaan">
                         <h5 class="section-title">4. Kebiasaan</h5>
-                         @include('unit-pelayanan.rawat-inap.pelayanan.asesmen-paru.KebiasaanForm.index',['KebiasaanData'=> !empty($KebiasaanData) ? $KebiasaanData : null,'viewMode' => true])
+                        @include('unit-pelayanan.rawat-inap.pelayanan.asesmen-paru.KebiasaanForm.index', [
+                            'KebiasaanData' => !empty($KebiasaanData) ? $KebiasaanData : null,
+                            'viewMode' => true,
+                        ])
                     </div>
 
                     <!-- 5. Tanda-Tanda Vital -->
@@ -1148,6 +1151,14 @@
                                                 </p>
                                             @endif
                                         </div>
+                                    </div>
+                                </div>
+                                <div class="section-separator mb-4">
+                                    <h5 class="fw-semibold mb-4">9. Rencana Penatalaksanaan dan Pengobatan</h5>
+                                    <div class="p-3 bg-light border rounded text-start">
+                                        <p style="white-space: pre-wrap; margin: 0;">
+                                            {{ $asesmen->rmeAsesmenParu->rencana_pengobatan ?? 'Tidak ada data' }}
+                                        </p>
                                     </div>
                                 </div>
 

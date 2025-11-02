@@ -96,9 +96,10 @@
 
                                                         <!-- DPJP Tambahan -->
                                                         <td>
-                                                            @if(!empty($mppData->dpjp_tambahan_names))
-                                                                @foreach($mppData->dpjp_tambahan_names as $nama)
-                                                                    <span class="badge bg-secondary me-1 mb-1">{{ $nama }}</span>
+                                                            @if (!empty($mppData->dpjp_tambahan_names))
+                                                                @foreach ($mppData->dpjp_tambahan_names as $nama)
+                                                                    <span
+                                                                        class="badge bg-secondary me-1 mb-1">{{ $nama }}</span>
                                                                 @endforeach
                                                             @else
                                                                 <em class="text-muted">Tidak ada</em>
@@ -113,13 +114,21 @@
                                                                     $mppData->risiko_tinggi,
                                                                     $mppData->potensi_komplain,
                                                                     $mppData->riwayat_kronis,
-                                                                    isset($mppData->kasus_katastropik) ? $mppData->kasus_katastropik : 0,
-                                                                    isset($mppData->kasus_terminal) ? $mppData->kasus_terminal : 0,
+                                                                    isset($mppData->kasus_katastropik)
+                                                                        ? $mppData->kasus_katastropik
+                                                                        : 0,
+                                                                    isset($mppData->kasus_terminal)
+                                                                        ? $mppData->kasus_terminal
+                                                                        : 0,
                                                                     $mppData->status_fungsional,
                                                                     $mppData->peralatan_medis,
                                                                     $mppData->gangguan_mental,
-                                                                    isset($mppData->krisis_keluarga) ? $mppData->krisis_keluarga : 0,
-                                                                    isset($mppData->isu_sosial) ? $mppData->isu_sosial : 0,
+                                                                    isset($mppData->krisis_keluarga)
+                                                                        ? $mppData->krisis_keluarga
+                                                                        : 0,
+                                                                    isset($mppData->isu_sosial)
+                                                                        ? $mppData->isu_sosial
+                                                                        : 0,
                                                                     $mppData->sering_igd,
                                                                     $mppData->perkiraan_asuhan,
                                                                     $mppData->sistem_pembiayaan,
@@ -127,34 +136,52 @@
                                                                     $mppData->rencana_pemulangan,
                                                                     $mppData->lain_lain,
                                                                 ])->sum();
-                
+
                                                                 $assessmentCount = collect([
                                                                     // Check new separated fields first, then fall back to old combined field
-                                                                    isset($mppData->assessment_fisik) ? $mppData->assessment_fisik : 0,
-                                                                    isset($mppData->assessment_fungsional) ? $mppData->assessment_fungsional : 0,
-                                                                    isset($mppData->assessment_kognitif) ? $mppData->assessment_kognitif : 0,
-                                                                    isset($mppData->assessment_kemandirian) ? $mppData->assessment_kemandirian : 0,
+                                                                    isset($mppData->assessment_fisik)
+                                                                        ? $mppData->assessment_fisik
+                                                                        : 0,
+                                                                    isset($mppData->assessment_fungsional)
+                                                                        ? $mppData->assessment_fungsional
+                                                                        : 0,
+                                                                    isset($mppData->assessment_kognitif)
+                                                                        ? $mppData->assessment_kognitif
+                                                                        : 0,
+                                                                    isset($mppData->assessment_kemandirian)
+                                                                        ? $mppData->assessment_kemandirian
+                                                                        : 0,
                                                                     // If new fields don't exist, use old combined field
-                                                                    (!isset($mppData->assessment_fisik) && isset($mppData->fisik_fungsional)) ? $mppData->fisik_fungsional : 0,
-                                                                    $mppData->riwayat_kesehatan,
-                                                                    $mppData->perilaku_psiko,
-                                                                    $mppData->kesehatan_mental,
-                                                                    $mppData->dukungan_keluarga,
-                                                                    $mppData->finansial_asuransi,
-                                                                    $mppData->riwayat_obat,
-                                                                    $mppData->trauma_kekerasan,
-                                                                    $mppData->health_literacy,
-                                                                    $mppData->aspek_legal,
-                                                                    $mppData->harapan_hasil,
-                                                                ])->sum();
-                
-                                                                $identificationCount = collect([
-                                                                    $mppData->tingkat_asuhan,
-                                                                    // Check new separated fields first, then fall back to old combined field
-                                                                    isset($mppData->over_utilization) ? $mppData->over_utilization : 0,
-                                                                    isset($mppData->under_utilization) ? $mppData->under_utilization : 0,
-                                                                    // If new fields don't exist, use old combined field
-                                                                    (!isset($mppData->over_utilization) && isset($mppData->over_under_utilization)) ? $mppData->over_under_utilization : 0,
+    !isset($mppData->assessment_fisik) &&
+    isset($mppData->fisik_fungsional)
+        ? $mppData->fisik_fungsional
+        : 0,
+    $mppData->riwayat_kesehatan,
+    $mppData->perilaku_psiko,
+    $mppData->kesehatan_mental,
+    $mppData->dukungan_keluarga,
+    $mppData->finansial_asuransi,
+    $mppData->riwayat_obat,
+    $mppData->trauma_kekerasan,
+    $mppData->health_literacy,
+    $mppData->aspek_legal,
+    $mppData->harapan_hasil,
+])->sum();
+
+$identificationCount = collect([
+    $mppData->tingkat_asuhan,
+    // Check new separated fields first, then fall back to old combined field
+    isset($mppData->over_utilization)
+        ? $mppData->over_utilization
+        : 0,
+    isset($mppData->under_utilization)
+        ? $mppData->under_utilization
+        : 0,
+    // If new fields don't exist, use old combined field
+                                                                    !isset($mppData->over_utilization) &&
+                                                                    isset($mppData->over_under_utilization)
+                                                                        ? $mppData->over_under_utilization
+                                                                        : 0,
                                                                     $mppData->ketidak_patuhan,
                                                                     $mppData->edukasi_kurang,
                                                                     $mppData->kurang_dukungan,
@@ -162,7 +189,7 @@
                                                                     $mppData->kendala_keuangan,
                                                                     $mppData->pemulangan_rujukan,
                                                                 ])->sum();
-                
+
                                                                 $planningCount = collect([
                                                                     $mppData->validasi_rencana,
                                                                     $mppData->rencana_informasi,
@@ -171,7 +198,7 @@
                                                                     $mppData->bantuan_alternatif,
                                                                 ])->sum();
                                                             @endphp
-                
+
                                                             <div class="d-flex flex-column gap-1">
                                                                 <span class="badge bg-info">
                                                                     <i class="ti-search me-1"></i>Screening:
@@ -365,26 +392,7 @@
             });
 
             // Show success message if data was deleted successfully
-            @if (session('success'))
-                Swal.fire({
-                    title: 'Berhasil!',
-                    text: '{{ session('success') }}',
-                    icon: 'success',
-                    confirmButtonColor: '#198754',
-                    confirmButtonText: 'OK'
-                });
-            @endif
 
-            // Show error message if deletion failed
-            @if (session('error'))
-                Swal.fire({
-                    title: 'Gagal!',
-                    text: '{{ session('error') }}',
-                    icon: 'error',
-                    confirmButtonColor: '#dc3545',
-                    confirmButtonText: 'OK'
-                });
-            @endif
         });
     </script>
 @endpush

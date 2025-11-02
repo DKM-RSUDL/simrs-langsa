@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Auth\SsoController;
+use App\Http\Controllers\Bridging\Bpjs\BpjsController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\NavigationController;
 use App\Http\Controllers\PermissionController;
@@ -8,6 +9,7 @@ use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\UnitPelayanan\GawatDaruratController;
 
 // unit pelanayan
 use App\Http\Controllers\TransfusiDarah\PermintaanController;
@@ -25,6 +27,7 @@ Route::middleware('guest')->group(function () {
     Route::get('/login', [SsoController::class, 'redirectToSso'])->name('login');
     Route::get('/callback', [SsoController::class, 'handleCallback'])->name('callback');
 });
+
 
 // Keep session alive
 Route::get('/keep-alive', function () {
@@ -96,6 +99,16 @@ Route::middleware('ssoToken')->group(function () {
                         Route::get('/hapus-darah/{data}', 'deleteDarah')->name('.delete-darah');
                     });
                 });
+            });
+        });
+    });
+
+
+    // BPJS
+    Route::prefix('bpjs')->group(function () {
+        Route::name('bpjs')->group(function () {
+            Route::controller(BpjsController::class)->group(function () {
+                Route::post('/icare', 'icare')->name('.icare');
             });
         });
     });

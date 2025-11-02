@@ -10,4 +10,5 @@ class DtCppt extends Model
     use HasFactory;
 
     protected $table = 'dt_cppt';
+    
 }

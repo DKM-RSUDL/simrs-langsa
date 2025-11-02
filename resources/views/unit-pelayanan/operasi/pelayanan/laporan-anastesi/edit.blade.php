@@ -323,7 +323,7 @@
                         </div>
 
                         <div class="form-group">
-                            <label style="min-width: 300px;">Pemakaian Tomiquet</label>
+                            <label style="min-width: 300px;">Pemakaian Tourniquet</label>
                             <select class="form-select" name="pemakaian_tomiquet">
                                 <option disabled {{ $laporanAnastesiDtl->pemakaian_tomiquet == null ? 'selected' : '' }}>
                                     --Pilih--</option>
@@ -337,17 +337,17 @@
                         </div>
 
                         <div class="form-group">
-                            <label style="min-width: 300px;">Pengawas Tomiquet</label>
+                            <label style="min-width: 300px;">Pengawas Tourniquet</label>
                             <input type="text" class="form-control" name="pengawas_tomiquet"
                                 value="{{ $laporanAnastesiDtl->pengawas_tomiquet }}">
                         </div>
 
-                        <!-- Lokasi Pemasangan Tomiquet -->
+                        <!-- Lokasi Pemasangan Tourniquet -->
                         <div class="form-group">
                             <table class="table">
                                 <thead>
                                     <tr>
-                                        <th scope="col">Lokasi Pemasangan Tomiquet</th>
+                                        <th scope="col">Lokasi Pemasangan Tourniquet</th>
                                         <th scope="col">Waktu Mulai</th>
                                         <th scope="col">Waktu Selesai</th>
                                         <th scope="col">Tekanan</th>

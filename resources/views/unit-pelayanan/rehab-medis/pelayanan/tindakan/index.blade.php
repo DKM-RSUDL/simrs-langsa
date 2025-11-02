@@ -86,180 +86,124 @@
 
         <div class="col-md-9">
             @include('components.navigation-rahab-medis')
-
-            <div class="row">
-                <div class="d-flex justify-content-between align-items-center m-3">
-
+            <x-content-card>
+                @include('components.page-header', [
+                    'title' => 'KFR/Asesmen/RE-Asesmen/Protokol Terapi',
+                    'description' =>
+                        'Kelola data KFR/Asesmen/RE-Asesmen/Protokol rehabilitasi medis di sini.',
+                ])
+                <div class="d-flex flex-column gap-2">
                     <div class="row">
-                        <!-- Select Option -->
-                        <div class="col-md-2">
-                            <select class="form-select" id="SelectOption" aria-label="Pilih...">
-                                <option value="semua" selected>Semua Episode</option>
-                                <option value="option1">Episode Sekarang</option>
-                                <option value="option2">1 Bulan</option>
-                                <option value="option3">3 Bulan</option>
-                                <option value="option4">6 Bulan</option>
-                                <option value="option5">9 Bulan</option>
-                            </select>
+                        <div class="col-10 d-flex flex-md-row flex-wrap flex-md-nowrap gap-2">
+                            <!-- Select Option -->
+                            <div>
+                                <select class="form-select" id="SelectOption" aria-label="Pilih...">
+                                    <option value="semua" selected>Semua Episode</option>
+                                    <option value="option1">Episode Sekarang</option>
+                                    <option value="option2">1 Bulan</option>
+                                    <option value="option3">3 Bulan</option>
+                                    <option value="option4">6 Bulan</option>
+                                    <option value="option5">9 Bulan</option>
+                                </select>
+                            </div>
+
+                            <!-- Start Date -->
+                            <div>
+                                <input type="date" name="start_date" id="start_date" class="form-control"
+                                    placeholder="Dari Tanggal">
+                            </div>
+
+                            <!-- End Date -->
+                            <div>
+                                <input type="date" name="end_date" id="end_date" class="form-control"
+                                    placeholder="S.d Tanggal">
+                            </div>
+
+                            <!-- Button Filter -->
+                            <div>
+                                <button id="filterButton" class="btn btn-secondary rounded-3"><i
+                                        class="bi bi-funnel-fill"></i></button>
+                            </div>
+
+                            <!-- Search Bar -->
+                            <div>
+                                <form method="GET"
+                                    action="{{ route('tindakan.index', ['kd_pasien' => $dataMedis->kd_pasien, 'tgl_masuk' => \Carbon\Carbon::parse($dataMedis->tgl_masuk)->format('Y-m-d')]) }}">
+
+                                    <div class="input-group">
+                                        <input type="text" name="search" class="form-control"
+                                            placeholder="Dokter & Tindakan" aria-label="Cari"
+                                            value="{{ request('search') }}" aria-describedby="basic-addon1">
+                                        <button type="submit" class="btn btn-primary">Cari</button>
+                                    </div>
+                                </form>
+                            </div>
                         </div>
+                        @if (count($tindakan) < 1)
+                            <div class="col-md-2 text-end">
+                                <a href="{{ route('rehab-medis.pelayanan.tindakan.create', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}"
+                                    class="btn btn-primary">
+                                    <i class="ti-plus"></i> Tambah
+                                </a>
+                            </div>
+                        @endif
+                    </div>
 
-                        <!-- Start Date -->
-                        <div class="col-md-2">
-                            <input type="date" name="start_date" id="start_date" class="form-control"
-                                placeholder="Dari Tanggal">
-                        </div>
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-sm table-hover">
+                            <thead class="table-primary">
+                                <tr>
+                                    <th>Tanggal</th>
+                                    <th>Dokter</th>
+                                    <th>Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($tindakan as $tdk)
+                                    <tr>
+                                        <td>
+                                            {{ date('d M Y', strtotime($tdk->tgl_tindakan)) . ' ' . date('H:i', strtotime($tdk->jam_tindakan)) }}
+                                            WIB
+                                        </td>
+                                        <td>{{ $tdk->karyawan?->gelar_depan . ' ' . str()->title($tdk->karyawan?->nama) . ' ' . $tdk->karyawan?->gelar_belakang }}
+                                        </td>
+                                        <td>
+                                            <x-table-action>
+                                                <a href="{{ route('rehab-medis.pelayanan.tindakan.print', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $tdk->id]) }}"
+                                                    class="btn btn-sm btn-success">
+                                                    <i class="ti-printer"></i>
+                                                </a>
+                                                <a href="{{ route('rehab-medis.pelayanan.tindakan.show', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $tdk->id]) }}"
+                                                    class="btn btn-info btn-sm"><i class="fas fa-eye"></i></a>
+                                                <a href="{{ route('rehab-medis.pelayanan.tindakan.edit', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $tdk->id]) }}"
+                                                    class="btn btn-warning btn-sm"><i class="fas fa-pencil"></i></a>
+                                                <form
+                                                    action="{{ route('rehab-medis.pelayanan.tindakan.destroy', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}"
+                                                    method="post">
+                                                    @csrf
+                                                    @method('delete')
+                                                    <input type="hidden" name="id" value="{{ encrypt($tdk->id) }}">
 
-                        <!-- End Date -->
-                        <div class="col-md-2">
-                            <input type="date" name="end_date" id="end_date" class="form-control"
-                                placeholder="S.d Tanggal">
-                        </div>
-
-                        <!-- Button Filter -->
-                        <div class="col-md-1">
-                            <button id="filterButton" class="btn btn-secondary rounded-3"><i
-                                    class="bi bi-funnel-fill"></i></button>
-                        </div>
-
-                        <!-- Search Bar -->
-                        <div class="col-md-3">
-                            <form method="GET"
-                                action="{{ route('tindakan.index', ['kd_pasien' => $dataMedis->kd_pasien, 'tgl_masuk' => \Carbon\Carbon::parse($dataMedis->tgl_masuk)->format('Y-m-d')]) }}">
-
-                                <div class="input-group">
-                                    <input type="text" name="search" class="form-control"
-                                        placeholder="Dokter & Tindakan" aria-label="Cari" value="{{ request('search') }}"
-                                        aria-describedby="basic-addon1">
-                                    <button type="submit" class="btn btn-primary">Cari</button>
-                                </div>
-                            </form>
-                        </div>
-
-                        <!-- Add Button -->
-                        <!-- Include the modal file -->
-                        <div class="col-md-2">
-                            @if (count($tindakan) < 1)
-                                <div class="d-grid gap-2">
-                                    <a href="{{ route('rehab-medis.pelayanan.tindakan.create', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}" class="btn btn-primary">
-                                        <i class="ti-plus"></i> Tambah
-                                    </a>
-                                </div>
-                            @endif
-                        </div>
-
+                                                    <button type="submit" class="btn btn-sm btn-danger" data-confirm
+                                                        data-confirm-title="Anda yakin?"
+                                                        data-confirm-text="Data yang dihapus tidak dapat dikembalikan"
+                                                        title="Hapus operasi" aria-label="Hapus operasi">
+                                                        <i class="fas fa-trash"></i>
+                                                    </button>
+                                                </form>
+                                            </x-table-action>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
                     </div>
                 </div>
-
-                <div class="table-responsive">
-                    <table class="table table-bordered table-sm table-hover">
-                        <thead class="table-primary">
-                            <tr>
-                                <th>Tanggal</th>
-                                <th>PPA</th>
-                                <th>Aksi</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($tindakan as $tdk)
-                                <tr>
-                                    <td>
-                                        {{ date('d M Y', strtotime($tdk->tgl_tindakan)) .' '. date('H:i', strtotime($tdk->jam_tindakan)) }}
-                                        WIB
-                                    </td>
-                                    <td>{{ $tdk->karyawan->gelar_depan .' '. str()->title($tdk->karyawan->nama) .' '. $tdk->karyawan->gelar_belakang }}</td>
-                                    <td>
-                                        <a href="{{ route('rehab-medis.pelayanan.tindakan.show', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $tdk->id]) }}" class="btn btn-success btn-sm"><i class="fas fa-eye"></i></a>
-                                        <a href="{{ route('rehab-medis.pelayanan.tindakan.edit', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $tdk->id]) }}" class="btn btn-warning btn-sm"><i class="fas fa-pencil"></i></a>
-                                        <button class="btn btn-sm btn-danger btn-delete-tindakan" data-tindakan="{{ encrypt($tdk->id) }}">
-                                            <i class="fas fa-trash"></i>
-                                        </button>
-                                    </td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+            </x-content-card>
         </div>
     </div>
 @endsection
 
-
-
 @push('js')
-    <script>
-        $('.btn-delete-tindakan').click(function(e) {
-            let $this = $(this);
-            let tindakan = $this.attr('data-tindakan');
-
-
-            Swal.fire({
-                title: "Anda yakin ingin menghapus?",
-                text: "Data yang dihapus tidak dapat dikembalikan kembali !",
-                icon: "warning",
-                showCancelButton: true,
-                confirmButtonColor: "#3085d6",
-                cancelButtonColor: "#d33",
-                confirmButtonText: "Ya, hapus!",
-                cancelButtonText: "Batal"
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    $.ajax({
-                        type: "post",
-                        url: "{{ route('rehab-medis.pelayanan.tindakan.destroy', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}",
-                        data: {
-                            _token: "{{ csrf_token() }}",
-                            _method: "delete",
-                            tindakan: tindakan
-                        },
-                        dataType: "json",
-                        beforeSend: function() {
-                            Swal.fire({
-                                title: 'Sedang Memproses',
-                                html: 'Mohon tunggu sebentar...',
-                                allowOutsideClick: false,
-                                didOpen: () => {
-                                    Swal.showLoading();
-                                }
-                            });
-                        },
-                        success: function (res) {
-                            let status = res.status;
-                            let msg = res.message;
-                            let data = res.data;
-
-                            if(status == 'error') {
-                                Swal.fire({
-                                    title: "Gagal!",
-                                    text: msg,
-                                    icon: "error",
-                                    allowOutsideClick: false,
-                                });
-
-                                return false;
-                            }
-
-                            Swal.fire({
-                                title: "Berhasil!",
-                                text: "Data Tindakan berhasil dihapus !",
-                                icon: "success",
-                                allowOutsideClick: false,
-                            });
-
-                            location.reload();
-                        },
-                        error: function() {
-                            Swal.fire({
-                                title: "Gagal!",
-                                text: "Internal Server Error",
-                                icon: "error",
-                                allowOutsideClick: false,
-                            });
-                        }
-                    });
-                }
-            });
-
-        });
-    </script>
+    <script src="{{ asset('js/helpers/confirm.js') }}"></script>
 @endpush

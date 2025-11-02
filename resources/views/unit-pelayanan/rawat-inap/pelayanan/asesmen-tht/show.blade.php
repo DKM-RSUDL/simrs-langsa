@@ -865,7 +865,7 @@
                             </div>
                         </div>
                         <div class="mb-3 row align-items-center">
-                            <label class="col-3">Fissare</label>
+                            <label class="col-3">Fisure</label>
                             <div class="col-4">
                                 <div class="input-group">
                                     <span class="input-group-text">Kanan</span>

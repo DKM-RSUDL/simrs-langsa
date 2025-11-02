@@ -39,7 +39,7 @@
         </div>
 
         <div class="col-md-9">
-            @include('components.navigation-rajal')
+            @include('components.navigation')
 
             <div class="d-flex justify-content-center">
                 <div class="card w-100 h-100">
@@ -58,21 +58,21 @@
                                                     <input type="text" name="search" class="form-control" placeholder="Cari data..." value="{{ request('search') }}">
                                                 </div>
                                             </div>
-                                            
+
                                             <div class="col-md-2">
                                                 <input type="date" name="dari_tanggal" class="form-control" placeholder="Dari Tanggal" value="{{ request('dari_tanggal') }}">
                                             </div>
-                                            
+
                                             <div class="col-md-2">
                                                 <input type="date" name="sampai_tanggal" class="form-control" placeholder="Sampai Tanggal" value="{{ request('sampai_tanggal') }}">
                                             </div>
-                                            
+
                                             <div class="col-md-2">
                                                 <button class="btn btn-outline-secondary" type="submit">
                                                     <i class="ti-filter"></i> Filter
                                                 </button>
                                             </div>
-                                            
+
                                             <div class="col-md-3 text-end">
                                                 <a href="{{ route('resiko-decubitus.create', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}"
                                                     class="btn btn-primary">
@@ -155,8 +155,8 @@
                                                                     class="btn btn-warning btn-sm" title="Edit">
                                                                     <i class="ti-pencil"></i>
                                                                 </a>
-                                                                <form method="POST" action="{{ route('resiko-decubitus.destroy', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}" 
-                                                                    style="display: inline-block;" 
+                                                                <form method="POST" action="{{ route('resiko-decubitus.destroy', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
+                                                                    style="display: inline-block;"
                                                                     onsubmit="return confirm('Apakah Anda yakin ingin menghapus data ini?');">
                                                                     @csrf
                                                                     @method('DELETE')
@@ -174,7 +174,7 @@
                                                                 <i class="ti-clipboard" style="font-size: 3rem; color: #dee2e6;"></i>
                                                                 <h5 class="mt-3 text-muted">Tidak ada data</h5>
                                                                 <p class="text-muted">Belum ada data pengkajian risiko decubitus untuk pasien ini</p>
-                                                                <a href="{{ route('resiko-decubitus.create', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}" 
+                                                                <a href="{{ route('resiko-decubitus.create', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}"
                                                                     class="btn btn-primary">
                                                                     <i class="ti-plus"></i> Tambah Data Pertama
                                                                 </a>
@@ -191,7 +191,7 @@
                                         <div class="d-flex justify-content-between align-items-center mt-3">
                                             <div>
                                                 <small class="text-muted">
-                                                    Menampilkan {{ $dataDecubitus->firstItem() }} sampai {{ $dataDecubitus->lastItem() }} 
+                                                    Menampilkan {{ $dataDecubitus->firstItem() }} sampai {{ $dataDecubitus->lastItem() }}
                                                     dari {{ $dataDecubitus->total() }} data
                                                 </small>
                                             </div>

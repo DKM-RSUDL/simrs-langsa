@@ -55,6 +55,12 @@ class User extends Authenticatable
         return $this->belongsTo(HrdKaryawan::class, 'kd_karyawan', 'kd_karyawan');
     }
 
+    public function viewKaryawan()
+    {
+        return $this->belongsTo(ViewTampilKaryawan::class, 'kd_karyawan', 'kd_karyawan');
+    }
+
+
     // public function profile()
     // {
     //     return $this->hasOne(UserProfile::class);

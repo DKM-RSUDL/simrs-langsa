@@ -98,166 +98,165 @@
         <div class="col-md-9">
             @include('components.navigation-hemodialisa')
 
-            <div class="d-flex justify-content-center">
-                <div class="card w-100 h-100">
-                    <div class="card-body">
+            <x-content-card>
+                @include('components.page-header', [
+                    'title' => 'Daftar Data Hasil Lab',
+                    'description' => 'Daftar data hasil lab hemodialisa.',
+                ])
 
-                        <!-- Header -->
-                        <div class="d-flex justify-content-between align-items-center mb-4">
-                            <h4 class="mb-0">Data Hasil Lab</h4>
-                            <a href="{{ route('hemodialisa.pelayanan.hasil-lab.create', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}"
-                                class="btn btn-primary">
-                                <i class="ti-plus"></i> Tambah Data
-                            </a>
-                        </div>
-
-                        <div class="table-responsive">
-                            <table class="table table-striped table-hover">
-                                <thead class="table-primary">
-                                    <tr>
-                                        <th width="5%">No</th>
-                                        <th width="12%">Tanggal</th>
-                                        <th width="10%">Waktu</th>
-                                        <th width="15%">Pemeriksaan</th>
-                                        <th width="23%">Hasil Lab Utama</th>
-                                        <th width="20%">Serologi</th>
-                                        <th width="15%">Aksi</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @forelse($dataHasilLab as $index => $lab)
-                                        <tr>
-                                            <td>{{ $index + 1 }}</td>
-                                            <td>
-                                                <span class="text-primary fw-bold">
-                                                    {{ date('d/m/Y', strtotime($lab->tanggal_implementasi)) }}
-                                                </span>
-                                            </td>
-                                            <td>
-                                                <span class="badge badge-info">
-                                                    {{ date('H:i', strtotime($lab->jam_implementasi)) }}
-                                                </span>
-                                            </td>
-                                            <td>
-                                                <div class="lab-summary">
-                                                    @if ($lab->pemeriksaan_urine_rutin)
-                                                        <span class="badge badge-success">Urine</span>
-                                                    @endif
-                                                    @if ($lab->pemeriksaan_feres_rutin)
-                                                        <span class="badge badge-warning">Feses</span>
-                                                    @endif
-                                                    @if ($lab->pemeriksaan_lain_lain)
-                                                        <span class="badge badge-info">Lainnya</span>
-                                                    @endif
-                                                </div>
-                                            </td>
-                                            <td>
-                                                @if ($lab->detail && $lab->detail->count() > 0)
-                                                    @php $detail = $lab->detail->first(); @endphp
-                                                    <div class="lab-summary">
-                                                        @if ($detail->hb)
-                                                            <div><strong>HB:</strong> {{ number_format($detail->hb, 1) }}
-                                                                g/dL</div>
-                                                        @endif
-                                                        @if ($detail->ureum_pre)
-                                                            <div><strong>Ureum Pre:</strong>
-                                                                {{ number_format($detail->ureum_pre, 1) }} mg/dL</div>
-                                                        @endif
-                                                        @if ($detail->kreatinin_pre)
-                                                            <div><strong>Kreatinin Pre:</strong>
-                                                                {{ number_format($detail->kreatinin_pre, 1) }} mg/dL</div>
-                                                        @endif
-                                                        @if ($detail->glukosa_sewaktu)
-                                                            <div><strong>Glukosa:</strong>
-                                                                {{ number_format($detail->glukosa_sewaktu, 1) }} mg/dL</div>
-                                                        @endif
-                                                    </div>
-                                                @else
-                                                    <span class="text-muted">-</span>
-                                                @endif
-                                            </td>
-                                            <td>
-                                                @if ($lab->detail && $lab->detail->count() > 0)
-                                                    @php $detail = $lab->detail->first(); @endphp
-                                                    <div class="serologic-tests">
-                                                        @if ($detail->hbsag_rapid)
-                                                            <div class="test-item">
-                                                                <span
-                                                                    class="badge {{ $detail->hbsag_rapid == 'Positif' ? 'badge-danger' : 'badge-success' }}">
-                                                                    HBsAg
-                                                                </span>
-                                                                <small>{{ $detail->hbsag_rapid }}</small>
-                                                            </div>
-                                                        @endif
-                                                        @if ($detail->anti_hcv_rapid)
-                                                            <div class="test-item">
-                                                                <span
-                                                                    class="badge {{ $detail->anti_hcv_rapid == 'Positif' ? 'badge-danger' : 'badge-success' }}">
-                                                                    Anti-HCV
-                                                                </span>
-                                                                <small>{{ $detail->anti_hcv_rapid }}</small>
-                                                            </div>
-                                                        @endif
-                                                        @if ($detail->anti_hiv_rapid)
-                                                            <div class="test-item">
-                                                                <span
-                                                                    class="badge {{ $detail->anti_hiv_rapid == 'Positif' ? 'badge-danger' : 'badge-success' }}">
-                                                                    Anti-HIV
-                                                                </span>
-                                                                <small>{{ $detail->anti_hiv_rapid }}</small>
-                                                            </div>
-                                                        @endif
-                                                    </div>
-                                                @else
-                                                    <span class="text-muted">-</span>
-                                                @endif
-                                            </td>
-                                            <td>
-                                                <div class="btn-group" role="group">
-                                                    <!-- Tombol Lihat -->
-                                                    <a href="{{ route('hemodialisa.pelayanan.hasil-lab.show', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $lab->id]) }}"
-                                                        class="btn btn-info btn-sm btn-action" title="Lihat Detail">
-                                                        <i class="ti-eye"></i>
-                                                    </a>
-
-                                                    <!-- Tombol Edit -->
-                                                    <a href="{{ route('hemodialisa.pelayanan.hasil-lab.edit', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $lab->id]) }}"
-                                                        class="btn btn-warning btn-sm btn-action" title="Edit Data">
-                                                        <i class="ti-pencil"></i>
-                                                    </a>
-
-                                                    <!-- Tombol Delete -->
-                                                    <form method="POST"
-                                                        action="{{ route('hemodialisa.pelayanan.hasil-lab.destroy', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $lab->id]) }}"
-                                                        class="d-inline">
-                                                        @csrf
-                                                        @method('DELETE')
-                                                        <button type="submit" class="btn btn-danger btn-sm btn-action"
-                                                            title="Hapus Data">
-                                                            <i class="ti-trash"></i>
-                                                        </button>
-                                                    </form>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    @empty
-                                        <tr>
-                                            <td colspan="7">
-                                                <div class="empty-state">
-                                                    <i class="ti-clipboard"></i>
-                                                    <h6>Belum ada data hasil lab</h6>
-                                                    <p class="text-muted">Klik tombol "Tambah Data" untuk menambahkan hasil
-                                                        lab baru</p>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    @endforelse
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
+                <!-- Header -->
+                <div class="text-end">
+                    <a href="{{ route('hemodialisa.pelayanan.hasil-lab.create', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}"
+                        class="btn btn-primary">
+                        <i class="ti-plus"></i> Tambah Data
+                    </a>
                 </div>
-            </div>
+
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover">
+                        <thead class="table-primary">
+                            <tr>
+                                <th width="5%">No</th>
+                                <th width="12%">Tanggal</th>
+                                <th width="10%">Waktu</th>
+                                <th width="15%">Pemeriksaan</th>
+                                <th width="23%">Hasil Lab Utama</th>
+                                <th width="20%">Serologi</th>
+                                <th width="15%">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @forelse($dataHasilLab as $index => $lab)
+                                <tr>
+                                    <td>{{ $index + 1 }}</td>
+                                    <td>
+                                        <span class="text-primary fw-bold">
+                                            {{ date('d/m/Y', strtotime($lab->tanggal_implementasi)) }}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span class="badge badge-info">
+                                            {{ date('H:i', strtotime($lab->jam_implementasi)) }}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <div class="lab-summary">
+                                            @if ($lab->pemeriksaan_urine_rutin)
+                                                <span class="badge badge-success">Urine</span>
+                                            @endif
+                                            @if ($lab->pemeriksaan_feres_rutin)
+                                                <span class="badge badge-warning">Feses</span>
+                                            @endif
+                                            @if ($lab->pemeriksaan_lain_lain)
+                                                <span class="badge badge-info">Lainnya</span>
+                                            @endif
+                                        </div>
+                                    </td>
+                                    <td>
+                                        @if ($lab->detail && $lab->detail->count() > 0)
+                                            @php $detail = $lab->detail->first(); @endphp
+                                            <div class="lab-summary">
+                                                @if ($detail->hb)
+                                                    <div><strong>HB:</strong> {{ number_format($detail->hb, 1) }}
+                                                        g/dL</div>
+                                                @endif
+                                                @if ($detail->ureum_pre)
+                                                    <div><strong>Ureum Pre:</strong>
+                                                        {{ number_format($detail->ureum_pre, 1) }} mg/dL</div>
+                                                @endif
+                                                @if ($detail->kreatinin_pre)
+                                                    <div><strong>Kreatinin Pre:</strong>
+                                                        {{ number_format($detail->kreatinin_pre, 1) }} mg/dL</div>
+                                                @endif
+                                                @if ($detail->glukosa_sewaktu)
+                                                    <div><strong>Glukosa:</strong>
+                                                        {{ number_format($detail->glukosa_sewaktu, 1) }} mg/dL</div>
+                                                @endif
+                                            </div>
+                                        @else
+                                            <span class="text-muted">-</span>
+                                        @endif
+                                    </td>
+                                    <td>
+                                        @if ($lab->detail && $lab->detail->count() > 0)
+                                            @php $detail = $lab->detail->first(); @endphp
+                                            <div class="serologic-tests">
+                                                @if ($detail->hbsag_rapid)
+                                                    <div class="test-item">
+                                                        <span
+                                                            class="badge {{ $detail->hbsag_rapid == 'Positif' ? 'badge-danger' : 'badge-success' }}">
+                                                            HBsAg
+                                                        </span>
+                                                        <small>{{ $detail->hbsag_rapid }}</small>
+                                                    </div>
+                                                @endif
+                                                @if ($detail->anti_hcv_rapid)
+                                                    <div class="test-item">
+                                                        <span
+                                                            class="badge {{ $detail->anti_hcv_rapid == 'Positif' ? 'badge-danger' : 'badge-success' }}">
+                                                            Anti-HCV
+                                                        </span>
+                                                        <small>{{ $detail->anti_hcv_rapid }}</small>
+                                                    </div>
+                                                @endif
+                                                @if ($detail->anti_hiv_rapid)
+                                                    <div class="test-item">
+                                                        <span
+                                                            class="badge {{ $detail->anti_hiv_rapid == 'Positif' ? 'badge-danger' : 'badge-success' }}">
+                                                            Anti-HIV
+                                                        </span>
+                                                        <small>{{ $detail->anti_hiv_rapid }}</small>
+                                                    </div>
+                                                @endif
+                                            </div>
+                                        @else
+                                            <span class="text-muted">-</span>
+                                        @endif
+                                    </td>
+                                    <td>
+                                        <x-table-action>
+                                            <!-- Tombol Lihat -->
+                                            <a href="{{ route('hemodialisa.pelayanan.hasil-lab.show', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $lab->id]) }}"
+                                                class="btn btn-info btn-sm btn-action" title="Lihat Detail">
+                                                <i class="ti-eye"></i>
+                                            </a>
+
+                                            <!-- Tombol Edit -->
+                                            <a href="{{ route('hemodialisa.pelayanan.hasil-lab.edit', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $lab->id]) }}"
+                                                class="btn btn-warning btn-sm btn-action" title="Edit Data">
+                                                <i class="ti-pencil"></i>
+                                            </a>
+
+                                            <!-- Tombol Delete -->
+                                            <form method="POST"
+                                                action="{{ route('hemodialisa.pelayanan.hasil-lab.destroy', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $lab->id]) }}"
+                                                class="d-inline">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="btn btn-danger btn-sm btn-action"
+                                                    title="Hapus Data">
+                                                    <i class="ti-trash"></i>
+                                                </button>
+                                            </form>
+                                        </x-table-action>
+                                    </td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="7">
+                                        <div class="empty-state">
+                                            <i class="ti-clipboard"></i>
+                                            <h6>Belum ada data hasil lab</h6>
+                                            <p class="text-muted">Klik tombol "Tambah Data" untuk menambahkan hasil
+                                                lab baru</p>
+                                        </div>
+                                    </td>
+                                </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
+            </x-content-card>
         </div>
     </div>
 

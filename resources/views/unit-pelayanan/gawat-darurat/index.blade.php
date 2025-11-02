@@ -2,12 +2,6 @@
 
 @push('css')
     <style>
-        .badge {
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-        }
-
         .badge-triage-yellow {
             background-color: #ffeb3b;
         }
@@ -206,8 +200,8 @@
                         data-bs-target="#addPatientTriage">
                         <i class="ti-plus"></i> Tambah Data
                     </button> --}}
-                        <a href="{{ route('gawat-darurat.triase') }}" class="btn btn-primary btn-sm">
-                            <i class="ti-plus"></i> Tambah Data
+                        <a href="{{ route('gawat-darurat.triase') }}" class="btn btn-primary">
+                            <i class="ti-plus"></i> Tambah
                         </a>
                     @endcanany
                 </div>
@@ -230,8 +224,7 @@
                                 <th>Jaminan</th>
                                 <th>Tgl Masuk</th>
                                 <th>Dokter</th>
-                                <th>Instruksi</th>
-                                <th>Del</th>
+                                <th>Status Pelayanan</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -285,6 +278,7 @@
     <script>
         var gawatDaruratIndexUrl = "{{ route('gawat-darurat.index') }}";
         var medisGawatDaruratIndexUrl = "{{ url('unit-pelayanan/gawat-darurat/pelayanan/') }}/";
+        var printTriaseUrl = "{{ url('unit-pelayanan/gawat-darurat/triase') }}";
 
         $(document).ready(function() {
             $('#rawatDaruratTable').DataTable({
@@ -303,14 +297,27 @@
                         searchable: false,
                         render: function(data, type, row) {
                             let hiddenAttr = row.triase_proses == 1 ? 'hidden' : '';
+
+                            // Membuat URL unik untuk print berdasarkan data baris
+                            let printUrl =
+                                `${printTriaseUrl}/${row.kd_pasien}/${row.tgl_masuk}/print-pdf`;
+
                             return `
-                                <div class="d-flex justify-content-center">
-                                    <a href="${medisGawatDaruratIndexUrl + row.kd_pasien}/${row.tgl_masuk}"
-                                    class="edit btn btn-primary">
-                                        <i class="ti-pencil-alt"></i>
-                                    </a>
-                                </div>
-                            `;
+                                    <div class="d-flex justify-content-center gap-1">
+                                        <a href="${medisGawatDaruratIndexUrl + row.kd_pasien}/${row.tgl_masuk}"
+                                           class="edit btn btn-primary btn-sm"
+                                           title="Layani Pasien">
+                                            <i class="ti-pencil-alt"></i>
+                                        </a>
+
+                                        <a href="${printUrl}"
+                                           class="btn btn-info btn-sm"
+                                           target="_blank"
+                                           title="Cetak Triase">
+                                            <i class="bi bi-printer"></i>
+                                        </a>
+                                    </div>
+                                `;
                         }
                     },
                     {
@@ -390,18 +397,19 @@
                         defaultContent: 'null'
                     },
                     {
-                        data: 'instruksi',
-                        name: 'instruksi',
-                        defaultContent: ''
-                    },
-                    {
-                        data: 'del',
-                        name: 'del',
-                        orderable: false,
-                        searchable: false,
+                        // data: 'status_pelayanan',
+                        // name: 'status_pelayanan',
+                        data: 'kd_dokter',
+                        name: 'kd_dokter',
                         render: function(data, type, row) {
-                            return '<a href="#" class="edit btn btn-danger btn-sm"><i class="bi bi-x-circle"></i></a>';
-                        }
+                            // Assuming row.kd_pasien is the "RM" and row.reg_number is the "Reg" value
+                            let bgBadge = 'secondary';
+
+                            if (row.status_inap == 1) bgBadge = 'success';
+
+                            return `<span class="d-block badge w-auto text-bg-${bgBadge}">${row.keterangan_kunjungan ?? '-'}</span>`;
+                        },
+                        defaultContent: ''
                     },
                 ],
                 paging: true,

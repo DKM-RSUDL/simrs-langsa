@@ -220,11 +220,11 @@ class CpptController extends Controller
 
         $nama_lengkap = '';
         if (! empty($karyawan->gelar_depan)) {
-            $nama_lengkap .= $karyawan->gelar_depan.' ';
+            $nama_lengkap .= $karyawan->gelar_depan . ' ';
         }
         $nama_lengkap .= $karyawan->nama;
         if (! empty($karyawan->gelar_belakang)) {
-            $nama_lengkap .= ', '.$karyawan->gelar_belakang;
+            $nama_lengkap .= ', ' . $karyawan->gelar_belakang;
         }
 
         return $nama_lengkap;
@@ -573,7 +573,6 @@ class CpptController extends Controller
                     'tipe' => $tipeCppt,
                 ],
             ]);
-
         } catch (Exception $e) {
             return response()->json([
                 'status' => 'error',
@@ -582,6 +581,8 @@ class CpptController extends Controller
             ], 500);
         }
     }
+
+
 
     private function getKunjungan($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
     {
@@ -620,13 +621,13 @@ class CpptController extends Controller
             $instruksis = $request->instruksi_text ?? [];
 
             foreach ($perawatKodes as $index => $perawatKode) {
-                if (! empty($perawatKode) && ! empty($instruksis[$index])) {
+                if (!empty($perawatKode) && !empty($instruksis[$index])) {
                     $cpptInstruksiPpa = [
-                        'kd_kasir' => $kunjungan->kd_kasir,
-                        'no_transaksi' => $kunjungan->no_transaksi,
-                        'urut_total_cppt' => $urutTotal,
-                        'ppa' => $perawatKode,
-                        'instruksi' => $instruksis[$index],
+                        'kd_kasir'              => $kunjungan->kd_kasir,
+                        'no_transaksi'          => $kunjungan->no_transaksi,
+                        'urut_total_cppt'   => $urutTotal,
+                        'ppa'               => $perawatKode,
+                        'instruksi'         => $instruksis[$index]
                     ];
 
                     CpptInstruksiPpa::create($cpptInstruksiPpa);
@@ -656,8 +657,8 @@ class CpptController extends Controller
                 'berat_badan' => ['hasil' => $tandaVital[4] ?? ''],
             ],
         ];
-
     }
+
 
     public function store($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, Request $request)
     {
@@ -874,14 +875,18 @@ class CpptController extends Controller
 
             // Create resume using private function
             $resumeData = $this->makeResumeData(
-                $request, $diagnosisReq,
-                $tindakLanjut, $tindakLanjutLabel,
+                $request,
+                $diagnosisReq,
+                $tindakLanjut,
+                $tindakLanjutLabel,
                 $tandaVitalReq
             );
 
             $this->createResume($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $resumeData);
 
             $this->asesmenService->getTransaksiData($kd_pasien, $kd_pasien, $tgl_masuk, $urut_masuk);
+
+
 
             // Save instruksi PPA using private function
             $this->saveInstruksiPpa($kunjungan, $lastUrutTotalCppt, $request);
@@ -1224,7 +1229,7 @@ class CpptController extends Controller
 
     private function buildCpptQuery($additionalWheres = [])
     {
-        return Cppt::with(['dtCppt', 'pemberat', 'peringan', 'kualitas', 'frekuensi', 'menjalar', 'jenis'])
+        return Cppt::with(['dtCppt', 'pemberat', 'peringan', 'kualitas', 'frekuensi', 'menjalar', 'jenis', 'userPenanggung'])
             ->select([
                 'cppt.*',
                 't.kd_pasien',
@@ -1315,7 +1320,8 @@ class CpptController extends Controller
                 'kd_unit' => $item->first()->kd_unit,
                 'nama_unit' => $item->first()->nama_unit,
                 'penanggung' => $item->first()->dtCppt,
-                'nama_penanggung' => $item->first()->nama_penanggung,
+                'nama_penanggung' => $item->first()->userPenanggung->viewKaryawan->gelar_depan . ' ' . $item->first()->userPenanggung->viewKaryawan->nama . ' ' . $item->first()->userPenanggung->viewKaryawan->gelar_belakang,
+                'jenis_tenaga' => $item->first()->userPenanggung->viewKaryawan->sub_detail ?? '-',
                 'tanggal' => $item->first()->tanggal,
                 'jam' => $item->first()->jam,
                 'obyektif' => $item->first()->obyektif,

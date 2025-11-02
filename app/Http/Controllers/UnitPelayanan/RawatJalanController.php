@@ -7,16 +7,22 @@ use App\Models\Dokter;
 use App\Models\DokterKlinik;
 use App\Models\Kunjungan;
 use App\Models\Unit;
+use App\Services\BaseService;
+use App\Services\Bpjs\BpjsService;
 use Carbon\Carbon;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Yajra\DataTables\Facades\DataTables;
 
 class RawatJalanController extends Controller
 {
+    private $baseService;
+
     public function __construct()
     {
         $this->middleware('can:read unit-pelayanan/rawat-jalan');
+        $this->baseService = new BaseService();
     }
 
     public function index()

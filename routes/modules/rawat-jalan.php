@@ -63,15 +63,21 @@ Route::prefix('rawat-jalan')->group(function () {
 
         Route::prefix('unit/{kd_unit}')->group(function () {
             Route::name('.unit')->group(function () {
-                Route::get('/', [RawatJalanController::class, 'unitPelayanan']);
-                Route::get('/belum-selesai', [RawatJalanController::class, 'belumSelesai'])->name('.belum-selesai');
-                Route::get('/selesai', [RawatJalanController::class, 'selesai'])->name('.selesai');
+
+                Route::controller(RawatJalanController::class)->group(function () {
+                    Route::get('/', 'unitPelayanan');
+                    Route::get('/belum-selesai', 'belumSelesai')->name('.belum-selesai');
+                    Route::get('/selesai', 'selesai')->name('.selesai');
+                });
             });
 
             // Pelayanan
             Route::prefix('pelayanan/{kd_pasien}/{tgl_masuk}/{urut_masuk}')->group(function () {
                 Route::name('.pelayanan')->group(function () {
-                    Route::get('/', [RawatJalanController::class, 'pelayanan']);
+
+                    Route::controller(RawatJalanController::class)->group(function () {
+                        Route::get('/', 'pelayanan');
+                    });
                 });
 
                 // rujuk route

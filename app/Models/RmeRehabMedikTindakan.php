@@ -19,14 +19,20 @@ class RmeRehabMedikTindakan extends Model
         'urut_masuk',
         'tgl_tindakan',
         'jam_tindakan',
-        'ppa',
-        'hasil',
-        'kesimpulan',
-        'rekomendasi',
+        'subjective',
+        'objective',
+        'assessment',
+        'planning_goal',
+        'planning_tindakan',
+        'planning_edukasi',
+        'planning_frekuensi',
+        'rencana_tindak_lanjut',
+        'user_create',
+        'user_edit',
     ];
 
     public function karyawan()
     {
-        return $this->belongsTo(HrdKaryawan::class, 'ppa', 'kd_karyawan');
+        return $this->belongsTo(HrdKaryawan::class, 'user_create', 'kd_karyawan');
     }
 }

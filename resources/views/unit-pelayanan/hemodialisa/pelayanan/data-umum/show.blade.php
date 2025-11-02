@@ -109,7 +109,7 @@
                 ])
                 <!-- DATA PASIEN -->
                 <div class="px-3">
-                    <div class="section-separator">
+                    <div class="section-separator mt-0">
                         <div class="section-header">DATA PASIEN</div>
 
                         <div class="form-row">

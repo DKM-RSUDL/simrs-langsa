@@ -47,6 +47,32 @@
                         </div>
                     </div>
 
+                    @php
+                        $listKesadaran = [
+                            'Compos Mentis' => 'Compos Mentis',
+                            'Apatis' => 'Apatis',
+                            'Somnolen' => 'Somnolen',
+                            'Sopor' => 'Sopor',
+                            'Koma' => 'Koma',
+                        ];
+
+                        $selectedKesadaran = old('kesadaran', $asesmen->asesmenKetDewasaRanapFisik->kesadaran ?? '');
+                    @endphp
+
+                    <div class="row mb-3">
+                        <label class="col-sm-3 col-form-label">Kesadaran:</label>
+                        <div class="col-sm-9">
+                            <select class="form-select" name="disability_kesadaran">
+                                <option value="">--Pilih--</option>
+                                @foreach ($listKesadaran as $value => $label)
+                                    <option value="{{ $value }}" {{ $selectedKesadaran == $value ? 'selected' : '' }}>
+                                        {{ $label }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+
                     <!-- Vital Signs -->
                     <div class="row mb-3">
                         <label class="col-sm-3 col-form-label">Nadi:</label>
@@ -1611,45 +1637,6 @@
                             <div class="mt-3">
                                 <label class="form-label fw-bold">Catatan:</label>
                                 <textarea class="form-control" name="pemeriksaan_neurologi_catatan" rows="2">{{ old('pemeriksaan_neurologi_catatan', $asesmen->asesmenKetDewasaRanapFisik->pemeriksaan_neurologi_catatan ?? '') }}</textarea>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Kesadaran -->
-                    <div class="row mb-3">
-                        <label class="col-sm-2 col-form-label">Kesadaran:</label>
-                        <div class="col-sm-10">
-                            <div class="d-flex flex-wrap gap-3">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" name="kesadaran[]"
-                                        id="kesadaran_compos_mentis" value="compos_mentis"
-                                        {{ in_array('compos_mentis', old('kesadaran', $asesmen->asesmenKetDewasaRanapFisik->kesadaran ?? [])) ? 'checked' : '' }}>
-                                    <label class="form-check-label" for="kesadaran_compos_mentis">Compos mentis</label>
-                                </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" name="kesadaran[]"
-                                        id="kesadaran_apatis" value="apatis"
-                                        {{ in_array('apatis', old('kesadaran', $asesmen->asesmenKetDewasaRanapFisik->kesadaran ?? [])) ? 'checked' : '' }}>
-                                    <label class="form-check-label" for="kesadaran_apatis">Apatis</label>
-                                </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" name="kesadaran[]"
-                                        id="kesadaran_somnolen" value="somnolen"
-                                        {{ in_array('somnolen', old('kesadaran', $asesmen->asesmenKetDewasaRanapFisik->kesadaran ?? [])) ? 'checked' : '' }}>
-                                    <label class="form-check-label" for="kesadaran_somnolen">Somnolen</label>
-                                </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" name="kesadaran[]"
-                                        id="kesadaran_sopor_koma" value="sopor_koma"
-                                        {{ in_array('sopor_koma', old('kesadaran', $asesmen->asesmenKetDewasaRanapFisik->kesadaran ?? [])) ? 'checked' : '' }}>
-                                    <label class="form-check-label" for="kesadaran_sopor_koma">Sopor Koma</label>
-                                </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" name="kesadaran[]"
-                                        id="kesadaran_koma" value="koma"
-                                        {{ in_array('koma', old('kesadaran', $asesmen->asesmenKetDewasaRanapFisik->kesadaran ?? [])) ? 'checked' : '' }}>
-                                    <label class="form-check-label" for="kesadaran_koma">Koma</label>
-                                </div>
                             </div>
                         </div>
                     </div>

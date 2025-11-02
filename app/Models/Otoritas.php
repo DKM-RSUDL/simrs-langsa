@@ -10,4 +10,7 @@ class Otoritas extends Model
     use HasFactory;
 
     protected $table = 'otoritas';
+    public $timestamps = false;
+
+    protected $guarded = [];
 }

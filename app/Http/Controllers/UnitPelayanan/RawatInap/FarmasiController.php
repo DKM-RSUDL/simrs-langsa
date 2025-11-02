@@ -99,7 +99,7 @@ class FarmasiController extends Controller
 
         $riwayatObat = $this->getRiwayatObat($kd_pasien);
 
-        $dokters = Dokter::all();
+        $dokters = Dokter::where('status', 1)->get();
 
         return view(
             'unit-pelayanan.rawat-inap.pelayanan.farmasi.order-obat',
@@ -240,7 +240,7 @@ class FarmasiController extends Controller
 
             DB::commit();
 
-            return redirect()->route('rawat-inap.farmasi.index', [
+            return to_route('rawat-inap.farmasi.index', [
                 $kd_unit,
                 $kd_pasien,
                 date('Y-m-d', strtotime($tgl_masuk)),
@@ -313,7 +313,7 @@ class FarmasiController extends Controller
                 $q->where('APT_OBAT.NAMA_OBAT', 'like', $term . '%')
                     ->orWhere('APT_OBAT.NAMA_OBAT', 'like', '% ' . $term . '%');
             })
-            ->orderBy('APT_OBAT.NAMA_OBAT')
+            ->orderBy(DB::raw('COALESCE(stok_depo.total_stok, 0)'), 'desc')
             ->limit($limit)
             ->get([
                 // Select2 shape
@@ -792,7 +792,6 @@ class FarmasiController extends Controller
                 'message' => 'Rekonsiliasi obat transfer berhasil disimpan',
                 'data' => $rekonsiliasi
             ], 201);
-
         } catch (\Exception $e) {
             DB::rollback();
             return response()->json([
@@ -869,7 +868,6 @@ class FarmasiController extends Controller
                 'message' => 'Rekonsiliasi obat transfer berhasil diperbarui',
                 'data' => $rekonsiliasiObat
             ]);
-
         } catch (\Exception $e) {
             DB::rollback();
             return response()->json([
@@ -907,7 +905,6 @@ class FarmasiController extends Controller
                 'success' => true,
                 'message' => 'Rekonsiliasi obat transfer berhasil dihapus'
             ], 200);
-
         } catch (\Exception $e) {
             DB::rollback();
             return response()->json([

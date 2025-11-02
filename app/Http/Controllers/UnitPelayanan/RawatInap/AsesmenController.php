@@ -45,7 +45,7 @@ class AsesmenController extends Controller
 
     public function index($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
     {
-      
+
         $user = auth()->user();
 
         // Mengambil data kunjungan dan tanggal triase terkait
@@ -321,7 +321,6 @@ class AsesmenController extends Controller
             $antropometri = json_decode($request->antropometri, true) ?: [];
 
             // Simpan vital sign utama menggunakan service
-
             $this->asesmentService->store($vitalSign, $dataMedis->kd_pasien, $dataMedis->no_transaksi, $dataMedis->kd_kasir);
 
             // Create resume

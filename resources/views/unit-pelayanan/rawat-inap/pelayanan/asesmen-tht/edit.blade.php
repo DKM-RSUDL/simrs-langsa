@@ -811,7 +811,7 @@
                                 </div>
                             </div>
                             <div class="mb-3 row align-items-center">
-                                <label class="col-3">Fissare</label>
+                                <label class="col-3">Fisure</label>
                                 <div class="col-4">
                                     <div class="input-group">
                                         <span class="input-group-text">Kanan</span>
@@ -1403,7 +1403,7 @@
                         {{-- Blade Template --}}
                         <div class="section-separator" style="margin-bottom: 2rem;">
                             <h5 class="fw-semibold mb-4">12. Discharge Planning</h5>
-                            <div class="mb-3 row align-items-center">
+                            {{-- <div class="mb-3 row align-items-center">
                                 <label class="col-md-3 text-secondary">Diagnosis medis</label>
                                 <div class="col-md-9">
                                     <select class="form-select bg-light" id="diagnosisMedis"
@@ -1424,7 +1424,7 @@
                                             Lainnya</option>
                                     </select>
                                 </div>
-                            </div>
+                            </div> --}}
 
                             <div class="mb-3 row align-items-center">
                                 <label class="col-md-3 text-secondary">Usia lanjut</label>

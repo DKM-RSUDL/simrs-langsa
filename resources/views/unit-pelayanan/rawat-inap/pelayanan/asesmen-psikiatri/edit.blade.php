@@ -10,7 +10,7 @@
             <x-content-card>
             <x-button-previous />
                 @include('components.page-header', [
-                    'title' => 'Edit Asesmen Medis Psiakitri',
+                    'title' => 'Edit Asesmen Medis Psikiatri',
                     'description' => 'Isikan Asesmen medis dalam 24 jam sejak pasien masuk ke unit pelayanan',
                 ])
 
@@ -70,7 +70,7 @@
                             </div>
 
                             <div class="section-separator" id="pengkajian-keperawatan">
-                                <h5 class="section-title">2. Pengkajian Keperawatan</h5>
+                                 <h5 class="section-title">2. Pengkajian Medis</h5>
 
                                 <div class="form-group">
                                     <label style="min-width: 220px;">Anamnesis</label>

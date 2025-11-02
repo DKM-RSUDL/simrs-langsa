@@ -10,10 +10,10 @@
             <x-content-card>
             <x-button-previous />
                 @include('components.page-header', [
-                    'title' => 'Asesmen Medis Psiakitri',
+                    'title' => 'Asesmen Medis Psikiatri',
                     'description' => 'Isikan Asesmen medis dalam 24 jam sejak pasien masuk ke unit pelayanan',
                 ])
-            
+
             <form method="POST"
                 action="{{ route('rawat-inap.asesmen.medis.psikiatri.index', [
                     'kd_unit' => $kd_unit,
@@ -55,7 +55,7 @@
                         </div>
 
                         <div class="section-separator" id="pengkajian-keperawatan">
-                            <h5 class="section-title">2. Pengkajian Keperawatan</h5>
+                            <h5 class="section-title">2. Pengkajian Medis</h5>
 
                             <div class="form-group">
                                 <label style="min-width: 220px;">Anamnesis</label>

@@ -77,14 +77,21 @@
                     <tbody>
                         @foreach ($pemeriksaan as $item)
                             <tr>
-                                <td align="middle">{{ date('d M Y', strtotime($item->tgl_pemeriksaan)) . ' ' . date('H:i', strtotime($item->jam_pemeriksaan)) }}</td>
+                                <td align="middle">
+                                    {{ date('d M Y', strtotime($item->tgl_pemeriksaan)) . ' ' . date('H:i', strtotime($item->jam_pemeriksaan)) }}
+                                </td>
                                 <td>{{ str()->title($item->userCreate->name) }}</td>
                                 <td>{{ $item->asal_rujukan }}</td>
                                 <td>{{ $item->diagnosos }}</td>
                                 <td align="middle">
-                                    <a href="{{ route('forensik.unit.pelayanan.pemeriksaan-klinik.show', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}" class="btn btn-sm btn-success"><i class="fas fa-eye"></i></a>
-                                    <a href="{{ route('forensik.unit.pelayanan.pemeriksaan-klinik.edit', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}" class="btn btn-sm btn-warning mx-2"><i class="bi bi-pencil-square"></i></a>
-                                    <button class="btn btn-sm btn-del-pemeriksaan" data-pemeriksaan="{{ encrypt($item->id) }}"><i class="bi bi-x-circle-fill text-danger"></i></button>
+                                    <a href="{{ route('forensik.unit.pelayanan.pemeriksaan-klinik.show', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
+                                        class="btn btn-sm btn-success"><i class="fas fa-eye"></i></a>
+                                    <a href="{{ route('forensik.unit.pelayanan.pemeriksaan-klinik.edit', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
+                                        class="btn btn-sm btn-warning mx-2"><i class="bi bi-pencil-square"></i></a>
+                                    <button type="button" class="btn btn-sm btn-danger btn-del-pemeriksaan"
+                                        data-pemeriksaan="{{ encrypt($item->id) }}" data-bs-target="#deleteModal">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
                                 </td>
                             </tr>
                         @endforeach
@@ -132,12 +139,12 @@
                                 }
                             });
                         },
-                        success: function (res) {
+                        success: function(res) {
                             let status = res.status;
                             let msg = res.message;
                             let data = res.data;
 
-                            if(status == 'error') {
+                            if (status == 'error') {
                                 Swal.fire({
                                     title: "Gagal!",
                                     text: msg,

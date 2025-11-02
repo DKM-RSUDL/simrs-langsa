@@ -142,17 +142,17 @@ class FarmasiController extends Controller
             // Generate ID_MRRESEP (sebagai string)
             $tglMasuk = Carbon::parse($kunjungan->tgl_masuk);
             $prefix = $tglMasuk->format('Ymd');
-            $lastResep = MrResep::where('ID_MRRESEP', 'like', $prefix.'%')
+            $lastResep = MrResep::where('ID_MRRESEP', 'like', $prefix . '%')
                 ->orderBy('ID_MRRESEP', 'desc')
                 ->first();
 
             $newNumber = $lastResep ? intval(substr($lastResep->ID_MRRESEP, -4)) + 1 : 1;
-            $ID_MRRESEP = $prefix.str_pad($newNumber, 4, '0', STR_PAD_LEFT);
+            $ID_MRRESEP = $prefix . str_pad($newNumber, 4, '0', STR_PAD_LEFT);
 
             // Periksa apakah ID sudah ada
             while (MrResep::where('ID_MRRESEP', $ID_MRRESEP)->exists()) {
                 $newNumber++;
-                $ID_MRRESEP = $prefix.str_pad($newNumber, 4, '0', STR_PAD_LEFT);
+                $ID_MRRESEP = $prefix . str_pad($newNumber, 4, '0', STR_PAD_LEFT);
             }
 
             // Log data sebelum insert
@@ -198,7 +198,7 @@ class FarmasiController extends Controller
                     'ID_MRRESEP' => $ID_MRRESEP,
                     'URUT' => $index + 1,
                     'KD_PRD' => $obat['id'],
-                    'CARA_PAKAI' => $obat['frekuensi'].', '.$obat['sebelumSesudahMakan'],
+                    'CARA_PAKAI' => $obat['frekuensi'] . ', ' . $obat['sebelumSesudahMakan'],
                     'JUMLAH' => $obat['jumlah'],
                     'JUMLAH_TAKARAN' => $obat['dosis'],
                     'SATUAN_TAKARAN' => $obat['satuan'],
@@ -212,7 +212,7 @@ class FarmasiController extends Controller
                 $mrResepDtl->ID_MRRESEP = $ID_MRRESEP;
                 $mrResepDtl->URUT = $index + 1;
                 $mrResepDtl->KD_PRD = $obat['id'];
-                $mrResepDtl->CARA_PAKAI = $obat['frekuensi'].', '.$obat['sebelumSesudahMakan'];
+                $mrResepDtl->CARA_PAKAI = $obat['frekuensi'] . ', ' . $obat['sebelumSesudahMakan'];
                 $mrResepDtl->JUMLAH = $obat['jumlah'];
                 $mrResepDtl->JUMLAH_TAKARAN = $obat['dosis'];
                 $mrResepDtl->SATUAN_TAKARAN = $obat['satuan'];
@@ -236,7 +236,7 @@ class FarmasiController extends Controller
                 $kd_pasien,
                 date('Y-m-d', strtotime($tgl_masuk)),
                 $urut_masuk,
-            ])->with('success', 'Resep berhasil disimpan dengan ID: '.$ID_MRRESEP);
+            ])->with('success', 'Resep berhasil disimpan dengan ID: ' . $ID_MRRESEP);
         } catch (\Illuminate\Validation\ValidationException $e) {
             DB::rollback();
 
@@ -244,7 +244,7 @@ class FarmasiController extends Controller
         } catch (\Exception $e) {
             DB::rollback();
 
-            return redirect()->back()->withErrors(['error' => 'Terjadi kesalahan: '.$e->getMessage()])->withInput();
+            return redirect()->back()->withErrors(['error' => 'Terjadi kesalahan: ' . $e->getMessage()])->withInput();
         }
     }
 
@@ -307,7 +307,7 @@ class FarmasiController extends Controller
                 $q->where('APT_OBAT.NAMA_OBAT', 'like', $term . '%')
                     ->orWhere('APT_OBAT.NAMA_OBAT', 'like', '% ' . $term . '%');
             })
-            ->orderBy('APT_OBAT.NAMA_OBAT')
+            ->orderBy(DB::raw('COALESCE(stok_depo.total_stok, 0)'), 'desc')
             ->limit($limit)
             ->get([
                 'APT_OBAT.KD_PRD as id',
@@ -510,7 +510,7 @@ class FarmasiController extends Controller
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Terjadi kesalahan saat menyimpan rekonsiliasi obat: '.$e->getMessage(),
+                'message' => 'Terjadi kesalahan saat menyimpan rekonsiliasi obat: ' . $e->getMessage(),
             ], 500);
         }
     }

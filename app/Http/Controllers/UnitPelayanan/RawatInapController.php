@@ -3,9 +3,11 @@
 namespace App\Http\Controllers\UnitPelayanan;
 
 use App\Http\Controllers\Controller;
+use App\Models\AsalIGD;
 use App\Models\HrdKaryawan;
 use App\Models\Kunjungan;
 use App\Models\PasienInap;
+use App\Models\RmeKetStatusKunjungan;
 use App\Models\RmeSerahTerima;
 use App\Models\Unit;
 use App\Models\User;
@@ -58,6 +60,10 @@ class RawatInapController extends Controller
                     $q->on('kunjungan.kd_unit', '=', 't.kd_unit');
                     $q->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
                     $q->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
+                })
+                ->leftJoin('rme_ket_status_kunjungan as sk', function ($q) {
+                    $q->on('t.kd_kasir', '=', 'sk.kd_kasir');
+                    $q->on('t.no_transaksi', '=', 'sk.no_transaksi');
                 })
                 ->where('nginap.kd_unit_kamar', $kd_unit)
                 ->where('nginap.akhir', 1)
@@ -282,19 +288,7 @@ class RawatInapController extends Controller
         DB::beginTransaction();
 
         try {
-
-            $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
-                ->join('transaksi as t', function ($join) {
-                    $join->on('kunjungan.kd_pasien', '=', 't.kd_pasien');
-                    $join->on('kunjungan.kd_unit', '=', 't.kd_unit');
-                    $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
-                    $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
-                })
-                ->where('kunjungan.kd_pasien', $kd_pasien)
-                ->where('kunjungan.kd_unit', $kd_unit)
-                ->where('kunjungan.urut_masuk', $urut_masuk)
-                ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
-                ->first();
+            $dataMedis = $this->baseService->getDataMedis($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
 
             if (empty($dataMedis)) return back()->with('error', 'Data kunjungan pasien tidak ditemukan !');
 
@@ -324,6 +318,18 @@ class RawatInapController extends Controller
                 ->where('urut_masuk', $urut_masuk)
                 ->whereDate('tgl_masuk', $tgl_masuk)
                 ->update(['status_inap' => 1]);
+
+
+            // update keterangan status kunjungan ranap
+            $this->baseService->updateKetKunjungan($dataMedis->kd_kasir, $dataMedis->no_transaksi, 'Aktif', 1);
+
+            // update keterangan status kunjungan IGD
+            $asalIGD = AsalIGD::where('kd_kasir', $dataMedis->kd_kasir)
+                ->where('no_transaksi', $dataMedis->no_transaksi)
+                ->first();
+
+            if (empty($asalIGD)) throw new Exception('Data Asal IGD tidak ditemukan !');
+            $this->baseService->updateKetKunjungan($asalIGD->kd_kasir_asal, $asalIGD->no_transaksi_asal, 'Ranap', 0);
 
             DB::commit();
             return to_route('rawat-inap.unit.pending', [$serahTerima->kd_unit_tujuan])->with('success', 'Pasien berhasil di terima !');

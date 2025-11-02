@@ -185,29 +185,29 @@ class AsesmenKetDewasaRanapController extends Controller
 
     public function create(Request $request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
     {
-            $dataMedis = $this->getDataMedis($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
-           
-            if (!$dataMedis) {
-                abort(404, 'Data tidak ditemukan');
-            }
+        $dataMedis = $this->getDataMedis($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
 
-            $masterData = $this->getMasterData($kd_pasien);
-
-            // Get latest vital signs data for the patient
-            $vitalSignsData = $this->asesmenService->getLatestVitalSignsByPatient($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
-
-            return view(
-                'unit-pelayanan.rawat-inap.pelayanan.asesmen-umum.create',
-                array_merge([
-                    'kd_unit' => $kd_unit,
-                    'kd_pasien' => $kd_pasien,
-                    'tgl_masuk' => $tgl_masuk,
-                    'urut_masuk' => $urut_masuk,
-                    'dataMedis' => $dataMedis,
-                    'vitalSigns' => $vitalSignsData,
-                ], $masterData)
-            );
+        if (!$dataMedis) {
+            abort(404, 'Data tidak ditemukan');
         }
+
+        $masterData = $this->getMasterData($kd_pasien);
+
+        // Get latest vital signs data for the patient
+        $vitalSignsData = $this->asesmenService->getLatestVitalSignsByPatient($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
+
+        return view(
+            'unit-pelayanan.rawat-inap.pelayanan.asesmen-umum.create',
+            array_merge([
+                'kd_unit' => $kd_unit,
+                'kd_pasien' => $kd_pasien,
+                'tgl_masuk' => $tgl_masuk,
+                'urut_masuk' => $urut_masuk,
+                'dataMedis' => $dataMedis,
+                'vitalSigns' => $vitalSignsData,
+            ], $masterData)
+        );
+    }
 
     public function store(Request $request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
     {
@@ -238,10 +238,10 @@ class AsesmenKetDewasaRanapController extends Controller
             ];
 
 
-            $lastTransaction = $this->asesmenService->getTransaksiData($kd_unit,$kd_pasien,$tgl_masuk,$urut_masuk);
+            $lastTransaction = $this->asesmenService->getTransaksiData($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
 
             // Simpan vital sign menggunakan service
-            $this->asesmenService->store($vitalSignData, $kd_pasien, $lastTransaction->no_transaksi,$lastTransaction->kd_kasir);
+            $this->asesmenService->store($vitalSignData, $kd_pasien, $lastTransaction->no_transaksi, $lastTransaction->kd_kasir);
 
             // Simpan ke tabel RmeAsesmenKetDewasaRanap
             $asesmenKetDewasaRanap = RmeAsesmenKetDewasaRanap::create([
@@ -646,7 +646,6 @@ class AsesmenKetDewasaRanapController extends Controller
 
     public function update(Request $request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $id)
     {
-
         DB::beginTransaction();
         try {
             // 1. Buat record RmeAsesmen
@@ -660,6 +659,23 @@ class AsesmenKetDewasaRanapController extends Controller
             $asesmen->kategori = 2;
             $asesmen->sub_kategori = 1;
             $asesmen->save();
+
+            // Data vital sign untuk disimpan
+            $vitalSignData = [
+                'sistole' => $request->sistole ? (int)$request->sistole : null,
+                'diastole' => $request->distole ? (int)$request->distole : null,
+                'nadi' => $request->nadi ? (int)$request->nadi : null,
+                'respiration' => $request->nafas ? (int)$request->nafas : null,
+                'suhu' => $request->suhu ? (float)$request->suhu : null,
+                'spo2_tanpa_o2' => $request->sao2 ? (int)$request->sao2 : null,
+                'tinggi_badan' => $request->tb ? (int)$request->tb : null,
+                'berat_badan' => $request->bb ? (int) $request->bb : null,
+            ];
+
+            $lastTransaction = $this->asesmenService->getTransaksiData($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
+
+            // Simpan vital sign menggunakan service
+            $this->asesmenService->store($vitalSignData, $kd_pasien, $lastTransaction->no_transaksi, $lastTransaction->kd_kasir);
 
             $asesmen->asesmenKetDewasaRanap()->updateOrCreate(
                 ['id_asesmen' => $asesmen->id],
