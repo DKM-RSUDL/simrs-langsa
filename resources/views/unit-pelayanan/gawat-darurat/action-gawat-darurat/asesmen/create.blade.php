@@ -527,12 +527,35 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @forelse($laborData ?? [] as $data)
-                                        <tr>
-                                            <td>{{ $data['Tanggal-Jam'] ?? '-' }}</td>
-                                            <td>{{ $data['Nama pemeriksaan'] ?? '-' }}</td>
-                                            <td>{{ $data['Status'] ?? '-' }}</td>
-                                        </tr>
+                                    @forelse($laborData ?? [] as $order)
+                                        @foreach ($order->details as $detail)
+                                            <tr>
+                                                <td>
+                                                    {{ \Carbon\Carbon::parse($order->tgl_order)->format('d M Y H:i') }}
+                                                </td>
+                                                <td>
+                                                    {{ $detail->produk->deskripsi ?? 'Tidak ada deskripsi' }}
+                                                </td>
+                                                <td>
+                                                    @php
+                                                        $statusOrder = $order->status_order;
+                                                        $statusLabel = '';
+
+                                                        if ($statusOrder == 0) {
+                                                            $statusLabel = 'Diproses';
+                                                        }
+                                                        if ($statusOrder == 1) {
+                                                            $statusLabel = 'Diorder';
+                                                        }
+                                                        if ($statusOrder == 2) {
+                                                            $statusLabel = 'Selesai';
+                                                        }
+                                                    @endphp
+
+                                                    {!! $statusLabel !!}
+                                                </td>
+                                            </tr>
+                                        @endforeach
                                     @empty
                                         <tr>
                                             <td colspan="3" class="text-center text-muted">Tidak ada data
@@ -559,42 +582,12 @@
                                         <tr>
                                             <td>{{ $rad['Tanggal-Jam'] ?? '-' }}</td>
                                             <td>{{ $rad['Nama Pemeriksaan'] ?? '-' }}</td>
-                                            <td>{{ $rad['Status'] ?? '-' }}</td>
+                                            <td>{!! $rad['Status'] ?? '-' !!}</td>
                                         </tr>
                                     @empty
                                         <tr>
                                             <td colspan="3" class="text-center text-muted">Tidak ada data
                                                 radiologi</td>
-                                        </tr>
-                                    @endforelse
-                                </tbody>
-                            </table>
-                        </div>
-
-                        {{-- TINDAKAN --}}
-                        <h6 class="mb-3">Tindakan</h6>
-                        <div class="table-responsive mb-4">
-                            <table class="table table-bordered">
-                                <thead class="table-light">
-                                    <tr>
-                                        <th>Tanggal dan Jam</th>
-                                        <th>Nama Tindakan</th>
-                                        <th>Dokter</th>
-                                        <th>Unit</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @forelse($tindakanData ?? [] as $tindakan)
-                                        <tr>
-                                            <td>{{ $tindakan['Tanggal-Jam'] ?? '-' }}</td>
-                                            <td>{{ $tindakan['Nama Tindakan'] ?? '-' }}</td>
-                                            <td>{{ $tindakan['Dokter'] ?? '-' }}</td>
-                                            <td>{{ $tindakan['Unit'] ?? '-' }}</td>
-                                        </tr>
-                                    @empty
-                                        <tr>
-                                            <td colspan="4" class="text-center text-muted">Tidak ada data
-                                                tindakan</td>
                                         </tr>
                                     @endforelse
                                 </tbody>

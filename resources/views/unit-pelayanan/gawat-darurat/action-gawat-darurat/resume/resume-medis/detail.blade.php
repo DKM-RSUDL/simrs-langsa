@@ -77,7 +77,8 @@
                                                                 <td>
                                                                     {{ $detail->produk->deskripsi ?? 'Tidak ada deskripsi' }}
                                                                 </td>
-                                                                <td>{{ \Carbon\Carbon::parse($order->tgl_order)->format('d M Y H:i') }}
+                                                                <td>
+                                                                    {{ \Carbon\Carbon::parse($order->tgl_order)->format('d M Y H:i') }}
                                                                 </td>
                                                                 <td>
                                                                     @php
