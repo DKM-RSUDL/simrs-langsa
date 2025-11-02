@@ -497,7 +497,10 @@
         </li>
     @endforeach
 </ul>
-@include('unit-pelayanan.gawat-darurat.action-gawat-darurat.asesmen.show')
+
+@if (count($asesmenIGD) > 0)
+    @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.asesmen.show')
+@endif
 @include('unit-pelayanan.rawat-inap.pelayanan.asesmen.create-asesmen')
 
 @push('js')

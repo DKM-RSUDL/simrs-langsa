@@ -796,10 +796,8 @@
                             @endif
 
                             @if($isDokterSpesialis)
-
                                 @foreach ($tandaVital as $item)
                                     @php
-
                                         $vitalValue = '';
                                         if (isset($vitalSignData) && !empty($vitalSignData)) {
                                             $kondisiName = strtolower(trim($item->kondisi));
@@ -986,4 +984,5 @@
             })
         })
     </script>
+
 @endpush

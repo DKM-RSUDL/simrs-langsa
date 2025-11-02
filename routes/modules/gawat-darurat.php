@@ -61,7 +61,7 @@ Route::prefix('gawat-darurat')->group(function () {
 
     Route::prefix('pelayanan')->group(function () {
         Route::prefix('/{kd_pasien}/{tgl_masuk}')->group(function () {
-
+        
             // Update Pasien
             Route::prefix('{urut_masuk}/ubah-pasien')->group(function () {
                 Route::name('ubah-pasien')->group(function () {
@@ -342,6 +342,7 @@ Route::prefix('gawat-darurat')->group(function () {
                         Route::put('/{data}', 'update')->name('.update');
                         Route::delete('/{data}', 'destroy')->name('.destroy');
                         Route::get('/{id}/print-pdf', 'generatePDF')->name('.print-pdf');
+                        
                     });
                 });
             });
