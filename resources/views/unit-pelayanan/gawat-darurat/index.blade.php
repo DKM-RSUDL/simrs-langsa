@@ -2,12 +2,6 @@
 
 @push('css')
     <style>
-        .badge {
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-        }
-
         .badge-triage-yellow {
             background-color: #ffeb3b;
         }
@@ -230,8 +224,7 @@
                                 <th>Jaminan</th>
                                 <th>Tgl Masuk</th>
                                 <th>Dokter</th>
-                                {{-- <th>Instruksi</th> --}}
-                                {{-- <th>Del</th> --}}
+                                <th>Status Pelayanan</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -403,20 +396,21 @@
                         name: 'kd_dokter',
                         defaultContent: 'null'
                     },
-                    // {
-                    //     data: 'instruksi',
-                    //     name: 'instruksi',
-                    //     defaultContent: ''
-                    // },
-                    // {
-                    //     data: 'del',
-                    //     name: 'del',
-                    //     orderable: false,
-                    //     searchable: false,
-                    //     render: function(data, type, row) {
-                    //         return '<a href="#" class="edit btn btn-danger btn-sm"><i class="bi bi-x-circle"></i></a>';
-                    //     }
-                    // },
+                    {
+                        // data: 'status_pelayanan',
+                        // name: 'status_pelayanan',
+                        data: 'kd_dokter',
+                        name: 'kd_dokter',
+                        render: function(data, type, row) {
+                            // Assuming row.kd_pasien is the "RM" and row.reg_number is the "Reg" value
+                            let bgBadge = 'secondary';
+
+                            if (row.status_inap == 1) bgBadge = 'success';
+
+                            return `<span class="d-block badge w-auto text-bg-${bgBadge}">${row.keterangan_kunjungan ?? '-'}</span>`;
+                        },
+                        defaultContent: ''
+                    },
                 ],
                 paging: true,
                 lengthChange: true,

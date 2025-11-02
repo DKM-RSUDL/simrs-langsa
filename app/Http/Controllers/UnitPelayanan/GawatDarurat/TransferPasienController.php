@@ -13,6 +13,7 @@ use App\Models\KamarInduk;
 use App\Models\Kunjungan;
 use App\Models\Nginap;
 use App\Models\PasienInap;
+use App\Models\RmeKetStatusKunjungan;
 use App\Models\RmeSerahTerima;
 use App\Models\RujukanKunjungan;
 use App\Models\SjpKunjungan;
@@ -21,6 +22,7 @@ use App\Models\Spesialisasi;
 use App\Models\Tarif;
 use App\Models\Transaksi;
 use App\Models\Unit;
+use App\Services\BaseService;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -28,25 +30,17 @@ use Illuminate\Support\Facades\DB;
 
 class TransferPasienController extends Controller
 {
+    private $baseService;
+
     public function __construct()
     {
         $this->middleware('can:read unit-pelayanan/gawat-darurat');
+        $this->baseService = new BaseService();
     }
 
     public function index($kd_pasien, $tgl_masuk, $urut_masuk)
     {
-        $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
-            ->join('transaksi as t', function ($join) {
-                $join->on('kunjungan.kd_pasien', '=', 't.kd_pasien');
-                $join->on('kunjungan.kd_unit', '=', 't.kd_unit');
-                $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
-                $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
-            })
-            ->where('kunjungan.kd_pasien', $kd_pasien)
-            ->where('kunjungan.kd_unit', 3)
-            ->where('kunjungan.urut_masuk', $urut_masuk)
-            ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
-            ->first();
+        $dataMedis = $this->baseService->getDataMedis(3, $kd_pasien, $tgl_masuk, $urut_masuk);
 
         $spesialisasi = Spesialisasi::orderBy('spesialisasi')->get();
 
@@ -223,19 +217,7 @@ class TransferPasienController extends Controller
         DB::beginTransaction();
 
         try {
-            $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
-                ->join('transaksi as t', function ($join) {
-                    $join->on('kunjungan.kd_pasien', '=', 't.kd_pasien');
-                    $join->on('kunjungan.kd_unit', '=', 't.kd_unit');
-                    $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
-                    $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
-                })
-                ->where('kunjungan.kd_pasien', $kd_pasien)
-                ->where('kunjungan.kd_unit', 3)
-                ->where('kunjungan.urut_masuk', $urut_masuk)
-                ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
-                ->first();
-
+            $dataMedis = $this->baseService->getDataMedis(3, $kd_pasien, $tgl_masuk, $urut_masuk);
             if ($dataMedis->status_kunjungan == 1) return back()->with('error', 'Pasien sudah pernah di transfer !');
 
             $kdSpesial = $request->kd_spesial;
@@ -521,6 +503,9 @@ class TransferPasienController extends Controller
             ];
 
             AsalIGD::create($asalIGDData);
+
+            // update keterangan status kunjungan IGD
+            $this->baseService->updateKetKunjungan($dataMedis->kd_kasir, $dataMedis->no_transaksi, 'Handover Ranap', 0);
 
             DB::commit();
             return to_route('gawat-darurat.index')->with('success', 'Pasien berhasil di transfer !');

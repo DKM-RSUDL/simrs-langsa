@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Kunjungan;
 use App\Models\Nginap;
+use App\Models\RmeKetStatusKunjungan;
 use App\Models\Transaksi;
 
 class BaseService
@@ -55,5 +56,17 @@ class BaseService
             ->first();
 
         return $dataMedis;
+    }
+
+    // update status keterangan kunjungan
+    public function updateKetKunjungan($kd_kasir, $no_transaksi, $keterangan, $status)
+    {
+        RmeKetStatusKunjungan::updateOrCreate([
+            'kd_kasir'      => $kd_kasir,
+            'no_transaksi'  => $no_transaksi,
+        ], [
+            'keterangan_kunjungan'  => $keterangan,
+            'status_inap'           => $status
+        ]);
     }
 }

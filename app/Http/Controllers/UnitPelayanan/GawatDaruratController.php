@@ -12,6 +12,7 @@ use App\Models\DokterKlinik;
 use App\Models\HrdKaryawan;
 use App\Models\Kunjungan;
 use App\Models\Pasien;
+use App\Models\RmeKetStatusKunjungan;
 use App\Models\RmeSerahTerima;
 use App\Models\RujukanKunjungan;
 use App\Models\SjpKunjungan;
@@ -26,17 +27,20 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Yajra\DataTables\DataTables;
 use App\Services\AsesmenService;
+use App\Services\BaseService;
 use Barryvdh\DomPDF\Facade\Pdf;
 
 class GawatDaruratController extends Controller
 {
     protected $roleService;
     protected $asesmenService;
+    private $baseService;
 
     public function __construct()
     {
         $this->middleware('can:read unit-pelayanan/gawat-darurat');
         $this->asesmenService = new AsesmenService();
+        $this->baseService = new BaseService();
     }
 
     public function index(Request $request)
@@ -52,6 +56,10 @@ class GawatDaruratController extends Controller
                     $join->on('kunjungan.kd_unit', '=', 't.kd_unit');
                     $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
                     $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
+                })
+                ->leftJoin('rme_ket_status_kunjungan as sk', function ($q) {
+                    $q->on('t.kd_kasir', '=', 'sk.kd_kasir');
+                    $q->on('t.no_transaksi', '=', 'sk.no_transaksi');
                 })
                 ->where('kunjungan.kd_unit', 3)
                 ->where('t.Dilayani', 0)
@@ -531,8 +539,10 @@ class GawatDaruratController extends Controller
 
             SjpKunjungan::create($sjpKunjunganData);
 
-            DB::commit();
+            // update keterangan status kunjungan
+            $this->baseService->updateKetKunjungan('06', $formattedTransactionNumber, 'Aktif', 1);
 
+            DB::commit();
             return to_route('gawat-darurat.index')->with('success', 'Data triase berhasil ditambah');
         } catch (Exception $e) {
             DB::rollBack();
