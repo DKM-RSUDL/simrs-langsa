@@ -5,7 +5,7 @@
 
     // Data instruksi PPA untuk setiap CPPT (dari blade)
     const cpptInstruksiPpaData = {
-        @if(!empty($cppt))
+        @if(!empty($cppt) && empty($isEdit))
             @foreach ($cppt as $key => $value)
                             '{{ $value['urut_total'] }}': [
                 @if (!empty($value['instruksi_ppa']))
@@ -625,6 +625,7 @@
 
     function updateEditInstruksiPpaCountBadge() {
         const count = editInstruksiPpaData.length;
+        console.log("COUNT : ",count)
         const badge = $('#edit_instruksi_ppa_count_badge');
 
         badge.text(count);
@@ -658,6 +659,8 @@
                     instruksi: item.instruksi,
                     created_at: new Date().toLocaleString('id-ID')
                 });
+
+                console.log(item)
             });
         }
 
@@ -921,6 +924,9 @@
         });
     }
 
+    
+
+
     // Function terpisah untuk initial load
     function loadInitialDiagnoses() {
         showDiagnosisLoading('Menyiapkan Form CPPT', 'Memuat diagnosis terakhir...');
@@ -1042,8 +1048,9 @@
         var unitData = $this.attr('data-unit');
         var transaksiData = $this.attr('data-transaksi');
         var target = $this.attr('data-bs-target');
+        var tipe_data=  $this.attr('data-tipe-cppt');
 
-        console.log(urutTotalData)
+        
 
         tanggal = tanggalData;
         urut = urutData;
@@ -1056,162 +1063,186 @@
         );
         $this.prop('disabled', true);
 
-        let url =
+        if(tipe_data==4){
+            // Template URL dari Laravel, tapi kita sisipkan placeholder
+       let url = "{{ route('rawat-inap.cppt.get-cppt-adime', [$dataMedis->kd_unit,$dataMedis->kd_pasien,$dataMedis->tgl_masuk,$dataMedis->urut_masuk])}}";
+
+        url = url
+            .replace('TANGGAL', tanggal)
+            .replace('URUT', urut);
+
+        const queryString = new URLSearchParams({
+            urut_masuk: "{{ $dataMedis->urut_masuk }}",
+            no_transaksi: "{{ $dataMedis->no_transaksi }}",
+            tanggal: tanggal,
+            urut: urut,
+            
+        }).toString();
+
+        location.href = `${url}?${queryString}`;
+
+        }else{
+          let url =
             "{{ route('rawat-inap.cppt.get-cppt-ajax', [$dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk]) }}";
 
-        $.ajax({
-            type: "post",
-            url: url,
-            data: {
-                _token: "{{ csrf_token() }}",
-                kd_pasien: "{{ $dataMedis->kd_pasien }}",
-                no_transaksi: "{{ $dataMedis->no_transaksi }}",
-                tanggal: tanggal,
-                urut: urut,
-                kd_unit: unit
-            },
-            dataType: "json",
-            success: function (response) {
-                if (response.status == 'success') {
-                    var data = response.data;
+            $.ajax({
+                type: "post",
+                url: url,
+                data: {
+                    _token: "{{ csrf_token() }}",
+                    kd_pasien: "{{ $dataMedis->kd_pasien }}",
+                    no_transaksi: "{{ $dataMedis->no_transaksi }}",
+                    tanggal: tanggal,
+                    urut: urut,
+                    kd_unit: unit
+                },
+                dataType: "json",
+                success: function (response) {
+                    if (response.status == 'success') {
+                        var data = response.data;
 
-                    for (let key in data) {
-                        if (data.hasOwnProperty(key)) {
-                            let patient = data[key];
+                        for (let key in data) {
+                            if (data.hasOwnProperty(key)) {
+                                let patient = data[key];
 
-                            // Set key to input
-                            $(target).find('input[name="tgl_cppt"]').val(tanggalData);
-                            $(target).find('input[name="urut_cppt"]').val(urutData);
-                            $(target).find('input[name="urut_total_cppt"]').val(urutTotalData);
-                            $(target).find('input[name="unit_cppt"]').val(unitData);
-                            $(target).find('input[name="no_transaksi"]').val(transaksiData);
-                            $(target).find('#anamnesis').val(patient.anamnesis);
-                            $(target).find('#lokasi').val(patient.lokasi);
-                            $(target).find('#durasi').val(patient.durasi);
-                            $(target).find('#pemeriksaan_fisik').val(patient.pemeriksaan_fisik);
-                            $(target).find('#data_objektif').val(patient.obyektif);
-                            $(target).find('#planning').val(patient.planning);
+                                // Set key to input
+                                $(target).find('input[name="tgl_cppt"]').val(tanggalData);
+                                $(target).find('input[name="urut_cppt"]').val(urutData);
+                                $(target).find('input[name="urut_total_cppt"]').val(urutTotalData);
+                                $(target).find('input[name="unit_cppt"]').val(unitData);
+                                $(target).find('input[name="no_transaksi"]').val(transaksiData);
+                                $(target).find('#anamnesis').val(patient.anamnesis);
+                                $(target).find('#lokasi').val(patient.lokasi);
+                                $(target).find('#durasi').val(patient.durasi);
+                                $(target).find('#pemeriksaan_fisik').val(patient.pemeriksaan_fisik);
+                                $(target).find('#data_objektif').val(patient.obyektif);
+                                $(target).find('#planning').val(patient.planning);
 
-                            // skala nyeri set value
-                            var skalaNyeri = patient.skala_nyeri;
-                            var valColor = 'btn-success';
-                            let skalaLabel = 'Tidak Nyeri'
+                                // skala nyeri set value
+                                var skalaNyeri = patient.skala_nyeri;
+                                var valColor = 'btn-success';
+                                let skalaLabel = 'Tidak Nyeri'
 
-                            if (skalaNyeri > 1 && skalaNyeri <= 3) skalaLabel = "Nyeri Ringan";
-                            if (skalaNyeri > 3 && skalaNyeri <= 5) skalaLabel = "Nyeri Sedang";
-                            if (skalaNyeri > 5 && skalaNyeri <= 7) skalaLabel = "Nyeri Parah";
-                            if (skalaNyeri > 7 && skalaNyeri <= 9) skalaLabel =
-                                "Nyeri Sangat Parah";
-                            if (skalaNyeri > 9) skalaLabel = "Nyeri Terburuk";
+                                if (skalaNyeri > 1 && skalaNyeri <= 3) skalaLabel = "Nyeri Ringan";
+                                if (skalaNyeri > 3 && skalaNyeri <= 5) skalaLabel = "Nyeri Sedang";
+                                if (skalaNyeri > 5 && skalaNyeri <= 7) skalaLabel = "Nyeri Parah";
+                                if (skalaNyeri > 7 && skalaNyeri <= 9) skalaLabel =
+                                    "Nyeri Sangat Parah";
+                                if (skalaNyeri > 9) skalaLabel = "Nyeri Terburuk";
 
-                            if (skalaNyeri > 3 && skalaNyeri <= 7) valColor = 'btn-warning';
-                            if (skalaNyeri > 7 && skalaNyeri <= 10) valColor = 'btn-danger';
+                                if (skalaNyeri > 3 && skalaNyeri <= 7) valColor = 'btn-warning';
+                                if (skalaNyeri > 7 && skalaNyeri <= 10) valColor = 'btn-danger';
 
-                            $(target).find('#skalaNyeriBtn').removeClass(
-                                'btn-success btn-warning btn-danger').addClass(valColor);
-                            $(target).find('#skalaNyeriBtn').text(skalaLabel);
-                            $(target).find('#skala_nyeri').val(skalaNyeri);
+                                $(target).find('#skalaNyeriBtn').removeClass(
+                                    'btn-success btn-warning btn-danger').addClass(valColor);
+                                $(target).find('#skalaNyeriBtn').text(skalaLabel);
+                                $(target).find('#skala_nyeri').val(skalaNyeri);
 
-                            // tanda vital set value
-                            var kondisi = patient.kondisi;
-                            var konpas = kondisi.konpas;
+                                // tanda vital set value
+                                var kondisi = patient.kondisi;
+                                var konpas = kondisi.konpas;
 
-                            for (let i in konpas) {
-                                if (konpas.hasOwnProperty(i)) {
-                                    let kondisi = konpas[i];
-                                    $(target).find(`#kondisi${kondisi.id_kondisi}`).val(kondisi
-                                        .hasil);
+                                for (let i in konpas) {
+                                    if (konpas.hasOwnProperty(i)) {
+                                        let kondisi = konpas[i];
+                                        $(target).find(`#kondisi${kondisi.id_kondisi}`).val(kondisi
+                                            .hasil);
+                                    }
                                 }
-                            }
 
-                            // set pemberat value
-                            $(target).find(
-                                `#pemberat option[value="${patient?.pemberat?.id || ''}"]`)
-                                .attr('selected', 'selected');
-                            $(target).find(
-                                `#peringan option[value="${patient?.peringan?.id || ''}"]`)
-                                .attr('selected', 'selected');
-                            $(target).find(
-                                `#kualitas_nyeri option[value="${patient?.kualitas?.id || ''}"]`
-                            ).attr('selected', 'selected');
-                            $(target).find(
-                                `#frekuensi_nyeri option[value="${patient?.frekuensi?.id || ''}"]`
-                            ).attr('selected', 'selected');
-                            $(target).find(
-                                `#menjalar option[value="${patient?.menjalar?.id || ''}"]`)
-                                .attr('selected', 'selected');
-                            $(target).find(
-                                `#jenis_nyeri option[value="${patient?.jenis?.id || ''}"]`)
-                                .attr('selected', 'selected');
+                                // set pemberat value
+                                $(target).find(
+                                    `#pemberat option[value="${patient?.pemberat?.id || ''}"]`)
+                                    .attr('selected', 'selected');
+                                $(target).find(
+                                    `#peringan option[value="${patient?.peringan?.id || ''}"]`)
+                                    .attr('selected', 'selected');
+                                $(target).find(
+                                    `#kualitas_nyeri option[value="${patient?.kualitas?.id || ''}"]`
+                                ).attr('selected', 'selected');
+                                $(target).find(
+                                    `#frekuensi_nyeri option[value="${patient?.frekuensi?.id || ''}"]`
+                                ).attr('selected', 'selected');
+                                $(target).find(
+                                    `#menjalar option[value="${patient?.menjalar?.id || ''}"]`)
+                                    .attr('selected', 'selected');
+                                $(target).find(
+                                    `#jenis_nyeri option[value="${patient?.jenis?.id || ''}"]`)
+                                    .attr('selected', 'selected');
 
-                            // diagnosis set value
-                            var penyakit = patient.cppt_penyakit;
-                            var dignoseListContent = '';
+                                // diagnosis set value
+                                var penyakit = patient.cppt_penyakit;
+                                var dignoseListContent = '';
 
-                            for (let d in penyakit) {
-                                if (penyakit.hasOwnProperty(d)) {
-                                    let diag = penyakit[d];
-                                    dignoseListContent += `<div class="diag-item-wrap">
-                                                            <a href="#" class="fw-bold text-decoration-none">
-                                                                <div class="d-flex align-items-center justify-content-between">
-                                                                    <p class="m-0 p-0">${diag.nama_penyakit}</p>
-                                                                    <span class="btnListDiagnose">
-                                                                        <i class="ti-close text-danger"></i>
-                                                                    </span>
-                                                                </div>
-                                                            </a>
-                                                            <input type="hidden" name="diagnose_name[]" value="${diag.nama_penyakit}">
-                                                        </div>`;
+                                for (let d in penyakit) {
+                                    if (penyakit.hasOwnProperty(d)) {
+                                        let diag = penyakit[d];
+                                        dignoseListContent += `<div class="diag-item-wrap">
+                                                                <a href="#" class="fw-bold text-decoration-none">
+                                                                    <div class="d-flex align-items-center justify-content-between">
+                                                                        <p class="m-0 p-0">${diag.nama_penyakit}</p>
+                                                                        <span class="btnListDiagnose">
+                                                                            <i class="ti-close text-danger"></i>
+                                                                        </span>
+                                                                    </div>
+                                                                </a>
+                                                                <input type="hidden" name="diagnose_name[]" value="${diag.nama_penyakit}">
+                                                            </div>`;
+                                    }
                                 }
+
+                                $(target).find('#diagnoseList').html(dignoseListContent);
+
+                                // CRITICAL: Simpan data instruksi PPA ke GLOBAL variable yang persisten
+                                window.MASTER_EDIT_INSTRUKSI_PPA = patient.instruksi_ppa || [];
+                                // console.log('MASTER PPA DATA SAVED:', window.MASTER_EDIT_INSTRUKSI_PPA.length, 'items');
                             }
-
-                            $(target).find('#diagnoseList').html(dignoseListContent);
-
-                            // CRITICAL: Simpan data instruksi PPA ke GLOBAL variable yang persisten
-                            window.MASTER_EDIT_INSTRUKSI_PPA = patient.instruksi_ppa || [];
-                            // console.log('MASTER PPA DATA SAVED:', window.MASTER_EDIT_INSTRUKSI_PPA.length, 'items');
                         }
                     }
+
+                    // Tampilkan modal dulu
+                    $(target).modal('show');
+
+                    // CRITICAL: Tunggu modal benar-benar muncul, JANGAN reset data
+                    setTimeout(() => {
+                        try {
+                            // console.log('Initializing edit modal with PPA data...');
+
+                            // Initialize searchable select TANPA reset data
+                            initEditInstruksiPpaSearchableSelect();
+
+                            // Load data PPA dari MASTER variable
+                            if (window.MASTER_EDIT_INSTRUKSI_PPA && Array.isArray(window
+                                .MASTER_EDIT_INSTRUKSI_PPA)) {
+                                loadEditInstruksiPpaFromAjaxDataFinal(window
+                                    .MASTER_EDIT_INSTRUKSI_PPA);
+                                
+                                // console.log('PPA data loaded successfully:', editInstruksiPpaData.length, 'items');
+                            } else {
+                                // console.warn('No master PPA data found');
+                                loadEditInstruksiPpaFromAjaxDataFinal([]);
+                            }
+
+                        } catch (error) {
+                            console.error('Error initializing edit modal:', error);
+                        }
+                    }, 1200);
+
+                    // Ubah teks tombol jadi edit
+                    button.html('Edit');
+                    button.prop('disabled', false);
+                },
+                error: function (xhr, status, error) {
+                    showToast('error', 'internal server error');
+                    button.html('Edit');
+                    button.prop('disabled', false);
                 }
-
-                // Tampilkan modal dulu
-                $(target).modal('show');
-
-                // CRITICAL: Tunggu modal benar-benar muncul, JANGAN reset data
-                setTimeout(() => {
-                    try {
-                        // console.log('Initializing edit modal with PPA data...');
-
-                        // Initialize searchable select TANPA reset data
-                        initEditInstruksiPpaSearchableSelect();
-
-                        // Load data PPA dari MASTER variable
-                        if (window.MASTER_EDIT_INSTRUKSI_PPA && Array.isArray(window
-                            .MASTER_EDIT_INSTRUKSI_PPA)) {
-                            loadEditInstruksiPpaFromAjaxDataFinal(window
-                                .MASTER_EDIT_INSTRUKSI_PPA);
-                            // console.log('PPA data loaded successfully:', editInstruksiPpaData.length, 'items');
-                        } else {
-                            // console.warn('No master PPA data found');
-                            loadEditInstruksiPpaFromAjaxDataFinal([]);
-                        }
-
-                    } catch (error) {
-                        console.error('Error initializing edit modal:', error);
-                    }
-                }, 1200);
-
-                // Ubah teks tombol jadi edit
-                button.html('Edit');
-                button.prop('disabled', false);
-            },
-            error: function (xhr, status, error) {
-                showToast('error', 'internal server error');
-                button.html('Edit');
-                button.prop('disabled', false);
-            }
-        });
+                });
+        }
+        
     });
+
+    
 
     // Delete diagnosis dari list
     $(document).on('click', '.btnListDiagnose', function (e) {
@@ -1720,6 +1751,7 @@
                     instruksi: item.instruksi,
                     created_at: new Date().toLocaleString('id-ID')
                 });
+                console.log(item)
             });
         }
 
@@ -1732,8 +1764,19 @@
         window.editInstruksiPpaBackup = JSON.parse(JSON.stringify(editInstruksiPpaData));
         window.PERSISTENT_PPA_BACKUP = JSON.parse(JSON.stringify(editInstruksiPpaData));
 
-        // console.log('PPA data loaded and backed up:', editInstruksiPpaData.length, 'items');
+        // console.
+        // log('PPA data loaded and backed up:', editInstruksiPpaData.length, 'items');
     }
+
+    setTimeout(()=>{
+       const isEditAdime = "{{ !empty($isEdit) ? 1 : 0 }}"
+       if(isEditAdime==1){
+            const instruksiPpaArray = JSON.parse("{{ !empty($cppt['instruksi_ppa']) ? $cppt['instruksi_ppa'] : '' }}".replace(/&quot;/g, '"'));
+            editInstruksiPpaData = instruksiPpaArray
+            console.log(editInstruksiPpaData)
+            loadEditInstruksiPpaFromAjaxDataFinal(instruksiPpaArray)
+       }
+    },1000)
 
     function loadInstruksiPpa(urutTotal, containerId) {
         $.ajax({

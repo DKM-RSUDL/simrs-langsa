@@ -24,20 +24,20 @@ use App\Models\RMEResume;
 use App\Models\RmeResumeDtl;
 use App\Models\Transaksi;
 use App\Models\VitalSign;
+use App\Services\AsesmenService;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use App\Services\AsesmenService;
 
 class CpptController extends Controller
 {
-
     protected $asesmenService;
+
     public function __construct()
     {
-        $this->asesmenService = new AsesmenService();
+        $this->asesmenService = new AsesmenService;
         $this->middleware('can:read unit-pelayanan/rawat-inap');
     }
 
@@ -78,7 +78,7 @@ class CpptController extends Controller
             $dataMedis->pasien->umur = 'Tidak Diketahui';
         }
 
-        if (!$dataMedis) {
+        if (! $dataMedis) {
             abort(404, 'Data not found');
         }
 
@@ -124,6 +124,8 @@ class CpptController extends Controller
                 'cppt.tanggal' => $request->tanggal,
                 'cppt.urut' => $request->urut,
             ];
+
+            
 
             $getCppt = $this->buildCpptQuery($additionalWheres)->get();
             $cppt = $this->transformCpptData($getCppt, false); // includeNames = false
@@ -449,9 +451,9 @@ class CpptController extends Controller
         } elseif ($user->can('is-perawat') || $user->can('is-bidan')) {
             $tipe_cppt = 2; // perawat/bidan
         } elseif ($user->can('is-farmasi')) {
-            $$tipe_cppt = 3; // farmasi
+            $tipe_cppt = 3; // farmasi
         } elseif ($user->can('is-gizi')) {
-            $$tipe_cppt = 4; // gizi
+            $tipe_cppt = 4; // gizi
         }
 
         return $tipe_cppt;
@@ -661,6 +663,7 @@ class CpptController extends Controller
     public function store($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, Request $request)
     {
         // Validation Input
+        
         $validatorMessage = [
             'anamnesis.required' => 'Anamnesis harus di isi!',
             'skala_nyeri.min' => 'Nilai skala nyeri minimal 0!',
@@ -683,14 +686,12 @@ class CpptController extends Controller
 
         DB::beginTransaction();
 
-
         try {
             // Get kunjungan using private function
 
-
             $kunjungan = $this->getKunjungan($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
 
-            if (!$kunjungan) {
+            if (! $kunjungan) {
                 throw new Exception('Data kunjungan tidak ditemukan!');
             }
 
@@ -805,7 +806,7 @@ class CpptController extends Controller
                 ->orderBy('id_konpas', 'desc')
                 ->max('id_konpas');
 
-            $newIdKonpas = (empty($konpasMax)) ? date('Ymd', strtotime($tanggal)) . '0001' : (int) $konpasMax + 1;
+            $newIdKonpas = (empty($konpasMax)) ? date('Ymd', strtotime($tanggal)).'0001' : (int) $konpasMax + 1;
 
             $lastUrutMasukKonpas = MrKonpas::where('kd_pasien', $kunjungan->kd_pasien)
                 ->where('kd_unit', $kunjungan->kd_unit)
@@ -858,7 +859,6 @@ class CpptController extends Controller
                 $i++;
             }
 
-
             $transaksi = $this->asesmenService->getTransaksiData(
                 $request->kd_unit,
                 $request->kd_pasien,
@@ -893,7 +893,13 @@ class CpptController extends Controller
 
             DB::commit();
 
-            return back()->with('success', 'CPPT berhasil ditambah!');
+            return redirect()->route('rawat-inap.cppt.index', [
+                $kd_unit,
+                $kd_pasien,
+                $tgl_masuk,
+                $urut_masuk,
+            ])->with('success', 'Data berhasil disimpan.');
+
         } catch (Exception $e) {
             DB::rollBack();
 
@@ -904,6 +910,7 @@ class CpptController extends Controller
     public function update($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, Request $request)
     {
         // Validation Input
+
         $validatorMessage = [
             'anamnesis.required' => 'Anamnesis harus di isi!',
             'skala_nyeri.min' => 'Nilai skala nyeri minimal 0!',
@@ -917,14 +924,11 @@ class CpptController extends Controller
             'tindak_lanjut' => 'nullable',
         ], $validatorMessage);
 
-
-
         if (empty($request->diagnose_name)) {
             return back()->with('error', 'Diagnosis harus di tambah minimal 1!');
         }
 
         DB::beginTransaction();
-
 
         try {
             // Get kunjungan using private function
@@ -1040,7 +1044,12 @@ class CpptController extends Controller
 
             DB::commit();
 
-            return back()->with('success', 'CPPT berhasil diubah!');
+            return redirect()->route('rawat-inap.cppt.index', [
+                $kd_unit,
+                $kd_pasien,
+                $tgl_masuk,
+                $urut_masuk,
+            ])->with('success', 'Data berhasil Diubah.');
         } catch (Exception $e) {
             DB::rollBack();
 
@@ -1174,6 +1183,49 @@ class CpptController extends Controller
         ]);
     }
 
+    public function getCpptAdime(Request $request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
+    {
+        try {
+
+             // REFACTORED
+            $additionalWheres = [
+                't.kd_pasien' => $request->kd_pasien,
+                't.kd_unit' => $request->kd_unit,
+                't.no_transaksi' => $request->no_transaksi,
+                'cppt.tanggal' => $request->tanggal,
+                'cppt.urut' => $request->urut,
+            ];
+
+           
+            
+            $tandaVital = MrKondisiFisik::OrderBy('urut')->get();
+            $vitalSignData = $this->getVitalSignForCppt($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
+            $getCppt = $this->buildCpptQuery($additionalWheres)->get();
+            $cppt = $this->transformCpptData($getCppt, true)-> first();
+            $lastDiagnoses = $this->getLastDiagnosisByTipeCppt($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
+            $karyawan = HrdKaryawan::orderBy('kd_karyawan', 'asc')->get();
+           
+
+        
+            if (count($cppt) < 1) {
+                return redirect()->back()->with('error', 'Data CPPT tidak ditemukan!');
+            }
+
+            $dataMedis = $this->dataMedis($kd_unit, $kd_pasien, $tgl_masuk, $request->urut_masuk);
+
+            return view('unit-pelayanan.rawat-inap.pelayanan.cppt.adime.index', [
+                'cppt' => $cppt,
+                'dataMedis' => $dataMedis,
+                'vitalSignData' => $vitalSignData,
+                'tandaVital' => $tandaVital,
+                'lastDiagnoses' => $lastDiagnoses,
+                'karyawan' => $karyawan,
+                'isEdit' => true,
+            ]);
+        } catch (Exception $e) {
+            return redirect()->back()->with('error', 'Terjadi kesalahan server: '.$e->getMessage());
+        }
+    }
 
     private function buildCpptQuery($additionalWheres = [])
     {
@@ -1249,14 +1301,15 @@ class CpptController extends Controller
             ->orderBy('kf.urut');
     }
 
-
     private function transformCpptData($getCppt, $includeNames = false)
-    {
+    {   
         return $getCppt->groupBy(['urut_total'])->map(function ($item) use ($includeNames) {
             $instruksiPpa = CpptInstruksiPpa::where('urut_total_cppt', $item->first()->urut_total)
                 ->where('kd_kasir', $item->first()->kd_kasir)
                 ->where('no_transaksi', $item->first()->no_transaksi)
                 ->get();
+           
+           
 
             $transformedInstruksi = $includeNames ? $this->transformInstruksiWithNames($instruksiPpa) : $instruksiPpa;
 
