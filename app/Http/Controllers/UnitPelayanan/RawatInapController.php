@@ -15,6 +15,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\Facades\DataTables;
 use App\Services\BaseService;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class RawatInapController extends Controller
 {
@@ -331,4 +332,6 @@ class RawatInapController extends Controller
             return back()->with('error', $e->getMessage());
         }
     }
+
+   
 }

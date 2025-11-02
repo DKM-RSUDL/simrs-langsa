@@ -318,7 +318,8 @@
                                                 data-urut="{{ $value['urut'] }}"
                                                 data-unit="{{ $value['kd_unit'] }}"
                                                 data-transaksi="{{ $value['no_transaksi'] }}"
-                                                data-urut-total="{{ $value['urut_total'] }}">
+                                                data-urut-total="{{ $value['urut_total'] }}"
+                                                data-tipe-cppt="{{ $value['tipe_cppt'] }}">
                                                 <i class="bi bi-pencil-square me-1"></i> Edit
                                             </button>
                                         @endif

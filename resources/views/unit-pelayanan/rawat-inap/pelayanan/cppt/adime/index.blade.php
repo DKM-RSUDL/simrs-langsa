@@ -38,13 +38,27 @@
                 </div>
 
                 <div class="card-body">
-                    <form action="{{ route('rawat-inap.cppt.store', [
+                    @php
+                        $urlAction = !empty($isEdit)
+                            ? 'rawat-inap.cppt.update'
+                            : 'rawat-inap.cppt.store';
+                    @endphp
+
+                    <form action="{{ route($urlAction, [
         $dataMedis->kd_unit,
         $dataMedis->kd_pasien,
         date('Y-m-d', strtotime($dataMedis->tgl_masuk)),
         $dataMedis->urut_masuk
-    ]) }}" method="post" id="formAddCppt">
+    ]) }}" id="formAddCppt" method="POST">
                         @csrf
+                        @method(!empty($isEdit) ? 'PUT' : 'POST')
+                        @if (!empty($isEdit))
+                            <input type="hidden" id="tgl_cppt" name="tgl_cppt" value="{{ $cppt['tanggal'] }}">
+                            <input type="hidden" id="urut_cppt" name="urut_cppt" value="{{ $cppt['urut'] }}">
+                            <input type="hidden" id="urut_total_cppt" name="urut_total_cppt" value="{{ $cppt['urut_total'] }}">
+                            <input type="hidden" id="unit_cppt" name="unit_cppt" value="{{ $cppt['kd_unit'] }}">
+                            <input type="hidden" id="no_transaksi" name="no_transaksi" value="{{ $cppt['no_transaksi'] }}">
+                        @endif
                         <input type="hidden" name="tipe_cppt" value="4">
                         <div class="border rounded p-3 bg-light mt-4">
                             <div class="row align-items-center">
@@ -69,7 +83,8 @@
                                 <div class="mb-3">
                                     <label for="anamnesis" class="fw-bold mb-2">Asesmen</label>
                                     <textarea class="form-control @error('anamnesis') is-invalid @enderror" name="anamnesis"
-                                        id="anamnesis" rows="3" required>{{ old('anamnesis') }}</textarea>
+                                        id="anamnesis" rows="3"
+                                        required>{{ !empty($isEdit) ? $cppt['anamnesis'] : '' }}</textarea>
                                     @error('anamnesis')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
@@ -167,7 +182,7 @@
                                     <label for="pemeriksaan_fisik" class="fw-bold mb-2">Intervensi</label>
                                     <textarea class="form-control @error('pemeriksaan_fisik') is-invalid @enderror"
                                         name="pemeriksaan_fisik" id="pemeriksaan_fisik"
-                                        rows="3">{{ old('pemeriksaan_fisik') }}</textarea>
+                                        rows="3">{{ !empty($isEdit) ? $cppt['pemeriksaan_fisik'] : '' }}</textarea>
                                     @error('pemeriksaan_fisik')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
@@ -177,7 +192,7 @@
                                     <label for="data_objektif" class="fw-bold mb-2">Monitoring</label>
                                     <textarea class="form-control @error('data_objektif') is-invalid @enderror"
                                         name="data_objektif" id="data_objektif"
-                                        rows="3">{{ old('data_objektif') }}</textarea>
+                                        rows="3">{{ !empty($isEdit) ? $cppt['obyektif'] : '' }}</textarea>
                                     @error('data_objektif')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
@@ -186,7 +201,7 @@
                                 <div class="mb-3">
                                     <label for="planning" class="fw-bold mb-2">Evaluasi</label>
                                     <textarea class="form-control @error('planning') is-invalid @enderror" name="planning"
-                                        id="planning" rows="3">{{ old('planning') }}</textarea>
+                                        id="planning" rows="3">{{ !empty($isEdit) ? $cppt['planning'] : '' }}</textarea>
                                     @error('planning')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
@@ -199,7 +214,6 @@
                             <div
                                 class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
                                 <h6 class="mb-0"><i class="bi bi-clipboard-plus me-2"></i>Instruksi PPA</h6>
-                                <span class="badge bg-light text-dark" id="edit_instruksi_ppa_count_badge">0</span>
                             </div>
                             <div class="row mt-3">
                                 <div class="col-12">
@@ -208,19 +222,19 @@
                                             <!-- Form Input untuk ADD Modal (ID yang benar) -->
                                             <div class="row g-3 mb-4">
                                                 <div class="col-md-4">
-                                                    <label for="instruksi_ppa_search_input" class="form-label fw-bold">
+                                                    <label for="{{  !empty($isEdit) ? "edit_instruksi_ppa_search_input" : "instruksi_ppa_search_input" }}" class="form-label fw-bold">
                                                         <i class="bi bi-person-badge text-primary me-1"></i>Pilih PPA
                                                     </label>
                                                     <!-- Custom searchable dropdown untuk ADD -->
                                                     <div class="position-relative">
-                                                        <input type="text" id="instruksi_ppa_search_input"
+                                                        <input type="text" id="{{  !empty($isEdit) ? "edit_instruksi_ppa_search_input" : "instruksi_ppa_search_input" }}"
                                                             class="form-control" placeholder="Ketik nama ppa mencari..."
                                                             autocomplete="off">
-                                                        <input type="hidden" id="instruksi_ppa_selected_value"
+                                                        <input type="hidden" id= "{{ !empty($isEdit) ? "edit_instruksi_ppa_selected_value" : "instruksi_ppa_selected_value" }}"
                                                             name="instruksi_ppa_perawat_select">
 
                                                         <!-- Dropdown list untuk ADD -->
-                                                        <div id="instruksi_ppa_dropdown"
+                                                        <div id="{{!empty($isEdit) ? "edit_instruksi_ppa_dropdown" : "instruksi_ppa_dropdown" }}"
                                                             class="dropdown-menu w-100 shadow-lg"
                                                             style="display: none; max-height: 250px; overflow-y: auto; position: absolute; top: 100%; z-index: 1000;">
                                                             <!-- Items will be generated by JavaScript -->
@@ -232,16 +246,16 @@
                                                 </div>
 
                                                 <div class="col-md-6">
-                                                    <label for="instruksi_ppa_text_input" class="form-label fw-bold">
+                                                    <label for=" {{ !empty($isEdit) ? "edit_instruksi_ppa_text_input" : "instruksi_ppa_text_input" }}"  class="form-label fw-bold">
                                                         <i class="bi bi-card-text text-primary me-1"></i>Instruksi
                                                     </label>
-                                                    <textarea id="instruksi_ppa_text_input" class="form-control" rows="2"
+                                                    <textarea id="{{ !empty($isEdit) ? "edit_instruksi_ppa_text_input" : "instruksi_ppa_text_input" }}"  class="form-control" rows="2"
                                                         placeholder="Masukkan instruksi untuk PPA yang dipilih..."></textarea>
                                                 </div>
 
                                                 <div class="col-md-2 d-flex align-items-end">
                                                     <button type="button" class="btn btn-primary w-100"
-                                                        id="instruksi_ppa_tambah_btn">
+                                                        id={{ !empty($isEdit) ? "edit_instruksi_ppa_tambah_btn":"instruksi_ppa_tambah_btn" }}>
                                                         <i class="bi bi-plus-square me-1"></i>Tambah
                                                     </button>
                                                 </div>
@@ -255,7 +269,7 @@
                                                         <i class="bi bi-list-check me-2"></i>List Instruksi PPA
                                                     </h6>
                                                     <span class="badge bg-secondary fs-6"
-                                                        id="instruksi_ppa_count_badge">0</span>
+                                                        id="{{!empty($isEdit) ? "edit_instruksi_ppa_count_badge" : "instruksi_ppa_count_badge" }}">0</span>
                                                 </div>
 
                                                 <div class="table-responsive">
@@ -268,15 +282,46 @@
                                                                 <th width="10%" class="text-center">Aksi</th>
                                                             </tr>
                                                         </thead>
-                                                        <tbody id="instruksi_ppa_table_body">
-                                                            <tr>
-                                                                <td colspan="4" class="text-center text-muted py-5">
-                                                                    <i
-                                                                        class="bi bi-inbox display-4 d-block mb-3 opacity-50"></i>
-                                                                    <span class="fs-6">Belum ada instruksi yang
-                                                                        ditambahkan</span>
-                                                                </td>
-                                                            </tr>
+                                                        <tbody
+                                                            id="{{ !empty($isEdit) ? 'edit_instruksi_ppa_table_body' : 'instruksi_ppa_table_body' }}">
+                                                            @if(!empty($cppt['instruksi_ppa']))
+                                                                @foreach ($cppt['instruksi_ppa_nama'] as $index => $item)
+                                                                    <tr>
+                                                                        <td class="text-center fw-bold">{{ $index + 1 }}</td>
+                                                                        <td>
+                                                                            <div class="d-flex align-items-center">
+                                                                                <i class="bi bi-person-badge text-primary me-2"></i>
+                                                                                <div>
+                                                                                    <strong>{{ $item['nama_lengkap'] }}</strong><br>
+                                                                                    <small
+                                                                                        class="text-muted">{{ $item['ppa'] }}</small>
+                                                                                </div>
+                                                                            </div>
+                                                                        </td>
+                                                                        <td>
+                                                                            <div class="mb-2">{{ $item['instruksi'] }}</div>
+                                                                        </td>
+                                                                        <td class="text-center">
+                                                                            <button type="button"
+                                                                                class="btn btn-sm btn-outline-danger"
+                                                                                onclick="hapusAddInstruksiPpa({{ $item['id'] }})"
+                                                                                title="Hapus Instruksi">
+                                                                                <i class="bi bi-trash"></i>
+                                                                            </button>
+                                                                        </td>
+                                                                    </tr>
+                                                                @endforeach
+
+                                                            @else
+                                                                <tr>
+                                                                    <td colspan="4" class="text-center text-muted py-5">
+                                                                        <i
+                                                                            class="bi bi-inbox display-4 d-block mb-3 opacity-50"></i>
+                                                                        <span class="fs-6">Belum ada instruksi yang
+                                                                            ditambahkan</span>
+                                                                    </td>
+                                                                </tr>
+                                                            @endif
                                                         </tbody>
                                                     </table>
                                                 </div>
@@ -285,7 +330,16 @@
                                     </div>
 
                                     <!-- Hidden inputs untuk ADD Modal -->
-                                    <div id="instruksi_ppa_hidden_inputs"></div>
+                                    <div id="{{ !empty($isEdit) ? "edit_instruksi_ppa_hidden_inputs":"instruksi_ppa_hidden_inputs" }}">
+                                        @if(!empty($cppt['instruksi_ppa_nama']))
+                                            @foreach ($cppt['instruksi_ppa_nama'] as $item)
+                                                <input type="hidden" name="perawat_kode[]" value="{{ $item['ppa'] }}">
+                                                <input type="hidden" name="perawat_nama[]" value="{{ $item['nama_lengkap'] }}">
+                                                <input type="hidden" name="instruksi_text[]" value="{{ $item['instruksi'] }}">
+                                            @endforeach
+
+                                        @endif
+                                    </div>
                                     <input type="hidden" id="instruksi_ppa_json_input" name="instruksi" value="">
                                 </div>
                             </div>
