@@ -101,20 +101,20 @@
                             @endif
                         </td>
                         <td>
-                            <div class="d-flex">
+                            <x-table-action>
                                 <a href="{{ route('konsultasi.pdf', [$dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk, encrypt($konsul->id)]) }}"
-                                    class="btn btn-sm btn-info btn-print-konsultasi" target="_blank">
+                                    class="btn btn-sm btn-success btn-print-konsultasi" target="_blank">
                                     <i class="fas fa-print"></i>
                                 </a>
-                                <button class="btn btn-sm btn-warning btn-edit-konsultasi mx-2"
+                                <button class="btn btn-sm btn-warning btn-edit-konsultasi"
                                     data-bs-target="#editKonsulModal" data-konsul="{{ encrypt($konsul->id) }}">
                                     <i class="bi bi-pencil-square"></i>
                                 </button>
-                                <button class="btn btn-sm btn-delete-konsultasi"
+                                <button class="btn btn-sm btn-delete-konsultasi btn-danger"
                                     data-konsul="{{ encrypt($konsul->id) }}">
-                                    <i class="bi bi-x-circle-fill text-danger"></i>
+                                    <i class="bi bi-trash"></i>
                                 </button>
-                            </div>
+                            </x-table-action>
                         </td>
                     </tr>
                 @endforeach
