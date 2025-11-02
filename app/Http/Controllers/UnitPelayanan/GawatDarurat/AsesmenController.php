@@ -26,7 +26,10 @@ use App\Models\RmeResumeDtl;
 use App\Models\RmeSpri;
 use App\Models\SegalaOrder;
 use App\Models\Unit;
+use App\Services\AsesmenService;
+use App\Services\BaseService;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -36,31 +39,23 @@ use Illuminate\Support\Facades\Validator;
 class AsesmenController extends Controller
 {
     private $kdUnit;
+    private $asesmenService;
+    private $baseService;
 
     public function __construct()
     {
         $this->middleware('can:read unit-pelayanan/gawat-darurat');
         $this->kdUnit = 3; // Gawat Darurat
+        $this->asesmenService = new AsesmenService();
+        $this->baseService = new BaseService();
     }
 
-    public function index($kd_pasien, $tgl_masuk)
+    public function index($kd_pasien, $tgl_masuk, $urut_masuk)
     {
         $user = auth()->user();
 
         // Mengambil data kunjungan dan tanggal triase terkait
-        $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit', 'getVitalSign'])
-            ->join('transaksi as t', function ($join) {
-                $join->on('kunjungan.kd_pasien', '=', 't.kd_pasien');
-                $join->on('kunjungan.kd_unit', '=', 't.kd_unit');
-                $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
-                $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
-            })
-            ->leftJoin('dokter', 'kunjungan.KD_DOKTER', '=', 'dokter.KD_DOKTER')
-            ->select('kunjungan.*', 't.*', 'dokter.NAMA as nama_dokter')
-            ->where('kunjungan.kd_unit', 3)
-            ->where('kunjungan.kd_pasien', $kd_pasien)
-            ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
-            ->first();
+        $dataMedis = $this->baseService->getDataMedis($this->kdUnit, $kd_pasien, $tgl_masuk, $urut_masuk);
 
         if (!$dataMedis) {
             abort(404, 'Data not found');
@@ -82,12 +77,9 @@ class AsesmenController extends Controller
         }
 
         $dataMedis->waktu_masuk = Carbon::parse($dataMedis->TGL_MASUK . ' ' . $dataMedis->JAM_MASUK)->format('Y-m-d H:i:s');
-        $dokter = Dokter::where('status', 1)->get();
-        $triageClass = $this->getTriageClass($dataMedis->kd_triase);
-        $riwayatObat = $this->getRiwayatObat($kd_pasien);
+        $riwayatObat = $this->getRiwayatObat($dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk);
         $laborData = $this->getLabor($dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk);
-        $radiologiData = $this->getRadiologi($kd_pasien);
-        $tindakanData = $this->getTindakan($kd_pasien);
+        $radiologiData = $this->getRadiologi($dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk);
         $itemFisik = MrItemFisik::orderby('urut')->get();
         $menjalar = RmeMenjalar::all();
         $frekuensinyeri = RmeFrekuensiNyeri::all();
@@ -100,7 +92,10 @@ class AsesmenController extends Controller
         // Mengambil asesmen dengan join ke data_triase untuk mendapatkan tanggal_triase
         $asesmen = RmeAsesmen::with(['user'])
             ->leftJoin('data_triase', 'RME_ASESMEN.id', '=', 'data_triase.id_asesmen')
-            ->where('RME_ASESMEN.kd_pasien', $kd_pasien)
+            ->where('RME_ASESMEN.kd_pasien', $dataMedis->kd_pasien)
+            ->where('RME_ASESMEN.kd_unit', $this->kdUnit)
+            ->whereDate('RME_ASESMEN.tgl_masuk', $dataMedis->tgl_masuk)
+            ->where('RME_ASESMEN.urut_masuk', $dataMedis->urut_masuk)
             ->select(
                 'RME_ASESMEN.*',
                 'data_triase.tanggal_triase',
@@ -111,8 +106,6 @@ class AsesmenController extends Controller
 
         return view('unit-pelayanan.gawat-darurat.action-gawat-darurat.asesmen.index', compact(
             'dataMedis',
-            'dokter',
-            'triageClass',
             'riwayatObat',
             'laborData',
             'radiologiData',
@@ -125,25 +118,13 @@ class AsesmenController extends Controller
             'efeknyeri',
             'asesmen',
             'unitPoli',
-            'tindakanData'
         ));
     }
 
 
     public function create(Request $request, $kd_pasien, $tgl_masuk, $urut_masuk)
     {
-        $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit', 'dataTriase'])
-            ->join('transaksi as t', function ($join) {
-                $join->on('kunjungan.kd_pasien', '=', 't.kd_pasien');
-                $join->on('kunjungan.kd_unit', '=', 't.kd_unit');
-                $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
-                $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
-            })
-            ->where('kunjungan.kd_pasien', $kd_pasien)
-            ->where('kunjungan.kd_unit', $this->kdUnit)
-            ->where('kunjungan.urut_masuk', $urut_masuk)
-            ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
-            ->first();
+        $dataMedis = $this->baseService->getDataMedis($this->kdUnit, $kd_pasien, $tgl_masuk, $urut_masuk);
 
         if (!$dataMedis) {
             abort(404, 'Data not found');
@@ -166,7 +147,7 @@ class AsesmenController extends Controller
         if ($latestTriase && $latestTriase->vital_sign) {
             try {
                 $triaseVitalSign = json_decode($latestTriase->vital_sign, true);
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 $triaseVitalSign = null;
             }
         }
@@ -184,6 +165,7 @@ class AsesmenController extends Controller
         $alergiPasien = RmeAlergiPasien::where('kd_pasien', $kd_pasien)->get();
         $unitPoli = Unit::where('kd_bagian', '2')->where('aktif', 1)->get();
         $laborData = $this->getLabor($dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk);
+        $radiologiData = $this->getRadiologi($dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk);
 
         return view('unit-pelayanan.gawat-darurat.action-gawat-darurat.asesmen.create', compact(
             'dataMedis',
@@ -200,25 +182,15 @@ class AsesmenController extends Controller
             'unitPoli',
             'itemFisik',
             'triaseVitalSign',
-            'laborData'
+            'laborData',
+            'radiologiData'
         ));
     }
 
     public function edit(Request $request, $kd_pasien, $tgl_masuk, $urut_masuk, $id)
     {
         // Ambil data kunjungan
-        $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit', 'dataTriase'])
-            ->join('transaksi as t', function ($join) {
-                $join->on('kunjungan.kd_pasien', '=', 't.kd_pasien');
-                $join->on('kunjungan.kd_unit', '=', 't.kd_unit');
-                $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
-                $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
-            })
-            ->where('kunjungan.kd_pasien', $kd_pasien)
-            ->where('kunjungan.kd_unit', $this->kdUnit)
-            ->where('kunjungan.urut_masuk', $urut_masuk)
-            ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
-            ->first();
+        $dataMedis = $this->baseService->getDataMedis($this->kdUnit, $kd_pasien, $tgl_masuk, $urut_masuk);
 
         if (!$dataMedis) {
             abort(404, 'Data kunjungan tidak ditemukan');
@@ -279,6 +251,8 @@ class AsesmenController extends Controller
         $jenisnyeri = RmeJenisNyeri::all();
         $itemFisik = MrItemFisik::orderby('urut')->get();
         $unitPoli = Unit::where('kd_bagian', '2')->where('aktif', 1)->get();
+        $laborData = $this->getLabor($dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk);
+        $radiologiData = $this->getRadiologi($dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk);
 
         // Triase untuk fallback
         $latestTriase = DataTriase::where('kd_pasien_triase', $kd_pasien)
@@ -290,7 +264,7 @@ class AsesmenController extends Controller
         if ($latestTriase && $latestTriase->vital_sign) {
             try {
                 $triaseVitalSign = json_decode($latestTriase->vital_sign, true);
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 $triaseVitalSign = null;
             }
         }
@@ -317,7 +291,9 @@ class AsesmenController extends Controller
             'diagnosis',
             'alatTerpasang',
             'retriaseData',
-            'pemeriksaanFisikData'
+            'pemeriksaanFisikData',
+            'laborData',
+            'radiologiData'
         ));
     }
 
@@ -335,20 +311,7 @@ class AsesmenController extends Controller
             }
 
             // Get data medis untuk referensi
-            $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
-                ->join('transaksi as t', function ($join) {
-                    $join->on('kunjungan.kd_pasien', '=', 't.kd_pasien');
-                    $join->on('kunjungan.kd_unit', '=', 't.kd_unit');
-                    $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
-                    $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
-                })
-                ->leftJoin('dokter', 'kunjungan.KD_DOKTER', '=', 'dokter.KD_DOKTER')
-                ->select('kunjungan.*', 't.*', 'dokter.NAMA as nama_dokter')
-                ->where('kunjungan.kd_unit', 3)
-                ->where('kunjungan.kd_pasien', $kd_pasien)
-                ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
-                ->where('kunjungan.urut_masuk', $urut_masuk)
-                ->first();
+            $dataMedis = $this->baseService->getDataMedis($this->kdUnit, $kd_pasien, $tgl_masuk, $urut_masuk);
 
             if (!$dataMedis) {
                 return back()->with('error', 'Data kunjungan tidak ditemukan');
@@ -569,56 +532,77 @@ class AsesmenController extends Controller
 
             $tindakLanjutDtl->save();
 
-            // Update resume
+            // Data vital sign untuk disimpan
+            $vitalSignStore = [
+                'sistole' => $request->vital_sign['td_sistole'] ? (int)$request->vital_sign['td_sistole'] : null,
+                'diastole' => $request->vital_sign['td_diastole'] ? (int)$request->vital_sign['td_diastole'] : null,
+                'nadi' => $request->vital_sign['nadi'] ? (int)$request->vital_sign['nadi'] : null,
+                'respiration' => $request->vital_sign['respirasi'] ? (int)$request->vital_sign['respirasi'] : null,
+                'suhu' => $request->suhu ? (float)$request->suhu : null,
+                'spo2_tanpa_o2' => $request->vital_sign['spo2_tanpa_o2'] ? (int)$request->vital_sign['spo2_tanpa_o2'] : null,
+                'spo2_dengan_o2' => $request->vital_sign['spo2_dengan_o2'] ? (int)$request->vital_sign['spo2_dengan_o2'] : null,
+                'tinggi_badan' => $request->antropometri['tb'] ? (int)$request->antropometri['tb'] : null,
+                'berat_badan' => $request->antropometri['bb'] ? (int) $request->antropometri['bb'] : null,
+            ];
+
+            // Simpan vital sign menggunakan service
+            $this->asesmenService->store($vitalSignStore, $dataMedis->kd_pasien, $dataMedis->no_transaksi, $dataMedis->kd_kasir);
+
+            // create resume
             $resumeData = [
                 'anamnesis'             => $request->keluhan_utama,
                 'diagnosis'             => $request->diagnosa_data,
+
                 'tindak_lanjut_code'    => $tindakLanjutDtl->tindak_lanjut_code ?? null,
                 'tindak_lanjut_name'    => $tindakLanjutDtl->tindak_lanjut_name ?? null,
-                'tujuan_rujuk'          => $tindakLanjutDtl->tujuan_rujuk ?? null,
+                'rs_rujuk'              => $tindakLanjutDtl->tujuan_rujuk ?? null,
                 'alasan_rujuk'          => $tindakLanjutDtl->alasan_rujuk ?? null,
                 'transportasi_rujuk'    => $tindakLanjutDtl->transportasi_rujuk ?? null,
-                'tanggal_pulang'        => $tindakLanjutDtl->tanggal_pulang ?? null,
+                'tgl_pulang'            => $tindakLanjutDtl->tanggal_pulang ?? null,
                 'jam_pulang'            => $tindakLanjutDtl->jam_pulang ?? null,
                 'alasan_pulang'         => $tindakLanjutDtl->alasan_pulang ?? null,
                 'kondisi_pulang'        => $tindakLanjutDtl->kondisi_pulang ?? null,
-                'tanggal_rajal'         => $tindakLanjutDtl->tanggal_rajal ?? null,
-                'poli_unit_tujuan'      => $tindakLanjutDtl->poli_unit_tujuan ?? null,
-                'keterangan'            => $tindakLanjutDtl->keterangan ?? null,
-                'tanggal_meninggal'     => $tindakLanjutDtl->tanggal_meninggal ?? null,
+                'tgl_rajal'             => $tindakLanjutDtl->tanggal_rajal ?? null,
+                'unit_rajal'            => $tindakLanjutDtl->poli_unit_tujuan ?? null,
+                'tgl_meninggal'         => $tindakLanjutDtl->tanggal_meninggal ?? null,
                 'jam_meninggal'         => $tindakLanjutDtl->jam_meninggal ?? null,
-                'konpas'                => [
+                'tgl_meninggal_doa'     => $tindakLanjutDtl->tanggal_meninggal ?? null,
+                'jam_meninggal_doa'     => $tindakLanjutDtl->jam_meninggal ?? null,
+                'keterangan'            => $tindakLanjutDtl->keterangan ?? null,
+
+                'konpas'                =>
+                [
                     'sistole'   => [
-                        'hasil' => $vitalSignData['td_sistole'] ?? null
+                        'hasil' => $vitalSignStore['sistole'] ?? null
                     ],
                     'distole'   => [
-                        'hasil' => $vitalSignData['td_diastole'] ?? null
+                        'hasil' => $vitalSignStore['diastole'] ?? null
                     ],
                     'respiration_rate'   => [
-                        'hasil' => $vitalSignData['rr'] ?? null
+                        'hasil' => $vitalSignStore['respiration'] ?? null
                     ],
                     'suhu'   => [
-                        'hasil' => $vitalSignData['temp'] ?? null
+                        'hasil' => $vitalSignStore['suhu'] ?? null
                     ],
                     'nadi'   => [
-                        'hasil' => $vitalSignData['nadi'] ?? null
+                        'hasil' => $vitalSignStore['nadi'] ?? null
                     ],
                     'tinggi_badan'   => [
-                        'hasil' => $request->antropometri['tb'] ?? null
+                        'hasil' => $vitalSignStore['tinggi_badan'] ?? null
                     ],
                     'berat_badan'   => [
-                        'hasil' => $request->antropometri['bb'] ?? null
+                        'hasil' => $vitalSignStore['berat_badan'] ?? null
                     ]
                 ]
             ];
 
-            $this->createResume($kd_pasien, $tgl_masuk, $urut_masuk, $resumeData);
+            $this->baseService->updateResumeMedis(3, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk, $resumeData);
 
             DB::commit();
 
-            return redirect()->route('asesmen.index', [$kd_pasien, date('Y-m-d', strtotime($tgl_masuk)), $urut_masuk])
+            return to_route('asesmen.index', [$kd_pasien, date('Y-m-d', strtotime($tgl_masuk)), $urut_masuk])
                 ->with('success', 'Asesmen berhasil diperbarui');
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             DB::rollBack();
             Log::error('Error updating asesmen: ' . $e->getMessage());
             return back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage())->withInput();
@@ -641,20 +625,7 @@ class AsesmenController extends Controller
             // Cek data kunjungan
             $date = Carbon::parse($tgl_masuk)->format('Y-m-d');
 
-            $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
-                ->join('transaksi as t', function ($join) {
-                    $join->on('kunjungan.kd_pasien', '=', 't.kd_pasien');
-                    $join->on('kunjungan.kd_unit', '=', 't.kd_unit');
-                    $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
-                    $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
-                })
-                ->leftJoin('dokter', 'kunjungan.KD_DOKTER', '=', 'dokter.KD_DOKTER')
-                ->select('kunjungan.*', 't.*', 'dokter.NAMA as nama_dokter')
-                ->where('kunjungan.kd_unit', 3)
-                ->where('kunjungan.kd_pasien', $kd_pasien)
-                ->where('kunjungan.urut_masuk', $urut_masuk)
-                ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
-                ->first();
+            $dataMedis = $this->baseService->getDataMedis($this->kdUnit, $kd_pasien, $tgl_masuk, $urut_masuk);
 
             if (!$dataMedis) {
                 return response()->json([
@@ -735,12 +706,12 @@ class AsesmenController extends Controller
                         'alat_terpasang' => $alatTerpasang,
                         'show_kondisi_pasien' => $asesmen->kondisi_pasien,
                         'tindaklanjut' => $asesmen->tindaklanjut,
-                        'pemeriksaan_fisik' => $pemeriksaanFisik
+                        'pemeriksaan_fisik' => $pemeriksaanFisik,
                     ],
                     'dataMedis' => $dataMedis
                 ]
             ]);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return response()->json([
                 'status' => 'error',
                 'message' => 'Terjadi kesalahan: ' . $e->getMessage()
@@ -773,100 +744,152 @@ class AsesmenController extends Controller
         }
     }
 
-    private function getTindakan($kd_pasien)
+    private function getRiwayatObat($kd_pasien, $tgl_masuk, $urut_masuk)
     {
-        return ListTindakanPasien::with(['produk', 'ppa', 'unit'])
-            ->where('kd_pasien', $kd_pasien)
-            ->orderBy('tgl_tindakan', 'desc')
-            ->get()
-            ->map(function ($tindakan) {
-                $tanggal = Carbon::parse($tindakan->tgl_tindakan)->format('Y-m-d');
-                $jam = Carbon::parse($tindakan->jam_tindakan)->format('H:i');
-
-                return [
-                    'Tanggal-Jam' => Carbon::parse($tanggal . ' ' . $jam)->format('d M Y H:i'),
-                    'Nama Tindakan' => $tindakan->produk->deskripsi ?? 'Tidak ada deskripsi',
-                    'Dokter' => $tindakan->ppa->nama ?? 'Tidak diketahui',
-                    'Unit' => $tindakan->unit->nama_unit ?? 'Tidak diketahui',
-                    'Status' => $this->getStatusTindakan($tindakan->status),
-                    'Keterangan' => $tindakan->keterangan ?? '-',
-                    'Kesimpulan' => $tindakan->kesimpulan ?? '-'
-                ];
-            });
-    }
-
-    private function getStatusTindakan($status)
-    {
-        switch ($status) {
-            case 0:
-                return '<span class="text-warning">Menunggu</span>';
-            case 1:
-                return '<span class="text-primary">Dalam Proses</span>';
-            case 2:
-                return '<span class="text-success">Selesai</span>';
-            default:
-                return '<span class="text-secondary">Tidak Diketahui</span>';
-        }
-    }
-
-    private function getRiwayatObat($kd_pasien)
-    {
-        // Get the latest order
-        $latestOrder = DB::table('MR_RESEP')
-            ->where('KD_PASIEN', $kd_pasien)
-            ->select('TGL_ORDER')
-            ->orderBy('TGL_ORDER', 'desc')
-            ->first();
-
-        if (!$latestOrder) {
-            return collect();
-        }
-
         return DB::table('MR_RESEP')
             ->join('DOKTER', 'MR_RESEP.KD_DOKTER', '=', 'DOKTER.KD_DOKTER')
             ->leftJoin('MR_RESEPDTL', 'MR_RESEP.ID_MRRESEP', '=', 'MR_RESEPDTL.ID_MRRESEP')
             ->leftJoin('APT_OBAT', 'MR_RESEPDTL.KD_PRD', '=', 'APT_OBAT.KD_PRD')
             ->where('MR_RESEP.KD_PASIEN', $kd_pasien)
-            ->where('MR_RESEP.TGL_ORDER', $latestOrder->tgl_order)  // Changed to lowercase
+            ->whereDate('MR_RESEP.tgl_masuk', $tgl_masuk)
+            ->where('MR_RESEP.urut_masuk', $urut_masuk)
+            ->where('MR_RESEP.kd_unit', $this->kdUnit)
             ->select(
-                DB::raw('DISTINCT MR_RESEP.TGL_MASUK'),
-                'MR_RESEP.KD_DOKTER',
-                'DOKTER.NAMA as NAMA_DOKTER',
                 'MR_RESEP.TGL_ORDER',
+                'DOKTER.NAMA_LENGKAP as NAMA_DOKTER',
+                'MR_RESEP.ID_MRRESEP',
+                'MR_RESEP.STATUS',
                 'MR_RESEPDTL.CARA_PAKAI',
+                'MR_RESEPDTL.JUMLAH',
+                'MR_RESEPDTL.KET',
                 'MR_RESEPDTL.JUMLAH_TAKARAN',
                 'MR_RESEPDTL.SATUAN_TAKARAN',
                 'APT_OBAT.NAMA_OBAT'
             )
-            ->orderBy('MR_RESEP.TGL_MASUK', 'desc')
+            ->distinct()
+            ->orderBy('MR_RESEP.TGL_ORDER', 'desc')
             ->get();
+    }
+
+    protected function getLabData($kd_order, $kd_pasien, $tgl_masuk, $urut_masuk)
+    {
+        $results = DB::table('SEGALA_ORDER as so')
+            ->select([
+                'so.kd_order',
+                'so.kd_pasien',
+                'so.tgl_order',
+                'so.tgl_masuk',
+                'sod.kd_produk',
+                'p.deskripsi as nama_produk',
+                'kp.klasifikasi',
+                'lt.item_test',
+                'sod.jumlah',
+                'sod.status',
+                'lh.hasil',
+                'lh.satuan',
+                'lh.nilai_normal',
+                'lh.tgl_masuk',
+                'lh.KD_UNIT',
+                'lh.URUT_MASUK',
+                'lt.kd_test'
+            ])
+            ->join('SEGALA_ORDER_DET as sod', 'so.kd_order', '=', 'sod.kd_order')
+            ->join('PRODUK as p', 'sod.kd_produk', '=', 'p.kd_produk')
+            ->join('KLAS_PRODUK as kp', 'p.kd_klas', '=', 'kp.kd_klas')
+            ->join('LAB_HASIL as lh', function ($join) {
+                $join->on('p.kd_produk', '=', 'lh.kd_produk')
+                    ->on('so.kd_pasien', '=', 'lh.kd_pasien')
+                    ->on('so.tgl_masuk', '=', 'lh.tgl_masuk');
+            })
+            ->join('LAB_TEST as lt', function ($join) {
+                $join->on('lh.kd_lab', '=', 'lt.kd_lab')
+                    ->on('lh.kd_test', '=', 'lt.kd_test');
+            })
+            ->where([
+                'so.tgl_masuk' => $tgl_masuk,
+                'so.kd_order' => $kd_order,
+                'so.kd_pasien' => $kd_pasien,
+                'so.kd_unit' => 3,
+                'so.urut_masuk' => $urut_masuk
+            ])
+            ->orderBy('lt.kd_test')
+            ->get();
+
+        // Group results by nama_produk and include klasifikasi
+        return collect($results)->groupBy('nama_produk')->map(function ($group) {
+            $klasifikasi = $group->first()->klasifikasi;
+            return [
+                'klasifikasi' => $klasifikasi,
+                'tests' => $group->map(function ($item) {
+                    return [
+                        'item_test' => $item->item_test ?? '-',
+                        'hasil' => $item->hasil ?? '-',
+                        'satuan' => $item->satuan ?? '',
+                        'nilai_normal' => $item->nilai_normal ?? '-',
+                        'kd_test' => $item->kd_test
+                    ];
+                })
+            ];
+        });
     }
 
     private function getLabor($kd_pasien, $tgl_masuk, $urut_masuk)
     {
-        return SegalaOrder::with(['details.produk', 'dokter', 'labHasil'])
+        // Mengambil data hasil pemeriksaan laboratorium
+        $dataLabor = SegalaOrder::with(['details.produk', 'produk.labHasil'])
             ->where('kd_pasien', $kd_pasien)
             ->whereDate('tgl_masuk', $tgl_masuk)
             ->where('urut_masuk', $urut_masuk)
+            ->where('kd_unit', $this->kdUnit)
+            ->whereHas('details.produk', function ($query) {
+                $query->where('kategori', 'LB');
+            })
             ->orderBy('tgl_order', 'desc')
-            ->get()
-            ->map(function ($order) {
-                $labHasil = $order->labHasil->sortByDesc('tgl_otoritas_det')->first();
-                $namaPemeriksaan = $order->details->map(function ($detail) {
-                    return $detail->produk->deskripsi ?? '';
-                })->filter()->implode(', ');
+            ->get();
 
-                return [
-                    'Tanggal-Jam' => $order->tgl_order->format('d M Y H:i'),
-                    'Nama pemeriksaan' => $namaPemeriksaan,
-                    'Status' => $this->getStatusOrder($order->status_order),
-                    // 'Waktu Hasil' => $labHasil && $labHasil->tgl_otoritas_det ? $labHasil->tgl_otoritas_det->format('d M Y H:i') : '-',
-                    'Dokter Pengirim' => $order->dokter->nama_lengkap ?? '',
-                    'Cito/Non Cito' => $order->cyto == 1 ? 'Cyto' : 'Non-Cyto',
-                    'No Order' => (int) $order->kd_order
-                ];
-            });
+        // Transform lab results
+        $dataLabor->transform(function ($item) {
+            foreach ($item->details as $detail) {
+                $labResults = $this->getLabData(
+                    $item->kd_order,
+                    $item->kd_pasien,
+                    $item->tgl_masuk,
+                    $item->urut_masuk
+                );
+                $detail->labResults = $labResults;
+            }
+            return $item;
+        });
+
+        return $dataLabor;
     }
+
+    // private function getLabor($kd_pasien, $tgl_masuk, $urut_masuk)
+    // {
+    //     return SegalaOrder::with(['details.produk', 'dokter', 'labHasil'])
+    //         ->where('kd_pasien', $kd_pasien)
+    //         ->whereDate('tgl_masuk', $tgl_masuk)
+    //         ->where('urut_masuk', $urut_masuk)
+    //         ->where('kd_unit', $this->kdUnit)
+    //         ->orderBy('tgl_order', 'desc')
+    //         ->get()
+    //         ->map(function ($order) {
+    //             $labHasil = $order->labHasil->sortByDesc('tgl_otoritas_det')->first();
+    //             $namaPemeriksaan = $order->details->map(function ($detail) {
+    //                 return $detail->produk->deskripsi ?? '';
+    //             })->filter()->implode(', ');
+
+    //             return [
+    //                 'Tanggal-Jam' => $order->tgl_order->format('d M Y H:i'),
+    //                 'Nama pemeriksaan' => $namaPemeriksaan,
+    //                 'Status' => $this->getStatusOrder($order->status_order),
+    //                 // 'Waktu Hasil' => $labHasil && $labHasil->tgl_otoritas_det ? $labHasil->tgl_otoritas_det->format('d M Y H:i') : '-',
+    //                 'Dokter Pengirim' => $order->dokter->nama_lengkap ?? '',
+    //                 'Cito/Non Cito' => $order->cyto == 1 ? 'Cyto' : 'Non-Cyto',
+    //                 'No Order' => (int) $order->kd_order
+    //             ];
+    //         });
+    // }
 
     private function getStatusOrder($statusOrder)
     {
@@ -878,10 +901,13 @@ class AsesmenController extends Controller
         return 'Unknown';
     }
 
-    private function getRadiologi($kd_pasien)
+    private function getRadiologi($kd_pasien, $tgl_masuk, $urut_masuk)
     {
         return SegalaOrder::with(['details.produk', 'dokter'])
             ->where('kd_pasien', $kd_pasien)
+            ->whereDate('tgl_masuk', $tgl_masuk)
+            ->where('urut_masuk', $urut_masuk)
+            ->where('kd_unit', $this->kdUnit)
             ->where('kategori', 'RD')
             ->orderBy('tgl_order', 'desc')
             ->get()
@@ -912,27 +938,14 @@ class AsesmenController extends Controller
         }
     }
 
-    public function store($kd_pasien, $tgl_masuk, Request $request)
+    public function store($kd_pasien, $tgl_masuk, $urut_masuk, Request $request)
     {
         DB::beginTransaction();
 
         try {
 
             $user = auth()->user();
-            $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
-                ->join('transaksi as t', function ($join) {
-                    $join->on('kunjungan.kd_pasien', '=', 't.kd_pasien');
-                    $join->on('kunjungan.kd_unit', '=', 't.kd_unit');
-                    $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
-                    $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
-                })
-                ->leftJoin('dokter', 'kunjungan.KD_DOKTER', '=', 'dokter.KD_DOKTER')
-                ->leftJoin('data_triase', 'kunjungan.kd_pasien', '=', 'data_triase.kd_pasien_triase')
-                ->select('kunjungan.*', 't.*', 'dokter.NAMA as nama_dokter', 'data_triase.foto_pasien', 'data_triase.status', 'data_triase.usia_bulan')
-                ->where('kunjungan.kd_unit', 3)
-                ->where('kunjungan.kd_pasien', $kd_pasien)
-                ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
-                ->first();
+            $dataMedis = $this->baseService->getDataMedis($this->kdUnit, $kd_pasien, $tgl_masuk, $urut_masuk);
             if ($dataMedis->pasien && $dataMedis->pasien->tgl_lahir) {
                 $dataMedis->pasien->umur = Carbon::parse($dataMedis->pasien->tgl_lahir)->age;
             } else {
@@ -1175,164 +1188,89 @@ class AsesmenController extends Controller
                 $tindakLanjutDtl->save();
             }
 
-            // Menggunakan data vital sign yang sudah diformat
-            $vitalSign = $vitalSignData;
-            $antropometri = $request->antropometri;
-            $diagnosa = $request->diagnosa_data;
+
+
+            // Data vital sign untuk disimpan
+            $vitalSignStore = [
+                'sistole' => $request->vital_sign['td_sistole'] ? (int)$request->vital_sign['td_sistole'] : null,
+                'diastole' => $request->vital_sign['td_diastole'] ? (int)$request->vital_sign['td_diastole'] : null,
+                'nadi' => $request->vital_sign['nadi'] ? (int)$request->vital_sign['nadi'] : null,
+                'respiration' => $request->vital_sign['respirasi'] ? (int)$request->vital_sign['respirasi'] : null,
+                'suhu' => $request->suhu ? (float)$request->suhu : null,
+                'spo2_tanpa_o2' => $request->vital_sign['spo2_tanpa_o2'] ? (int)$request->vital_sign['spo2_tanpa_o2'] : null,
+                'spo2_dengan_o2' => $request->vital_sign['spo2_dengan_o2'] ? (int)$request->vital_sign['spo2_dengan_o2'] : null,
+                'tinggi_badan' => $request->antropometri['tb'] ? (int)$request->antropometri['tb'] : null,
+                'berat_badan' => $request->antropometri['bb'] ? (int) $request->antropometri['bb'] : null,
+            ];
+
+            // Simpan vital sign menggunakan service
+            $this->asesmenService->store($vitalSignStore, $dataMedis->kd_pasien, $dataMedis->no_transaksi, $dataMedis->kd_kasir);
+
+
 
             // create resume
             $resumeData = [
-                'anamnesis'             => $request->anamnesis,
-                'diagnosis'             => $diagnosa,
+                'anamnesis'             => $request->keluhan_utama,
+                'diagnosis'             => $request->diagnosa_data,
+
                 'tindak_lanjut_code'    => $tindakLanjutDtl->tindak_lanjut_code ?? null,
                 'tindak_lanjut_name'    => $tindakLanjutDtl->tindak_lanjut_name ?? null,
-                'tujuan_rujuk'          => $tindakLanjutDtl->tujuan_rujuk ?? null,
+                'rs_rujuk'              => $tindakLanjutDtl->tujuan_rujuk ?? null,
                 'alasan_rujuk'          => $tindakLanjutDtl->alasan_rujuk ?? null,
                 'transportasi_rujuk'    => $tindakLanjutDtl->transportasi_rujuk ?? null,
-                'tanggal_pulang'        => $tindakLanjutDtl->tanggal_pulang ?? null,
+                'tgl_pulang'            => $tindakLanjutDtl->tanggal_pulang ?? null,
                 'jam_pulang'            => $tindakLanjutDtl->jam_pulang ?? null,
                 'alasan_pulang'         => $tindakLanjutDtl->alasan_pulang ?? null,
                 'kondisi_pulang'        => $tindakLanjutDtl->kondisi_pulang ?? null,
-                'tanggal_rajal'         => $tindakLanjutDtl->tanggal_rajal ?? null,
-                'poli_unit_tujuan'      => $tindakLanjutDtl->poli_unit_tujuan ?? null,
-                'keterangan'            => $tindakLanjutDtl->keterangan ?? null,
-                'tanggal_meninggal'     => $tindakLanjutDtl->tanggal_meninggal ?? null,
+                'tgl_rajal'             => $tindakLanjutDtl->tanggal_rajal ?? null,
+                'unit_rajal'            => $tindakLanjutDtl->poli_unit_tujuan ?? null,
+                'tgl_meninggal'         => $tindakLanjutDtl->tanggal_meninggal ?? null,
                 'jam_meninggal'         => $tindakLanjutDtl->jam_meninggal ?? null,
-                'tanggal_meninggal'     => $tindakLanjutDtl->tanggal_meninggal ?? null,
+                'tgl_meninggal_doa'     => $tindakLanjutDtl->tanggal_meninggal ?? null,
                 'jam_meninggal_doa'     => $tindakLanjutDtl->jam_meninggal ?? null,
-                'konpas'                => [
+                'keterangan'            => $tindakLanjutDtl->keterangan ?? null,
+
+                'konpas'                =>
+                [
                     'sistole'   => [
-                        'hasil' => $vitalSign['td_sistole'] ?? null
+                        'hasil' => $vitalSignStore['sistole'] ?? null
                     ],
                     'distole'   => [
-                        'hasil' => $vitalSign['td_diastole'] ?? null
+                        'hasil' => $vitalSignStore['diastole'] ?? null
                     ],
                     'respiration_rate'   => [
-                        'hasil' => $vitalSign['rr'] ?? null
+                        'hasil' => $vitalSignStore['respiration'] ?? null
                     ],
                     'suhu'   => [
-                        'hasil' => $vitalSign['temp'] ?? null
+                        'hasil' => $vitalSignStore['suhu'] ?? null
                     ],
                     'nadi'   => [
-                        'hasil' => $vitalSign['nadi'] ?? null
+                        'hasil' => $vitalSignStore['nadi'] ?? null
                     ],
                     'tinggi_badan'   => [
-                        'hasil' => $antropometri['tb'] ?? null
+                        'hasil' => $vitalSignStore['tinggi_badan'] ?? null
                     ],
                     'berat_badan'   => [
-                        'hasil' => $antropometri['bb'] ?? null
+                        'hasil' => $vitalSignStore['berat_badan'] ?? null
                     ]
                 ]
             ];
 
-            $this->createResume($kd_pasien, $tgl_masuk, $request->urut_masuk, $resumeData);
+            $this->baseService->updateResumeMedis(3, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk, $resumeData);
 
             DB::commit();
-            return redirect()->route('asesmen.index', [$kd_pasien, date('Y-m-d', strtotime($tgl_masuk)), $request->urut_masuk])
+            return to_route('asesmen.index', [$kd_pasien, date('Y-m-d', strtotime($tgl_masuk)), $dataMedis->urut_masuk])
                 ->with('success', 'Asesmen berhasil disimpan');
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             DB::rollBack();
             return response()->json(['message' => 'Terjadi kesalahan: ' . $e->getMessage()], 500);
-        }
-    }
-
-    public function createResume($kd_pasien, $tgl_masuk, $urut_masuk, $data)
-    {
-        // get resume
-        $resume = RMEResume::where('kd_pasien', $kd_pasien)
-            ->where('kd_unit', 3)
-            ->whereDate('tgl_masuk', $tgl_masuk)
-            ->where('urut_masuk', $urut_masuk)
-            ->first();
-
-        $resumeDtlData = [
-            'tindak_lanjut_code'    => $data['tindak_lanjut_code'],
-            'tindak_lanjut_name'    => $data['tindak_lanjut_name'],
-            'rs_rujuk'              => $data['tujuan_rujuk'],
-            'alasan_rujuk'          => $data['alasan_rujuk'],
-            'transportasi_rujuk'    => $data['transportasi_rujuk'],
-            'tgl_pulang'            => $data['tanggal_pulang'],
-            'jam_pulang'            => $data['jam_pulang'],
-            'alasan_pulang'         => $data['alasan_pulang'],
-            'kondisi_pulang'        => $data['kondisi_pulang'],
-            'tgl_rajal'             => $data['tanggal_rajal'],
-            'unit_rajal'            => $data['poli_unit_tujuan'],
-            'alasan_menolak_inap'   => $data['keterangan'],
-            'tgl_meninggal'         => $data['tanggal_meninggal'],
-            'jam_meninggal'         => $data['jam_meninggal'],
-            'tgl_meninggal_doa'     => $data['tanggal_meninggal'],
-            'jam_meninggal_doa'     => $data['jam_meninggal'],
-        ];
-
-        if (empty($resume)) {
-            $resumeData = [
-                'kd_pasien'     => $kd_pasien,
-                'kd_unit'       => 3,
-                'tgl_masuk'     => $tgl_masuk,
-                'urut_masuk'    => $urut_masuk,
-                'anamnesis'     => $data['anamnesis'],
-                'konpas'        => $data['konpas'],
-                'diagnosis'     => $data['diagnosis'],
-                'status'        => 0
-            ];
-
-            $newResume = RMEResume::create($resumeData);
-            $newResume->refresh();
-
-            // create resume detail
-            $resumeDtlData['id_resume'] = $newResume->id;
-            RmeResumeDtl::create($resumeDtlData);
-        } else {
-            $resume->anamnesis = $data['anamnesis'];
-            $resume->konpas = $data['konpas'];
-            $resume->diagnosis = $data['diagnosis'];
-            $resume->save();
-
-            // get resume dtl
-            $resumeDtl = RmeResumeDtl::where('id_resume', $resume->id)->first();
-            $resumeDtlData['id_resume'] = $resume->id;
-
-            if (empty($resumeDtl)) {
-                RmeResumeDtl::create($resumeDtlData);
-            } else {
-                $resumeDtl->tindak_lanjut_code  = $data['tindak_lanjut_code'];
-                $resumeDtl->tindak_lanjut_name  = $data['tindak_lanjut_name'];
-                $resumeDtl->rs_rujuk            = $data['tujuan_rujuk'];
-                $resumeDtl->alasan_rujuk        = $data['alasan_rujuk'];
-                $resumeDtl->transportasi_rujuk  = $data['transportasi_rujuk'];
-                $resumeDtl->tgl_pulang          = $data['tanggal_pulang'];
-                $resumeDtl->jam_pulang          = $data['jam_pulang'];
-                $resumeDtl->alasan_pulang       = $data['alasan_pulang'];
-                $resumeDtl->kondisi_pulang      = $data['kondisi_pulang'];
-                $resumeDtl->tgl_rajal           = $data['tanggal_rajal'];
-                $resumeDtl->unit_rajal          = $data['poli_unit_tujuan'];
-                $resumeDtl->alasan_menolak_inap = $data['keterangan'];
-                $resumeDtl->tgl_meninggal       = $data['tanggal_meninggal'];
-                $resumeDtl->jam_meninggal       = $data['jam_meninggal'];
-                $resumeDtl->tgl_meninggal_doa   = $data['tanggal_meninggal'];
-                $resumeDtl->jam_meninggal_doa   = $data['jam_meninggal'];
-                $resumeDtl->save();
-            }
         }
     }
 
     public function print($kd_pasien, $tgl_masuk, $urut_masuk, $id)
     {
 
-        $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
-            ->join('transaksi as t', function ($join) {
-                $join->on('kunjungan.kd_pasien', '=', 't.kd_pasien');
-                $join->on('kunjungan.kd_unit', '=', 't.kd_unit');
-                $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
-                $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
-            })
-            ->leftJoin('dokter', 'kunjungan.KD_DOKTER', '=', 'dokter.KD_DOKTER')
-            ->select('kunjungan.*', 't.*', 'dokter.NAMA as nama_dokter')
-            ->where('kunjungan.kd_unit', 3)
-            ->where('kunjungan.kd_pasien', $kd_pasien)
-            ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
-            ->where('kunjungan.urut_masuk', $urut_masuk)
-            ->first();
+        $dataMedis = $this->baseService->getDataMedis($this->kdUnit, $kd_pasien, $tgl_masuk, $urut_masuk);
 
         // Ambil data asesmen
         $asesmen = RmeAsesmen::with([

@@ -660,6 +660,23 @@ class AsesmenKetDewasaRanapController extends Controller
             $asesmen->sub_kategori = 1;
             $asesmen->save();
 
+            // Data vital sign untuk disimpan
+            $vitalSignData = [
+                'sistole' => $request->sistole ? (int)$request->sistole : null,
+                'diastole' => $request->distole ? (int)$request->distole : null,
+                'nadi' => $request->nadi ? (int)$request->nadi : null,
+                'respiration' => $request->nafas ? (int)$request->nafas : null,
+                'suhu' => $request->suhu ? (float)$request->suhu : null,
+                'spo2_tanpa_o2' => $request->sao2 ? (int)$request->sao2 : null,
+                'tinggi_badan' => $request->tb ? (int)$request->tb : null,
+                'berat_badan' => $request->bb ? (int) $request->bb : null,
+            ];
+
+            $lastTransaction = $this->asesmenService->getTransaksiData($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
+
+            // Simpan vital sign menggunakan service
+            $this->asesmenService->store($vitalSignData, $kd_pasien, $lastTransaction->no_transaksi, $lastTransaction->kd_kasir);
+
             $asesmen->asesmenKetDewasaRanap()->updateOrCreate(
                 ['id_asesmen' => $asesmen->id],
                 [

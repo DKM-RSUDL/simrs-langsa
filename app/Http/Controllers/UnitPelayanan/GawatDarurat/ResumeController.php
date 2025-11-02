@@ -653,8 +653,6 @@ class ResumeController extends Controller
 
     private function getRiwayatObatHariIni($kd_pasien, $tgl_masuk, $urut_masuk)
     {
-        $today = Carbon::today()->toDateString();
-
         return DB::table('MR_RESEP')
             ->join('DOKTER', 'MR_RESEP.KD_DOKTER', '=', 'DOKTER.KD_DOKTER')
             ->leftJoin('MR_RESEPDTL', 'MR_RESEP.ID_MRRESEP', '=', 'MR_RESEPDTL.ID_MRRESEP')
@@ -664,7 +662,6 @@ class ResumeController extends Controller
             ->whereDate('MR_RESEP.tgl_masuk', $tgl_masuk)
             ->where('MR_RESEP.urut_masuk', $urut_masuk)
             ->where('MR_RESEP.kd_unit', 3)
-            // ->whereDate('MR_RESEP.TGL_ORDER', $today)
             ->select(
                 'MR_RESEP.TGL_ORDER',
                 'DOKTER.NAMA as NAMA_DOKTER',

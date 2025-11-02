@@ -417,29 +417,39 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @forelse($laborData as $data)
-                                                <tr>
-                                                    <td>{{ $data['Tanggal-Jam'] }}</td>
-                                                    <td>{{ $data['Nama pemeriksaan'] }}</td>
-                                                    <td>
-                                                        @if ($data['Status'] == 'Diorder')
-                                                            <span class="badge bg-warning text-dark">
-                                                                <i class="bi bi-clock me-1"></i>Diorder
-                                                            </span>
-                                                        @elseif($data['Status'] == 'Selesai')
-                                                            <span class="badge bg-success">
-                                                                <i class="bi bi-check-circle me-1"></i>Selesai
-                                                            </span>
-                                                        @else
-                                                            {{ $data['Status'] }}
-                                                        @endif
-                                                    </td>
-                                                </tr>
+                                            @forelse($laborData ?? [] as $order)
+                                                @foreach ($order->details as $detail)
+                                                    <tr>
+                                                        <td>
+                                                            {{ \Carbon\Carbon::parse($order->tgl_order)->format('d M Y H:i') }}
+                                                        </td>
+                                                        <td>
+                                                            {{ $detail->produk->deskripsi ?? 'Tidak ada deskripsi' }}
+                                                        </td>
+                                                        <td>
+                                                            @php
+                                                                $statusOrder = $order->status_order;
+                                                                $statusLabel = '';
+
+                                                                if ($statusOrder == 0) {
+                                                                    $statusLabel = 'Diproses';
+                                                                }
+                                                                if ($statusOrder == 1) {
+                                                                    $statusLabel = 'Diorder';
+                                                                }
+                                                                if ($statusOrder == 2) {
+                                                                    $statusLabel = 'Selesai';
+                                                                }
+                                                            @endphp
+
+                                                            {!! $statusLabel !!}
+                                                        </td>
+                                                    </tr>
+                                                @endforeach
                                             @empty
                                                 <tr>
-                                                    <td colspan="3" class="text-center py-3">
-                                                        <em>Tidak ada data laboratorium</em>
-                                                    </td>
+                                                    <td colspan="3" class="text-center text-muted">Tidak ada data
+                                                        laboratorium</td>
                                                 </tr>
                                             @endforelse
                                         </tbody>
@@ -1340,17 +1350,17 @@
                             <div class="d-flex align-items-center gap-1">
                                 <span class="badge badge-sm ${isNormal === '1' ? 'bg-success' : 'bg-danger'}">${statusText}</span>
                                 ${keterangan ? `<button class="btn btn-sm btn-link p-0 text-muted" type="button" data-bs-toggle="collapse" data-bs-target="#show_keterangan_${itemFisik.id}" title="Lihat keterangan">
-                                                            <i class="bi bi-info-circle" style="font-size: 0.875rem;"></i>
-                                                        </button>` : ''}
+                                                                <i class="bi bi-info-circle" style="font-size: 0.875rem;"></i>
+                                                            </button>` : ''}
                             </div>
                         </div>
                         ${keterangan ? `
-                                                    <div id="show_keterangan_${itemFisik.id}" class="collapse mt-1">
-                                                        <div class="alert alert-warning py-2 px-3 mb-0 small">
-                                                            <strong>Keterangan:</strong> ${keterangan}
+                                                        <div id="show_keterangan_${itemFisik.id}" class="collapse mt-1">
+                                                            <div class="alert alert-warning py-2 px-3 mb-0 small">
+                                                                <strong>Keterangan:</strong> ${keterangan}
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                                ` : ''}
+                                                    ` : ''}
                     </div>
                 `;
                 container.append(itemHtml);
