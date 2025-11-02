@@ -65,6 +65,7 @@ class AsesmenService
         try {
             $vitalSign = VitalSign::where('kd_kasir', $kd_kasir)
                 ->where('no_transaksi', $no_transaksi)
+                ->orderBy('id', 'desc')
                 ->first();
 
             return $vitalSign;

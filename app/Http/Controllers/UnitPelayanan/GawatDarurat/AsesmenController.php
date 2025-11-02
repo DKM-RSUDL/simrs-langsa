@@ -85,7 +85,7 @@ class AsesmenController extends Controller
         $dokter = Dokter::where('status', 1)->get();
         $triageClass = $this->getTriageClass($dataMedis->kd_triase);
         $riwayatObat = $this->getRiwayatObat($kd_pasien);
-        $laborData = $this->getLabor($kd_pasien);
+        $laborData = $this->getLabor($dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk);
         $radiologiData = $this->getRadiologi($kd_pasien);
         $tindakanData = $this->getTindakan($kd_pasien);
         $itemFisik = MrItemFisik::orderby('urut')->get();
@@ -183,6 +183,7 @@ class AsesmenController extends Controller
         $itemFisik = MrItemFisik::orderby('urut')->get();
         $alergiPasien = RmeAlergiPasien::where('kd_pasien', $kd_pasien)->get();
         $unitPoli = Unit::where('kd_bagian', '2')->where('aktif', 1)->get();
+        $laborData = $this->getLabor($dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk);
 
         return view('unit-pelayanan.gawat-darurat.action-gawat-darurat.asesmen.create', compact(
             'dataMedis',
@@ -198,7 +199,8 @@ class AsesmenController extends Controller
             'alergiPasien',
             'unitPoli',
             'itemFisik',
-            'triaseVitalSign'
+            'triaseVitalSign',
+            'laborData'
         ));
     }
 
@@ -840,10 +842,12 @@ class AsesmenController extends Controller
             ->get();
     }
 
-    private function getLabor($kd_pasien)
+    private function getLabor($kd_pasien, $tgl_masuk, $urut_masuk)
     {
         return SegalaOrder::with(['details.produk', 'dokter', 'labHasil'])
             ->where('kd_pasien', $kd_pasien)
+            ->whereDate('tgl_masuk', $tgl_masuk)
+            ->where('urut_masuk', $urut_masuk)
             ->orderBy('tgl_order', 'desc')
             ->get()
             ->map(function ($order) {

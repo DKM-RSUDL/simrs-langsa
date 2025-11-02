@@ -57,7 +57,7 @@ Route::prefix('gawat-darurat')->group(function () {
     Route::post('/get-triase-data', [GawatDaruratController::class, 'getTriaseData'])->name('gawat-darurat.get-triase-data');
     Route::put('/ubah-foto-triase/{kdKasir}/{noTrx}', [GawatDaruratController::class, 'updateFotoTriase'])->name('gawat-darurat.ubah-foto-triase');
     Route::get('/triase/{kd_pasien}/{tgl_masuk}/print-pdf', [GawatDaruratController::class, 'generatePDF'])
-     ->name('gawat-darurat.triase.printPDF');
+        ->name('gawat-darurat.triase.printPDF');
 
     Route::prefix('pelayanan')->group(function () {
         Route::prefix('/{kd_pasien}/{tgl_masuk}')->group(function () {
@@ -679,6 +679,8 @@ Route::prefix('gawat-darurat')->group(function () {
             Route::controller(GawatDaruratResumeController::class)->group(function () {
                 Route::name('resume')->group(function () {
                     Route::prefix('/{urut_masuk}/resume')->group(function () {
+                        Route::get('/{data}/detail', 'detail')->name('.detail');
+                        Route::put('/{data}', 'update')->name('.update');
                         Route::post('/validasi', 'validasiResume')->name('.validasi');
                         Route::get('/{data}/pdf', 'pdf')->name('.pdf');
                     });

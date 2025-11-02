@@ -189,8 +189,7 @@ class UpdatePasienController extends Controller
 
 
             DB::commit();
-
-            return redirect()->route('gawat-darurat.index')->with('success', 'Data pasien berhasil diubah ke data asli');
+            return to_route('index', [$kd_pasien_baru, $tgl_masuk])->with('success', 'Data pasien berhasil diubah ke data asli');
         } catch (Exception $e) {
             DB::rollBack();
             return back()->with('error', 'Gagal mengubah data pasien: ' . $e->getMessage());

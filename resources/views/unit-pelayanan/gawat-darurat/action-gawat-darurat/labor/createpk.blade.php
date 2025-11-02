@@ -27,7 +27,7 @@
                 <div class="modal-body">
                     <div class="row">
                         <div class="col-md-4">
-                            <div class="patient-card">
+                            <x-content-card>
                                 <label for="kd_dokter" class="form-label fw-bold h5 text-dark">Dokter Pengirim:</label>
                                 <select id="kd_dokter" name="kd_dokter" class="form-select"
                                     aria-label="Pilih dokter pengirim">
@@ -49,9 +49,9 @@
                                             required>
                                     </div>
                                 </div>
-                            </div>
+                            </x-content-card>
 
-                            <div class="patient-card mt-4">
+                            <x-content-card>
                                 <div class="row">
                                     <div class="col-6">
                                         <label class="form-label fw-bold h5 text-dark">Cito?</label>
@@ -80,9 +80,9 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            </x-content-card>
 
-                            <div class="patient-card mt-4">
+                            <x-content-card>
                                 <h6 class="fw-bold">Jadwal Pemeriksaan</h6>
                                 <p class="text-muted">
                                     Tanggal ini diisi jika pemeriksaan laboratorium dijadwalkan bukan pada hari ini.
@@ -91,18 +91,18 @@
                                     <div class="col-12">
                                         <label for="jadwal_pemeriksaan" class="form-label fw-bold h5 text-dark">Tanggal
                                             & Jam Pemeriksaan:</label>
-                                        <input type="datetime-local" id="jadwal_pemeriksaan"
-                                            name="jadwal_pemeriksaan" class="form-control">
+                                        <input type="datetime-local" id="jadwal_pemeriksaan" name="jadwal_pemeriksaan"
+                                            class="form-control">
                                     </div>
                                 </div>
-                            </div>
+                            </x-content-card>
 
-                            {{-- <div class="patient-card mt-4">
+                            {{-- <x-content-card>
                                 <h6 class="fw-bold">Catatan Klinis/Diagnosis</h6>
                                 <textarea class="form-control" id="diagnosis" name="diagnosis" readonly>{{ $diagnosisText ?: '-' }}</textarea>
-                            </div> --}}
+                            </x-content-card> --}}
 
-                            <div class="patient-card mt-4">
+                            <x-content-card>
                                 <h6 class="fw-bold">Diagnosis</h6>
                                 <div class="diagnosis-list">
                                     @if (count($diagnosisList) > 0)
@@ -121,17 +121,17 @@
 
                                 <input type="hidden" name="diagnosis"
                                     value="{{ count($diagnosisList) > 0 ? implode(', ', $diagnosisList) . ' ' : '' }}">
-                            </div>
+                            </x-content-card>
 
-                            <div class="patient-card mt-4">
+                            <x-content-card>
                                 <h6 class="fw-bold">Indikasi Klinis</h6>
                                 <textarea name="indikasi_klinis" id="indikasi_klinis" class="form-control">{{ $dataDiagnosis->anamnesis ?? '' }}</textarea>
-                            </div>
+                            </x-content-card>
 
                         </div>
 
                         {{-- <div class="col-md-4">
-                            <div class="patient-card">
+                            <x-content-card>
                                 <p class="fw-bold">Pilih Jenis Pemeriksaan</p>
                                 <select id="jenis_pemeriksaan" name="jenis_pemeriksaan" class="form-select"
                                     aria-label="Pilih jenis pemeriksaan">
@@ -150,33 +150,33 @@
                                     <ul class="dropdown-menu w-100" id="dataList" aria-labelledby="searchInput"
                                         style="display: none;"></ul>
                                 </div>
-                            </div>
+                            </x-content-card>
                         </div> --}}
-
-                        <div class="col-md-4">
-                            <div class="patient-card">
-                                <p class="fw-bold">Pilih Jenis Pemeriksaan</p>
-                                <div class="dropdown mt-3">
-                                    <input type="text" class="form-control" id="searchInput"
-                                        name="jenis_pemeriksaan" placeholder="Cari pemeriksaan..."
-                                        autocomplete="off">
-                                    <ul class="dropdown-menu w-100" id="dataList" aria-labelledby="searchInput"
-                                        style="display: none;"></ul>
-                                </div>
+                        <div class="col-md-8">
+                            <div class="col-12">
+                                <x-content-card>
+                                    <p class="fw-bold">Pilih Jenis Pemeriksaan</p>
+                                    <div class="dropdown">
+                                        <input type="text" class="form-control" id="searchInput"
+                                            name="jenis_pemeriksaan" placeholder="Cari pemeriksaan..."
+                                            autocomplete="off">
+                                        <ul class="dropdown-menu w-100" id="dataList" aria-labelledby="searchInput"
+                                            style="display: none;"></ul>
+                                    </div>
+                                </x-content-card>
                             </div>
-                        </div>
-
-                        <div class="col-md-4">
-                            <div class="patient-card">
-                                <h6 class="fw-bold">Daftar Order Pemeriksaan</h6>
-                                <ul id="orderList" class="list-group"></ul>
+                            <div class="col-12">
+                                <x-content-card>
+                                    <h6 class="fw-bold">Daftar Order Pemeriksaan</h6>
+                                    <ul id="orderList" class="list-group"></ul>
+                                </x-content-card>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
-                    <button type="submit" class="btn btn-primary">Simpan</button>
+                    <x-button-submit />
                 </div>
             </form>
         </div>
