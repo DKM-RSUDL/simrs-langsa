@@ -430,7 +430,7 @@
                             Print
                         </a>
                         <button type="button" class="btn btn-sm btn-primary" id="update">Ubah</button>
-                        <button type="button" class="btn btn-sm btn-success" id="btnValidate">Validasi</button>
+                        {{-- <button type="button" class="btn btn-sm btn-success" id="btnValidate">Validasi</button> --}}
                         <a href="{{ route('resume.index', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk))]) }}"
                             class="btn btn-sm btn-secondary">Close</a>
                     </div>
@@ -599,19 +599,6 @@
             formData.append('anamnesis', $('#anamnesis').val().trim());
             formData.append('pemeriksaan_penunjang', $('#pemeriksaan_penunjang').val().trim());
 
-            // const diagnosisArray = $('#diagnoseDisplay').children()
-            //     .map(function() {
-            //         return $(this).find('.fw-bold').text().trim();
-            //     }).get().filter(Boolean);
-            // if (diagnosisArray.length === 0) {
-            //     Swal.fire({
-            //         icon: 'error',
-            //         title: 'Error',
-            //         text: 'Minimal satu diagnosis harus diisi'
-            //     });
-            //     return;
-            // }
-            // formData.append('diagnosis', JSON.stringify(diagnosisArray));
 
             // Ambil diagnosis berdasarkan urutan saat ini dari diagnosis-list
             // Di bagian ajax untuk menyimpan ke database
@@ -623,39 +610,19 @@
                 });
                 return;
             }
-            console.log('Data diagnosis yang akan disimpan:', dataDiagnosis);
             formData.append('diagnosis', JSON.stringify(dataDiagnosis));
             // return false;
 
 
             // Get ICD-10 data
-            const icd10Array = $('#icdList').children()
-                .map(function() {
-                    return $(this).text().trim().split(' ')[0];
-                }).get().filter(Boolean);
-            // if (icd10Array.length === 0) {
-            //     Swal.fire({
-            //         icon: 'error',
-            //         title: 'Error',
-            //         text: 'Minimal satu ICD 10 harus diisi'
-            //     });
-            //     return;
-            // }
-            formData.append('icd_10', JSON.stringify(icd10Array));
+            formData.append('penyakit', JSON.stringify(penyakitList));
 
             // Get ICD-9 data
             const icd9Array = $('#icd9List').children()
                 .map(function() {
                     return $(this).text().trim().split(' ')[0];
                 }).get().filter(Boolean);
-            // if (icd9Array.length === 0) {
-            //     Swal.fire({
-            //         icon: 'error',
-            //         title: 'Error',
-            //         text: 'Minimal satu ICD 9 harus diisi'
-            //     });
-            //     return;
-            // }
+
             formData.append('icd_9', JSON.stringify(icd9Array));
 
             // Get Alergi
@@ -701,7 +668,6 @@
 
             // Ambil ID unit dari atribut data-unit-id
             const unitId = $('#selected-unit-tujuan').attr('data-unit-id') || previousUnitRujukInternal;
-            console.log('Sending unit_rujuk_internal:', unitId);
             formData.append('unit_rujuk_internal', unitId);
 
             // tindak lanjut pulang
@@ -723,6 +689,7 @@
 
             formData.append('_method', 'PUT');
 
+
             // Show konfirmasi
             Swal.fire({
                 title: 'Konfirmasi',
@@ -734,8 +701,12 @@
                 showLoaderOnConfirm: true,
                 preConfirm: () => {
                     return new Promise((resolve, reject) => {
+
+                        let urlUpdate =
+                            "{{ route('resume.update', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $dataResume->id]) }}";
+
                         $.ajax({
-                                url: `/unit-pelayanan/gawat-darurat/pelayanan/${kd_pasien}/${tgl_masuk}/resume/${resume_id}`,
+                                url: urlUpdate,
                                 type: "POST",
                                 data: formData,
                                 processData: false,

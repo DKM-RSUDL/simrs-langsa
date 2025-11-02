@@ -680,6 +680,7 @@ Route::prefix('gawat-darurat')->group(function () {
                 Route::name('resume')->group(function () {
                     Route::prefix('/{urut_masuk}/resume')->group(function () {
                         Route::get('/{data}/detail', 'detail')->name('.detail');
+                        Route::put('/{data}', 'update')->name('.update');
                         Route::post('/validasi', 'validasiResume')->name('.validasi');
                         Route::get('/{data}/pdf', 'pdf')->name('.pdf');
                     });

@@ -12,6 +12,7 @@ use App\Models\ICD9Baru;
 use App\Models\Konsultasi;
 use App\Models\Kunjungan;
 use App\Models\ListTindakanPasien;
+use App\Models\MrPenyakit;
 use App\Models\MrResep;
 use App\Models\Penyakit;
 use App\Models\RmeAsesmen;
@@ -175,7 +176,7 @@ class ResumeController extends Controller
         $kodeICD9 = ICD9Baru::all();
 
         // Mengambil data obat
-        $riwayatObatHariIni = $this->getRiwayatObatHariIni($kd_pasien, $tgl_masuk);
+        $riwayatObatHariIni = $this->getRiwayatObatHariIni($kd_pasien, $tgl_masuk, $dataMedis->urut_masuk);
 
         // unit palayanan
         $unitKonsul = Unit::where('kd_bagian', 2)
@@ -265,7 +266,7 @@ class ResumeController extends Controller
             ->get();
 
         // Mengambil data obat
-        $riwayatObatHariIni = $this->getRiwayatObatHariIni($kd_pasien, $tgl_masuk);
+        $riwayatObatHariIni = $this->getRiwayatObatHariIni($kd_pasien, $tgl_masuk, $dataMedis->urut_masuk);
 
         // get last ttv
         $vitalSign = $this->asesmenService->getVitalSignData($dataMedis->kd_kasir, $dataMedis->no_transaksi);
@@ -349,7 +350,7 @@ class ResumeController extends Controller
         }
     }
 
-    public function update(Request $request, $kd_pasien, $tgl_masuk, $id)
+    public function update(Request $request, $kd_pasien, $tgl_masuk, $urut_masuk, $id)
     {
         DB::beginTransaction();
 
@@ -359,9 +360,10 @@ class ResumeController extends Controller
                 'anamnesis' => 'required',
                 'pemeriksaan_penunjang' => 'required',
                 'diagnosis' => 'required|json',
-                'icd_10' => 'required|json',
+                // 'icd_10' => 'required|json',
+                'penyakit' => 'required|json',
                 'icd_9' => 'required|json',
-                'alergi' => 'nullable|json',
+                // 'alergi' => 'nullable|json',
 
                 // RmeResumeDtl
                 'tindak_lanjut_code' => 'required|string',
@@ -388,9 +390,14 @@ class ResumeController extends Controller
                 ], 422);
             }
 
-            $data = RMEResume::where('kd_pasien', $kd_pasien)
-                ->where('tgl_masuk', $tgl_masuk)
-                ->findOrFail($id);
+
+            // get data medis
+            $dataMedis = $this->baseService->getDataMedis(3, $kd_pasien, $tgl_masuk, $urut_masuk);
+            if (!$dataMedis) throw new Exception('Data kunjungan tidak ditemukan');
+
+            $data = RMEResume::find($id);
+
+            if (empty($data)) throw new Exception('Data resume tidak ditemukan');
 
             // newline
             $cleanArray = function ($array) {
@@ -401,21 +408,22 @@ class ResumeController extends Controller
 
             // Data baru
             $newDiagnosis = json_decode($request->diagnosis, true);
-            $newIcd10 = json_decode($request->icd_10, true);
+            // $newIcd10 = json_decode($request->icd_10, true);
             $newIcd9 = json_decode($request->icd_9, true);
             $newAlergi = json_decode($request->alergi, true);
 
             // Bersihkan data newline
             $newDiagnosis = $cleanArray($newDiagnosis);
-            $newIcd10 = $cleanArray($newIcd10);
+            // $newIcd10 = $cleanArray($newIcd10);
             $newIcd9 = $cleanArray($newIcd9);
             $newAlergi = $cleanArray($newAlergi);
+            $penyakit = json_decode($request->penyakit, true);
 
             $data->update([
                 'anamnesis' => $request->anamnesis,
                 'pemeriksaan_penunjang' => $request->pemeriksaan_penunjang,
                 'diagnosis' => $newDiagnosis,
-                'icd_10' => $newIcd10,
+                'icd_10' => $penyakit,
                 'icd_9' => $newIcd9,
                 'alergi' => $newAlergi,
                 'anjuran_diet' => $request->anjuran_diet,
@@ -451,6 +459,33 @@ class ResumeController extends Controller
                 ]
             );
 
+            // delete mr_penyakit
+            MrPenyakit::where('kd_pasien', $kd_pasien)
+                ->whereDate('tgl_masuk', $tgl_masuk)
+                ->where('urut_masuk', $urut_masuk)
+                ->where('kd_unit', 3)
+                ->delete();
+
+            // store data ke mr_penyakit
+            $urutPenyakit = 0;
+
+            foreach ($penyakit as $penyakitItem) {
+                MrPenyakit::create([
+                    'kd_penyakit' => $penyakitItem['kd_penyakit'],
+                    'kd_pasien' => $dataMedis->kd_pasien,
+                    'kd_unit' => 3,
+                    'tgl_masuk' => $dataMedis->tgl_masuk,
+                    'urut_masuk' => $dataMedis->urut_masuk,
+                    'urut' => $urutPenyakit,
+                    'stat_diag' => $penyakitItem['stat_diag'],
+                    'kasus' => $penyakitItem['kasus'],
+                    'tindakan' => 99,
+                    'perawatan' => 99,
+                ]);
+
+                $urutPenyakit++;
+            }
+
             DB::commit();
 
             return response()->json([
@@ -463,7 +498,11 @@ class ResumeController extends Controller
             ]);
         } catch (Exception $e) {
             DB::rollBack();
-            return back()->with('error', $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage(),
+                'data' => []
+            ]);
         }
     }
 
@@ -612,7 +651,7 @@ class ResumeController extends Controller
     }
 
 
-    private function getRiwayatObatHariIni($kd_pasien, $tgl_masuk)
+    private function getRiwayatObatHariIni($kd_pasien, $tgl_masuk, $urut_masuk)
     {
         $today = Carbon::today()->toDateString();
 
@@ -622,7 +661,10 @@ class ResumeController extends Controller
             ->leftJoin('APT_OBAT', 'MR_RESEPDTL.KD_PRD', '=', 'APT_OBAT.KD_PRD')
             ->leftJoin('APT_SATUAN', 'APT_OBAT.KD_SATUAN', '=', 'APT_SATUAN.KD_SATUAN')
             ->where('MR_RESEP.KD_PASIEN', $kd_pasien)
-            ->whereDate('MR_RESEP.TGL_ORDER', $today)
+            ->whereDate('MR_RESEP.tgl_masuk', $tgl_masuk)
+            ->where('MR_RESEP.urut_masuk', $urut_masuk)
+            ->where('MR_RESEP.kd_unit', 3)
+            // ->whereDate('MR_RESEP.TGL_ORDER', $today)
             ->select(
                 'MR_RESEP.TGL_ORDER',
                 'DOKTER.NAMA as NAMA_DOKTER',
