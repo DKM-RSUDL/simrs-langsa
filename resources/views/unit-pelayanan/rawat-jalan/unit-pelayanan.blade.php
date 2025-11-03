@@ -101,7 +101,8 @@
                                             height="36">
                                         <div class="text-start">
                                             <div class="small mb-1">Belum Selesai</div>
-                                            <div class="fs-4 fw-bold">{{ countUnfinishedPatientRajal($unit->kd_unit) }}</div>
+                                            <div class="fs-4 fw-bold">{{ countUnfinishedPatientRajal($unit->kd_unit) }}
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -148,7 +149,6 @@
                     <table class="table table-bordered dataTable" id="patientUnitDatatable">
                         <thead>
                             <tr>
-                                <th width="100px">No</th>
                                 <th width="100px">Aksi</th>
                                 <th>Pasien</th>
                                 <th>No RM / Reg</th>
@@ -179,13 +179,6 @@
                 serverSide: true,
                 ajax: "{{ route('rawat-jalan.unit', $unit->kd_unit) }}",
                 columns: [{
-                        data: 'antrian',
-                        name: 'no',
-                        orderable: false,
-                        searchable: false,
-                        defaultContent: ''
-                    },
-                    {
                         data: 'action',
                         name: 'action',
                         orderable: false,

@@ -149,7 +149,6 @@
                     <table class="table table-bordered dataTable" id="patientUnitDatatable">
                         <thead>
                             <tr>
-                                <th width="100px">No</th>
                                 <th width="100px">Aksi</th>
                                 <th>Pasien</th>
                                 <th>No RM / Reg</th>
@@ -191,13 +190,7 @@
                 processing: true,
                 serverSide: true,
                 ajax: "{{ route('rawat-jalan.unit.belum-selesai', $unit->kd_unit) }}",
-                columns: [{
-                        data: 'antrian',
-                        name: 'no',
-                        orderable: false,
-                        searchable: false,
-                        defaultContent: ''
-                    },
+                columns: [
                     {
                         data: 'action',
                         name: 'action',
@@ -212,49 +205,7 @@
                                     </a>
                                     <a href="${pelayananUrl + row.kd_unit + '/pelayanan/' + row.kd_pasien + '/' + row.tgl_masuk + '/' + row.urut_masuk}" class="edit btn btn-outline-primary btn-sm m-2">
                                         <i class="ti-pencil-alt"></i>
-                                    </a>
-
-                                    <div class="dropdown ms-2">
-                                        <button class="btn btn-outline-secondary btn-sm" type="button" data-bs-toggle="dropdown">
-                                            <i class="bi bi-three-dots"></i>
-                                        </button>
-
-                                        <ul class="dropdown-menu shadow-lg">
-                                            <li><a class="dropdown-item m-1" href="#">Update Informasi Pasien</a></li>
-                                            <li><a class="dropdown-item m-1" href="#">Identitas Pasien</a></li>
-                                            <li><a class="dropdown-item m-1" href="#">General Concent</a></li>
-                                            <li class="dropdown-submenu">
-                                                <a class="dropdown-item m-1 dropdown-toggle" href="#">Persetujuan</a>
-                                                <ul class="dropdown-menu shadow-lg">
-                                                    <li><a class="dropdown-item m-1" href="${pelayananUrl + row.kd_unit + '/pelayanan/' + row.kd_pasien + '/' + row.tgl_masuk + '/' + row.urut_masuk + '/anestesi-sedasi' }">Anestesi dan Sedasi</a></li>
-                                                </ul>
-                                            </li>
-                                            <li><a class="dropdown-item m-1" href="#">Edukasi dan Informasi</a></li>
-                                            <li><a class="dropdown-item m-1" href="#">Jaminan/Asuransi</a></li>
-                                            <li><a class="dropdown-item m-1" href="#">Registrasi Rawat Inap</a></li>
-                                            <li class="dropdown-submenu">
-                                                <a class="dropdown-item m-1 dropdown-toggle" href="#">Mutasi Pasien</a>
-                                                <ul class="dropdown-menu shadow-lg">
-                                                    <li><a class="dropdown-item m-1" href="#">Pindah Ruangan / Rawat Inap</a></li>
-                                                    <li><a class="dropdown-item m-1" href="#">Pulangkan (Berobat Jalan)</a></li>
-                                                    <li><a class="dropdown-item m-1" href="#">Pulangkan (APS)</a></li>
-                                                    <li><a class="dropdown-item m-1" href="${pelayananUrl + row.kd_unit + '/pelayanan/' + row.kd_pasien + '/' + row.tgl_masuk + '/' + row.urut_masuk + '/rujuk-antar-rs' }">Rujuk Keluar RS</a></li>
-                                                    <li><a class="dropdown-item m-1" href="#">Meninggal Dunia</a></li>
-                                                    <li><a class="dropdown-item m-1" href="#">Batal Berobat</a></li>
-                                                </ul>
-                                            </li>
-                                            <li class="dropdown-submenu">
-                                                <a class="dropdown-item m-1 dropdown-toggle" href="#">Surat-Surat</a>
-                                                <ul class="dropdown-menu shadow-lg">
-                                                    <li><a class="dropdown-item m-1" href="${pelayananUrl + row.kd_unit + '/pelayanan/' + row.kd_pasien + '/' + row.tgl_masuk + '/' + row.urut_masuk + '/penundaan' }">Penundaan Pelayanan</a></li>
-                                                </ul>
-                                            </li>
-                                            <li><a class="dropdown-item m-1" href="#">Billing System</a></li>
-                                            <li><a class="dropdown-item m-1" href="#">Finalisasi</a></li>
-                                            <li><a class="dropdown-item m-1" href="#">Status Pasien</a></li>
-                                            <li><a class="dropdown-item m-1" href="${pelayananUrl + row.kd_unit + '/pelayanan/' + row.kd_pasien + '/' + row.tgl_masuk + '/' + row.urut_masuk + '/permintaan-darah' }">Permintaan Darah</a></li>
-                                        </ul>
-                                    </div>`;
+                                    </a>`;
                         }
                     },
                     {
