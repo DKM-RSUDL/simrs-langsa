@@ -90,13 +90,14 @@
         </div>
 
         <div class="col-md-9">
-            <div class="text-center mt-1 mb-2">
-                <h5 class="text-secondary fw-bold">Edit Data Pengelolaan Pengawasan Darah</h5>
-            </div>
+            <x-content-card>
+                <x-button-previous />
 
-            <hr>
-
-            <div class="form-section">
+                @include('components.page-header', [
+                    'title' => 'Perbarui Data Pengelolaan Pengawasan Darah',
+                    'description' =>
+                        'Perbarui data pengelolaan pengawasan darah pasien gawat darurat dengan mengisi formulir di bawah ini.',
+                ])
                 <form
                     action="{{ route('pengawasan-darah.pengelolaan.update', [
                         'kd_pasien' => $dataMedis->kd_pasien,
@@ -337,20 +338,11 @@
                         </div>
                     </div>
 
-                    <!-- Button Actions -->
-                    <div class="row">
-                        <div class="col-12 text-end">
-                            <button type="submit" class="btn btn-primary">
-                                <i class="bi bi-save me-1"></i> Update Data Pengelolaan
-                            </button>
-                            <a href="{{ route('pengawasan-darah.index', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}?tab=pengelolaan"
-                                class="btn btn-secondary ms-2">
-                                <i class="ti-arrow-left"></i> Batal
-                            </a>
-                        </div>
+                    <div class="text-end">
+                        <x-button-submit>Perbarui</x-button-submit>
                     </div>
                 </form>
-            </div>
+            </x-content-card>
         </div>
     </div>
 @endsection
