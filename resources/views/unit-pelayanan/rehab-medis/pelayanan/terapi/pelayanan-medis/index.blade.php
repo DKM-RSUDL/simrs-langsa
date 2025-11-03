@@ -44,13 +44,15 @@
             </div>
         </div>
         <!-- Add Button -->
-        <div class="col-md-2 text-end">
-            <a href="{{ route('rehab-medis.pelayanan.terapi.create', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}"
-                class="btn btn-primary">
-                <i class="fas fa-plus"></i>
-                Tambah
-            </a>
-        </div>
+        @if (count($layanan) < 1)
+            <div class="col-md-2 text-end">
+                <a href="{{ route('rehab-medis.pelayanan.terapi.create', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}"
+                    class="btn btn-primary">
+                    <i class="fas fa-plus"></i>
+                    Tambah
+                </a>
+            </div>
+        @endif
     </div>
 
     <div class="table-responsive">
@@ -75,15 +77,15 @@
                         <td min-width="50px">
                             <x-table-action>
                                 <a href="{{ route('rehab-medis.pelayanan.terapi.print', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
-                                    class="mb-2 btn btn-sm btn-success">
+                                    class="btn btn-sm btn-success">
                                     <i class="ti-printer"></i>
                                 </a>
                                 <a href="{{ route('rehab-medis.pelayanan.terapi.show', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
-                                    class="mb-2 btn btn-sm btn-info">
+                                    class="btn btn-sm btn-info">
                                     <i class="ti-eye"></i>
                                 </a>
                                 <a href="{{ route('rehab-medis.pelayanan.terapi.edit', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
-                                    class="mb-2 btn btn-sm btn-warning">
+                                    class="btn btn-sm btn-warning">
                                     <i class="ti-pencil"></i>
                                 </a>
                                 <form

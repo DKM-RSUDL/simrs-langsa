@@ -195,19 +195,41 @@
             max-width: 300px;
         }
 
-        /* ===== Removed (UNUSED) selectors =====
-           - header .left-column / .center-column / .right-column
-           - header .header-logo
-           - header .title
-           - header .info-table / header .info-table td
-           - .logo, .title (generic), .subtitle
-           - .signature-section, .signature-box, .clear
-           - .section table.bordered ul / li
-        */
+        /* ===== Page Break ===== */
+        .page-break {
+            page-break-after: always;
+        }
+
+        /* ===== Form Pengantar Rawat Inap ===== */
+        .box-content {
+            min-height: 80px;
+            padding: 8px;
+            border: 1px solid #000;
+            margin-top: 5px;
+            background-color: #fff;
+        }
+
+        .box-content-small {
+            min-height: 60px;
+            padding: 8px;
+            border: 1px solid #000;
+            margin-top: 5px;
+            background-color: #fff;
+        }
+
+        .footer-doc {
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            font-size: 9px;
+        }
     </style>
 </head>
 
 <body>
+    <!-- ============================================ -->
+    <!-- HALAMAN 1: FORM GAWAT DARURAT MEDIS -->
+    <!-- ============================================ -->
     <header>
         <table class="header-table">
             <tr>
@@ -717,6 +739,219 @@
         </table>
     </div>
 
-</body>
+    <!-- ============================================ -->
+    <!-- HALAMAN 2: PENGANTAR RAWAT INAP -->
+    <!-- (Hanya muncul jika tindak lanjut = Rawat Inap) -->
+    <!-- ============================================ -->
+    @if ($asesmen->tindaklanjut[0] ?? false)
+        @if ($asesmen->tindaklanjut[0]['tindak_lanjut_code'] == '1')
+            <div class="page-break"></div>
 
+            @php
+                $spriData = $asesmen->tindaklanjut[0]['spri'] ?? [];
+            @endphp
+
+            <header>
+                <table class="header-table">
+                    <tr>
+                        <!-- Kolom 1: Logo + Keterangan -->
+                        <td class="td-left">
+                            <table class="brand-table">
+                                <tr>
+                                    <td class="va-middle">
+                                        <img src="{{ public_path('assets/img/Logo-RSUD-Langsa-1.png') }}"
+                                            alt="Logo RSUD Langsa" class="brand-logo">
+                                    </td>
+                                    <td class="va-middle">
+                                        <p class="brand-name">RSUD Langsa</p>
+                                        <p class="brand-info">Jl. Jend. A. Yani No.1 Kota Langsa</p>
+                                        <p class="brand-info">Telp. 0641-22051, email: rsulangsa@gmail.com</p>
+                                        <p class="brand-info">www.rsud.langsakota.go.id</p>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+
+                        <!-- Kolom 2: Title -->
+                        <td class="td-center">
+                            <p class="form-title">PENGANTAR</p>
+                            <p class="form-title">RAWAT INAP</p>
+                        </td>
+
+                        <!-- Kolom 3: Info Pasien -->
+                        <td class="td-right" style="vertical-align: top;">
+                            <table style="width: 100%; font-size: 10px;">
+                                <tr>
+                                    <td style="padding: 2px;">NO RM</td>
+                                    <td style="padding: 2px;">: {{ $asesmen->kd_pasien }}</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 2px;">Nama</td>
+                                    <td style="padding: 2px;">: {{ str()->title($asesmen->pasien->nama) }}</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 2px;">Jenis Kelamin</td>
+                                    <td style="padding: 2px;">:
+                                        @php
+                                            $gender = '-';
+                                            if ($asesmen->pasien->jenis_kelamin == 1) {
+                                                $gender = 'L';
+                                            }
+                                            if ($asesmen->pasien->jenis_kelamin == 0) {
+                                                $gender = 'P';
+                                            }
+                                            echo $gender;
+                                        @endphp
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 2px;">Tanggal Lahir</td>
+                                    <td style="padding: 2px;">:
+                                        {{ date('d/m/Y', strtotime($asesmen->pasien->tgl_lahir)) }}</td>
+                                </tr>
+                            </table>
+                            <p style="font-size: 8px; margin-top: 5px; font-style: italic;">
+                                Mohon diisi atau tempelkan stiker jika ada
+                            </p>
+                        </td>
+                    </tr>
+                </table>
+            </header>
+
+            <div style="margin-top: 10px;">
+                <table style="width: 100%;">
+                    <tr>
+                        <td style="width: 35%; vertical-align: top; padding-right: 10px;">
+                            <strong>Kepada Admision Center</strong>
+                        </td>
+                        <td style="width: 65%; vertical-align: top;">
+                            <strong>Tanggal Masuk:</strong>
+                            {{ !empty($spriData['tanggal_ranap']) ? date('d/m/Y', strtotime($spriData['tanggal_ranap'])) : date('d/m/Y') }}
+                        </td>
+                    </tr>
+                </table>
+            </div>
+
+            <!-- Keluhan Utama -->
+            <div class="section" style="margin-top: 15px;">
+                <div class="section-subtitle">Keluhan utama dari riwayat penyakit</div>
+                <div class="section-subtitle">Yang positif:</div>
+                <div class="box-content">
+                    {{ $spriData['keluhan_utama'] ?? ($asesmen->anamnesis ?? '-') }}
+                </div>
+            </div>
+
+            <!-- Pemeriksaan Fisik dan Laboratorium -->
+            <div class="section" style="margin-top: 15px;">
+                <div class="section-subtitle">Pemeriksaan fisik dan laboratorium</div>
+                <div class="section-subtitle">Yang positif:</div>
+                <div class="box-content">
+                    @php
+                        $hasilPemeriksaan = $spriData['hasil_pemeriksaan'] ?? '';
+
+                        // Tambahkan pemeriksaan fisik yang tidak normal
+                        $pemeriksaanTidakNormal = [];
+                        if (!empty($asesmen->pemeriksaanFisik)) {
+                            foreach ($asesmen->pemeriksaanFisik as $fisik) {
+                                if ((int) $fisik->is_normal !== 1) {
+                                    $pemeriksaanTidakNormal[] =
+                                        ($fisik->itemFisik->nama ?? '') . ': ' . ($fisik->keterangan ?? '');
+                                }
+                            }
+                        }
+
+                        if (!empty($pemeriksaanTidakNormal)) {
+                            if (!empty($hasilPemeriksaan)) {
+                                $hasilPemeriksaan .= "\n\nPemeriksaan Fisik:\n";
+                            } else {
+                                $hasilPemeriksaan = "Pemeriksaan Fisik:\n";
+                            }
+                            $hasilPemeriksaan .= implode("\n", $pemeriksaanTidakNormal);
+                        }
+
+                        echo !empty($hasilPemeriksaan) ? nl2br($hasilPemeriksaan) : '-';
+                    @endphp
+                </div>
+            </div>
+
+            <!-- Jalannya Penyakit -->
+            <div class="section" style="margin-top: 15px;">
+                <div class="section-subtitle">Jalannya penyakit selama perawatan</div>
+                <div class="section-subtitle">(konsultasi) pemeriksaan khusus:</div>
+                <div class="box-content">
+                    {{ $spriData['jalannya_penyakit'] ?? ($asesmen->riwayat_penyakit ?? '-') }}
+                </div>
+            </div>
+
+            <!-- Diagnosa Kerja -->
+            <div class="section" style="margin-top: 15px;">
+                <div class="section-subtitle">Diagnosa kerja (satu atau lebih):</div>
+                <div class="box-content-small">
+                    @php
+                        $diagnosis = $spriData['diagnosis'] ?? ($asesmen->diagnosis ?? []);
+
+                        if (is_string($diagnosis)) {
+                            $diagnosis = json_decode($diagnosis, true);
+                        }
+
+                        if (!empty($diagnosis) && is_array($diagnosis)) {
+                            foreach ($diagnosis as $index => $diag) {
+                                echo $index + 1 . '. ' . $diag;
+                                if ($index < count($diagnosis) - 1) {
+                                    echo '<br>';
+                                }
+                            }
+                        } else {
+                            echo '-';
+                        }
+                    @endphp
+                </div>
+            </div>
+
+            <!-- Tindakan/Therapy -->
+            <div class="section" style="margin-top: 15px;">
+                <div class="section-subtitle">Tindakan / therapy yang telah diberikan:</div>
+                <div class="box-content-small">
+                    {{ $spriData['tindakan'] ?? '-' }}
+                </div>
+            </div>
+
+            <!-- Anjuran -->
+            <div class="section" style="margin-top: 15px;">
+                <div class="section-subtitle">ANJURAN:</div>
+                <div class="box-content-small">
+                    {{ $spriData['anjuran'] ?? 'RAWAT INAP' }}
+                </div>
+            </div>
+
+            <!-- Tanda Tangan -->
+            <div class="signature-wrap" style="margin-top: 30px;">
+                <table class="signature-table">
+                    <tbody class="signature-body">
+                        <tr>
+                            <td>DOKTER,</td>
+                        </tr>
+                        <tr>
+                            <td class="signature-gap"></td>
+                        </tr>
+                        <tr>
+                            <td class="signature-gap"></td>
+                        </tr>
+                        <tr>
+                            <td style="padding-top: 5px;">
+                                {{ $asesmen->user->name ?? '_________________' }}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="font-size: 10px; padding-top: 3px; border-top: 1px solid #000;">
+                                Nama terang dan ttd
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        @endif
+    @endif
+
+</body>
 </html>

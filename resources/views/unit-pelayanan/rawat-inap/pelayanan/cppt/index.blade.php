@@ -4,7 +4,11 @@
     <link rel="stylesheet" href="{{ asset('assets/css/MedisGawatDaruratController.css') }}">
     <style>
         .patient-card .nav-link.active {
-            background-color: #0056b3;
+            background-color: #0d6efd;
+            color: #fff;
+        }
+
+        .patient-card .nav-link.active p {
             color: #fff;
         }
 
@@ -115,7 +119,7 @@
                                             class="rounded-circle" width="50" height="50">
                                         <div class="ms-3">
                                             <p class="mb-0"><strong>{{ $value['nama_penanggung'] }}</strong></p>
-                                            <small class="text-muted">{{ $value['nama_unit'] }}</small>
+                                            <small class="text-sm">{{ str()->title($value['jenis_tenaga']) }}</small>
                                         </div>
                                     </div>
                                 </button>
@@ -318,7 +322,8 @@
                                                 data-urut="{{ $value['urut'] }}"
                                                 data-unit="{{ $value['kd_unit'] }}"
                                                 data-transaksi="{{ $value['no_transaksi'] }}"
-                                                data-urut-total="{{ $value['urut_total'] }}">
+                                                data-urut-total="{{ $value['urut_total'] }}"
+                                                data-tipe-cppt="{{ $value['tipe_cppt'] }}">
                                                 <i class="bi bi-pencil-square me-1"></i> Edit
                                             </button>
                                         @endif

@@ -21,8 +21,8 @@
                                 <div class="card-header bg-light fw-bold">Informasi Pasien & Unit</div>
                                 <div class="card-body">
                                     <p>
-                                        KD Pasien: <span class="fw-bold">{{ $laborPK->kd_pasien }}</span><br>
-                                        KD Unit: <span class="fw-bold">{{ $laborPK->unit->nama_unit }}</span><br>
+                                        No RM: <span class="fw-bold">{{ $laborPK->kd_pasien }}</span><br>
+                                        Unit/Ruang: <span class="fw-bold">{{ $laborPK->unit->nama_unit }}</span><br>
                                         Tanggal Masuk: <span
                                             class="fw-bold">{{ \Carbon\Carbon::parse($laborPK->tgl_masuk)->format('d M Y') }}</span>
                                     </p>
@@ -150,22 +150,24 @@
 
             $.ajax({
                 type: "post",
-                url: "{{ url('unit-pelayanan/gawat-darurat/pelayanan/'. $dataMedis->kd_pasien . '/'. $dataMedis->tgl_masuk . '/cetak') }}",
+                url: "{{ url('unit-pelayanan/gawat-darurat/pelayanan/' . $dataMedis->kd_pasien . '/' . $dataMedis->tgl_masuk . '/cetak') }}",
                 data: {
                     _token: "{{ csrf_token() }}",
                     no_transaksi: "{{ $dataMedis->no_transaksi }}"
                 },
                 dataType: "json",
                 beforeSend: function() {
-                    $this.html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>');
+                    $this.html(
+                        '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>'
+                    );
                     $this.prop('disabled', true);
                 },
-                success: function (res) {
+                success: function(res) {
                     let status = res.status;
                     let msg = res.message;
                     let data = res.data;
 
-                    if(status == 'error') {
+                    if (status == 'error') {
                         Swal.fire({
                             title: "Error",
                             text: msg,
@@ -191,5 +193,5 @@
                 }
             });
         });
-        </script>
+    </script>
 @endpush

@@ -102,7 +102,8 @@ class AsesmenKepThtController extends Controller
         ));
     }
 
-    public function store(Request $request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk){
+    public function store(Request $request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
+    {
         DB::beginTransaction();
         try {
 
@@ -136,12 +137,12 @@ class AsesmenKepThtController extends Controller
                 'berat_badan' => $request->antropometr_berat_badan ? (int)$request->antropometr_berat_badan : null,
             ];
 
-           
 
-            $lastTransaction = $this->asesmenService->getTransaksiData($kd_unit,$kd_pasien,$tgl_masuk,$urut_masuk);
+
+            $lastTransaction = $this->asesmenService->getTransaksiData($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
 
             // Simpan vital sign menggunakan service
-            $this->asesmenService->store($vitalSignData, $kd_pasien, $lastTransaction->no_transaksi,$lastTransaction->kd_kasir);
+            $this->asesmenService->store($vitalSignData, $kd_pasien, $lastTransaction->no_transaksi, $lastTransaction->kd_kasir);
 
             $asesmenThtDataMasuk = new RmeAsesmenTht();
             $asesmenThtDataMasuk->id_asesmen = $asesmenTht->id;
@@ -845,7 +846,7 @@ class AsesmenKepThtController extends Controller
             $asesmenThtPemeriksaanFisik->antropometr_berat_badan = $request->antropometr_berat_badan;
             $asesmenThtPemeriksaanFisik->antropometri_imt = $request->antropometri_imt;
             $asesmenThtPemeriksaanFisik->antropometri_lpt = $request->antropometri_lpt;
-            
+
             // Plica vokalis
             $asesmenThtPemeriksaanFisik->plica_vokalis_bentuk_kanan = $request->plica_vokalis_bentuk_kanan;
             $asesmenThtPemeriksaanFisik->plica_vokalis_bentuk_kiri = $request->plica_vokalis_bentuk_kiri;

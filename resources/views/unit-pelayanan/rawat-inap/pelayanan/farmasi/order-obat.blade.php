@@ -88,7 +88,7 @@
                                             aria-labelledby="nonracikan-tab">
                                             <div class="mb-3">
                                                 <label for="dokterPengirim" class="form-label">Dokter Pengirim</label>
-                                                <select class="form-select" id="dokterPengirim"
+                                                <select class="form-select select2" id="dokterPengirim"
                                                     @cannot('is-admin') disabled @endcannot>
                                                     @foreach ($dokters as $dokter)
                                                         <option value="{{ $dokter->kd_dokter }}"
@@ -728,7 +728,8 @@
                         $('#dokterPengirim').prop('disabled', false);
                         selectedDokter = null;
                         $('#tambahResep').modal('hide');
-                        location.reload();
+
+                        location.href = "{{ route('rawat-inap.farmasi.index', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}";
                     },
                     error: function(xhr) {
                         $('#loadingIndicator').addClass('d-none');

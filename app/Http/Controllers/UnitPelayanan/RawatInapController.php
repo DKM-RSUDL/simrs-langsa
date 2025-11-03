@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\UnitPelayanan;
 
 use App\Http\Controllers\Controller;
+use App\Models\AsalIGD;
 use App\Models\HrdKaryawan;
 use App\Models\Kunjungan;
 use App\Models\PasienInap;
@@ -16,6 +17,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\Facades\DataTables;
 use App\Services\BaseService;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class RawatInapController extends Controller
 {
@@ -317,21 +319,17 @@ class RawatInapController extends Controller
                 ->whereDate('tgl_masuk', $tgl_masuk)
                 ->update(['status_inap' => 1]);
 
-            // create status ket
-            $dataStatus = [
-                'kd_kasir'      => $dataMedis->kd_kasir,
-                'no_transaksi'  => $dataMedis->no_transaksi,
-                'keterangan_kunjungan'    => 'Aktif',
-                'status_inap'   => 1
-            ];
 
-            RmeKetStatusKunjungan::updateOrCreate([
-                'kd_kasir'      => $dataMedis->kd_kasir,
-                'no_transaksi'  => $dataMedis->no_transaksi,
-            ], [
-                'keterangan_kunjungan'  => 'Aktif',
-                'status_inap'           => 1
-            ]);
+            // update keterangan status kunjungan ranap
+            $this->baseService->updateKetKunjungan($dataMedis->kd_kasir, $dataMedis->no_transaksi, 'Aktif', 1);
+
+            // update keterangan status kunjungan IGD
+            $asalIGD = AsalIGD::where('kd_kasir', $dataMedis->kd_kasir)
+                ->where('no_transaksi', $dataMedis->no_transaksi)
+                ->first();
+
+            if (empty($asalIGD)) throw new Exception('Data Asal IGD tidak ditemukan !');
+            $this->baseService->updateKetKunjungan($asalIGD->kd_kasir_asal, $asalIGD->no_transaksi_asal, 'Ranap', 0);
 
             DB::commit();
             return to_route('rawat-inap.unit.pending', [$serahTerima->kd_unit_tujuan])->with('success', 'Pasien berhasil di terima !');
@@ -340,4 +338,6 @@ class RawatInapController extends Controller
             return back()->with('error', $e->getMessage());
         }
     }
+
+   
 }

@@ -77,7 +77,6 @@ Route::prefix('rawat-jalan')->group(function () {
 
                     Route::controller(RawatJalanController::class)->group(function () {
                         Route::get('/', 'pelayanan');
-                        Route::get('/icare', 'icare')->name('.icare');
                     });
                 });
 

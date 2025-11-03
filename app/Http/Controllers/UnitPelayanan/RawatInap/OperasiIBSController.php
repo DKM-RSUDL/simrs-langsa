@@ -167,7 +167,7 @@ class OperasiIBSController extends Controller
                 'kd_spc' => $request->input('spesialisasi'), // User pilih manual
                 'kd_jenis_op' => $product->klas->parent, // ✅ Dari database
                 'status' => 0,
-                'kd_tindakan' => '',
+                'kd_tindakan' => $product->kd_produk,
                 'kd_produk' => $product->kd_produk, // ✅ Dari database
                 'no_transaksi' => $dataMedis->no_transaksi,
                 'kd_kasir' => $dataMedis->kd_kasir,

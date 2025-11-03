@@ -1,4 +1,4 @@
-<div class="d-flex justify-content-start align-items-center my-3">
+<div class="d-flex justify-content-start align-items-center">
     <div class="row g-3 w-100">
         <!-- Select Episode Option -->
         <div class="col-md-2">
@@ -346,7 +346,7 @@
                     </a>
                 @endif
 
-                @if ($item->kategori == 2 && $item->sub_kategori == 11)
+                @if ($item->kategori == 1 && $item->sub_kategori == 11)
                     <a href="{{ route('rawat-inap.asesmen.medis.psikiatri.show', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
                         class="btn btn-sm btn-info">
                         <i class="fas fa-eye me-1"></i> Lihat
@@ -497,7 +497,10 @@
         </li>
     @endforeach
 </ul>
-@include('unit-pelayanan.gawat-darurat.action-gawat-darurat.asesmen.show')
+
+@if (count($asesmenIGD) > 0)
+    @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.asesmen.show')
+@endif
 @include('unit-pelayanan.rawat-inap.pelayanan.asesmen.create-asesmen')
 
 @push('js')

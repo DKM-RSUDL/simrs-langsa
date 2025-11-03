@@ -43,10 +43,9 @@
 
                     <hr>
 
-                    <!-- Anamnesa & Pemeriksaan -->
                     <div class="row g-3">
                         <div class="col-md-12">
-                            <label class="fw-bold">Anamesa</label>
+                            <label class="fw-bold">Subjective</label>
                             <textarea class="form-control" style="height: 100px" disabled>{{ $layanan->subjective ?? '-' }}</textarea>
                         </div>
                         <div class="col-md-12">

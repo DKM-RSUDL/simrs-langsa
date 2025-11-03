@@ -1179,13 +1179,44 @@ class AsesmenKeperawatanController extends Controller
             $pendidikanData = cache()->remember('pendidikan', 3600, function () {
                 return Pendidikan::select('kd_pendidikan', 'pendidikan')->pluck('pendidikan', 'kd_pendidikan');
             });
+            
+            // dd([
+            //     'pasien' => optional($dataMedis)->pasien ?? null,
+            //     'dataMedis' => $dataMedis ?? null,
+            //     'asesmenKepUmum' => optional($asesmen)->asesmenKepUmum ?? null,
+            //     'asesmenBreathing' => optional($asesmen)->asesmenKepUmumBreathing ?? null,
+            //     'asesmenCirculation' => optional($asesmen)->asesmenKepUmumCirculation ?? null,
+            //     'asesmenDisability' => optional($asesmen)->asesmenKepUmumDisability ?? null,
+            //     'asesmenExposure' => optional($asesmen)->asesmenKepUmumExposure ?? null,
+            //     'asesmenSkalaNyeri' => optional($asesmen)->asesmenKepUmumSkalaNyeri ?? null,
+            //     'asesmenRisikoJatuh' => optional($asesmen)->asesmenKepUmumRisikoJatuh ?? null,
+            //     'asesmenSosialEkonomi' => optional($asesmen)->asesmenKepUmumSosialEkonomi ?? null,
+            //     'asesmenStatusGizi' => optional($asesmen)->asesmenKepUmumGizi ?? null,
+            //     'asesmenTanggal' => $asesmenTanggal ?? null,
+            //     'tglMasukFormatted' => $tglMasukFormatted ?? null,
+
+            //     // All Item with null checks
+            //     'faktorPemberatData' => $faktorPemberatData ?? null,
+            //     'kualitasNyeriData' => $kualitasNyeriData ?? null,
+            //     'menjalarData' => $menjalarData ?? null,
+            //     'faktorPeringanData' => $faktorPeringanData ?? null,
+            //     'frekuensiNyeriData' => $frekuensiNyeriData ?? null,
+            //     'jenisNyeriData' => $jenisNyeriData ?? null,
+            //     'pekerjaanData' => $pekerjaanData ?? null,
+            //     'agamaData' => $agamaData ?? null,
+            //     'pendidikanData' => $pendidikanData ?? null,
+
+            //     // tambahan sesuai kalimat “(Bila skor ≥ 2 dan/atau pasien dengan diagnosis/kondisi khusus dilaporkan ke dokter pemeriksa)”
+            //     'catatanKondisiKhusus' => '(Bila skor ≥ 2 dan/atau pasien dengan diagnosis/kondisi khusus dilaporkan ke dokter pemeriksa)',
+            // ]);
+
 
             // 4. Optimize date handling
             $asesmenTanggal = $asesmen->created_at ?? now();
             $tglMasukFormatted = $dataMedis->tgl_masuk ?? now();
 
             // Generate PDF with null checks
-            $pdf = PDF::loadView('unit-pelayanan.gawat-darurat.action-gawat-darurat.asesmen-keperawatan.print', [
+            $pdf = PDF::loadView('unit-pelayanan.gawat-darurat.action-gawat-darurat.asesmen-keperawatan.print-pdfv2', [
                 'asesmen' => $asesmen ?? null,
                 'pasien' => optional($dataMedis)->pasien ?? null,
                 'dataMedis' => $dataMedis ?? null,

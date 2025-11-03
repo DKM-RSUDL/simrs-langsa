@@ -18,13 +18,11 @@ use Yajra\DataTables\Facades\DataTables;
 class RawatJalanController extends Controller
 {
     private $baseService;
-    private $bpjsService;
 
     public function __construct()
     {
         $this->middleware('can:read unit-pelayanan/rawat-jalan');
         $this->baseService = new BaseService();
-        $this->bpjsService = new BpjsService();
     }
 
     public function index()
@@ -256,19 +254,5 @@ class RawatJalanController extends Controller
         }
 
         return view('unit-pelayanan.rawat-jalan.unit-pelayanan-selesai', compact('unit'));
-    }
-
-    public function icare($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
-    {
-        try {
-            $dataMedis = $this->baseService->getDataMedis($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
-            if (!$dataMedis) throw new Exception('Data medis tidak ditemukan.');
-
-            $icare = $this->bpjsService->icare($dataMedis->pasien->no_asuransi ?? null, $dataMedis->dokter->kd_user ?? null);
-            // dd($icare);
-
-        } catch (Exception $e) {
-            return back()->with('error', $e->getMessage());
-        }
     }
 }

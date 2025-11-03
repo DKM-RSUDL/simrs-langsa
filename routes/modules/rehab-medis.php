@@ -39,6 +39,7 @@ Route::prefix('rehab-medis')->group(function () {
                             Route::get('/create', 'create')->name('.create');
                             Route::get('/show/{data}', 'show')->name('.show');
                             Route::get('/{data}/edit', 'edit')->name('.edit');
+                            Route::get('/print/{data}', 'print')->name('.print');
                             Route::post('/', 'store')->name('.store');
                             Route::put('/{data}', 'update')->name('.update');
                             Route::delete('/', 'destroy')->name('.destroy');

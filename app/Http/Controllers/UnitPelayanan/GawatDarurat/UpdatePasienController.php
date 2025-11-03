@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\UnitPelayanan\GawatDarurat;
 
 use App\Http\Controllers\Controller;
+use App\Models\AptBarangOut;
 use App\Models\DataTriase;
 use App\Models\HrdKaryawan;
 use App\Models\Konsultasi;
@@ -10,6 +11,8 @@ use App\Models\KonsultasiIGD;
 use App\Models\Kunjungan;
 use App\Models\ListTindakanPasien;
 use App\Models\MrResep;
+use App\Models\Otoritas;
+use App\Models\OtoritasCetakan;
 use App\Models\Pasien;
 use App\Models\RmeAsesmen;
 use App\Models\RMEResume;
@@ -108,7 +111,7 @@ class UpdatePasienController extends Controller
                     'kd_pasien' => $kd_pasien_baru,
                     'urut_masuk' => $new_urut_masuk,
                     'triase_proses' => 0,
-                    
+
                 ]);
 
             // 2. Update Transaksi table
@@ -152,12 +155,41 @@ class UpdatePasienController extends Controller
                         [
                             'kd_pasien' => $kd_pasien_baru,
                             'urut_masuk' => $new_urut_masuk,
-                        ]);
+                        ]
+                    );
             }
 
-            DB::commit();
+            // Update Pendukung
+            Kunjungan::where('kd_pasien', $kd_pasien_lama)
+                ->update([
+                    'kd_pasien' => $kd_pasien_baru,
+                ]);
 
-            return redirect()->route('gawat-darurat.index')->with('success', 'Data pasien berhasil diubah ke data asli');
+
+            Transaksi::where('kd_pasien', $kd_pasien_lama)
+                ->update([
+                    'kd_pasien' => $kd_pasien_baru,
+                ]);
+
+
+            Otoritas::where('kd_pasien', $kd_pasien_lama)
+                ->update([
+                    'kd_pasien' => $kd_pasien_baru,
+                ]);
+
+            OtoritasCetakan::where('kd_pasien', $kd_pasien_lama)
+                ->update([
+                    'kd_pasien' => $kd_pasien_baru,
+                ]);
+
+            AptBarangOut::where('kd_pasienapt', $kd_pasien_lama)
+                ->update([
+                    'kd_pasienapt' => $kd_pasien_baru,
+                ]);
+
+
+            DB::commit();
+            return to_route('index', [$kd_pasien_baru, $tgl_masuk])->with('success', 'Data pasien berhasil diubah ke data asli');
         } catch (Exception $e) {
             DB::rollBack();
             return back()->with('error', 'Gagal mengubah data pasien: ' . $e->getMessage());

@@ -141,7 +141,6 @@
 
 
 @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.asesmen.show')
-{{-- @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.asesmen-keperawatan.show') --}}
 
 @push('css')
     <style>
