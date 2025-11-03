@@ -139,9 +139,65 @@
                             class="list-group-item list-group-item-action">
                             Triase
                         </a>
+                        <a href="#" class="list-group-item list-group-item-action btn-print-labor">
+                            <i class="fas fa-print"></i> Laboratorium
+                        </a>
                     </div>
                 </div>
             </div>
         </div>
     @endif
 </div>
+
+@push('js')
+    <script>
+        $('.btn-print-labor').click(function() {
+            let $this = $(this);
+
+            $.ajax({
+                type: "post",
+                url: "{{ url('unit-pelayanan/gawat-darurat/pelayanan/' . $dataMedis->kd_pasien . '/' . $dataMedis->tgl_masuk . '/cetak') }}",
+                data: {
+                    _token: "{{ csrf_token() }}",
+                    no_transaksi: "{{ $dataMedis->no_transaksi }}"
+                },
+                dataType: "json",
+                beforeSend: function() {
+                    $this.html(
+                        '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading...'
+                    );
+                    $this.prop('disabled', true);
+                },
+                success: function(res) {
+                    let status = res.status;
+                    let msg = res.message;
+                    let data = res.data;
+
+                    if (status == 'error') {
+                        Swal.fire({
+                            title: "Error",
+                            text: msg,
+                            icon: "error",
+                        });
+
+                        return false;
+                    }
+
+                    window.open(data.file_url, '_blank');
+
+                },
+                complete: function() {
+                    $this.html('<i class="fas fa-print"></i> Laboratorium');
+                    $this.prop('disabled', false);
+                },
+                error: function() {
+                    Swal.fire({
+                        title: "Error",
+                        text: "Internal server error !",
+                        icon: "error",
+                    });
+                }
+            });
+        });
+    </script>
+@endpush
