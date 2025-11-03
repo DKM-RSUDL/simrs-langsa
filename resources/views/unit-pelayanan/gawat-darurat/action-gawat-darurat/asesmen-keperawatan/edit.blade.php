@@ -16,6 +16,7 @@
             <form id="asesmenForm" method="POST" action="{{ route('asesmen-keperawatan.update', [
         'kd_pasien' => $dataMedis->kd_pasien,
         'tgl_masuk' => \Carbon\Carbon::parse($dataMedis->tgl_masuk)->format('Y-m-d'),
+        'urut_masuk' => $dataMedis->urut_masuk,
         'id' => $asesmen->id
     ]) }}">
                 @csrf

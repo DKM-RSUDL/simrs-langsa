@@ -29,6 +29,8 @@ use App\Models\RmeFrekuensiNyeri;
 use App\Models\RmeJenisNyeri;
 use App\Models\RmeKualitasNyeri;
 use App\Models\RmeMenjalar;
+use App\Services\AsesmenService;
+use App\Services\BaseService;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
@@ -41,29 +43,24 @@ use Exception;
 
 class AsesmenKeperawatanController extends Controller
 {
+    private $baseService;
+    private $asesmenService;
+    private $kdUnit;
+
     public function __construct()
     {
         $this->middleware('can:read unit-pelayanan/gawat-darurat');
+        $this->baseService = new BaseService();
+        $this->asesmenService = new AsesmenService();
+        $this->kdUnit = 3; // Gawat Darurat
     }
 
-    public function index($kd_pasien, $tgl_masuk)
+    public function index($kd_pasien, $tgl_masuk, $urut_masuk)
     {
         $user = auth()->user();
 
-        // Mengambil data kunjungan dan tanggal triase terkait
-        $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
-            ->join('transaksi as t', function ($join) {
-                $join->on('kunjungan.kd_pasien', '=', 't.kd_pasien');
-                $join->on('kunjungan.kd_unit', '=', 't.kd_unit');
-                $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
-                $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
-            })
-            ->leftJoin('dokter', 'kunjungan.KD_DOKTER', '=', 'dokter.KD_DOKTER')
-            ->select('kunjungan.*', 't.*', 'dokter.NAMA as nama_dokter')
-            ->where('kunjungan.kd_unit', 3)
-            ->where('kunjungan.kd_pasien', $kd_pasien)
-            ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
-            ->first();
+        $dataMedis = $this->baseService->getDataMedis($this->kdUnit, $kd_pasien, $tgl_masuk, $urut_masuk);
+        if (!$dataMedis) abort(404, 'Data not found');
 
         $pekerjaan = Pekerjaan::all();
         $faktorPemberat = RmeFaktorPemberat::all();
@@ -76,10 +73,6 @@ class AsesmenKeperawatanController extends Controller
         $pendidikan = Pendidikan::all();
 
         $rmeAsesmenKepUmum = RmeAsesmenKepUmum::select('masalah_keperawatan', 'implementasi')->get();
-
-        if (!$dataMedis) {
-            abort(404, 'Data not found');
-        }
 
         if ($dataMedis->pasien && $dataMedis->pasien->tgl_lahir) {
             $dataMedis->pasien->umur = Carbon::parse($dataMedis->pasien->tgl_lahir)->age;
@@ -129,11 +122,13 @@ class AsesmenKeperawatanController extends Controller
         ));
     }
 
-    public function store(Request $request, $kd_pasien, $tgl_masuk)
+    public function store(Request $request, $kd_pasien, $tgl_masuk, $urut_masuk)
     {
         DB::beginTransaction();
 
         try {
+            $dataMedis = $this->baseService->getDataMedis($this->kdUnit, $kd_pasien, $tgl_masuk, $urut_masuk);
+            if (!$dataMedis) throw new Exception('Data medis tidak ditemukan.');
 
             $asesmen = new RmeAsesmen();
             $asesmen->kd_pasien = $kd_pasien;
@@ -515,9 +510,36 @@ class AsesmenKeperawatanController extends Controller
 
             $asesmenKepUmumStatusGizi->save();
 
+
+
+            // Data vital sign untuk disimpan
+            $vitalSignStore = [
+                'nadi' => $request->circulation_transfusi_jumlah ? (int)$request->circulation_transfusi_jumlah : null,
+                'respiration' => $request->breathing_frekuensi_nafas ? (int)$request->breathing_frekuensi_nafas : null,
+            ];
+
+            // Simpan vital sign menggunakan service
+            $this->asesmenService->store($vitalSignStore, $dataMedis->kd_pasien, $dataMedis->no_transaksi, $dataMedis->kd_kasir);
+
+
+            // create resume
+            $resumeData = [
+                'konpas' =>
+                [
+                    'respiration_rate'   => [
+                        'hasil' => $vitalSignStore['respiration'] ?? null
+                    ],
+                    'nadi'   => [
+                        'hasil' => $vitalSignStore['nadi'] ?? null
+                    ],
+                ]
+            ];
+
+            $this->baseService->updateResumeMedis(3, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk, $resumeData);
+
             DB::commit();
 
-            return redirect()->route('asesmen.index', [
+            return to_route('asesmen.index', [
                 'kd_pasien' => $kd_pasien,
                 'tgl_masuk' => $tgl_masuk,
                 'urut_masuk' => $request->urut_masuk
@@ -598,7 +620,7 @@ class AsesmenKeperawatanController extends Controller
         }
     }
 
-    public function edit($kd_pasien, $tgl_masuk, $id)
+    public function edit($kd_pasien, $tgl_masuk, $urut_masuk, $id)
     {
         try {
             $asesmen = RmeAsesmen::with([
@@ -619,9 +641,8 @@ class AsesmenKeperawatanController extends Controller
                 ->firstOrFail();
 
 
-            $dataMedis = Kunjungan::where('kd_pasien', $kd_pasien)
-                ->where('tgl_masuk', $tgl_masuk)
-                ->firstOrFail();
+            $dataMedis = $this->baseService->getDataMedis($this->kdUnit, $kd_pasien, $tgl_masuk, $urut_masuk);
+            if (!$dataMedis) abort(404, 'Data not found');
 
             $data = [
                 'asesmen'   => $asesmen,
@@ -646,11 +667,14 @@ class AsesmenKeperawatanController extends Controller
         }
     }
 
-    public function update(Request $request, $kd_pasien, $tgl_masuk, $id)
+    public function update(Request $request, $kd_pasien, $tgl_masuk, $urut_masuk, $id)
     {
         DB::beginTransaction();
 
         try {
+            $dataMedis = $this->baseService->getDataMedis($this->kdUnit, $kd_pasien, $tgl_masuk, $urut_masuk);
+            if (!$dataMedis) abort(404, 'Data not found');
+
             $asesmen = RmeAsesmen::findOrFail($id);
             $asesmen->kd_pasien = $kd_pasien;
             $asesmen->kd_unit = 3;
@@ -1072,6 +1096,35 @@ class AsesmenKeperawatanController extends Controller
 
             $asesmenKepUmumStatusGizi->save();
 
+
+
+            // Data vital sign untuk disimpan
+            $vitalSignStore = [
+                'nadi' => $request->circulation_transfusi_jumlah ? (int)$request->circulation_transfusi_jumlah : null,
+                'respiration' => $request->breathing_frekuensi_nafas ? (int)$request->breathing_frekuensi_nafas : null,
+            ];
+
+            // Simpan vital sign menggunakan service
+            $this->asesmenService->store($vitalSignStore, $dataMedis->kd_pasien, $dataMedis->no_transaksi, $dataMedis->kd_kasir);
+
+
+            // create resume
+            $resumeData = [
+                'konpas' =>
+                [
+                    'respiration_rate'   => [
+                        'hasil' => $vitalSignStore['respiration'] ?? null
+                    ],
+                    'nadi'   => [
+                        'hasil' => $vitalSignStore['nadi'] ?? null
+                    ],
+                ]
+            ];
+
+            $this->baseService->updateResumeMedis(3, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk, $resumeData);
+
+
+
             DB::commit();
 
             return redirect()->route('asesmen.index', [
@@ -1179,7 +1232,7 @@ class AsesmenKeperawatanController extends Controller
             $pendidikanData = cache()->remember('pendidikan', 3600, function () {
                 return Pendidikan::select('kd_pendidikan', 'pendidikan')->pluck('pendidikan', 'kd_pendidikan');
             });
-            
+
             // dd([
             //     'pasien' => optional($dataMedis)->pasien ?? null,
             //     'dataMedis' => $dataMedis ?? null,

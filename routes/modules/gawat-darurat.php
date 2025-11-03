@@ -211,11 +211,11 @@ Route::prefix('gawat-darurat')->group(function () {
             Route::prefix('asesmen-keperawatan')->group(function () {
                 Route::name('asesmen-keperawatan')->group(function () {
                     Route::controller(AsesmenKeperawatanController::class)->group(function () {
-                        Route::get('/', 'index')->name('.index');
-                        Route::post('/', 'store')->name('.store');
+                        Route::get('/{urut_masuk}/', 'index')->name('.index');
+                        Route::post('/{urut_masuk}/', 'store')->name('.store');
                         Route::get('/{id}', 'show')->name('.show');
-                        Route::get('/{id}/edit', 'edit')->name('.edit');
-                        Route::put('/{id}', 'update')->name('.update');
+                        Route::get('/{urut_masuk}/{id}/edit', 'edit')->name('.edit');
+                        Route::put('/{urut_masuk}/{id}', 'update')->name('.update');
                         Route::get('/{id}/print-pdf', 'generatePDF')->name('.print-pdf');
                     });
                 });
