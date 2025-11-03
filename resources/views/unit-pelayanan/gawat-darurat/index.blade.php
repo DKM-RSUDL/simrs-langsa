@@ -149,7 +149,8 @@
                                     @endforeach
                                 </select>
                                 @canany(['is-admin', 'is-dokter-umum'])
-                                    <a href="{{ route('gawat-darurat.triase') }}" class="btn btn-primary d-flex align-items-center gap-2">
+                                    <a href="{{ route('gawat-darurat.triase') }}"
+                                        class="btn btn-primary d-flex align-items-center gap-2">
                                         <i class="ti-plus"></i> Tambah
                                     </a>
                                 @endcanany
@@ -229,7 +230,6 @@
     <script>
         var gawatDaruratIndexUrl = "{{ route('gawat-darurat.index') }}";
         var medisGawatDaruratIndexUrl = "{{ url('unit-pelayanan/gawat-darurat/pelayanan/') }}/";
-        var printTriaseUrl = "{{ url('unit-pelayanan/gawat-darurat/triase') }}";
 
         $(document).ready(function() {
             $('#rawatDaruratTable').DataTable({
@@ -247,18 +247,13 @@
                         orderable: false,
                         searchable: false,
                         render: function(data, type, row) {
-                            let printUrl =
-                                `${printTriaseUrl}/${row.kd_pasien}/${row.tgl_masuk}/print-pdf`;
                             return `
-                                <div class="d-flex justify-content-center gap-1">
+                                <x-table-action>
                                     <a href="${medisGawatDaruratIndexUrl + row.kd_pasien}/${row.tgl_masuk}"
-                                       class="edit btn btn-primary btn-sm" title="Layani Pasien">
+                                       class="edit btn btn-primary" title="Layani Pasien">
                                         <i class="ti-pencil-alt"></i>
                                     </a>
-                                    <a href="${printUrl}" class="btn btn-info btn-sm" target="_blank" title="Cetak Triase">
-                                        <i class="bi bi-printer"></i>
-                                    </a>
-                                </div>`;
+                                </x-table-action>`;
                         }
                     },
                     {
