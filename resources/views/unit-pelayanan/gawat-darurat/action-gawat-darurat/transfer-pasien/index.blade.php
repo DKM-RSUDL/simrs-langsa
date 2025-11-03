@@ -1,20 +1,14 @@
 @extends('layouts.administrator.master')
 
 @section('content')
-    @push('css')
-        <link rel="stylesheet" href="{{ asset('assets/css/MedisGawatDaruratController.css') }}">
-        <style>
-            .header-background {
-                height: 100%;
-                background-image: url("{{ asset('assets/img/background_gawat_darurat.png') }}");
-            }
-        </style>
-    @endpush
-
     <div class="row">
         <div class="col-md-3">
             @include('components.patient-card')
         </div>
+
+        @php
+            $disabledStatus = in_array($serahTerima->status ?? 0, [1, 2]);
+        @endphp
 
         <div class="col-md-9">
             <x-content-card>
@@ -22,7 +16,7 @@
 
                 <form
                     action="{{ route('transfer-rwi.store', [$dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk]) }}"
-                    method="post">
+                    method="post" id="formTransfer">
                     @csrf
 
                     {{-- START : TRANSFER --}}
@@ -31,7 +25,7 @@
                         'description' => 'Lengkapi data transfer pasien ke rawat inap.',
                     ])
 
-                    <div class="row">
+                    <div class="row" id="transfer-wrap">
                         <div class="col-sm-6">
                             <div class="form-group">
                                 <label for="#kd_spesial" class="form-label">Spesialisasi</label>
@@ -92,19 +86,23 @@
                                 <div class="row g-3">
                                     <div class="col-12 mb-3">
                                         <label>Subjective</label>
-                                        <textarea name="subjective" placeholder="Data subjektif" class="form-control" rows="5" required>{{ old('subjective') }}</textarea>
+                                        <textarea name="subjective" placeholder="Data subjektif" class="form-control" rows="5"
+                                            @disabled($disabledStatus) required>{{ old('subjective', $serahTerima->subjective ?? '') }}</textarea>
                                     </div>
                                     <div class="col-12 mb-3">
                                         <label>Background</label>
-                                        <textarea name="background" placeholder="Background" class="form-control" rows="5" required>{{ old('background') }}</textarea>
+                                        <textarea name="background" placeholder="Background" class="form-control" rows="5" @disabled($disabledStatus)
+                                            required>{{ old('background', $serahTerima->background ?? '') }}</textarea>
                                     </div>
                                     <div class="col-12 mb-3">
                                         <label>Assessment</label>
-                                        <textarea name="assessment" placeholder="Assessment" class="form-control" rows="5" required>{{ old('assessment') }}</textarea>
+                                        <textarea name="assessment" placeholder="Assessment" class="form-control" rows="5" @disabled($disabledStatus)
+                                            required>{{ old('assessment', $serahTerima->assessment ?? '') }}</textarea>
                                     </div>
                                     <div class="col-12 mb-3">
                                         <label>Recommendation</label>
-                                        <textarea name="recomendation" placeholder="Recommendation" class="form-control" rows="5" required>{{ old('recomendation') }}</textarea>
+                                        <textarea name="recomendation" placeholder="Recommendation" class="form-control" rows="5"
+                                            @disabled($disabledStatus) required>{{ old('recomendation', $serahTerima->recomendation ?? '') }}</textarea>
                                     </div>
                                 </div>
                             </div>
@@ -123,17 +121,6 @@
                                         @endforeach
                                     </select>
                                 </div>
-
-                                {{-- <div class="mb-3">
-                                    <label for="kd_unit_tujuan">Tujuan ke Unit/ Ruang</label>
-                                    <select name="kd_unit_tujuan" id="kd_unit_tujuan" class="form-select select2" required>
-                                        <option value="">--Pilih--</option>
-                                        @foreach ($unitTujuan as $item)
-                                            <option value="{{ $item->kd_unit }}">
-                                                {{ $item->nama_unit }}</option>
-                                        @endforeach
-                                    </select>
-                                </div> --}}
 
                                 <div class="mb-3">
                                     <label for="petugas_menyerahkan">Petugas yang Menyerahkan</label>
@@ -166,39 +153,22 @@
                                             class="form-control" required>
                                     </div>
                                 </div>
-                                {{-- <button type="button" class="btn btn-primary w-100">Validasi petugas yang menerima</button> --}}
                             </div>
-
-                            {{-- <div class="mb-4">
-                                <h5 class="fw-bold">Yang Menerima:</h5>
-                                <div class="mb-3">
-                                    <label>Diterima di Ruang/ Unit Pelayanan</label>
-                                    <input type="text" class="form-control" value="" disabled>
-                                </div>
-                                <div class="mb-3">
-                                    <label>Petugas yang Menerima</label>
-                                    <input type="text" class="form-control" value="" disabled>
-                                </div>
-                                <div class="mb-3 row">
-                                    <div class="col-md-6">
-                                        <label>Tanggal</label>
-                                        <input type="date" value="" class="form-control" disabled>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label>Jam</label>
-                                        <input type="time" value="" class="form-control" disabled>
-                                    </div>
-                                </div>
-                            </div> --}}
                         </div>
                     </div>
                     {{-- END : HANDOVER --}}
 
-                    <div class="text-end">
-                        <x-button-submit>
-                            Transfer
-                        </x-button-submit>
-                    </div>
+                    @if (!in_array($serahTerima->status ?? 0, [1, 2]))
+                        <div class="text-end">
+                            <x-button-submit :class="'btn btn-success me-2'" :id="'btn-save-data'">
+                                <i class="fas fa-save"></i> Simpan Data
+                            </x-button-submit>
+
+                            <x-button-submit :id="'btn-transfer'">
+                                <i class="fas fa-right-left"></i> Transfer
+                            </x-button-submit>
+                        </div>
+                    @endif
                 </form>
 
             </x-content-card>
@@ -365,6 +335,22 @@
                     });
                 }
             });
+        });
+
+        $('#btn-save-data').click(function() {
+            $('#formTransfer').attr('action',
+                "{{ route('transfer-rwi.store-temp', [$dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk]) }}"
+            );
+
+            $('#transfer-wrap select').prop('required', false);
+        });
+
+        $('#btn-transfer').click(function() {
+            $('#formTransfer').attr('action',
+                "{{ route('transfer-rwi.store', [$dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk]) }}"
+            );
+
+            $('#transfer-wrap select').prop('required', true);
         });
 
         @cannot('is-admin')
