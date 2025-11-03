@@ -15,8 +15,8 @@
     // SweetAlert
     'confirmTitle' => 'Simpan data?',
     'confirmText' => 'Pastikan semua isian sudah benar.',
-    'confirmOk' => 'Simpan',
     'confirmCancel' => 'Batal',
+    'confirmOk' => 'Simpan',
 
     // Submit-once
     'submitOnce' => true,
@@ -36,18 +36,18 @@
         'type' => $type,
         'class' => $finalClass,
         'title' => $title ?? $label,
-    
+
         // --- SweetAlert ---
         'data-confirm' => true,
         'data-confirm-title' => $confirmTitle,
         'data-confirm-text' => $confirmText,
         'data-confirm-ok' => $confirmOk,
         'data-confirm-cancel' => $confirmCancel,
-    
+
         // --- Loading & overlay ---
         'data-loading-text' => $loadingHTML,
         'data-loading-overlay' => $loadingOverlay,
-    
+
         // --- Submit-once ---
         'data-submit-once' => $submitOnce ? 'true' : 'false',
         'data-loading-label' => $loadingLabel,
@@ -68,6 +68,7 @@
                         text: "Aksi ini tidak dapat dibatalkan.",
                         icon: "warning",
                         showCancelButton: true,
+                        reverseButtons: true,
                         confirmButtonText: "Ya",
                         cancelButtonText: "Tidak",
                     };
