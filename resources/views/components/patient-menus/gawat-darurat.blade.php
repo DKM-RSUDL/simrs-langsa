@@ -123,5 +123,25 @@
                 </div>
             </div>
         </div>
+
+        {{-- Daftar Print --}}
+        <div class="accordion-item">
+            <h2 class="accordion-header">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#daftarPrintMenuIGD">
+                    <i class="bi bi-printer me-2"></i> Daftar Print
+                </button>
+            </h2>
+            <div id="daftarPrintMenuIGD" class="accordion-collapse collapse" data-bs-parent="#patientMenuAccordionIGD">
+                <div class="accordion-body p-0">
+                    <div class="list-group list-group-flush">
+                        <a href="{{ route('gawat-darurat.triase.printPDF', [$dataMedis?->kd_pasien ?? '', $dataMedis?->tgl_masuk ?? '']) }}"
+                            class="list-group-item list-group-item-action">
+                            Triase
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
     @endif
 </div>

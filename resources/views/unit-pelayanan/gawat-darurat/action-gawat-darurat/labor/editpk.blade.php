@@ -182,8 +182,8 @@
                         <div class="col-md-8">
                             <div class="col-12">
                                 <x-content-card>
-                                    <p class="fw-bold">Pilih Jenis Pemeriksaan</p>
                                     <div class="dropdown">
+                                        <p class="fw-bold">Pilih Jenis Pemeriksaan</p>
                                         <input type="text" class="form-control" id="search__input"
                                             name="jenis_pemeriksaan" placeholder="Cari pemeriksaan..."
                                             autocomplete="off">

@@ -216,6 +216,16 @@ class LaporanAnastesiController extends Controller
             $lapAnastesiDtlDua->dilakukan_xray = $request->dilakukan_xray;
             $lapAnastesiDtlDua->penggunaan_tampon = $request->penggunaan_tampon;
             $lapAnastesiDtlDua->jenis_tampon = $request->jenis_tampon;
+            // --- Logika untuk Alat Terbungkus ---
+            // Cek input "Lainnya" (alat_terbungkus) dulu.
+            if ($request->filled('alat_terbungkus')) {
+                // Jika "Lainnya" diisi, simpan nilainya
+                $lapAnastesiDtlDua->alat_terbungkus = $request->alat_terbungkus;
+            } else {
+                // Jika "Lainnya" kosong, simpan pilihan radio (Kasa/Jubah)
+                $lapAnastesiDtlDua->alat_terbungkus = $request->alat_terbungkus_opsi;
+            }
+            // --- Akhir Logika ---
 
             // Collect drain data and convert to JSON
             $drainData = [
@@ -552,6 +562,17 @@ class LaporanAnastesiController extends Controller
             $laporanAnastesiDtl2->dilakukan_xray = $request->dilakukan_xray;
             $laporanAnastesiDtl2->penggunaan_tampon = $request->penggunaan_tampon;
             $laporanAnastesiDtl2->jenis_tampon = $request->jenis_tampon;
+            // --- Logika untuk Alat Terbungkus ---
+            // Cek input "Lainnya" (alat_terbungkus) dulu.
+            if ($request->filled('alat_terbungkus')) {
+                // Jika "Lainnya" diisi, simpan nilainya
+                $laporanAnastesiDtl2->alat_terbungkus = $request->alat_terbungkus;
+            } else {
+                // Jika "Lainnya" kosong, simpan pilihan radio (Kasa/Jubah)
+                $laporanAnastesiDtl2->alat_terbungkus = $request->alat_terbungkus_opsi;
+            }
+            // --- Akhir Logika ---
+
 
             // Collect drain data and convert to JSON
             $drainData = [
@@ -594,7 +615,7 @@ class LaporanAnastesiController extends Controller
             // Spesimen
             $spesimen = json_decode($request->spesimen, true) ?: [];
             $laporanAnastesiDtl2->spesimen = json_encode($spesimen);
-            
+
             $laporanAnastesiDtl2->jenis_spesimen = $request->jenis_spesimen;
             $laporanAnastesiDtl2->total_jaringan_cairan_pemeriksaan = $request->total_jaringan_cairan_pemeriksaan;
             $laporanAnastesiDtl2->jenis_jaringan = $request->jenis_jaringan;

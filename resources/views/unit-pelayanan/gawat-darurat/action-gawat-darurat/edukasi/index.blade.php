@@ -1,11 +1,6 @@
 @extends('layouts.administrator.master')
 @push('css')
     <link rel="stylesheet" href="{{ asset('assets/css/MedisGawatDaruratController.css') }}">
-    <style>
-        /* .header-background {
-                                background-image: url("{{ asset('assets/img/background_gawat_darurat.png') }}");
-                            } */
-    </style>
 @endpush
 
 @section('content')
@@ -17,27 +12,31 @@
         <div class="col-md-9">
             @include('components.navigation')
 
-            <div class="row">
-                <div class="d-flex justify-content-between m-3">
-                    <div class="row">
+            <x-content-card>
+                @include('components.page-header', [
+                    'title' => 'Daftar Edukasi',
+                    'description' => 'Berikut daftar data edukasi pasien gawat darurat.',
+                ])
+                <div class="row">
+                    <div class="col-md-10 d-flex flex-wrap flex-md-nowrap gap-2">
                         <!-- Start Date -->
-                        <div class="col-md-2">
+                        <div>
                             <input type="date" name="start_date" id="start_date" class="form-control"
                                 placeholder="Dari Tanggal">
                         </div>
 
                         <!-- End Date -->
-                        <div class="col-md-2">
+                        <div>
                             <input type="date" name="end_date" id="end_date" class="form-control"
                                 placeholder="S.d Tanggal">
                         </div>
-                        <div class="col-md-2">
+                        <div>
                             <a href="#" class="btn btn-secondary rounded-3" id="filterButton"><i
                                     class="bi bi-funnel-fill"></i></a>
                         </div>
 
                         <!-- Search Bar -->
-                        <div class="col-md-4">
+                        <div>
                             <form method="GET" action="#">
 
                                 <div class="input-group">
@@ -47,41 +46,47 @@
                                 </div>
                             </form>
                         </div>
+                    </div>
 
-                        <div class="col-md-2">
-                            <div class="dropdown">
-                                <button class="btn btn-primary dropdown-toggle w-100" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
-                                    <i class="ti-plus"></i> Tambah
-                                </button>
-                                <ul class="dropdown-menu w-100" aria-labelledby="dropdownMenuButton">
-                                    <li>
-                                        <a class="dropdown-item" href="{{ route('edukasi.create', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}?role=dokter">
-                                            Dokter
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a class="dropdown-item" href="{{ route('edukasi.create', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}?role=farmasi">
-                                            Farmasi
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a class="dropdown-item" href="{{ route('edukasi.create', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}?role=gizi">
-                                            Gizi
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a class="dropdown-item" href="{{ route('edukasi.create', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}?role=perawat">
-                                            Perawat
-                                        </a>
-                                    </li>
-                                    
-                                    <li>
-                                        <a class="dropdown-item" href="{{ route('edukasi.create', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}?role=adc">
-                                            adc
-                                        </a>
-                                    </li>
-                                </ul>
-                            </div>
+                    <div class="col-md-2 text-end">
+                        <div class="dropdown">
+                            <button class="btn btn-primary dropdown-toggle w-100" type="button" id="dropdownMenuButton"
+                                data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="ti-plus"></i> Tambah
+                            </button>
+                            <ul class="dropdown-menu w-100" aria-labelledby="dropdownMenuButton">
+                                <li>
+                                    <a class="dropdown-item"
+                                        href="{{ route('edukasi.create', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}?role=dokter">
+                                        Dokter
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item"
+                                        href="{{ route('edukasi.create', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}?role=farmasi">
+                                        Farmasi
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item"
+                                        href="{{ route('edukasi.create', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}?role=gizi">
+                                        Gizi
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item"
+                                        href="{{ route('edukasi.create', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}?role=perawat">
+                                        Perawat
+                                    </a>
+                                </li>
+
+                                <li>
+                                    <a class="dropdown-item"
+                                        href="{{ route('edukasi.create', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}?role=adc">
+                                        adc
+                                    </a>
+                                </li>
+                            </ul>
                         </div>
                     </div>
                 </div>
@@ -142,13 +147,13 @@
                                         @endif
                                     </td>
                                     <td>
-                                        <div class="btn-group" role="group">
+                                        <x-table-action>
                                             <a href="{{ route('edukasi.show', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
                                                 class="btn btn-info btn-sm" title="Detail">
                                                 <i class="ti-eye"></i>
                                             </a>
                                             <a href="{{ route('edukasi.edit', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
-                                                class="btn btn-warning btn-sm ms-2" title="Edit">
+                                                class="btn btn-warning btn-sm" title="Edit">
                                                 <i class="ti-pencil"></i>
                                             </a>
                                             <form
@@ -156,11 +161,11 @@
                                                 method="POST" class="delete-form" style="display: inline;">
                                                 @csrf
                                                 @method('DELETE')
-                                                <button type="submit" class="btn btn-danger btn-sm ms-2" title="Hapus">
+                                                <button type="submit" class="btn btn-danger btn-sm" title="Hapus">
                                                     <i class="ti-trash"></i>
                                                 </button>
                                             </form>
-                                        </div>
+                                        </x-table-action>
                                     </td>
                                 </tr>
                             @empty
@@ -176,7 +181,7 @@
                         {{ $edukasi->links() }}
                     </div>
                 </div>
-            </div>
+            </x-content-card>
         </div>
     </div>
 @endsection

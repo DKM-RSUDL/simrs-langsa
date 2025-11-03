@@ -21,7 +21,7 @@
                 background-color: #4caf50;
             }
 
-            /* Custom CSS for profile */
+            /* Profile */
             .profile {
                 display: flex;
                 align-items: center;
@@ -46,74 +46,7 @@
                 color: #777;
             }
 
-            .emergency__container {
-                display: flex;
-                align-items: center;
-                gap: 20px;
-            }
-
-            .custom__card {
-                border-radius: 15px;
-                padding: 8px 15px;
-                width: fit-content;
-                min-width: 150px;
-                display: flex;
-                align-items: center;
-                gap: 20px;
-            }
-
-            .all__patients {
-                background: linear-gradient(to bottom, #a5d8ff, #e0f7ff);
-                border: 2px solid #a100c9;
-            }
-
-            .Pending {
-                background: linear-gradient(to bottom, #FFE31A, #fbedc3);
-                border: 2px solid #ffbb00;
-            }
-
-            .Completed {
-                background: linear-gradient(to bottom, #99ff99, #e6ffe6);
-                border: 2px solid #48fa07;
-            }
-
-            .emergency__container a {
-                text-decoration: none;
-                color: #000
-            }
-
-            .custom__icon {
-                width: 28px;
-            }
-
-            .card__content {
-                display: flex;
-                align-items: center;
-                gap: 10px;
-            }
-
-            .warning__icon {
-                color: #ff0000;
-                font-style: normal;
-                font-weight: bold;
-                background-color: #fff9e6;
-                border: 2px solid #ff0000;
-                border-radius: 50%;
-                width: 20px;
-                height: 20px;
-                display: inline-flex;
-                align-items: center;
-                justify-content: center;
-                font-size: 14px;
-            }
-
-            .check__icon {
-                color: #00cc00;
-                font-style: normal;
-                font-weight: bold;
-                font-size: 14px;
-            }
-
+            /* Dropdown submenu */
             .dropdown-submenu {
                 position: relative;
             }
@@ -146,54 +79,67 @@
             }
         </style>
     @endpush
+
     <x-content-card>
         <div class="row">
             <div class="col-md-12">
-                <div class="emergency__container ">
-                    <h4 class="fw-bold">{{ $unit->nama_unit }}</h4>
-                    <a class="text-black" href="{{ route('rawat-jalan.unit', $unit->kd_unit) }}">
-                        <div class="custom__card all__patients">
-                            <img src="{{ asset('assets/img/icons/Sick.png') }}" alt="Icon" width="40">
-                            <div class="text-center">
-                                <p class="m-0 p-0">Semua Pasien</p>
-                                <p class="m-0 p-0 fs-4 fw-bold">{{ countActivePatientRajal($unit->kd_unit) }}</p>
-                            </div>
-                        </div>
-                    </a>
-                    <a class="text-black" href="{{ route('rawat-jalan.unit.belum-selesai', $unit->kd_unit) }}">
-                        <div class="custom__card Pending">
-                            <div class="d-flex align-items-center">
-                                <img src="{{ asset('assets/img/icons/Sick.png') }}" alt="Icon" width="40">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="#d10404"
-                                    class="bi bi-exclamation-diamond-fill custom__icon" viewBox="0 0 16 16">
-                                    <path
-                                        d="M9.05.435c-.58-.58-1.52-.58-2.1 0L.436 6.95c-.58.58-.58 1.519 0 2.098l6.516 6.516c.58.58 1.519.58 2.098 0l6.516-6.516c.58-.58.58-1.519 0-2.098zM8 4c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 4.995A.905.905 0 0 1 8 4m.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2" />
-                                </svg>
-                            </div>
-                            <div class="text-center">
-                                <p class="m-0 p-0">Belum Selesai</p>
-                                <p class="m-0 p-0 fs-4 fw-bold">{{ countUnfinishedPatientRajal($unit->kd_unit) }}</p>
-                            </div>
-                        </div>
-                    </a>
+                {{-- Header: Judul + 3 kartu Bootstrap --}}
+                <div class="row g-3 align-items-start">
+                    <div class="col-12 col-md-6">
+                        <h4 class="fw-bold m-0">{{ $unit->nama_unit }} (Selesai)</h4>
+                    </div>
 
-                    <a class="text-black" href="{{ route('rawat-jalan.unit.selesai', $unit->kd_unit) }}">
-                        <div class="custom__card Completed">
-                            <div class="d-flex align-items-center">
-                                <img src="{{ asset('assets/img/icons/Sick.png') }}" alt="Icon" width="40">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="green" class="bi bi-check-lg custom__icon"
-                                    viewBox="0 0 16 16">
-                                    <path
-                                        d="M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l3.052 3.093 5.4-6.425z" />
-                                </svg>
-                            </div>
-                            <div class="text-center">
-                                <p class="m-0 p-0">Selesai</p>
-                                <p class="m-0 p-0 fs-4 fw-bold">{{ countFinishedPatientRajal($unit->kd_unit) }}</p>
-                            </div>
+                    <div class="col-12 col-md-6">
+                        <div class="row">
+                            {{-- Belum Selesai (Warning) --}}
+                            <a href="{{ route('rawat-jalan.unit.belum-selesai', $unit->kd_unit) }}"
+                                class="text-decoration-none col-4">
+                                <div class="rounded bg-warning text-white">
+                                    <div class="card-body d-flex align-items-center gap-3 px-3">
+                                        <img src="{{ asset('assets/img/icons/Sick.png') }}" alt="Icon" width="36"
+                                            height="36">
+                                        <div class="text-start">
+                                            <div class="small mb-1">Belum Selesai</div>
+                                            <div class="fs-4 fw-bold">{{ countUnfinishedPatientRajal($unit->kd_unit) }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+
+                            {{-- Selesai (Success) --}}
+                            <a href="{{ route('rawat-jalan.unit.selesai', $unit->kd_unit) }}"
+                                class="text-decoration-none col-4">
+                                <div class="rounded bg-success text-white">
+                                    <div class="card-body d-flex align-items-center gap-3 px-3">
+                                        <img src="{{ asset('assets/img/icons/Sick.png') }}" alt="Icon" width="36"
+                                            height="36">
+                                        <div class="text-start">
+                                            <div class="small mb-1">Selesai</div>
+                                            <div class="fs-4 fw-bold">{{ countFinishedPatientRajal($unit->kd_unit) }}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+
+                            {{-- Semua Pasien (Primary) --}}
+                            <a href="{{ route('rawat-jalan.unit', $unit->kd_unit) }}" class="text-decoration-none col-4">
+                                <div class="rounded bg-primary text-white">
+                                    <div class="card-body d-flex align-items-center gap-3 px-3">
+                                        <img src="{{ asset('assets/img/icons/Sick.png') }}" alt="Icon" width="36"
+                                            height="36">
+                                        <div class="text-start">
+                                            <div class="small mb-1">Semua Pasien</div>
+                                            <div class="fs-4 fw-bold">{{ countActivePatientRajal($unit->kd_unit) }}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
                         </div>
-                    </a>
+                    </div>
+
                 </div>
+                {{-- End Header --}}
             </div>
         </div>
 
@@ -203,7 +149,6 @@
                     <table class="table table-bordered dataTable" id="patientUnitDatatable">
                         <thead>
                             <tr>
-                                <th width="100px">No</th>
                                 <th width="100px">Aksi</th>
                                 <th>Pasien</th>
                                 <th>No RM / Reg</th>
@@ -247,13 +192,7 @@
                 processing: true,
                 serverSide: true,
                 ajax: "{{ route('rawat-jalan.unit.selesai', $unit->kd_unit) }}",
-                columns: [{
-                        data: 'antrian',
-                        name: 'no',
-                        orderable: false,
-                        searchable: false,
-                        defaultContent: ''
-                    },
+                columns: [
                     {
                         data: 'action',
                         name: 'action',
@@ -268,57 +207,16 @@
                                     </a>
                                     <a href="${pelayananUrl + row.kd_unit + '/pelayanan/' + row.kd_pasien + '/' + row.tgl_masuk + '/' + row.urut_masuk}" class="edit btn btn-outline-primary btn-sm m-2">
                                         <i class="ti-pencil-alt"></i>
-                                    </a>
-
-                                    <div class="dropdown ms-2">
-                                            <button class="btn btn-outline-secondary btn-sm" type="button" data-bs-toggle="dropdown">
-                                                <i class="bi bi-three-dots"></i>
-                                            </button>
-
-                                            <ul class="dropdown-menu shadow-lg">
-                                                <li><a class="dropdown-item m-1" href="#">Update Informasi Pasien</a></li>
-                                                <li><a class="dropdown-item m-1" href="#">Identitas Pasien</a></li>
-                                                <li><a class="dropdown-item m-1" href="#">General Concent</a></li>
-                                                <li><a class="dropdown-item m-1" href="#">Edukasi dan Informasi</a></li>
-                                                <li><a class="dropdown-item m-1" href="#">Jaminan/Asuransi</a></li>
-                                                <li><a class="dropdown-item m-1" href="#">Registrasi Rawat Inap</a></li>
-                                                <li class="dropdown-submenu">
-                                                    <a class="dropdown-item m-1 dropdown-toggle" href="#">Mutasi Pasien</a>
-                                                    <ul class="dropdown-menu shadow-lg">
-                                                        <li><a class="dropdown-item m-1" href="#">Pindah Ruangan / Rawat Inap</a></li>
-                                                        <li><a class="dropdown-item m-1" href="#">Pulangkan (Berobat Jalan)</a></li>
-                                                        <li><a class="dropdown-item m-1" href="#">Pulangkan (APS)</a></li>
-                                                        <li><a class="dropdown-item m-1" href="${pelayananUrl + row.kd_unit + '/pelayanan/' + row.kd_pasien + '/' + row.tgl_masuk + '/' + row.urut_masuk + '/rujuk-antar-rs' }">Rujuk Keluar RS</a></li>
-                                                        <li><a class="dropdown-item m-1" href="#">Meninggal Dunia</a></li>
-                                                        <li><a class="dropdown-item m-1" href="#">Batal Berobat</a></li>
-                                                    </ul>
-                                                </li>
-                                                <li class="dropdown-submenu">
-                                                    <a class="dropdown-item m-1 dropdown-toggle" href="#">Order Pelayanan</a>
-                                                    <ul class="dropdown-menu shadow-lg">
-                                                        <li><a class="dropdown-item m-1" href="#">Operasi</a></li>
-                                                        <li><a class="dropdown-item m-1" href="#">Rehabilitasi Medis</a></li>
-                                                        <li><a class="dropdown-item m-1" href="#">Hemodialisa</a></li>
-                                                        <li><a class="dropdown-item m-1" href="#">Forensik</a></li>
-                                                        <li><a class="dropdown-item m-1" href="#">Cath Lab</a></li>
-                                                        <li><a class="dropdown-item m-1" href="#">Rujukan/Ambulance</a></li>
-                                                        <li><a class="dropdown-item m-1" href="#">Tindakan Klinik</a></li>
-                                                    </ul>
-                                                </li>
-                                                <li><a class="dropdown-item m-1" href="#">Billing System</a></li>
-                                                <li><a class="dropdown-item m-1" href="#">Finalisasi</a></li>
-                                                <li><a class="dropdown-item m-1" href="#">Status Pasien</a></li>
-                                            </ul>
-                                        </div>
-                                    `;
+                                    </a>`;
                         }
                     },
                     {
                         data: 'profile',
                         name: 'profile',
                         render: function(data, type, row) {
-                            let imageUrl = row.foto_pasien ? "{{ asset('storage/') }}" + '/' + row
-                                .foto_pasien : "{{ asset('assets/images/avatar1.png') }}";
+                            let imageUrl = row.foto_pasien ?
+                                "{{ asset('storage/') }}" + '/' + row.foto_pasien :
+                                "{{ asset('assets/images/avatar1.png') }}";
                             let gender = row.pasien.jenis_kelamin == '1' ? 'Laki-Laki' :
                                 'Perempuan';
                             return `
@@ -338,13 +236,12 @@
                         data: 'kd_pasien',
                         name: 'kd_pasien',
                         render: function(data, type, row) {
-                            // Assuming row.kd_pasien is the "RM" and row.reg_number is the "Reg" value
                             return `
-                            <div class="rm-reg">
-                                RM: ${row.kd_pasien ? row.kd_pasien : 'N/A'}<br>
-                                Reg: ${row.reg_number ? row.reg_number : 'N/A'}
-                            </div>
-                        `;
+                                <div class="rm-reg">
+                                    RM: ${row.kd_pasien ? row.kd_pasien : 'N/A'}<br>
+                                    Reg: ${row.reg_number ? row.reg_number : 'N/A'}
+                                </div>
+                            `;
                         },
                         defaultContent: ''
                     },

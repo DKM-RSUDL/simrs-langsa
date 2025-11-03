@@ -821,6 +821,69 @@
                             </div>
                         </div>
                     </div>
+                    @php
+                        // Logika kecil ini untuk memilah data yang tersimpan
+                        $alat = optional($laporanAnastesiDtl2)->alat_terbungkus;
+                        $opsi_terpilih = ''; // Untuk Kasa/Jubah
+                        $teks_lainnya = ''; // Untuk freetext "Lainnya"
+                        $status_ya = false; // Untuk radio "Ya/Tidak"
+
+                        if ($alat == 'Kasa' || $alat == 'Jubah') {
+                            $opsi_terpilih = $alat; // Data adalah Kasa atau Jubah
+                            $status_ya = true;
+                        } elseif (!empty($alat)) {
+                            $teks_lainnya = $alat; // Data adalah teks "Lainnya"
+                            $status_ya = true;
+                        }
+                        // Jika $alat kosong, $status_ya tetap false (artinya "Tidak")
+                    @endphp
+
+                    <div class="col-md-12">
+                        <label style="min-width: 200px;">Alat-alat terbungkus</label>
+
+                        <div class="d-flex align-items-center justify-content-between gap-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="alat_terbungkus_status"
+                                    id="alat_terbungkus_tidak_edit" value="tidak" {{ !$status_ya ? 'checked' : '' }}>
+                                <label class="form-check-label" for="alat_terbungkus_tidak_edit">Tidak</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="alat_terbungkus_status"
+                                    id="alat_terbungkus_ya_edit" value="ya" {{ $status_ya ? 'checked' : '' }}>
+                                <label class="form-check-label" for="alat_terbungkus_ya_edit">Ya</label>
+                            </div>
+                            <div style="flex-grow: 1;"></div>
+                        </div>
+
+                        <div class="alat-terbungkus-detail"
+                            style="margin-top: 10px; {{ !$status_ya ? 'display: none;' : '' }}">
+                            <label class="form-label">Pilihan:</label>
+                            <div class="d-flex gap-4 align-items-center">
+
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="alat_terbungkus_opsi"
+                                        value="Kasa" id="alat_kasa_edit"
+                                        {{ $opsi_terpilih == 'Kasa' ? 'checked' : '' }}>
+                                    <label class="form-check-label" for="alat_kasa_edit">Kasa</label>
+                                </div>
+
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="alat_terbungkus_opsi"
+                                        value="Jubah" id="alat_jubah_edit"
+                                        {{ $opsi_terpilih == 'Jubah' ? 'checked' : '' }}>
+                                    <label class="form-check-label" for="alat_jubah_edit">Jubah</label>
+                                </div>
+
+                                <div class="d-flex align-items-center gap-2">
+                                    <label class="form-label mb-0">Lainnya:</label>
+                                    <input type="text" class="form-control form-control-sm" name="alat_terbungkus"
+                                        value="{{ $teks_lainnya }}" placeholder="Isi jika ada..."
+                                        style="width: 200px;">
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
 
                     <div class="section-separator">
                         <h5 class="section-title">7. Waktu dan Tim Medis</h5>
@@ -1132,8 +1195,9 @@
 @push('js')
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
     <script>
-        $(document).ready(function() {
-            // Pasang event listener untuk Perawat Instrumen
+        $(document).ready(function() { // <-- Buka document.ready DI SINI
+
+            // --- (Blok 1: Logika QR Code Anda) ---
             $('#perawat_instrumen').on('select2:select', function(e) {
                 var kodePerawat = $(this).val();
                 var namaPerawat = $(this).find('option:selected').data(
@@ -1147,7 +1211,6 @@
                 generateQRCode('qrcode_perawat_instrumen', kodePerawat);
             });
 
-            // Pasang event listener untuk Perawat Sirkuler
             $('#perawat_sirkuler').on('select2:select', function(e) {
                 var kodePerawat = $(this).val();
                 var namaPerawat = $(this).find('option:selected').data(
@@ -1161,7 +1224,6 @@
                 generateQRCode('qrcode_perawat_sirkuler', kodePerawat);
             });
 
-            // Fungsi untuk membuat QR code
             function generateQRCode(elementId, text) {
                 // Hapus QR code sebelumnya jika ada
                 $('#' + elementId).empty();
@@ -1180,6 +1242,39 @@
                     console.error("Error generating QR code:", err);
                 }
             }
-        });
+            // --- (Akhir Blok 1) ---
+
+
+            // --- (Blok 2: Logika Show/Hide Anda) ---
+            /**
+             * Fungsi untuk menampilkan/menyembunyikan elemen
+             * berdasarkan pilihan radio button 'ya'/'tidak'.
+             */
+            function setupConditionalShow(triggerName, targetSelector) {
+                var radioSelector = 'input[name="' + triggerName + '"]';
+
+                $(document).on('change', radioSelector, function() {
+                    if (this.value === 'ya' && this.checked) {
+                        $(targetSelector).slideDown(); // Tampilkan
+                    } else {
+                        $(targetSelector).slideUp(); // Sembunyikan
+                    }
+                });
+
+                // Cek kondisi awal saat halaman dimuat (untuk form edit)
+                var checkedVal = $(radioSelector + ':checked').val();
+                if (checkedVal === 'ya') {
+                    $(targetSelector).show();
+                } else {
+                    $(targetSelector).hide();
+                }
+            }
+
+            // Pemanggilan fungsi Show/Hide
+            setupConditionalShow('alat_terbungkus_status', '.alat-terbungkus-detail');
+            // --- (Akhir Blok 2) ---
+
+
+        }); // <-- Tutup document.ready (HANYA SATU KALI DI AKHIR)
     </script>
 @endpush

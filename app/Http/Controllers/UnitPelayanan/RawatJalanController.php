@@ -44,7 +44,7 @@ class RawatJalanController extends Controller
         if ($request->ajax()) {
             $data = Kunjungan::with(['pasien', 'dokter', 'customer'])
                 ->where('kd_unit', $kd_unit)
-                ->whereYear('tgl_masuk', '>=', 2024);
+                ->whereYear('tgl_masuk', '>=', 2025);
 
             return DataTables::of($data)
                 ->filter(function ($query) use ($request) {
@@ -135,6 +135,7 @@ class RawatJalanController extends Controller
                     $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
                 })
                 ->where('kunjungan.kd_unit', $kd_unit)
+                ->whereYear('kunjungan.tgl_masuk', '>=', 2025)
                 ->where('t.Dilayani', 0);
 
             return DataTables::of($data)
@@ -203,6 +204,7 @@ class RawatJalanController extends Controller
                     $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
                 })
                 ->where('kunjungan.kd_unit', $kd_unit)
+                ->whereYear('kunjungan.tgl_masuk', '>=', 2025)
                 ->where('t.Dilayani', 1);
 
             return DataTables::of($data)
