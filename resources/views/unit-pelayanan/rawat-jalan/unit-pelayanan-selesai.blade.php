@@ -84,8 +84,7 @@
         <div class="row">
             <div class="col-md-12">
                 {{-- Header: Judul + 3 kartu Bootstrap --}}
-                <div class="row g-3">
-
+                <div class="row g-3 align-items-start">
                     <div class="col-12 col-md-6">
                         <h4 class="fw-bold m-0">{{ $unit->nama_unit }} (Selesai)</h4>
                     </div>
