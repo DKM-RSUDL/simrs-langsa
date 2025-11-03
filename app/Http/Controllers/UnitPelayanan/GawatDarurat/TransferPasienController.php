@@ -27,6 +27,7 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 
 class TransferPasienController extends Controller
 {
@@ -41,6 +42,7 @@ class TransferPasienController extends Controller
     public function index($kd_pasien, $tgl_masuk, $urut_masuk)
     {
         $dataMedis = $this->baseService->getDataMedis(3, $kd_pasien, $tgl_masuk, $urut_masuk);
+        if (empty($dataMedis)) return to_route('gawat-darurat.index')->with('error', 'Data medis pasien tidak ditemukan !');
 
         $spesialisasi = Spesialisasi::orderBy('spesialisasi')->get();
 
@@ -53,7 +55,13 @@ class TransferPasienController extends Controller
             ->where('status_peg',  1)
             ->get();
 
-        return view('unit-pelayanan.gawat-darurat.action-gawat-darurat.transfer-pasien.index', compact('dataMedis', 'spesialisasi', 'unit', 'unitTujuan', 'petugasIGD'));
+        $serahTerima = RmeSerahTerima::where('kd_pasien', $dataMedis->kd_pasien)
+            ->whereDate('tgl_masuk', $dataMedis->tgl_masuk)
+            ->where('urut_masuk', $dataMedis->urut_masuk)
+            ->where('kd_unit_asal', 3)
+            ->first();
+
+        return view('unit-pelayanan.gawat-darurat.action-gawat-darurat.transfer-pasien.index', compact('dataMedis', 'spesialisasi', 'unit', 'unitTujuan', 'petugasIGD', 'serahTerima'));
     }
 
     public function getDokterBySpesial(Request $request)
@@ -187,6 +195,7 @@ class TransferPasienController extends Controller
 
     public function storeTransferInap(Request $request, $kd_pasien, $tgl_masuk, $urut_masuk)
     {
+
         $messageErr = [
             'kd_spesial.required'   => 'Spesialisasi harus dipilih!',
             'kd_dokter.required'    => 'Dokter harus dipilih!',
@@ -468,11 +477,7 @@ class TransferPasienController extends Controller
 
             // CREATE DATA SERAH TERIMA
             $handOverData = [
-                'kd_pasien'             => $kd_pasien,
-                'tgl_masuk'             => $tgl_masuk,
-                'urut_masuk'            => $urut_masuk,
                 'urut_masuk_tujuan'     => $newUrutMasuk,
-                'kd_unit_asal'          => 3,
                 'kd_unit_tujuan'        => $kdUnit,
                 'subjective'            => $request->subjective,
                 'background'            => $request->background,
@@ -484,7 +489,12 @@ class TransferPasienController extends Controller
                 'status'                => 1
             ];
 
-            RmeSerahTerima::create($handOverData);
+            RmeSerahTerima::updateOrCreate([
+                'kd_pasien'             => $kd_pasien,
+                'tgl_masuk'             => $tgl_masuk,
+                'urut_masuk'            => $urut_masuk,
+                'kd_unit_asal'          => 3,
+            ], $handOverData);
 
             // update kunjungan pasien telah di transfer
             Kunjungan::where('kd_pasien', $kd_pasien)
@@ -509,6 +519,48 @@ class TransferPasienController extends Controller
 
             DB::commit();
             return to_route('gawat-darurat.index')->with('success', 'Pasien berhasil di transfer !');
+        } catch (Exception $e) {
+            DB::rollBack();
+            return back()->with('error', $e->getMessage());
+        }
+    }
+
+    public function storeDataTemp(Request $request, $kd_pasien, $tgl_masuk, $urut_masuk)
+    {
+        DB::beginTransaction();
+
+        try {
+
+            $validator = Validator::make($request->all(), [
+                // HANDOVER
+                'subjective'            => 'required',
+                'background'            => 'required',
+                'assessment'            => 'required',
+                'recomendation'         => 'required',
+            ]);
+
+            if ($validator->fails()) throw new Exception('SBAR harus diisi semua!');
+
+            $dataMedis = $this->baseService->getDataMedis(3, $kd_pasien, $tgl_masuk, $urut_masuk);
+            if ($dataMedis->status_kunjungan == 1) return back()->with('error', 'Pasien sudah di transfer, tidak dapat mengubah data !');
+
+            // CREATE DATA SERAH TERIMA
+            $handOverData = [
+                'subjective'            => $request->subjective,
+                'background'            => $request->background,
+                'assessment'            => $request->assessment,
+                'recomendation'         => $request->recomendation,
+            ];
+
+            RmeSerahTerima::updateOrCreate([
+                'kd_pasien'             => $kd_pasien,
+                'tgl_masuk'             => $tgl_masuk,
+                'urut_masuk'            => $urut_masuk,
+                'kd_unit_asal'          => 3,
+            ], $handOverData);
+
+            DB::commit();
+            return to_route('index', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk))])->with('success', 'Data transfer pasien berhasil disimpan sementara!');
         } catch (Exception $e) {
             DB::rollBack();
             return back()->with('error', $e->getMessage());

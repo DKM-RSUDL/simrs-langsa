@@ -353,6 +353,14 @@
                             </div>
                         </div>
                     </div>
+                    <div class="col-md-6">
+                        <label class="fw-bold text-muted">Alat-alat terbungkus</label>
+                        <p class="fw-medium">
+                            {{-- Jika datanya null/kosong (karena user pilih "Tidak"), tampilkan "Tidak".
+             Jika ada isinya, tampilkan isinya (Kasa/Jubah/Lainnya) --}}
+                            {{ $laporanAnastesiDtl2->alat_terbungkus ?? 'Tidak' }}
+                        </p>
+                    </div>
 
                     <!-- 7. Waktu dan Tim Medis -->
                     <div class="mb-5">
@@ -583,26 +591,62 @@
 @push('js')
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
     <script>
-        $(document).ready(function() {
-            @if ($laporanAnastesi->perawat_instrumen)
-                generateQRCode('qrcode_perawat_instrumen', '{{ $laporanAnastesi->perawat_instrumen }}');
-            @endif
-            @if ($laporanAnastesi->perawat_sirkuler)
-                generateQRCode('qrcode_perawat_sirkuler', '{{ $laporanAnastesi->perawat_sirkuler }}');
-            @endif
+        $(document).ready(function() { // <-- Buka document.ready DI SINI
+
+            // --- (Blok 1: Logika QR Code Anda) ---
+            $('#perawat_instrumen').on('select2:select', function(e) {
+                var kodePerawat = $(this).val();
+                var namaPerawat = $(this).find('option:selected').data(
+                    'nama'); // Ambil nama perawat dari data-nama
+                console.log("Kode perawat instrumen yang dipilih:", kodePerawat);
+                console.log("Nama perawat instrumen yang dipilih:", namaPerawat);
+
+                // Update nama perawat dan kode perawat
+                $('#nama_perawat_instrumen').text(namaPerawat || '');
+                $('#kode_perawat_instrumen').text(kodePerawat || '.........................');
+                generateQRCode('qrcode_perawat_instrumen', kodePerawat);
+            });
+
+            $('#perawat_sirkuler').on('select2:select', function(e) {
+                var kodePerawat = $(this).val();
+                var namaPerawat = $(this).find('option:selected').data(
+                    'nama'); // Ambil nama perawat dari data-nama
+                console.log("Kode perawat sirkuler yang dipilih:", kodePerawat);
+                console.log("Nama perawat sirkuler yang dipilih:", namaPerawat);
+
+                // Update nama perawat dan kode perawat
+                $('#nama_perawat_sirkuler').text(namaPerawat || '');
+                $('#kode_perawat_sirkuler').text(kodePerawat || '.........................');
+                generateQRCode('qrcode_perawat_sirkuler', kodePerawat);
+            });
 
             function generateQRCode(elementId, text) {
-                if (typeof qrcode === 'function') {
-                    try {
-                        var qr = qrcode(0, 'M');
-                        qr.addData(text);
-                        qr.make();
-                        $('#' + elementId).html(qr.createImgTag(5));
-                    } catch (err) {
-                        console.error("Error generating QR code:", err);
-                    }
+                // Hapus QR code sebelumnya jika ada
+                $('#' + elementId).empty();
+
+                if (!text) return; // Hindari error jika text kosong
+
+                try {
+                    // Buat QR code baru
+                    var qr = qrcode(0, 'M');
+                    qr.addData(text);
+                    qr.make();
+
+                    // Tampilkan QR code
+                    $('#' + elementId).html(qr.createImgTag(5));
+                } catch (err) {
+                    console.error("Error generating QR code:", err);
                 }
             }
-        });
+            // --- (Akhir Blok 1) ---
+
+
+            // --- (Blok 2: Logika Show/Hide Anda) ---
+            /**
+             * Fungsi untuk menampilkan/menyembunyikan elemen
+             * berdasarkan pilihan radio button 'ya'/'tidak'.
+             */
+
+        }); // <-- Tutup document.ready (HANYA SATU KALI DI AKHIR)
     </script>
 @endpush

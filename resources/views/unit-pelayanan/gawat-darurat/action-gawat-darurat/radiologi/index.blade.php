@@ -30,12 +30,15 @@
                             <div class="tab-pane fade show active">
                                 {{-- TAB 1. buatlah list disini --}}
 
-                                <div class="row">
-                                    <div class="d-flex justify-content-between align-items-center m-3">
-
-                                        <div class="row">
+                                <div class="d-flex flex-column gap-2">
+                                    @include('components.page-header', [
+                                        'title' => 'Daftar Order Radiologi',
+                                        'description' => 'Berikut daftar data order radiologi gawat darurat.',
+                                    ])
+                                    <div class="row">
+                                        <div class="col-md-10 d-flex flex-wrap flex-md-nowrap gap-2">
                                             <!-- Select PPA Option -->
-                                            <div class="col-md-2">
+                                            <div>
                                                 <select class="form-select" id="SelectOption" aria-label="Pilih...">
                                                     <option value="semua" selected>Semua Episode</option>
                                                     <option value="option1">Episode Sekarang</option>
@@ -47,25 +50,25 @@
                                             </div>
 
                                             <!-- Start Date -->
-                                            <div class="col-md-2">
+                                            <div>
                                                 <input type="date" name="start_date" id="start_date" class="form-control"
                                                     placeholder="Dari Tanggal">
                                             </div>
 
                                             <!-- End Date -->
-                                            <div class="col-md-2">
+                                            <div>
                                                 <input type="date" name="end_date" id="end_date" class="form-control"
                                                     placeholder="S.d Tanggal">
                                             </div>
 
                                             <!-- Button Filter -->
-                                            <div class="col-md-1">
-                                                <button id="filterButton" class="btn btn-secondary rounded-3"><i
+                                            <div>
+                                                <button id="filterButton" class="btn btn-secondary"><i
                                                         class="bi bi-funnel-fill"></i></button>
                                             </div>
 
                                             <!-- Search Bar -->
-                                            <div class="col-md-3">
+                                            <div>
                                                 <form method="GET"
                                                     action="{{ route('radiologi.index', ['kd_pasien' => $dataMedis->kd_pasien, 'tgl_masuk' => \Carbon\Carbon::parse($dataMedis->tgl_masuk)->format('Y-m-d')]) }}">
 
@@ -77,14 +80,8 @@
                                                     </div>
                                                 </form>
                                             </div>
-
-                                            <!-- Add Button -->
-                                            <!-- Include the modal file -->
-                                            <div class="col-md-2">
-                                                @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.radiologi.modal')
-                                            </div>
-
                                         </div>
+                                        @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.radiologi.modal')
                                     </div>
 
                                     <div class="table-responsive">
@@ -148,21 +145,23 @@
                                                         </td>
 
                                                         <td>
-                                                            @if ($rad->status_order == 1)
-                                                                <button class="btn btn-sm btn-secondary btn-edit-rad"
-                                                                    data-kode="{{ intval($rad->kd_order) }}"
-                                                                    data-bs-target="#editRadiologiModal"><i
-                                                                        class="ti-pencil"></i></button>
-                                                            @else
-                                                                <button class="btn btn-sm btn-primary btn-show-rad"
-                                                                    data-kode="{{ intval($rad->kd_order) }}"
-                                                                    data-bs-target="#showRadiologiModal"><i
-                                                                        class="ti-eye"></i></button>
-                                                            @endif
-                                                            <button
-                                                                class="btn btn-sm {{ $rad->status_order == 1 ? 'btn-delete-rad' : '' }}"
-                                                                data-kode="{{ intval($rad->kd_order) }}"><i
-                                                                    class="bi bi-x-circle {{ $rad->status_order == 1 ? 'text-danger' : 'text-secondary' }}"></i></button>
+                                                            <x-table-action>
+                                                                @if ($rad->status_order == 1)
+                                                                    <button class="btn btn-sm btn-warning btn-edit-rad"
+                                                                        data-kode="{{ intval($rad->kd_order) }}"
+                                                                        data-bs-target="#editRadiologiModal"><i
+                                                                            class="ti-pencil"></i></button>
+                                                                @else
+                                                                    <button class="btn btn-sm btn-info btn-show-rad"
+                                                                        data-kode="{{ intval($rad->kd_order) }}"
+                                                                        data-bs-target="#showRadiologiModal"><i
+                                                                            class="ti-eye"></i></button>
+                                                                @endif
+                                                                <button
+                                                                    class="btn btn-sm {{ $rad->status_order == 1 ? 'btn-delete-rad btn-danger' : '' }}"
+                                                                    data-kode="{{ intval($rad->kd_order) }}"><i
+                                                                        class="bi bi-trash {{ $rad->status_order == 1 ? 'text-white' : 'text-secondary' }}"></i></button>
+                                                            </x-table-action>
                                                         </td>
                                                     </tr>
                                                 @endforeach

@@ -1,7 +1,7 @@
 <div class="d-flex flex-column">
     <div class="d-flex align-items-center justify-content-between">
         @include('components.page-header', [
-            'title' => 'Daftar Asesmemen Awal Medis',
+            'title' => 'Daftar Asesmen Gawat Darurat',
             'description' => 'Berikut daftar data asesmen awal medis.',
         ])
     </div>
@@ -58,7 +58,7 @@
             @endcanany
 
             @canany(['is-admin', 'is-perawat', 'is-bidan'])
-                <a href="{{ route('asesmen-keperawatan.index', ['kd_pasien' => request()->route('kd_pasien'), 'tgl_masuk' => request()->route('tgl_masuk')]) }}"
+                <a href="{{ route('asesmen-keperawatan.index', ['kd_pasien' => request()->route('kd_pasien'), 'tgl_masuk' => request()->route('tgl_masuk'), $dataMedis->urut_masuk]) }}"
                     class="btn btn-primary">
                     <i class="ti-plus"></i> Keperawatan
                 </a>
@@ -117,6 +117,7 @@
                         <a href="{{ route('asesmen-keperawatan.show', [
                             'kd_pasien' => $dataMedis->kd_pasien,
                             'tgl_masuk' => \Carbon\Carbon::parse($dataMedis->tgl_masuk)->format('Y-m-d'),
+                            // 'urut_masuk' => $dataMedis->urut_masuk,
                             'id' => $item->id,
                         ]) }}"
                             class="btn btn-sm btn-info">
@@ -126,6 +127,7 @@
                         <a href="{{ route('asesmen-keperawatan.edit', [
                             'kd_pasien' => $dataMedis->kd_pasien,
                             'tgl_masuk' => \Carbon\Carbon::parse($dataMedis->tgl_masuk)->format('Y-m-d'),
+                            'urut_masuk' => $dataMedis->urut_masuk,
                             'id' => $item->id,
                         ]) }}"
                             class="btn btn-sm btn-secondary">

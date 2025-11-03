@@ -123,5 +123,81 @@
                 </div>
             </div>
         </div>
+
+        {{-- Daftar Print --}}
+        <div class="accordion-item">
+            <h2 class="accordion-header">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#daftarPrintMenuIGD">
+                    <i class="bi bi-printer me-2"></i> Daftar Print
+                </button>
+            </h2>
+            <div id="daftarPrintMenuIGD" class="accordion-collapse collapse" data-bs-parent="#patientMenuAccordionIGD">
+                <div class="accordion-body p-0">
+                    <div class="list-group list-group-flush">
+                        <a href="{{ route('gawat-darurat.triase.printPDF', [$dataMedis?->kd_pasien ?? '', $dataMedis?->tgl_masuk ?? '']) }}"
+                            class="list-group-item list-group-item-action">
+                            Triase
+                        </a>
+                        <a href="#" class="list-group-item list-group-item-action btn-print-labor">
+                            Laboratorium
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
     @endif
 </div>
+
+@push('js')
+    <script>
+        $('.btn-print-labor').click(function() {
+            let $this = $(this);
+
+            $.ajax({
+                type: "post",
+                url: "{{ url('unit-pelayanan/gawat-darurat/pelayanan/' . $dataMedis->kd_pasien . '/' . $dataMedis->tgl_masuk . '/cetak') }}",
+                data: {
+                    _token: "{{ csrf_token() }}",
+                    no_transaksi: "{{ $dataMedis->no_transaksi }}"
+                },
+                dataType: "json",
+                beforeSend: function() {
+                    $this.html(
+                        '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading...'
+                    );
+                    $this.prop('disabled', true);
+                },
+                success: function(res) {
+                    let status = res.status;
+                    let msg = res.message;
+                    let data = res.data;
+
+                    if (status == 'error') {
+                        Swal.fire({
+                            title: "Error",
+                            text: msg,
+                            icon: "error",
+                        });
+
+                        return false;
+                    }
+
+                    window.open(data.file_url, '_blank');
+
+                },
+                complete: function() {
+                    $this.html('Laboratorium');
+                    $this.prop('disabled', false);
+                },
+                error: function() {
+                    Swal.fire({
+                        title: "Error",
+                        text: "Internal server error !",
+                        icon: "error",
+                    });
+                }
+            });
+        });
+    </script>
+@endpush

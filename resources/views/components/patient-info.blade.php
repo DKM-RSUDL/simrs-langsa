@@ -93,7 +93,7 @@
         {{-- CHECK BUTTON I-CARE --}}
 
         @if (in_array(($dataMedis->unit->kd_bagian ?? null), [2,3]))
-            <div class="px-3 pt-3">
+            <div class="pt-3">
                 {{-- <form action="{{ route('rawat-jalan.pelayanan.icare', [$dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk]) }}" method="get"> --}}
                 <button class="btn btn-warning w-100" id="btnIcare" type="button">
                     <i class="bi bi-info-circle me-2"></i> I-Care

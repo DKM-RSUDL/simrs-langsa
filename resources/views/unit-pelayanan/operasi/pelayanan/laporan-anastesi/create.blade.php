@@ -657,298 +657,312 @@
                             </select>
                         </div>
 
-                        <div class="form-group">
-                            <label style="min-width: 200px;">Pemakaian Cairan</label>
-                            <div class="w-100 d-flex flex-column">
-                                <!-- Input Row -->
-                                <div class="input-group mb-2">
-                                    <select class="form-select" id="cairan-select" style="flex: 2;">
-                                        <option value="">--Pilih Jenis Cairan--</option>
-                                        <option value="Sodium Chloride 0,9%">Sodium Chloride 0,9%
+                        <div class="col-md-12">
+                            <label style="min-width: 200px;">Alat-alat terbungkus</label>
+                            <div class="d-flex align-items-center justify-content-between gap-3">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="alat_terbungkus_status"
+                                        id="alat_terbungkus_tidak" value="tidak" checked>
+                                    <label class="form-check-label" for="alat_terbungkus_tidak">Tidak</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="alat_terbungkus_status"
+                                        id="alat_terbungkus_ya" value="ya">
+                                    <label class="form-check-label" for="alat_terbungkus_ya">Ya</label>
+                                </div>
+                                <div style="flex-grow: 1;"></div>
+                            </div>
+                            <div class="alat-terbungkus-detail" style="display: none; margin-top: 10px;">
+
+                                <label class="form-label">Pilihan:</label>
+
+                                <div class="d-flex gap-4 align-items-center">
+
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="alat_terbungkus_opsi"
+                                            value="Kasa" id="alat_kasa">
+                                        <label class="form-check-label" for="alat_kasa">
+                                            Kasa
+                                        </label>
+                                    </div>
+
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="alat_terbungkus_opsi"
+                                            value="Jubah" id="alat_jubah">
+                                        <label class="form-check-label" for="alat_jubah">
+                                            Jubah
+                                        </label>
+                                    </div>
+
+                                    <div class="d-flex align-items-center gap-2">
+                                        <label class="form-label mb-0">Lainnya:</label>
+                                        <input type="text" class="form-control form-control-sm" name="alat_terbungkus"
+                                            placeholder="Isi jika ada..." style="width: 200px;">
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="section-separator">
+                            <h5 class="section-title">7. Waktu dan Tim Medis</h5>
+
+                            <div class="form-group">
+                                <label style="min-width: 200px;">Waktu Mulai Operasi</label>
+                                <input type="date" class="form-control me-3" name="waktu_mulai_operasi">
+                                <input type="time" class="form-control" name="jam_mulai_operasi">
+                            </div>
+
+                            <div class="form-group">
+                                <label style="min-width: 200px;">Waktu Selesai Operasi</label>
+                                <input type="date" class="form-control me-3" name="waktu_selesai_operasi">
+                                <input type="time" class="form-control" name="jam_selesai_operasi">
+                            </div>
+
+                            <div class="form-group">
+                                <label style="min-width: 200px;">Dokter Bedah</label>
+                                <select class="form-select select2" name="dokter_bedah">
+                                    <option selected disabled>--Pilih--</option>
+                                    @foreach ($dokter as $d)
+                                        <option value="{{ $d->kd_dokter }}">{{ $d->nama_lengkap }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label style="min-width: 200px;">Dokter Anastesi</label>
+                                <select class="form-select" name="dokter_anastesi">
+                                    <option selected disabled>--Pilih--</option>
+                                    @foreach ($dokterAnastesi as $da)
+                                        <option value="{{ $da->kd_dokter }}">
+                                            {{ $da->dokter->nama_lengkap }}
                                         </option>
-                                        <option value="Glyrin">Glyrin</option>
-                                        <option value="BSS Solution">BSS Solution</option>
-                                        <option value="Air Untuk Irigasi">Air Untuk Irigasi</option>
-                                        <option value="Lainnya">Lainnya</option>
-                                    </select>
-                                    <input type="number" class="form-control" id="cairan-jumlah" placeholder="Liter"
-                                        style="flex: 1;">
-                                    <input type="text" class="form-control d-none" id="cairan-lainnya"
-                                        placeholder="Sebutkan jenis cairan" style="flex: 1;">
-                                    <span class="input-group-text bg-white" id="btn-add-cairan" style="cursor: pointer;">
-                                        <i class="bi bi-plus-circle text-primary"></i>
-                                    </span>
-                                </div>
-
-                                <!-- List Pemakaian Cairan -->
-                                <div id="list-pemakaian-cairan" class="w-100">
-                                    <p class="text-danger text-small" id="empty-cairan">Belum ada
-                                        pemakaian cairan ditambahkan</p>
-                                </div>
-
-                                <!-- Hidden input untuk dikirim ke backend -->
-                                <input type="hidden" name="pemakaian_cairan" id="hidden-pemakaian-cairan"
-                                    value="[]">
+                                    @endforeach
+                                </select>
                             </div>
-                        </div>
-                    </div>
 
-                    <div class="section-separator">
-                        <h5 class="section-title">7. Waktu dan Tim Medis</h5>
-
-                        <div class="form-group">
-                            <label style="min-width: 200px;">Waktu Mulai Operasi</label>
-                            <input type="date" class="form-control me-3" name="waktu_mulai_operasi">
-                            <input type="time" class="form-control" name="jam_mulai_operasi">
-                        </div>
-
-                        <div class="form-group">
-                            <label style="min-width: 200px;">Waktu Selesai Operasi</label>
-                            <input type="date" class="form-control me-3" name="waktu_selesai_operasi">
-                            <input type="time" class="form-control" name="jam_selesai_operasi">
-                        </div>
-
-                        <div class="form-group">
-                            <label style="min-width: 200px;">Dokter Bedah</label>
-                            <select class="form-select select2" name="dokter_bedah">
-                                <option selected disabled>--Pilih--</option>
-                                @foreach ($dokter as $d)
-                                    <option value="{{ $d->kd_dokter }}">{{ $d->nama_lengkap }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-
-                        <div class="form-group">
-                            <label style="min-width: 200px;">Dokter Anastesi</label>
-                            <select class="form-select" name="dokter_anastesi">
-                                <option selected disabled>--Pilih--</option>
-                                @foreach ($dokterAnastesi as $da)
-                                    <option value="{{ $da->kd_dokter }}">
-                                        {{ $da->dokter->nama_lengkap }}
-                                    </option>
-                                @endforeach
-                            </select>
-                        </div>
-
-                        <div class="form-group">
-                            <label style="min-width: 200px;">Penata Anastesi</label>
-                            <select class="form-select select2" name="penatara_anastesi">
-                                <option selected disabled>--Pilih--</option>
-                                @foreach ($perawat as $p)
-                                    <option value="{{ $p->kd_perawat }}">{{ $p->nama }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-
-                        <div class="form-group">
-                            <label style="min-width: 200px;">Perawat Bedah</label>
-                            <select class="form-select select2" name="penatara_anastesi">
-                                <option selected disabled>--Pilih--</option>
-                                @foreach ($perawat as $p)
-                                    <option value="{{ $p->kd_perawat }}">{{ $p->nama }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-
-                    </div>
-
-                    <div class="section-separator">
-                        <h5 class="section-title">8. Evaluasi Pasca Operasi</h5>
-                        <div class="form-group">
-                            <label style="min-width: 300px;">Pemeriksaan Kondisi Kulit Pra
-                                Operasi</label>
-                            <select class="form-select" name="pemeriksaan_kondisi_kulit_pra_operasi">
-                                <option selected disabled>--Pilih--</option>
-                                <option value="Utuh">Utuh</option>
-                                <option value="Menggelembung">Menggelembung</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label style="min-width: 300px;">Pemeriksaan Kondisi Kulit Pasca
-                                Operasi</label>
-                            <select class="form-select" name="pemeriksaan_kondisi_kulit_pasca_operasi">
-                                <option selected disabled>--Pilih--</option>
-                                <option value="Utuh">Utuh</option>
-                                <option value="Menggelembung">Menggelembung</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label style="min-width: 300px;">Balutan Luka</label>
-                            <select class="form-select" name="balutan_luka">
-                                <option selected disabled>--Pilih--</option>
-                                <option value="Tidak Ada">Tidak Ada</option>
-                                <option value="Pressure">Pressure</option>
-                            </select>
-                        </div>
-
-                        <!-- Form Spesimen -->
-                        <div class="form-group">
-                            <label style="min-width: 300px;">Spesimen</label>
-                            <div class="w-100 d-flex flex-column">
-                                <!-- Input Row -->
-                                <div class="input-group mb-2">
-                                    <select class="form-select" id="spesimen-select" style="flex: 1;">
-                                        <option value="">--Pilih Kategori--</option>
-                                        <option value="Histologi">Histologi</option>
-                                        <option value="Kultur">Kultur</option>
-                                        <option value="Frozen Section">Frozen Section</option>
-                                        <option value="Sitologi">Sitologi</option>
-                                        <option value="Lainnya">Lainnya</option>
-                                    </select>
-
-                                    <!-- Checkbox (muncul kalau pilih Sitologi atau Lainnya) -->
-                                    <div class="input-group-text bg-white" id="spesimen-checkbox-wrapper"
-                                        style="display: none;">
-                                        <input class="form-check-input mt-0" type="checkbox" id="spesimen-checkbox">
-                                    </div>
-
-                                    <input type="text" class="form-control" id="spesimen-jenis"
-                                        placeholder="Jenis spesimen" style="flex: 2;">
-                                    <span class="input-group-text bg-white" id="btn-add-spesimen"
-                                        style="cursor: pointer;">
-                                        <i class="bi bi-plus-circle text-primary"></i>
-                                    </span>
-                                </div>
-
-                                <!-- List Spesimen -->
-                                <div id="list-spesimen" class="w-100">
-                                    <p class="text-danger text-small" id="empty-spesimen">Belum ada
-                                        spesimen ditambahkan</p>
-                                </div>
-
-                                <!-- Hidden input -->
-                                <input type="hidden" name="spesimen" id="hidden-spesimen" value="[]">
+                            <div class="form-group">
+                                <label style="min-width: 200px;">Penata Anastesi</label>
+                                <select class="form-select select2" name="penatara_anastesi">
+                                    <option selected disabled>--Pilih--</option>
+                                    @foreach ($perawat as $p)
+                                        <option value="{{ $p->kd_perawat }}">{{ $p->nama }}</option>
+                                    @endforeach
+                                </select>
                             </div>
+
+                            <div class="form-group">
+                                <label style="min-width: 200px;">Perawat Bedah</label>
+                                <select class="form-select select2" name="penatara_anastesi">
+                                    <option selected disabled>--Pilih--</option>
+                                    @foreach ($perawat as $p)
+                                        <option value="{{ $p->kd_perawat }}">{{ $p->nama }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+
                         </div>
 
-                        <div class="form-group">
-                            <label style="min-width: 300px;">Jenis</label>
-                            <input type="text" class="form-control" name="jenis_spesimen">
-                        </div>
-                        <div class="form-group">
-                            <label style="min-width: 300px;">Jumlah Total Jaringan/Cairan
-                                Pemeriksaan</label>
-                            <input type="text" class="form-control" name="total_jaringan_cairan_pemeriksaan">
-                        </div>
-                        <div class="form-group">
-                            <label style="min-width: 300px;">Jenis dari Jaringan</label>
-                            <input type="text" class="form-control" name="jenis_jaringan">
-                        </div>
-                        <div class="form-group">
-                            <label style="min-width: 300px;">Jumlah dari Jaringan</label>
-                            <input type="text" class="form-control" name="jumlah_jaringan">
-                        </div>
-                        <div class="form-group">
-                            <label style="min-width: 300px;">Keterangan</label>
-                            <textarea class="form-control" rows="3" name="keterangan"></textarea>
-                        </div>
-                    </div>
+                        <div class="section-separator">
+                            <h5 class="section-title">8. Evaluasi Pasca Operasi</h5>
+                            <div class="form-group">
+                                <label style="min-width: 300px;">Pemeriksaan Kondisi Kulit Pra
+                                    Operasi</label>
+                                <select class="form-select" name="pemeriksaan_kondisi_kulit_pra_operasi">
+                                    <option selected disabled>--Pilih--</option>
+                                    <option value="Utuh">Utuh</option>
+                                    <option value="Menggelembung">Menggelembung</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label style="min-width: 300px;">Pemeriksaan Kondisi Kulit Pasca
+                                    Operasi</label>
+                                <select class="form-select" name="pemeriksaan_kondisi_kulit_pasca_operasi">
+                                    <option selected disabled>--Pilih--</option>
+                                    <option value="Utuh">Utuh</option>
+                                    <option value="Menggelembung">Menggelembung</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label style="min-width: 300px;">Balutan Luka</label>
+                                <select class="form-select" name="balutan_luka">
+                                    <option selected disabled>--Pilih--</option>
+                                    <option value="Tidak Ada">Tidak Ada</option>
+                                    <option value="Pressure">Pressure</option>
+                                </select>
+                            </div>
 
-                    <div class="section-separator" id="dokumentasiVerifikasi">
-                        <h5 class="section-title"
-                            style="color: #2c3e50; font-weight: 600; padding-bottom: 5px; margin-bottom: 20px;">
-                            9. Dokumentasi dan Verifikasi
-                        </h5>
-                        <div class="card shadow-sm" style="border: none; border-radius: 15px; background: #f8f9fa;">
-                            <div class="card-body p-4">
-                                <!-- E-Signature Perawat Instrumen -->
-                                <div class="row mb-4 align-items-center">
-                                    <div class="col-md-4">
-                                        <label class="fw-bold mb-2" style="color: #34495e;">
-                                            <i class="ti-user me-2" style="color: #3498db;"></i>
-                                            E-Signature Perawat Instrumen
-                                        </label>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <select class="form-select select2" name="perawat_instrumen"
-                                            id="perawat_instrumen" style="border-radius: 10px;">
-                                            <option selected disabled>--Pilih Perawat--</option>
-                                            @foreach ($perawat as $p)
-                                                <option value="{{ $p->kd_perawat }}" data-nama="{{ $p->nama }}">
-                                                    {{ $p->nama }}
-                                                </option>
-                                            @endforeach
+                            <!-- Form Spesimen -->
+                            <div class="form-group">
+                                <label style="min-width: 300px;">Spesimen</label>
+                                <div class="w-100 d-flex flex-column">
+                                    <!-- Input Row -->
+                                    <div class="input-group mb-2">
+                                        <select class="form-select" id="spesimen-select" style="flex: 1;">
+                                            <option value="">--Pilih Kategori--</option>
+                                            <option value="Histologi">Histologi</option>
+                                            <option value="Kultur">Kultur</option>
+                                            <option value="Frozen Section">Frozen Section</option>
+                                            <option value="Sitologi">Sitologi</option>
+                                            <option value="Lainnya">Lainnya</option>
                                         </select>
-                                    </div>
-                                    <div class="col-md-4 text-center">
-                                        <div id="qrcode_perawat_instrumen" class="d-inline-block mb-2">
-                                        </div>
-                                        <p class="fw-medium" style="color: #7f8c8d;">
-                                            <span id="nama_perawat_instrumen" class="d-block mb-1"></span>
-                                            Ns. <span id="kode_perawat_instrumen"
-                                                class="badge bg-light text-dark px-3 py-1"
-                                                style="border-radius: 20px;">.........................</span>
-                                        </p>
-                                    </div>
-                                </div>
 
-                                <!-- E-Signature Perawat Sirkuler -->
-                                <div class="row mb-4 align-items-center">
-                                    <div class="col-md-4">
-                                        <label class="fw-bold mb-2" style="color: #34495e;">
-                                            <i class="ti-user me-2" style="color: #3498db;"></i>
-                                            E-Signature Perawat Sirkuler
-                                        </label>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <select class="form-select select2" name="perawat_sirkuler" id="perawat_sirkuler"
-                                            style="border-radius: 10px;">
-                                            <option selected disabled>--Pilih Perawat--</option>
-                                            @foreach ($perawat as $p)
-                                                <option value="{{ $p->kd_perawat }}" data-nama="{{ $p->nama }}">
-                                                    {{ $p->nama }}
-                                                </option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                    <div class="col-md-4 text-center">
-                                        <div id="qrcode_perawat_sirkuler" class="d-inline-block mb-2">
+                                        <!-- Checkbox (muncul kalau pilih Sitologi atau Lainnya) -->
+                                        <div class="input-group-text bg-white" id="spesimen-checkbox-wrapper"
+                                            style="display: none;">
+                                            <input class="form-check-input mt-0" type="checkbox" id="spesimen-checkbox">
                                         </div>
-                                        <p class="fw-medium" style="color: #7f8c8d;">
-                                            <span id="nama_perawat_sirkuler" class="d-block mb-1"></span>
-                                            Ns. <span id="kode_perawat_sirkuler"
-                                                class="badge bg-light text-dark px-3 py-1"
-                                                style="border-radius: 20px;">.........................</span>
-                                        </p>
-                                    </div>
-                                </div>
 
-                                <!-- Tanggal dan Jam Pencatatan -->
-                                <div class="row mb-4 align-items-center">
-                                    <div class="col-md-4">
-                                        <label class="fw-bold mb-2" style="color: #34495e;">
-                                            <i class="ti-calendar me-2" style="color: #3498db;"></i>
-                                            Tanggal dan Jam Pencatatan
-                                        </label>
+                                        <input type="text" class="form-control" id="spesimen-jenis"
+                                            placeholder="Jenis spesimen" style="flex: 2;">
+                                        <span class="input-group-text bg-white" id="btn-add-spesimen"
+                                            style="cursor: pointer;">
+                                            <i class="bi bi-plus-circle text-primary"></i>
+                                        </span>
                                     </div>
-                                    <div class="col-md-8">
-                                        <div class="d-flex gap-3">
-                                            <input type="date" class="form-control" name="tanggal_pencatatan"
-                                                style="border-radius: 10px; max-width: 200px;">
-                                            <input type="time" class="form-control" name="jam_pencatatan"
-                                                style="border-radius: 10px; max-width: 150px;">
+
+                                    <!-- List Spesimen -->
+                                    <div id="list-spesimen" class="w-100">
+                                        <p class="text-danger text-small" id="empty-spesimen">Belum ada
+                                            spesimen ditambahkan</p>
+                                    </div>
+
+                                    <!-- Hidden input -->
+                                    <input type="hidden" name="spesimen" id="hidden-spesimen" value="[]">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label style="min-width: 300px;">Jenis</label>
+                                <input type="text" class="form-control" name="jenis_spesimen">
+                            </div>
+                            <div class="form-group">
+                                <label style="min-width: 300px;">Jumlah Total Jaringan/Cairan
+                                    Pemeriksaan</label>
+                                <input type="text" class="form-control" name="total_jaringan_cairan_pemeriksaan">
+                            </div>
+                            <div class="form-group">
+                                <label style="min-width: 300px;">Jenis dari Jaringan</label>
+                                <input type="text" class="form-control" name="jenis_jaringan">
+                            </div>
+                            <div class="form-group">
+                                <label style="min-width: 300px;">Jumlah dari Jaringan</label>
+                                <input type="text" class="form-control" name="jumlah_jaringan">
+                            </div>
+                            <div class="form-group">
+                                <label style="min-width: 300px;">Keterangan</label>
+                                <textarea class="form-control" rows="3" name="keterangan"></textarea>
+                            </div>
+                        </div>
+
+                        <div class="section-separator" id="dokumentasiVerifikasi">
+                            <h5 class="section-title"
+                                style="color: #2c3e50; font-weight: 600; padding-bottom: 5px; margin-bottom: 20px;">
+                                9. Dokumentasi dan Verifikasi
+                            </h5>
+                            <div class="card shadow-sm" style="border: none; border-radius: 15px; background: #f8f9fa;">
+                                <div class="card-body p-4">
+                                    <!-- E-Signature Perawat Instrumen -->
+                                    <div class="row mb-4 align-items-center">
+                                        <div class="col-md-4">
+                                            <label class="fw-bold mb-2" style="color: #34495e;">
+                                                <i class="ti-user me-2" style="color: #3498db;"></i>
+                                                E-Signature Perawat Instrumen
+                                            </label>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <select class="form-select select2" name="perawat_instrumen"
+                                                id="perawat_instrumen" style="border-radius: 10px;">
+                                                <option selected disabled>--Pilih Perawat--</option>
+                                                @foreach ($perawat as $p)
+                                                    <option value="{{ $p->kd_perawat }}"
+                                                        data-nama="{{ $p->nama }}">
+                                                        {{ $p->nama }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                        <div class="col-md-4 text-center">
+                                            <div id="qrcode_perawat_instrumen" class="d-inline-block mb-2">
+                                            </div>
+                                            <p class="fw-medium" style="color: #7f8c8d;">
+                                                <span id="nama_perawat_instrumen" class="d-block mb-1"></span>
+                                                Ns. <span id="kode_perawat_instrumen"
+                                                    class="badge bg-light text-dark px-3 py-1"
+                                                    style="border-radius: 20px;">.........................</span>
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                    <!-- E-Signature Perawat Sirkuler -->
+                                    <div class="row mb-4 align-items-center">
+                                        <div class="col-md-4">
+                                            <label class="fw-bold mb-2" style="color: #34495e;">
+                                                <i class="ti-user me-2" style="color: #3498db;"></i>
+                                                E-Signature Perawat Sirkuler
+                                            </label>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <select class="form-select select2" name="perawat_sirkuler"
+                                                id="perawat_sirkuler" style="border-radius: 10px;">
+                                                <option selected disabled>--Pilih Perawat--</option>
+                                                @foreach ($perawat as $p)
+                                                    <option value="{{ $p->kd_perawat }}"
+                                                        data-nama="{{ $p->nama }}">
+                                                        {{ $p->nama }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                        <div class="col-md-4 text-center">
+                                            <div id="qrcode_perawat_sirkuler" class="d-inline-block mb-2">
+                                            </div>
+                                            <p class="fw-medium" style="color: #7f8c8d;">
+                                                <span id="nama_perawat_sirkuler" class="d-block mb-1"></span>
+                                                Ns. <span id="kode_perawat_sirkuler"
+                                                    class="badge bg-light text-dark px-3 py-1"
+                                                    style="border-radius: 20px;">.........................</span>
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                    <!-- Tanggal dan Jam Pencatatan -->
+                                    <div class="row mb-4 align-items-center">
+                                        <div class="col-md-4">
+                                            <label class="fw-bold mb-2" style="color: #34495e;">
+                                                <i class="ti-calendar me-2" style="color: #3498db;"></i>
+                                                Tanggal dan Jam Pencatatan
+                                            </label>
+                                        </div>
+                                        <div class="col-md-8">
+                                            <div class="d-flex gap-3">
+                                                <input type="date" class="form-control" name="tanggal_pencatatan"
+                                                    style="border-radius: 10px; max-width: 200px;">
+                                                <input type="time" class="form-control" name="jam_pencatatan"
+                                                    style="border-radius: 10px; max-width: 150px;">
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
 
-                    <div class="text-end">
-                        <x-button-submit id="submit" />
-                    </div>
+                        <div class="text-end">
+                            <x-button-submit id="submit" />
+                        </div>
 
                 </form>
             </x-content-card>
         </div>
     </div>
 @endsection
-
 @push('js')
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
     <script>
-        $(document).ready(function() {
-            // Pasang event listener untuk Perawat Instrumen
+        $(document).ready(function() { // <-- Buka document.ready DI SINI
+
+            // --- (Blok 1: Logika QR Code Anda) ---
             $('#perawat_instrumen').on('select2:select', function(e) {
                 var kodePerawat = $(this).val();
                 var namaPerawat = $(this).find('option:selected').data(
@@ -962,7 +976,6 @@
                 generateQRCode('qrcode_perawat_instrumen', kodePerawat);
             });
 
-            // Pasang event listener untuk Perawat Sirkuler
             $('#perawat_sirkuler').on('select2:select', function(e) {
                 var kodePerawat = $(this).val();
                 var namaPerawat = $(this).find('option:selected').data(
@@ -976,7 +989,6 @@
                 generateQRCode('qrcode_perawat_sirkuler', kodePerawat);
             });
 
-            // Fungsi untuk membuat QR code
             function generateQRCode(elementId, text) {
                 // Hapus QR code sebelumnya jika ada
                 $('#' + elementId).empty();
@@ -995,6 +1007,39 @@
                     console.error("Error generating QR code:", err);
                 }
             }
-        });
+            // --- (Akhir Blok 1) ---
+
+
+            // --- (Blok 2: Logika Show/Hide Anda) ---
+            /**
+             * Fungsi untuk menampilkan/menyembunyikan elemen
+             * berdasarkan pilihan radio button 'ya'/'tidak'.
+             */
+            function setupConditionalShow(triggerName, targetSelector) {
+                var radioSelector = 'input[name="' + triggerName + '"]';
+
+                $(document).on('change', radioSelector, function() {
+                    if (this.value === 'ya' && this.checked) {
+                        $(targetSelector).slideDown(); // Tampilkan
+                    } else {
+                        $(targetSelector).slideUp(); // Sembunyikan
+                    }
+                });
+
+                // Cek kondisi awal saat halaman dimuat (untuk form edit)
+                var checkedVal = $(radioSelector + ':checked').val();
+                if (checkedVal === 'ya') {
+                    $(targetSelector).show();
+                } else {
+                    $(targetSelector).hide();
+                }
+            }
+
+            // Pemanggilan fungsi Show/Hide
+            setupConditionalShow('alat_terbungkus_status', '.alat-terbungkus-detail');
+            // --- (Akhir Blok 2) ---
+
+
+        }); // <-- Tutup document.ready (HANYA SATU KALI DI AKHIR)
     </script>
 @endpush

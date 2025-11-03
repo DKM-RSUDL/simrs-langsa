@@ -61,7 +61,7 @@ Route::prefix('gawat-darurat')->group(function () {
 
     Route::prefix('pelayanan')->group(function () {
         Route::prefix('/{kd_pasien}/{tgl_masuk}')->group(function () {
-        
+
             // Update Pasien
             Route::prefix('{urut_masuk}/ubah-pasien')->group(function () {
                 Route::name('ubah-pasien')->group(function () {
@@ -113,6 +113,7 @@ Route::prefix('gawat-darurat')->group(function () {
                 Route::name('transfer-rwi')->group(function () {
                     Route::controller(TransferPasienController::class)->group(function () {
                         Route::get('/', 'index');
+                        Route::post('/simpan-temp', 'storeDataTemp')->name('.store-temp');
                         Route::post('/', 'storeTransferInap')->name('.store');
                         Route::post('/get-dokter-spesial-ajax', 'getDokterBySpesial')->name('.get-dokter-spesial-ajax');
                         Route::post('/get-ruang-kelas-ajax', 'getRuanganByKelas')->name('.get-ruang-kelas-ajax');
@@ -210,11 +211,11 @@ Route::prefix('gawat-darurat')->group(function () {
             Route::prefix('asesmen-keperawatan')->group(function () {
                 Route::name('asesmen-keperawatan')->group(function () {
                     Route::controller(AsesmenKeperawatanController::class)->group(function () {
-                        Route::get('/', 'index')->name('.index');
-                        Route::post('/', 'store')->name('.store');
+                        Route::get('/{urut_masuk}/', 'index')->name('.index');
+                        Route::post('/{urut_masuk}/', 'store')->name('.store');
                         Route::get('/{id}', 'show')->name('.show');
-                        Route::get('/{id}/edit', 'edit')->name('.edit');
-                        Route::put('/{id}', 'update')->name('.update');
+                        Route::get('/{urut_masuk}/{id}/edit', 'edit')->name('.edit');
+                        Route::put('/{urut_masuk}/{id}', 'update')->name('.update');
                         Route::get('/{id}/print-pdf', 'generatePDF')->name('.print-pdf');
                     });
                 });
@@ -342,7 +343,6 @@ Route::prefix('gawat-darurat')->group(function () {
                         Route::put('/{data}', 'update')->name('.update');
                         Route::delete('/{data}', 'destroy')->name('.destroy');
                         Route::get('/{id}/print-pdf', 'generatePDF')->name('.print-pdf');
-                        
                     });
                 });
             });

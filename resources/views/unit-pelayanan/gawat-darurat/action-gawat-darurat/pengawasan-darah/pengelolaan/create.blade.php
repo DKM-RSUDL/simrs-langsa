@@ -90,13 +90,14 @@
         </div>
 
         <div class="col-md-9">
-            <div class="text-center mt-1 mb-2">
-                <h5 class="text-secondary fw-bold">Tambah Data Pengelolaan Pengawasan Darah</h5>
-            </div>
+            <x-content-card>
+                <x-button-previous />
 
-            <hr>
-
-            <div class="form-section">
+                @include('components.page-header', [
+                    'title' => 'Tambah Data Pengelolaan Pengawasan Darah',
+                    'description' =>
+                        'Tambah data pengelolaan pengawasan darah pasien gawat darurat dengan mengisi formulir di bawah ini.',
+                ])
                 <form
                     action="{{ route('pengawasan-darah.pengelolaan.store', [
                         'kd_pasien' => $dataMedis->kd_pasien,
@@ -202,8 +203,8 @@
                                         <label for="label_ya" class="text-success">Ya</label>
                                     </div>
                                     <div class="radio-item">
-                                        <input type="radio" name="identitas_label_sesuai" value="0"
-                                            id="label_tidak" required>
+                                        <input type="radio" name="identitas_label_sesuai" value="0" id="label_tidak"
+                                            required>
                                         <label for="label_tidak" class="text-danger">Tidak</label>
                                     </div>
                                 </div>
@@ -324,20 +325,14 @@
                         </div>
                     </div>
 
-                    <!-- Button Actions -->
-                    <div class="row">
-                        <div class="col-12 text-end">
-                            <button type="submit" class="btn btn-primary">
-                                <i class="bi bi-save me-1"></i> Simpan Data Pengelolaan
-                            </button>
-                            <a href="{{ route('pengawasan-darah.index', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}?tab=pengelolaan"
-                                class="btn btn-secondary ms-2">
-                                <i class="ti-arrow-left"></i> Batal
-                            </a>
-                        </div>
+                    <div class="text-end">
+                        <x-button-submit-confirm label="Simpan" confirmTitle="Sudah Yakin?"
+                            confirmText="Pastikan semua data sudah lengkap sebelum disimpan. Lanjutkan menyimpan?"
+                            confirmOk="Simpan" confirmCancel="Batal" :spinner="true" loadingLabel="Menyimpan..."
+                            loadingOverlay="#loadingOverlay" />
                     </div>
                 </form>
-            </div>
+            </x-content-card>
         </div>
     </div>
 @endsection
