@@ -837,8 +837,9 @@
                         }
                         // Jika $alat kosong, $status_ya tetap false (artinya "Tidak")
                     @endphp
+
                     <div class="col-md-12">
-                        <label class="form-label fw-bold">Alat-alat terbungkus:</label>
+                        <label style="min-width: 200px;">Alat-alat terbungkus</label>
 
                         <div class="d-flex align-items-center justify-content-between gap-3">
                             <div class="form-check">
