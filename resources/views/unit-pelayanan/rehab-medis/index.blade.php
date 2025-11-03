@@ -3,25 +3,7 @@
 @section('content')
     @push('css')
         <style>
-            .badge {
-                width: 30px;
-                height: 30px;
-                border-radius: 50%;
-            }
-
-            .badge-triage-yellow {
-                background-color: #ffeb3b;
-            }
-
-            .badge-triage-red {
-                background-color: #f44336;
-            }
-
-            .badge-triage-green {
-                background-color: #4caf50;
-            }
-
-            /* Custom CSS for profile */
+            /* Profile */
             .profile {
                 display: flex;
                 align-items: center;
@@ -46,6 +28,7 @@
                 color: #777;
             }
 
+            /* Select2 — samakan dengan Bootstrap & z-index di modal */
             .select2-container {
                 z-index: 9999;
             }
@@ -62,12 +45,10 @@
                 z-index: 99999 !important;
             }
 
-            /* Menghilangkan elemen Select2 yang tidak diinginkan */
             .select2-container+.select2-container {
                 display: none;
             }
 
-            /* Menyamakan tampilan Select2 dengan Bootstrap */
             .select2-container--default .select2-selection--single {
                 height: calc(1.5em + 0.75rem + 2px);
                 padding: 0.375rem 0.75rem;
@@ -78,7 +59,7 @@
                 background-color: #fff;
                 border: 1px solid #ced4da;
                 border-radius: 0.25rem;
-                transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+                transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
             }
 
             .select2-container--default .select2-selection--single .select2-selection__rendered {
@@ -110,96 +91,56 @@
             }
 
             .select2-container--default .select2-results__option--highlighted[aria-selected] {
-                background-color: #007bff;
+                background-color: #0d6efd;
             }
 
-            /* Fokus */
             .select2-container--default.select2-container--focus .select2-selection--single {
                 border-color: #80bdff;
                 outline: 0;
-                box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
-            }
-
-            .emergency__container {
-                display: flex;
-                align-items: center;
-                gap: 20px;
-            }
-
-            .custom__card {
-                background: linear-gradient(to bottom, #e0f7ff, #a5d8ff);
-                border: 2px solid #a100c9;
-                border-radius: 15px;
-                padding: 8px 15px;
-                width: fit-content;
-                min-width: 150px;
-                display: flex;
-                align-items: center;
-                gap: 20px;
-            }
-
-            .user__icon {
-                width: 40px;
-                height: 40px;
-            }
-
-            .dropdown-submenu {
-                position: relative;
-            }
-
-            .dropdown-submenu>.dropdown-menu {
-                top: 0;
-                left: 100%;
-                margin-top: -6px;
-                margin-left: -1px;
-            }
-
-            .dropdown-submenu:hover>.dropdown-menu {
-                display: block;
-            }
-
-            .dropdown-submenu>a.dropdown-toggle {
-                position: relative;
-                padding-right: 30px;
-            }
-
-            .dropdown-submenu>a.dropdown-toggle::after {
-                position: absolute;
-                right: 10px;
-                top: 50%;
-                transform: translateY(-50%);
-            }
-
-            .dropdown-submenu:hover>a.dropdown-toggle::after {
-                transform: translateY(-50%) rotate(-90deg);
+                box-shadow: 0 0 0 .2rem rgba(13, 110, 253, .25);
             }
         </style>
     @endpush
+
     <x-content-card>
         <div class="row">
             <div class="col-md-12">
-                <div class="emergency__container">
-                    <h4 class="fw-bold">Rehabilitasi Medik</h4>
-                    <div class="custom__card">
-                        <img src="{{ asset('assets/img/icons/Sick.png') }}" alt="User Icon" class="user__icon">
-                        <div class="text-center">
-                            <p class="m-0 p-0">Aktif</p>
-                            <p class="m-0 p-0 fs-4 fw-bold">{{ countUnfinishedPatientWithTglKeluar(74) }}</p>
+                {{-- Header + kartu ringkas (Bootstrap-only) --}}
+                <div class="row g-3 align-items-start">
+                    <div class="col-12 col-md-8">
+                        <h4 class="fw-bold m-0">Rehabilitasi Medik</h4>
+                    </div>
+
+                    <div class="col-12 col-md-4">
+                        <div class="row gap-2">
+                            {{-- Aktif (Primary) --}}
+                            <a href="{{ route('rehab-medis.index') }}" class="text-decoration-none col-6 ms-auto">
+                                <div class="rounded bg-primary text-white">
+                                    <div class="card-body d-flex align-items-center gap-3 px-3">
+                                        <img src="{{ asset('assets/img/icons/Sick.png') }}" alt="Icon" width="36"
+                                            height="36">
+                                        <div class="text-start">
+                                            <div class="small mb-1">Aktif</div>
+                                            <div class="fs-4 fw-bold">{{ countUnfinishedPatientWithTglKeluar(74) }}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+
+                            {{-- Filter Dokter --}}
+                            <div class="col-12 d-flex align-items-center justify-content-md-end mt-3 mt-lg-0">
+                                <label for="dokterSelect" class="form-label me-2 mb-0">Dokter:</label>
+                                <select class="form-select" id="dokterSelect" aria-label="Pilih dokter">
+                                    <option value="" selected>Semua</option>
+                                    @foreach ($dokter as $d)
+                                        <option value="{{ $d->dokter->kd_dokter }}">{{ $d->dokter->nama_lengkap }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
                         </div>
                     </div>
                 </div>
-
-                <div class="d-flex justify-content-end align-items-end gap-3">
-                    <div class="d-flex align-items-center">
-                        <label for="dokterSelect" class="form-label me-2">Dokter:</label>
-                        <select class="form-select" id="dokterSelect" aria-label="Pilih dokter">
-                            <option value="" selected>Semua</option>
-                            @foreach ($dokter as $d)
-                                <option value="{{ $d->dokter->kd_dokter }}">{{ $d->dokter->nama_lengkap }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                </div>
+                {{-- End Header --}}
             </div>
         </div>
 
@@ -223,7 +164,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            {{-- Tabel diisi oleh DataTables --}}
+                            {{-- Diisi oleh DataTables --}}
                         </tbody>
                     </table>
                 </div>
@@ -253,20 +194,22 @@
                         orderable: false,
                         searchable: false,
                         render: function(data, type, row) {
-                            return `<div class="d-flex justify-content-center">
-                                        <a href="${medisGawatDaruratIndexUrl + row.kd_pasien}/${row.tgl_masuk}/${row.urut_masuk}" class="edit btn btn-primary">
-                                                <i class="ti-pencil-alt"></i>
-                                        </a>
-                                    </div>
-                                    `;
+                            return `
+                                <div class="d-flex justify-content-center">
+                                    <a href="${medisGawatDaruratIndexUrl + row.kd_pasien}/${row.tgl_masuk}/${row.urut_masuk}" class="edit btn btn-primary">
+                                        <i class="ti-pencil-alt"></i>
+                                    </a>
+                                </div>
+                            `;
                         }
                     },
                     {
                         data: 'profile',
                         name: 'profile',
                         render: function(data, type, row) {
-                            let imageUrl = row.foto_pasien ? "{{ asset('storage/') }}" + '/' + row
-                                .foto_pasien : "{{ asset('assets/images/avatar1.png') }}";
+                            let imageUrl = row.foto_pasien ?
+                                "{{ asset('storage/') }}" + '/' + row.foto_pasien :
+                                "{{ asset('assets/images/avatar1.png') }}";
                             let gender = row.pasien.jenis_kelamin == '1' ? 'Laki-Laki' :
                                 'Perempuan';
                             return `
@@ -288,12 +231,10 @@
                         render: function(data, type, row) {
                             let kdTriase = row.kd_triase;
                             let classEl = '';
-
                             if (kdTriase == 5) classEl = 'bg-dark';
                             if (kdTriase == 4 || kdTriase == 3) classEl = 'bg-danger';
                             if (kdTriase == 2) classEl = 'bg-warning';
                             if (kdTriase == 1) classEl = 'bg-success';
-
                             return `<div class="rounded-circle ${classEl}" style="width: 35px; height: 35px;"></div>`;
                         },
                         defaultContent: 'null'
@@ -307,13 +248,12 @@
                         data: 'kd_pasien',
                         name: 'kd_pasien',
                         render: function(data, type, row) {
-                            // Assuming row.kd_pasien is the "RM" and row.reg_number is the "Reg" value
                             return `
-                            <div class="rm-reg">
-                                RM: ${row.kd_pasien ? row.kd_pasien : 'N/A'}<br>
-                                Reg: ${row.reg_number ? row.reg_number : 'N/A'}
-                            </div>
-                        `;
+                                <div class="rm-reg">
+                                    RM: ${row.kd_pasien ? row.kd_pasien : 'N/A'}<br>
+                                    Reg: ${row.reg_number ? row.reg_number : 'N/A'}
+                                </div>
+                            `;
                         },
                         defaultContent: ''
                     },
@@ -347,7 +287,7 @@
                         name: 'del',
                         orderable: false,
                         searchable: false,
-                        render: function(data, type, row) {
+                        render: function() {
                             return '<a href="#" class="edit btn btn-danger btn-sm"><i class="bi bi-x-circle"></i></a>';
                         }
                     },
@@ -362,29 +302,13 @@
                 responsive: true,
             });
 
-            initSelect2();
+            // Select2 init kalau kamu pakai (panggil fungsi init milikmu)
+            if (typeof initSelect2 === 'function') initSelect2();
 
-            let rujukanVal = $('#addPatientTriage input[name="rujukan"]').val();
-            if (rujukanVal == '1') $('#addPatientTriage #rujukan_ket').prop('required', true);
-        });
-
-
-        document.addEventListener('DOMContentLoaded', function() {
-            var dropdownSubmenus = document.querySelectorAll('.dropdown-submenu');
-
-            dropdownSubmenus.forEach(function(submenu) {
-                submenu.addEventListener('mouseover', function() {
-                    submenu.querySelector('.dropdown-menu').classList.add('show');
-                });
-
-                submenu.addEventListener('mouseout', function() {
-                    submenu.querySelector('.dropdown-menu').classList.remove('show');
-                });
+            // filter dokter
+            $('#dokterSelect').on('change', function() {
+                $('#rawatDaruratTable').DataTable().ajax.reload();
             });
-        });
-
-        $('#dokterSelect').on('change', function() {
-            $('#rawatDaruratTable').DataTable().ajax.reload();
         });
     </script>
 @endpush

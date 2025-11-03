@@ -3,8 +3,8 @@
     <link rel="stylesheet" href="{{ asset('assets/css/MedisGawatDaruratController.css') }}">
     <style>
         /* .header-background {
-                                                                                                                            background-image: url("{{ asset('assets/img/background_gawat_darurat.png') }}");
-                                                                                                                        } */
+                                                                                                                                background-image: url("{{ asset('assets/img/background_gawat_darurat.png') }}");
+                                                                                                                            } */
     </style>
 @endpush
 
@@ -34,9 +34,11 @@
                         <div class="tab-content" id="myTabContent">
                             <div class="tab-pane fade show active">
                                 {{-- TAB 1. buatlah list disini --}}
-
+                                @include('components.page-header', [
+                                    'title' => 'Daftar Hasil Radiologi',
+                                    'description' => 'Berikut daftar data hasil radiologi gawat darurat.',
+                                ])
                                 <div class="row">
-
                                     <div class="table-responsive">
                                         <table class="table table-bordered table-sm table-hover">
                                             <thead class="table-primary">
