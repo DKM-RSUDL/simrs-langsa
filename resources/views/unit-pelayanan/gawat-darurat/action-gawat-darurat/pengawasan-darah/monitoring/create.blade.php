@@ -66,14 +66,14 @@
         </div>
 
         <div class="col-md-9">
-            <div class="text-center mt-1 mb-2">
-                <h5 class="text-secondary fw-bold">Tambah Data Monitoring Transfusi Darah</h5>
-                <p class="info-text">Form ini dapat diisi secara bertahap dan dapat diedit kembali setelah disimpan</p>
-            </div>
+            <x-content-card>
+                <x-button-previous />
 
-            <hr>
-
-            <div class="form-section">
+                @include('components.page-header', [
+                    'title' => 'Tambah Data Monitoring Transfusi Darah',
+                    'description' =>
+                        'Tambah data monitoring transfusi darah pasien gawat darurat dengan mengisi formulir di bawah ini.',
+                ])
                 <form
                     action="{{ route('pengawasan-darah.monitoring.store', [
                         'kd_pasien' => $dataMedis->kd_pasien,
@@ -94,14 +94,14 @@
                                     <div class="mb-3">
                                         <label class="form-label required">Tanggal</label>
                                         <input type="date" class="form-control" name="tanggal" required
-                                               value="{{ date('Y-m-d') }}">
+                                            value="{{ date('Y-m-d') }}">
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="mb-3">
                                         <label class="form-label required">Jam</label>
                                         <input type="time" class="form-control" name="jam" required
-                                               value="{{ date('H:i') }}">
+                                            value="{{ date('H:i') }}">
                                     </div>
                                 </div>
                             </div>
@@ -119,8 +119,8 @@
                                     <div class="mb-3">
                                         <label class="form-label">TD Sistole</label>
                                         <div class="input-group">
-                                            <input type="number" class="form-control" name="pre_td_sistole" 
-                                                   placeholder="ex: 120" min="0" max="300">
+                                            <input type="number" class="form-control" name="pre_td_sistole"
+                                                placeholder="ex: 120" min="0" max="300">
                                             <span class="input-group-text">mmHg</span>
                                         </div>
                                     </div>
@@ -129,8 +129,8 @@
                                     <div class="mb-3">
                                         <label class="form-label">TD Diastole</label>
                                         <div class="input-group">
-                                            <input type="number" class="form-control" name="pre_td_diastole" 
-                                                   placeholder="ex: 80" min="0" max="200">
+                                            <input type="number" class="form-control" name="pre_td_diastole"
+                                                placeholder="ex: 80" min="0" max="200">
                                             <span class="input-group-text">mmHg</span>
                                         </div>
                                     </div>
@@ -139,8 +139,8 @@
                                     <div class="mb-3">
                                         <label class="form-label">Nadi</label>
                                         <div class="input-group">
-                                            <input type="number" class="form-control" name="pre_nadi" 
-                                                   placeholder="ex: 80" min="0" max="200">
+                                            <input type="number" class="form-control" name="pre_nadi" placeholder="ex: 80"
+                                                min="0" max="200">
                                             <span class="input-group-text">x/mnt</span>
                                         </div>
                                     </div>
@@ -149,8 +149,8 @@
                                     <div class="mb-3">
                                         <label class="form-label">Suhu</label>
                                         <div class="input-group">
-                                            <input type="number" step="0.1" class="form-control" name="pre_temp" 
-                                                   placeholder="ex: 36.5" min="30" max="45">
+                                            <input type="number" step="0.1" class="form-control" name="pre_temp"
+                                                placeholder="ex: 36.5" min="30" max="45">
                                             <span class="input-group-text">°C</span>
                                         </div>
                                     </div>
@@ -159,8 +159,8 @@
                                     <div class="mb-3">
                                         <label class="form-label">RR</label>
                                         <div class="input-group">
-                                            <input type="number" class="form-control" name="pre_rr" 
-                                                   placeholder="ex: 20" min="0" max="50">
+                                            <input type="number" class="form-control" name="pre_rr" placeholder="ex: 20"
+                                                min="0" max="50">
                                             <span class="input-group-text">x/mnt</span>
                                         </div>
                                     </div>
@@ -194,8 +194,8 @@
                                     <div class="mb-3">
                                         <label class="form-label">TD Sistole</label>
                                         <div class="input-group">
-                                            <input type="number" class="form-control" name="post15_td_sistole" 
-                                                   placeholder="ex: 120" min="0" max="300">
+                                            <input type="number" class="form-control" name="post15_td_sistole"
+                                                placeholder="ex: 120" min="0" max="300">
                                             <span class="input-group-text">mmHg</span>
                                         </div>
                                     </div>
@@ -204,8 +204,8 @@
                                     <div class="mb-3">
                                         <label class="form-label">TD Diastole</label>
                                         <div class="input-group">
-                                            <input type="number" class="form-control" name="post15_td_diastole" 
-                                                   placeholder="ex: 80" min="0" max="200">
+                                            <input type="number" class="form-control" name="post15_td_diastole"
+                                                placeholder="ex: 80" min="0" max="200">
                                             <span class="input-group-text">mmHg</span>
                                         </div>
                                     </div>
@@ -214,8 +214,8 @@
                                     <div class="mb-3">
                                         <label class="form-label">Nadi</label>
                                         <div class="input-group">
-                                            <input type="number" class="form-control" name="post15_nadi" 
-                                                   placeholder="ex: 80" min="0" max="200">
+                                            <input type="number" class="form-control" name="post15_nadi"
+                                                placeholder="ex: 80" min="0" max="200">
                                             <span class="input-group-text">x/mnt</span>
                                         </div>
                                     </div>
@@ -224,8 +224,8 @@
                                     <div class="mb-3">
                                         <label class="form-label">Suhu</label>
                                         <div class="input-group">
-                                            <input type="number" step="0.1" class="form-control" name="post15_temp" 
-                                                   placeholder="ex: 36.5" min="30" max="45">
+                                            <input type="number" step="0.1" class="form-control" name="post15_temp"
+                                                placeholder="ex: 36.5" min="30" max="45">
                                             <span class="input-group-text">°C</span>
                                         </div>
                                     </div>
@@ -234,8 +234,8 @@
                                     <div class="mb-3">
                                         <label class="form-label">RR</label>
                                         <div class="input-group">
-                                            <input type="number" class="form-control" name="post15_rr" 
-                                                   placeholder="ex: 20" min="0" max="50">
+                                            <input type="number" class="form-control" name="post15_rr"
+                                                placeholder="ex: 20" min="0" max="50">
                                             <span class="input-group-text">x/mnt</span>
                                         </div>
                                     </div>
@@ -255,8 +255,8 @@
                                     <div class="mb-3">
                                         <label class="form-label">TD Sistole</label>
                                         <div class="input-group">
-                                            <input type="number" class="form-control" name="post1h_td_sistole" 
-                                                   placeholder="120" min="0" max="300">
+                                            <input type="number" class="form-control" name="post1h_td_sistole"
+                                                placeholder="120" min="0" max="300">
                                             <span class="input-group-text">mmHg</span>
                                         </div>
                                     </div>
@@ -265,8 +265,8 @@
                                     <div class="mb-3">
                                         <label class="form-label">TD Diastole</label>
                                         <div class="input-group">
-                                            <input type="number" class="form-control" name="post1h_td_diastole" 
-                                                   placeholder="80" min="0" max="200">
+                                            <input type="number" class="form-control" name="post1h_td_diastole"
+                                                placeholder="80" min="0" max="200">
                                             <span class="input-group-text">mmHg</span>
                                         </div>
                                     </div>
@@ -275,8 +275,8 @@
                                     <div class="mb-3">
                                         <label class="form-label">Nadi</label>
                                         <div class="input-group">
-                                            <input type="number" class="form-control" name="post1h_nadi" 
-                                                   placeholder="80" min="0" max="200">
+                                            <input type="number" class="form-control" name="post1h_nadi"
+                                                placeholder="80" min="0" max="200">
                                             <span class="input-group-text">x/mnt</span>
                                         </div>
                                     </div>
@@ -285,8 +285,8 @@
                                     <div class="mb-3">
                                         <label class="form-label">Suhu</label>
                                         <div class="input-group">
-                                            <input type="number" step="0.1" class="form-control" name="post1h_temp" 
-                                                   placeholder="36.5" min="30" max="45">
+                                            <input type="number" step="0.1" class="form-control" name="post1h_temp"
+                                                placeholder="36.5" min="30" max="45">
                                             <span class="input-group-text">°C</span>
                                         </div>
                                     </div>
@@ -295,8 +295,8 @@
                                     <div class="mb-3">
                                         <label class="form-label">RR</label>
                                         <div class="input-group">
-                                            <input type="number" class="form-control" name="post1h_rr" 
-                                                   placeholder="20" min="0" max="50">
+                                            <input type="number" class="form-control" name="post1h_rr" placeholder="20"
+                                                min="0" max="50">
                                             <span class="input-group-text">x/mnt</span>
                                         </div>
                                     </div>
@@ -313,8 +313,8 @@
                         <div class="card-body">
                             <div class="mb-3">
                                 <label class="form-label">Reaksi Selama Transfusi</label>
-                                <textarea class="form-control" name="reaksi_selama_transfusi" rows="3" 
-                                          placeholder="Deskripsikan reaksi yang terjadi selama transfusi (jika ada)"></textarea>
+                                <textarea class="form-control" name="reaksi_selama_transfusi" rows="3"
+                                    placeholder="Deskripsikan reaksi yang terjadi selama transfusi (jika ada)"></textarea>
                             </div>
                         </div>
                     </div>
@@ -344,8 +344,8 @@
                                     <div class="mb-3">
                                         <label class="form-label">TD Sistole</label>
                                         <div class="input-group">
-                                            <input type="number" class="form-control" name="post4h_td_sistole" 
-                                                   placeholder="ex: 120" min="0" max="300">
+                                            <input type="number" class="form-control" name="post4h_td_sistole"
+                                                placeholder="ex: 120" min="0" max="300">
                                             <span class="input-group-text">mmHg</span>
                                         </div>
                                     </div>
@@ -354,8 +354,8 @@
                                     <div class="mb-3">
                                         <label class="form-label">TD Diastole</label>
                                         <div class="input-group">
-                                            <input type="number" class="form-control" name="post4h_td_diastole" 
-                                                   placeholder="ex: 80" min="0" max="200">
+                                            <input type="number" class="form-control" name="post4h_td_diastole"
+                                                placeholder="ex: 80" min="0" max="200">
                                             <span class="input-group-text">mmHg</span>
                                         </div>
                                     </div>
@@ -364,8 +364,8 @@
                                     <div class="mb-3">
                                         <label class="form-label">TD Nadi</label>
                                         <div class="input-group">
-                                            <input type="number" class="form-control" name="post4h_nadi" 
-                                                   placeholder="ex: 80" min="0" max="200">
+                                            <input type="number" class="form-control" name="post4h_nadi"
+                                                placeholder="ex: 80" min="0" max="200">
                                             <span class="input-group-text">x/mnt</span>
                                         </div>
                                     </div>
@@ -374,8 +374,8 @@
                                     <div class="mb-3">
                                         <label class="form-label">Suhu</label>
                                         <div class="input-group">
-                                            <input type="number" step="0.1" class="form-control" name="post4h_temp" 
-                                                   placeholder="ex: 36.5" min="30" max="45">
+                                            <input type="number" step="0.1" class="form-control" name="post4h_temp"
+                                                placeholder="ex: 36.5" min="30" max="45">
                                             <span class="input-group-text">°C</span>
                                         </div>
                                     </div>
@@ -384,8 +384,8 @@
                                     <div class="mb-3">
                                         <label class="form-label">RR</label>
                                         <div class="input-group">
-                                            <input type="number" class="form-control" name="post4h_rr" 
-                                                   placeholder="ex: 20" min="0" max="50">
+                                            <input type="number" class="form-control" name="post4h_rr"
+                                                placeholder="ex: 20" min="0" max="50">
                                             <span class="input-group-text">x/mnt</span>
                                         </div>
                                     </div>
@@ -402,8 +402,8 @@
                         <div class="card-body">
                             <div class="mb-3">
                                 <label class="form-label">Reaksi Transfusi</label>
-                                <textarea class="form-control" name="reaksi_transfusi" rows="3" 
-                                          placeholder="Deskripsikan reaksi yang terjadi setelah transfusi (jika ada)"></textarea>
+                                <textarea class="form-control" name="reaksi_transfusi" rows="3"
+                                    placeholder="Deskripsikan reaksi yang terjadi setelah transfusi (jika ada)"></textarea>
                             </div>
                         </div>
                     </div>
@@ -445,20 +445,14 @@
                         </div>
                     </div>
 
-                    <!-- Button Actions -->
-                    <div class="row">
-                        <div class="col-12 text-end">
-                            <button type="submit" class="btn btn-primary">
-                                Simpan Data Monitoring
-                            </button>
-                            <a href="{{ route('pengawasan-darah.index', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}?tab=monitoring"
-                                class="btn btn-secondary ms-2">
-                                Batal
-                            </a>
-                        </div>
-                    </div>           
+                    <div class="text-end">
+                        <x-button-submit-confirm label="Simpan" confirmTitle="Sudah Yakin?"
+                            confirmText="Pastikan semua data sudah lengkap sebelum disimpan. Lanjutkan menyimpan?"
+                            confirmOk="Simpan" confirmCancel="Batal" :spinner="true" loadingLabel="Menyimpan..."
+                            loadingOverlay="#loadingOverlay" />
+                    </div>
                 </form>
-            </div>
+            </x-content-card>
         </div>
     </div>
 @endsection
@@ -512,11 +506,6 @@
                     });
                     return;
                 }
-
-                // Konfirmasi penyimpanan
-                if (!confirm('Apakah Anda yakin ingin menyimpan data monitoring ini?')) {
-                    e.preventDefault();
-                }
             });
 
             // Auto-fill jam berdasarkan jam mulai (opsional)
@@ -525,7 +514,7 @@
                     // Auto suggest jam selesai 2 jam setelah jam mulai (opsional)
                     const jamMulai = new Date('2000-01-01 ' + this.value);
                     jamMulai.setHours(jamMulai.getHours() + 2);
-                    
+
                     if (jamMulai.getDate() === new Date('2000-01-01').getDate()) { // Tidak melewati hari
                         jamSelesaiInput.value = jamMulai.toTimeString().slice(0, 5);
                     }
