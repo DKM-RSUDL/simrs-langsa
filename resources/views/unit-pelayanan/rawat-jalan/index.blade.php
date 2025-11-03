@@ -23,7 +23,7 @@
                 @foreach ($unit as $unt)
                     @can('access-unit', $unt->kd_unit)
                         <div class="col-md-2 p-2 unit-card" data-unit-name="{{ strtolower($unt->nama_unit) }}">
-                            <a href="{{ route('rawat-jalan.unit', $unt->kd_unit) }}" class="text-decoration-none card-hover">
+                            <a href="{{ route('rawat-jalan.unit.belum-selesai', $unt->kd_unit) }}" class="text-decoration-none card-hover">
                                 <div class="card mb-3 rounded-2 bg-white dark:bg-dark text-dark dark:text-light">
                                     <div class="card-body text-center d-flex flex-column">
                                         <h6 class="fw-bold text-primary mb-2">{{ $unt->nama_unit }}</h6>

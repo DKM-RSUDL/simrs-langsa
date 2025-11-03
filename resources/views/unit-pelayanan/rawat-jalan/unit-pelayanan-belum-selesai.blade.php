@@ -92,20 +92,6 @@
                     <div class="col-12 col-md-6">
                         <div class="row">
 
-                            {{-- Semua Pasien (Primary) --}}
-                            <a href="{{ route('rawat-jalan.unit', $unit->kd_unit) }}" class="text-decoration-none col-4">
-                                <div class="rounded bg-primary text-white">
-                                    <div class="card-body d-flex align-items-center gap-3 px-3">
-                                        <img src="{{ asset('assets/img/icons/Sick.png') }}" alt="Icon" width="36"
-                                            height="36">
-                                        <div class="text-start">
-                                            <div class="small mb-1">Semua Pasien</div>
-                                            <div class="fs-4 fw-bold">{{ countActivePatientRajal($unit->kd_unit) }}</div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </a>
-
                             {{-- Belum Selesai (Warning) --}}
                             <a href="{{ route('rawat-jalan.unit.belum-selesai', $unit->kd_unit) }}"
                                 class="text-decoration-none col-4">
@@ -137,6 +123,19 @@
                                 </div>
                             </a>
 
+                            {{-- Semua Pasien (Primary) --}}
+                            <a href="{{ route('rawat-jalan.unit', $unit->kd_unit) }}" class="text-decoration-none col-4">
+                                <div class="rounded bg-primary text-white">
+                                    <div class="card-body d-flex align-items-center gap-3 px-3">
+                                        <img src="{{ asset('assets/img/icons/Sick.png') }}" alt="Icon" width="36"
+                                            height="36">
+                                        <div class="text-start">
+                                            <div class="small mb-1">Semua Pasien</div>
+                                            <div class="fs-4 fw-bold">{{ countActivePatientRajal($unit->kd_unit) }}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
                         </div>
                     </div>
                 </div>
