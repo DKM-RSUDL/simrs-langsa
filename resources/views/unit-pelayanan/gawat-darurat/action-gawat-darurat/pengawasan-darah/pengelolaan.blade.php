@@ -167,12 +167,15 @@
                                                                     'urut_masuk' => $dataMedis->urut_masuk,
                                                                     'id' => $data->id,
                                                                 ]) }}"
-                                                                method="POST" class="delete-form d-inline">
+                                                                method="post">
                                                                 @csrf
-                                                                @method('DELETE')
-                                                                <button type="submit" class="btn btn-danger btn-sm"
-                                                                    title="Hapus">
-                                                                    <i class="bi bi-trash"></i>
+                                                                @method('delete')
+
+                                                                <button type="submit" class="btn btn-sm btn-danger"
+                                                                    data-confirm data-confirm-title="Anda yakin?"
+                                                                    data-confirm-text="Data yang dihapus tidak dapat dikembalikan"
+                                                                    title="Hapus operasi" aria-label="Hapus operasi">
+                                                                    <i class="fas fa-trash"></i>
                                                                 </button>
                                                             </form>
                                                         </x-table-action>
@@ -220,28 +223,5 @@
 @endsection
 
 @push('js')
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // SweetAlert untuk konfirmasi hapus
-            document.querySelectorAll('.delete-form').forEach(form => {
-                form.addEventListener('submit', function(e) {
-                    e.preventDefault();
-                    Swal.fire({
-                        title: 'Apakah Anda yakin?',
-                        text: 'Data pengelolaan pengawasan darah ini akan dihapus secara permanen!',
-                        icon: 'warning',
-                        showCancelButton: true,
-                        confirmButtonColor: '#d33',
-                        cancelButtonColor: '#3085d6',
-                        confirmButtonText: 'Ya, hapus!',
-                        cancelButtonText: 'Batal'
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            form.submit();
-                        }
-                    });
-                });
-            });
-        });
-    </script>
+    <script src="{{ asset('js/helpers/confirm.js') }}"></script>
 @endpush

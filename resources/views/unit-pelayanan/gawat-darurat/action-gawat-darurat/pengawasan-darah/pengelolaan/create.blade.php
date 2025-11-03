@@ -326,7 +326,10 @@
                     </div>
 
                     <div class="text-end">
-                        <x-button-submit />
+                        <x-button-submit-confirm label="Simpan" confirmTitle="Sudah Yakin?"
+                            confirmText="Pastikan semua data sudah lengkap sebelum disimpan. Lanjutkan menyimpan?"
+                            confirmOk="Simpan" confirmCancel="Batal" :spinner="true" loadingLabel="Menyimpan..."
+                            loadingOverlay="#loadingOverlay" />
                     </div>
                 </form>
             </x-content-card>
