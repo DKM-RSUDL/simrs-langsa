@@ -7,7 +7,7 @@
     </style>
 @endpush
 
-<div class="d-grid gap-2">
+<div class="col-md-2 text-end">
     <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addRadiologiModal" type="button">
         <i class="ti-plus"></i> Tambah
     </button>
@@ -32,7 +32,7 @@
                 <div class="modal-body">
                     <div class="row">
                         <div class="col-md-4">
-                            <div class="patient-card">
+                            <x-content-card>
                                 <label for="kd_dokter" class="form-label fw-bold h5 text-dark">Dokter Pengirim:</label>
                                 <select id="kd_dokter" name="kd_dokter"
                                     class="form-select @error('kd_dokter') is-invalid @enderror"
@@ -75,9 +75,9 @@
                                         @enderror
                                     </div>
                                 </div>
-                            </div>
+                            </x-content-card>
 
-                            <div class="patient-card mt-4">
+                            <x-content-card>
                                 <div class="row">
                                     <div class="col-6">
                                         <label class="form-label fw-bold h5 text-dark">Cito?</label>
@@ -99,30 +99,10 @@
                                             </div>
                                         @enderror
                                     </div>
-                                    {{-- <div class="col-6">
-                                        <label class="form-label fw-bold h5 text-dark">Puasa?</label>
-                                        <div class="form-check">
-                                            <input class="form-check-input @error('puasa') is-invalid @enderror"
-                                                type="radio" name="puasa" value="1" id="puasa_yes"
-                                                @checked(old('puasa') == 1) required>
-                                            <label class="form-check-label" for="puasa_yes">Ya</label>
-                                        </div>
-                                        <div class="form-check">
-                                            <input class="form-check-input @error('puasa') is-invalid @enderror"
-                                                type="radio" name="puasa" value="0" id="puasa_no"
-                                                @checked(old('puasa') == 0) required>
-                                            <label class="form-check-label" for="puasa_no">Tidak</label>
-                                        </div>
-                                        @error('puasa')
-                                            <div class="invalid-feedback">
-                                                {{ $error }}
-                                            </div>
-                                        @enderror
-                                    </div> --}}
                                 </div>
-                            </div>
+                            </x-content-card>
 
-                            <div class="patient-card mt-4">
+                            <x-content-card>
                                 <h6 class="fw-bold">Jadwal Pemeriksaan</h6>
                                 <p class="text-muted">
                                     Tanggal ini diisi jika pemeriksaan radiologi dijadwalkan bukan pada hari ini.
@@ -144,40 +124,40 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            </x-content-card>
 
-                            <div class="patient-card mt-4">
+                            <x-content-card>
                                 <h6 class="fw-bold">Diagnosis</h6>
                                 <textarea class="form-control" id="diagnosis" name="diagnosis">{{ old('diagnosis', count($resumeData->diagnosis ?? []) > 0 ? implode(', ', $resumeData->diagnosis ?? []) : '') }}</textarea>
-                            </div>
+                            </x-content-card>
 
-                            <div class="patient-card mt-4">
+                            <x-content-card>
                                 <h6 class="fw-bold">Indikasi Klinis</h6>
                                 <textarea class="form-control" id="indikasi_klinis" name="indikasi_klinis">{{ old('indikasi_klinis', $resumeData->anamnesis ?? '') }}</textarea>
+                            </x-content-card>
+                        </div>
+
+                        <div class="col-md-8">
+                            <div class="col-12">
+                                <x-content-card>
+                                    <div class="dropdown">
+                                        <p class="fw-bold">Pilih Jenis Pemeriksaan</p>
+                                        <input type="text" class="form-control" id="searchInput"
+                                            placeholder="Cari produk..." autocomplete="off">
+                                        <ul class="dropdown-menu w-100" id="dataList" aria-labelledby="searchInput"
+                                            style="display: none;"></ul>
+                                    </div>
+                                </x-content-card>
+                            </div>
+
+                            <div class="col-12">
+                                <x-content-card>
+                                    <h6 class="fw-bold">Daftar Order Pemeriksaan</h6>
+                                    <ul id="orderList" class="list-group"></ul>
+                                </x-content-card>
                             </div>
                         </div>
 
-                        <div class="col-md-4">
-                            <div class="patient-card">
-                                {{-- <select id="jenis_pemeriksaan" name="jenis_pemeriksaan" class="form-select" aria-label="Pilih jenis pemeriksaan">
-                                    <option value="" disabled selected>--Pilih Kategori--</option>
-                                </select> --}}
-
-                                <div class="dropdown mt-3">
-                                    <input type="text" class="form-control mt-3" id="searchInput"
-                                        placeholder="Cari produk..." autocomplete="off">
-                                    <ul class="dropdown-menu w-100" id="dataList" aria-labelledby="searchInput"
-                                        style="display: none;"></ul>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-md-4">
-                            <div class="patient-card">
-                                <h6 class="fw-bold">Daftar Order Pemeriksaan</h6>
-                                <ul id="orderList" class="list-group"></ul>
-                            </div>
-                        </div>
                     </div>
                 </div>
 
@@ -212,7 +192,7 @@
                 <div class="modal-body">
                     <div class="row">
                         <div class="col-md-4">
-                            <div class="patient-card">
+                            <x-content-card>
                                 <label for="kd_dokter" class="form-label fw-bold h5 text-dark">Dokter
                                     Pengirim:</label>
                                 <select id="kd_dokter" name="kd_dokter"
@@ -256,9 +236,9 @@
                                         @enderror
                                     </div>
                                 </div>
-                            </div>
+                            </x-content-card>
 
-                            <div class="patient-card mt-4">
+                            <x-content-card>
                                 <div class="row">
                                     <div class="col-6">
                                         <label class="form-label fw-bold h5 text-dark">Cito?</label>
@@ -301,9 +281,9 @@
                                         @enderror
                                     </div> --}}
                                 </div>
-                            </div>
+                            </x-content-card>
 
-                            <div class="patient-card mt-4">
+                            <x-content-card>
                                 <h6 class="fw-bold">Jadwal Pemeriksaan</h6>
                                 <p class="text-muted">
                                     Tanggal ini diisi jika pemeriksaan radiologi dijadwalkan bukan pada hari ini.
@@ -325,38 +305,37 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            </x-content-card>
 
-                            <div class="patient-card mt-4">
+                            <x-content-card>
                                 <h6 class="fw-bold">Diagnosis</h6>
                                 <textarea class="form-control" id="diagnosis" name="diagnosis">{{ old('diagnosis') }}</textarea>
-                            </div>
+                            </x-content-card>
 
-                            <div class="patient-card mt-4">
+                            <x-content-card>
                                 <h6 class="fw-bold">Indikasi Klinis</h6>
                                 <textarea class="form-control" id="indikasi_klinis" name="indikasi_klinis">{{ old('indikasi_klinis') }}</textarea>
-                            </div>
+                            </x-content-card>
                         </div>
 
-                        <div class="col-md-4">
-                            <div class="patient-card">
-                                {{-- <select id="jenis_pemeriksaan" name="jenis_pemeriksaan" class="form-select" aria-label="Pilih jenis pemeriksaan">
-                                    <option value="" disabled selected>--Pilih Kategori--</option>
-                                </select> --}}
-
-                                <div class="dropdown mt-3">
-                                    <input type="text" class="form-control mt-3" id="searchInput"
-                                        placeholder="Cari produk..." autocomplete="off">
-                                    <ul class="dropdown-menu w-100" id="dataList" aria-labelledby="searchInput"
-                                        style="display: none;"></ul>
-                                </div>
+                        <div class="col-md-8">
+                            <div class="col-12">
+                                <x-content-card>
+                                    <div class="dropdown">
+                                        <p class="fw-bold">Pilih Jenis Pemeriksaan</p>
+                                        <input type="text" class="form-control" id="searchInput"
+                                            placeholder="Cari produk..." autocomplete="off">
+                                        <ul class="dropdown-menu w-100" id="dataList" aria-labelledby="searchInput"
+                                            style="display: none;"></ul>
+                                    </div>
+                                </x-content-card>
                             </div>
-                        </div>
 
-                        <div class="col-md-4">
-                            <div class="patient-card">
-                                <h6 class="fw-bold">Daftar Order Pemeriksaan</h6>
-                                <ul id="orderList" class="list-group"></ul>
+                            <div class="col-12">
+                                <x-content-card>
+                                    <h6 class="fw-bold">Daftar Order Pemeriksaan</h6>
+                                    <ul id="orderList" class="list-group"></ul>
+                                </x-content-card>
                             </div>
                         </div>
                     </div>
@@ -386,7 +365,7 @@
             <div class="modal-body">
                 <div class="row">
                     <div class="col-md-4">
-                        <div class="patient-card">
+                        <x-content-card>
                             <div class="row">
                                 <div class="col-12">
                                     <p class="p-0 m-0"><strong>Dokter pengirim :</strong></p>
@@ -400,9 +379,9 @@
                                     <p class="p-0 m-0" id="jadwal_order"></p>
                                 </div>
                             </div>
-                        </div>
+                        </x-content-card>
 
-                        <div class="patient-card mt-4">
+                        <x-content-card>
                             <div class="row">
                                 <div class="col-6">
                                     <p class="p-0 m-0"><strong>Cito :</strong> <span id="cyto"></span></p>
@@ -411,42 +390,42 @@
                                     <p class="p-0 m-0"><strong>Puasa :</strong> <span id="puasa"></span></p>
                                 </div> --}}
                             </div>
-                        </div>
+                        </x-content-card>
 
-                        <div class="patient-card mt-4">
+                        <x-content-card>
                             <div class="row">
                                 <div class="col-12">
                                     <p class="p-0 m-0"><strong>Jadwal Pemeriksaan :</strong></p>
                                     <p class="p-0 m-0" id="jadwal_pemeriksaan"></p>
                                 </div>
                             </div>
-                        </div>
+                        </x-content-card>
 
-                        <div class="patient-card mt-4">
+                        <x-content-card>
                             <div class="row">
                                 <div class="col-12">
                                     <p class="p-0 m-0"><strong>Diagnosis :</strong></p>
                                     <p class="p-0 m-0" id="diagnosis">Tidak ada diagnosis</p>
                                 </div>
                             </div>
-                        </div>
+                        </x-content-card>
 
-                        <div class="patient-card mt-4">
+                        <x-content-card>
                             <div class="row">
                                 <div class="col-12">
                                     <p class="p-0 m-0"><strong>Indikasi Klinis :</strong></p>
                                     <p class="p-0 m-0" id="indikasi_klinis">Tidak ada indikasi</p>
                                 </div>
                             </div>
-                        </div>
+                        </x-content-card>
                     </div>
 
                     <div class="col-md-4">
-                        <div class="patient-card">
+                        <x-content-card>
                             <h6 class="fw-bold">Daftar Pemeriksaan</h6>
                             <ul id="orderList" class="list-group">
                             </ul>
-                        </div>
+                        </x-content-card>
                     </div>
                 </div>
             </div>
