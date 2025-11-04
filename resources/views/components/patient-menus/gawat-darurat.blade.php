@@ -139,6 +139,10 @@
                             class="list-group-item list-group-item-action">
                             Triase
                         </a>
+                        <a href="{{ route('tindakan.print-pdf', [$dataMedis?->kd_pasien ?? '', $dataMedis?->tgl_masuk ?? '']) }}?{{ request()->getQueryString() }}"
+                            target="_blank" class="list-group-item list-group-item-action">
+                            Daftar Tindakan
+                        </a>
                     </div>
                 </div>
             </div>

@@ -13,18 +13,22 @@ use App\Models\ListTindakanPasien;
 use App\Models\Produk;
 use App\Models\RMEResume;
 use App\Models\RmeResumeDtl;
+use App\Services\BaseService;
 use Exception;
 use Illuminate\Support\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class TindakanController extends Controller
 {
+    private $baseService;
     public function __construct()
     {
         $this->middleware('can:read unit-pelayanan/gawat-darurat');
+        $this->baseService = new BaseService();
     }
 
     public function index(Request $request, $kd_pasien, $tgl_masuk)
@@ -466,6 +470,92 @@ class TindakanController extends Controller
                 'data'      => []
             ], 500);
         }
+    }
+
+    public function printPDF(Request $request, $kd_pasien, $tgl_masuk)
+    {
+        // 1. Logika untuk mendapatkan $dataMedis (Disalin dari fungsi index)
+        $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
+            ->join('transaksi as t', function ($join) {
+                $join->on('kunjungan.kd_pasien', '=', 't.kd_pasien');
+                $join->on('kunjungan.kd_unit', '=', 't.kd_unit');
+                $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
+                $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
+            })
+            ->where('kunjungan.kd_pasien', $kd_pasien)
+            ->where('kunjungan.kd_unit', 3)
+            ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
+            ->first();
+
+        // 2. Logika filter dan query untuk $tindakan (Disalin dari fungsi index)
+        $periode = $request->input('periode');
+        $startDate = $request->input('start_date');
+        $endDate = $request->input('end_date');
+        $search = $request->input('search');
+
+        $tindakan = ListTindakanPasien::with(['produk', 'ppa', 'unit'])
+            // filter data per periode
+            ->when($periode && $periode !== 'semua', function ($query) use ($periode) {
+                $now = now();
+                switch ($periode) {
+                    case 'option1':
+                        return $query->whereYear('tgl_tindakan', $now->year)
+                            ->whereMonth('tgl_tindakan', $now->month);
+                    case 'option2':
+                        return $query->where('tgl_tindakan', '>=', $now->subMonth(1));
+                    case 'option3':
+                        return $query->where('tgl_tindakan', '>=', $now->subMonths(3));
+                    case 'option4':
+                        return $query->where('tgl_tindakan', '>=', $now->subMonths(6));
+                    case 'option5':
+                        return $query->where('tgl_tindakan', '>=', $now->subMonths(9));
+                }
+            })
+            ->when($startDate, function ($query) use ($startDate) {
+                return $query->whereDate('tgl_tindakan', '>=', $startDate);
+            })
+            ->when($endDate, function ($query) use ($endDate) {
+                return $query->whereDate('tgl_tindakan', '<=', $endDate);
+            })
+            // end filter data
+            ->where('kd_pasien', $kd_pasien)
+            ->where('tgl_masuk', $tgl_masuk)
+            ->where('kd_unit', $dataMedis->kd_unit)
+            ->where('urut_masuk', $dataMedis->urut_masuk)
+            // Filter pencarian
+            ->when($search, function ($query, $search) {
+                $search = strtolower($search);
+
+                if (is_numeric($search) && strlen($search) > 3) {
+                    return $query->where('tgl_tindakan', $search);
+                }
+                return $query->where(function ($q) use ($search) {
+                    $q->whereRaw('LOWER(tgl_tindakan) like ?', ["%$search%"])
+                        ->orWhereHas('ppa', function ($q) use ($search) {
+                            $q->whereRaw('LOWER(nama_lengkap) like ?', ["%$search%"]);
+                        })
+                        ->orWhereHas('produk', function ($q) use ($search) {
+                            $q->whereRaw('LOWER(deskripsi) like ?', ["%$search%"]);
+                        });
+                });
+            })
+            ->get();
+
+        if (!$dataMedis) {
+            abort(404, 'Data not found');
+        }
+
+        // 4. BUAT PDF
+        $pdf = Pdf::loadView('unit-pelayanan.gawat-darurat.action-gawat-darurat.tindakan.print', compact(
+            'dataMedis',
+            'tindakan'
+        ));
+
+        // Atur ukuran kertas
+        $pdf->setPaper('a4', 'potret'); // 'landscape' (horizontal) atau 'portrait' (vertikal)
+
+        // 5. TAMPILKAN PDF DI BROWSER
+        return $pdf->stream('daftar-tindakan-' . $dataMedis->pasien->nama_pasien . '.pdf');
     }
 
 
