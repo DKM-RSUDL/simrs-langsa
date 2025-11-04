@@ -127,13 +127,68 @@
 
                 <!-- Modal Footer -->
                 <div class="modal-footer">
+                    <button type="button" class="btn btn-info btn-print">
+                        <i class="fas fa-print"></i>
+                        Print
+                    </button>
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
                     @if ($laborPK->status == 1)
                         <button type="submit" class="btn btn-primary">Simpan</button>
                     @endif
                 </div>
-
-            </form>
         </div>
+
+        @push('js')
+            <script>
+                // Cetak hanya lewat tombol print, bukan event modal show
+
+                $('.btn-print').click(function() {
+                    let $this = $(this);
+                    $.ajax({
+                        type: "post",
+                        url: "{{ route('rawat-inap.lab-patologi-klinik.print', [$laborPK->kd_unit, $laborPK->kd_pasien, $laborPK->tgl_masuk, $laborPK->urut_masuk]) }}",
+                        data: {
+                            _token: "{{ csrf_token() }}",
+                            no_transaksi: "{{ $laborPK->no_transaksi }}"
+                        },
+                        dataType: "json",
+                        beforeSend: function() {
+                            $this.html(
+                                '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>'
+                            );
+                            $this.prop('disabled', true);
+                        },
+                        success: function(res) {
+                            let status = res.status;
+                            let msg = res.message;
+                            let data = res.data;
+                            if (status == 'error') {
+                                Swal.fire({
+                                    title: "Error",
+                                    text: msg,
+                                    icon: "error",
+                                });
+                                return false;
+                            }
+                            window.open(data.file_url, '_blank');
+                        },
+                        complete: function() {
+                            $this.html('<i class="fas fa-print"></i>Print');
+                            $this.prop('disabled', false);
+                        },
+                        error: function() {
+                            Swal.fire({
+                                title: "Error",
+                                text: "Internal server error !",
+                                icon: "error",
+                            });
+                        }
+                    });
+                });
+            </script>
+        @endpush
+
+        </form>
     </div>
+</div>
 </div>

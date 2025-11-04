@@ -94,7 +94,7 @@ use App\Http\Controllers\UnitPelayanan\RawatInapController;
 Route::prefix('rawat-inap')->group(function () {
     Route::name('rawat-inap')->group(function () {
         Route::get('/', [RawatInapController::class, 'index'])->name('.index');
-       
+
         // Route::middleware(['check.unit'])->group(function () {
 
         Route::prefix('unit/{kd_unit}')->group(function () {
@@ -133,7 +133,7 @@ Route::prefix('rawat-inap')->group(function () {
                             Route::put('/', 'update')->name('.update');
                             Route::post('/get-icd10-ajax', 'getIcdTenAjax')->name('.get-icd10-ajax');
                             Route::post('/get-cppt-ajax', 'getCpptAjax')->name('.get-cppt-ajax');
-                            Route::get('/get-cppt-adime','getCpptAdime')->name('.get-cppt-adime');
+                            Route::get('/get-cppt-adime', 'getCpptAdime')->name('.get-cppt-adime');
                             Route::post('/get-instruksi-ppa', 'getInstruksiPpaByUrutTotal')->name('.get-instruksi-ppa');
                             Route::post('/get-last-diagnoses', 'getLastDiagnosesAjax')->name('.get-last-diagnoses');
                             Route::put('/verifikasi', 'verifikasiCppt')->name('.verifikasi');
@@ -295,6 +295,7 @@ Route::prefix('rawat-inap')->group(function () {
                             Route::post('/', 'store')->name('.store');
                             Route::put('/', 'update')->name('.update');
                             Route::delete('/', 'destroy')->name('.destroy');
+                            Route::post('print', 'print')->name('.print');
                         });
                     });
                 });

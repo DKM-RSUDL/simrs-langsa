@@ -6,19 +6,15 @@
                 action="{{ route('rawat-jalan.lab-patologi-klinik.index', [$laborPK->kd_unit, $laborPK->kd_pasien, $laborPK->tgl_masuk, $laborPK->urut_masuk]) }}"
                 method="post">
                 @csrf
-
                 <div class="modal-header bg-primary text-white">
                     <h5 class="modal-title" id="laborModalLabel{{ $laborPK->kd_order }}">
                         Order Pemeriksaan Laboratorium Klinik - KD Order: {{ (int) $laborPK->kd_order }}
                     </h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-
                 <div class="modal-body">
                     <div class="row g-3">
-
-                        <!-- Informasi Pasien & Unit -->
-                        <div class="col-md-6 mb-3"> <!-- Added mb-3 for bottom margin -->
+                        <div class="col-md-6 mb-3">
                             <div class="card shadow-sm">
                                 <div class="card-header bg-light fw-bold">Informasi Pasien & Unit</div>
                                 <div class="card-body">
@@ -31,9 +27,7 @@
                                 </div>
                             </div>
                         </div>
-
-                        <!-- Informasi Dokter & Pemeriksaan -->
-                        <div class="col-md-6 mb-3"> <!-- Added mb-3 for bottom margin -->
+                        <div class="col-md-6 mb-3">
                             <div class="card shadow-sm">
                                 <div class="card-header bg-light fw-bold">Informasi Dokter & Pemeriksaan</div>
                                 <div class="card-body">
@@ -58,21 +52,15 @@
                                     <p class="mt-4">
                                         Jadwal Pemeriksaan:
                                         <span class="fw-bold">
-                                            {{ $laborPK->jadwal_pemeriksaan
-                                                ? \Carbon\Carbon::parse($laborPK->jadwal_pemeriksaan)->format('d M Y H:i')
-                                                : '-' }}
+                                            {{ $laborPK->jadwal_pemeriksaan ? \Carbon\Carbon::parse($laborPK->jadwal_pemeriksaan)->format('d M Y H:i') : '-' }}
                                         </span>
                                     </p>
                                     <p class="mt-4">
-                                        Diagnosis: <span class="fw-bold">
-                                            {{ $laborPK->diagnosis ?? '-' }}
-                                        </span>
+                                        Diagnosis: <span class="fw-bold">{{ $laborPK->diagnosis ?? '-' }}</span>
                                     </p>
                                 </div>
                             </div>
                         </div>
-
-                        <!-- Detail Pemeriksaan -->
                         <div class="col-md-12 mb-3">
                             <div class="card shadow-sm">
                                 <div class="card-header bg-light fw-bold">Detail Pemeriksaan</div>
@@ -117,23 +105,69 @@
                                 </div>
                             </div>
                         </div>
-
                         @if (method_exists($dataLabor, 'links'))
                             {{ $dataLabor->withQueryString()->links() }}
                         @endif
-
                     </div>
                 </div>
-
-                <!-- Modal Footer -->
                 <div class="modal-footer">
+                    <button type="button" class="btn btn-info btn-print">
+                        <i class="fas fa-print"></i>
+                        Print
+                    </button>
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
-                    @if ($laborPK->status == 1)
-                        <button type="submit" class="btn btn-primary">Simpan</button>
-                    @endif
                 </div>
-
             </form>
         </div>
     </div>
 </div>
+
+@push('js')
+    <script>
+        // Cetak hanya lewat tombol print, bukan event modal show
+
+        $('.btn-print').click(function() {
+            let $this = $(this);
+            $.ajax({
+                type: "post",
+                url: "{{ route('rawat-jalan.lab-patologi-klinik.print', [$laborPK->kd_unit, $laborPK->kd_pasien, $laborPK->tgl_masuk, $laborPK->urut_masuk]) }}",
+                data: {
+                    _token: "{{ csrf_token() }}",
+                    no_transaksi: "{{ $laborPK->no_transaksi }}"
+                },
+                dataType: "json",
+                beforeSend: function() {
+                    $this.html(
+                        '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>'
+                    );
+                    $this.prop('disabled', true);
+                },
+                success: function(res) {
+                    let status = res.status;
+                    let msg = res.message;
+                    let data = res.data;
+                    if (status == 'error') {
+                        Swal.fire({
+                            title: "Error",
+                            text: msg,
+                            icon: "error",
+                        });
+                        return false;
+                    }
+                    window.open(data.file_url, '_blank');
+                },
+                complete: function() {
+                    $this.html('<i class="fas fa-print"></i>Print');
+                    $this.prop('disabled', false);
+                },
+                error: function() {
+                    Swal.fire({
+                        title: "Error",
+                        text: "Internal server error !",
+                        icon: "error",
+                    });
+                }
+            });
+        });
+    </script>
+@endpush
