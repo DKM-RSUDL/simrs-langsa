@@ -13,6 +13,7 @@ use App\Models\ListTindakanPasien;
 use App\Models\Produk;
 use App\Models\RMEResume;
 use App\Models\RmeResumeDtl;
+use App\Models\SjpKunjungan;
 use App\Services\BaseService;
 use Exception;
 use Illuminate\Support\Carbon;
@@ -545,10 +546,25 @@ class TindakanController extends Controller
             abort(404, 'Data not found');
         }
 
+        $resume = RMEResume::where('kd_pasien', $kd_pasien)
+            ->where('kd_unit', $dataMedis->kd_unit)
+            ->where('tgl_masuk', $tgl_masuk) // <-- Menggunakan tgl_masuk (bukan whereDate)
+            ->where('urut_masuk', (int)$dataMedis->urut_masuk) // <-- Diubah jadi angka
+            ->first();
+
+        // 4. AMBIL DATA NO SJP (Cara Model - Sudah Diperbaiki)
+        $sjp = SjpKunjungan::where('KD_PASIEN', $kd_pasien)
+            ->where('KD_UNIT', $dataMedis->kd_unit)
+            ->where('TGL_MASUK', $tgl_masuk) // <-- Menggunakan tgl_masuk (bukan whereDate)
+            ->where('URUT_MASUK', (int)$dataMedis->urut_masuk) // <-- Diubah jadi angka
+            ->first();
+
         // 4. BUAT PDF
         $pdf = Pdf::loadView('unit-pelayanan.gawat-darurat.action-gawat-darurat.tindakan.print', compact(
             'dataMedis',
-            'tindakan'
+            'tindakan',
+            'resume',
+            'sjp'
         ));
 
         // Atur ukuran kertas

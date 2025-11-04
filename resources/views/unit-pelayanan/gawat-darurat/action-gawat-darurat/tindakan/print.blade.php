@@ -242,7 +242,7 @@
                 <tr>
                     <td>NO SEP</td>
                     <td>:</td>
-                    <td>...........................................................</td>
+                    <td>{{ $sjp->no_sjp ?? '...................' }}</td>
                 </tr>
                 <tr>
                     <td>NAMA</td>
@@ -252,7 +252,7 @@
                 <tr>
                     <td>TGL PELAYANAN</td>
                     <td>:</td>
-                    <td>{{ \Carbon\Carbon::parse($tdk->tgl_tindakan)->format('d M Y H:i') }} WIB</td>
+                    <td>{{ \Carbon\Carbon::parse($tdk->tgl_tindakan)->format('d M Y') }}</td>
                 </tr>
                 <tr>
                     <td>POLI/RUANG</td>
@@ -262,7 +262,7 @@
                 <tr>
                     <td>DIAGNOSE</td>
                     <td>:</td>
-                    <td>...........................................................</td>
+                    <td>{{ $resume->diagnosis ? implode(', ', $resume->diagnosis) : '...................' }}</td>
                 </tr>
                 <tr>
                     <td>JENIS TINDAKAN</td>
