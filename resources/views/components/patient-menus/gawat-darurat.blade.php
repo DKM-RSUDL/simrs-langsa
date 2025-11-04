@@ -140,7 +140,7 @@
                             Triase
                         </a>
                         <a href="#" class="list-group-item list-group-item-action btn-print-labor">
-                            <i class="fas fa-print"></i> Laboratorium
+                            Laboratorium
                         </a>
                     </div>
                 </div>
@@ -187,7 +187,7 @@
 
                 },
                 complete: function() {
-                    $this.html('<i class="fas fa-print"></i> Laboratorium');
+                    $this.html('Laboratorium');
                     $this.prop('disabled', false);
                 },
                 error: function() {

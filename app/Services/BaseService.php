@@ -82,15 +82,9 @@ class BaseService
                 'anamnesis'             => 'demam tinggi dan batuk',
                 'diagnosis'             => ['demam', 'batuk'],
 
-                // WAJIB DIKIRIM
 
                 'tindak_lanjut_code'    => 1,
                 'tindak_lanjut_name'    => 'Rawat Inap',
-
-                //=========================================
-
-
-
                 'tgl_kontrol_ulang'     => '2023-09-15',
                 'unit_rujuk_internal'  => '0102',
                 'unit_rawat_inap'      => '0203',
