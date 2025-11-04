@@ -188,7 +188,6 @@
                         @foreach ($operasis as $idx => $op)
                             @php
                                 $number = $idx + 1;
-                                // Build show route if possible; expect routes named 'rawat-inap.operasi-ibs.show'
                                 $showUrl = isset($dataMedis)
                                     ? route('rawat-inap.operasi.show', [
                                         $dataMedis->kd_unit,
@@ -196,8 +195,8 @@
                                         date('Y-m-d', strtotime($dataMedis->tgl_masuk)),
                                         $dataMedis->urut_masuk,
                                         date('Y-m-d', strtotime($op->tgl_op)),
-                                        date('H:i:s', strtotime($op->jam_op))
-                ])
+                                        date('H:i:s', strtotime($op->jam_op)),
+                                    ])
                                     : '#';
                             @endphp
                             <a href="{{ $showUrl }}" class="list-group-item list-group-item-action">Operasi
@@ -210,4 +209,89 @@
             </div>
         </div>
     </div>
+
+    {{-- Daftar Print --}}
+    <div class="accordion-item">
+        <h2 class="accordion-header">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                data-bs-target="#daftarPrintMenuRanap">
+                <i class="bi bi-printer me-2"></i> Daftar Print
+            </button>
+        </h2>
+        <div id="daftarPrintMenuRanap" class="accordion-collapse collapse" data-bs-parent="#patientMenuAccordion">
+            <div class="accordion-body p-0">
+                <div class="list-group list-group-flush">
+                    <a href="#" class="list-group-item list-group-item-action btn-print-labor"
+                        data-kasir="{{ $dataMedis->kd_kasir ?? '' }}"
+                        data-transaksi="{{ $dataMedis->no_transaksi ?? '' }}"
+                        data-pasien="{{ $dataMedis->kd_pasien ?? '' }}"
+                        data-tglmasuk="{{ $dataMedis->tgl_masuk ?? '' }}">
+                        Laboratorium
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
+
+@push('js')
+    <script>
+        $(document).on('click', '.btn-print-labor', function() {
+            let $this = $(this);
+            let kasir = $this.data('kasir');
+            let transaksi = $this.data('transaksi');
+            let pasien = $this.data('pasien');
+            let tglmasuk = $this.data('tglmasuk');
+
+            if (!kasir || !transaksi || !pasien || !tglmasuk) {
+                Swal.fire({
+                    title: "Error",
+                    text: "Data pasien tidak lengkap!",
+                    icon: "error",
+                });
+                return false;
+            }
+
+            $.ajax({
+                type: "post",
+                url: `/unit-pelayanan/rawat-inap/pelayanan/${pasien}/${tglmasuk}/cetak`,
+                data: {
+                    _token: "{{ csrf_token() }}",
+                    no_transaksi: transaksi
+                },
+                dataType: "json",
+                beforeSend: function() {
+                    $this.html(
+                        '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading...'
+                    );
+                    $this.prop('disabled', true);
+                },
+                success: function(res) {
+                    let status = res.status;
+                    let msg = res.message;
+                    let data = res.data;
+                    if (status == 'error') {
+                        Swal.fire({
+                            title: "Error",
+                            text: msg,
+                            icon: "error",
+                        });
+                        return false;
+                    }
+                    window.open(data.file_url, '_blank');
+                },
+                complete: function() {
+                    $this.html('Laboratorium');
+                    $this.prop('disabled', false);
+                },
+                error: function() {
+                    Swal.fire({
+                        title: "Error",
+                        text: "Internal server error !",
+                        icon: "error",
+                    });
+                }
+            });
+        });
+    </script>
+@endpush

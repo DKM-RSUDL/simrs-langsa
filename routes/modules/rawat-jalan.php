@@ -196,6 +196,7 @@ Route::prefix('rawat-jalan')->group(function () {
                             Route::post('/', 'store')->name('.store');
                             Route::put('/', 'update')->name('.update');
                             Route::delete('/', 'destroy')->name('.destroy');
+                            Route::post('print', 'print')->name('.print');
                         });
                     });
                 });
