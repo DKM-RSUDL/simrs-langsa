@@ -49,9 +49,7 @@ class TransferPasienController extends Controller
         $unit = Unit::where('aktif', 1)->get();
         $unitTujuan = Unit::where('kd_bagian', 1)->where('aktif', 1)->get();
 
-        $petugasIGD = HrdKaryawan::where('kd_jenis_tenaga', 2)
-            ->where('kd_detail_jenis_tenaga', 1)
-            ->where('kd_ruangan', 36)
+        $petugasIGD = HrdKaryawan::where('kd_ruangan', 36)
             ->where('status_peg',  1)
             ->get();
 
