@@ -90,10 +90,10 @@
                     </div>
 
                     <div class="col-12 col-md-6">
-                        <div class="row">
+                        <div class="row g-2">
                             {{-- Belum Selesai (Warning) --}}
                             <a href="{{ route('rawat-jalan.unit.belum-selesai', $unit->kd_unit) }}"
-                                class="text-decoration-none col-4">
+                                class="text-decoration-none col-12 col-md-4">
                                 <div class="rounded bg-warning text-white">
                                     <div class="card-body d-flex align-items-center gap-3 px-3">
                                         <img src="{{ asset('assets/img/icons/Sick.png') }}" alt="Icon" width="36"
@@ -109,7 +109,7 @@
 
                             {{-- Selesai (Success) --}}
                             <a href="{{ route('rawat-jalan.unit.selesai', $unit->kd_unit) }}"
-                                class="text-decoration-none col-4">
+                                class="text-decoration-none col-12 col-md-4">
                                 <div class="rounded bg-success text-white">
                                     <div class="card-body d-flex align-items-center gap-3 px-3">
                                         <img src="{{ asset('assets/img/icons/Sick.png') }}" alt="Icon" width="36"
@@ -123,7 +123,7 @@
                             </a>
 
                             {{-- Semua Pasien (Primary) --}}
-                            <a href="{{ route('rawat-jalan.unit', $unit->kd_unit) }}" class="text-decoration-none col-4">
+                            <a href="{{ route('rawat-jalan.unit', $unit->kd_unit) }}" class="text-decoration-none col-12 col-md-4">
                                 <div class="rounded bg-primary text-white">
                                     <div class="card-body d-flex align-items-center gap-3 px-3">
                                         <img src="{{ asset('assets/img/icons/Sick.png') }}" alt="Icon" width="36"
