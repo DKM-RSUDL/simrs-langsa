@@ -4,7 +4,7 @@
     'showMenu' => true,
 ])
 
-<div {{ $attributes->merge(['class' => 'card h-auto sticky-top', 'style' => 'top:1rem; z-index: 99;']) }}>
+<div {{ $attributes->merge(['class' => 'card h-auto sticky-top', 'style' => 'top:1rem; z-index: 0;']) }}>
     <div class="card-body">
         <div class="position-absolute top-0 end-0 p-3 d-flex flex-column align-items-center gap-1">
             <span class="d-block rounded-circle bg-danger" style="width:8px;height:8px;"></span>
@@ -92,7 +92,7 @@
 
         {{-- CHECK BUTTON I-CARE --}}
 
-        @if (in_array(($dataMedis->unit->kd_bagian ?? null), [2,3]))
+        @if (in_array($dataMedis->unit->kd_bagian ?? null, [2, 3]))
             <div class="pt-3">
                 {{-- <form action="{{ route('rawat-jalan.pelayanan.icare', [$dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk]) }}" method="get"> --}}
                 <button class="btn btn-warning w-100" id="btnIcare" type="button">
