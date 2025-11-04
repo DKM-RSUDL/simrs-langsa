@@ -7,85 +7,13 @@
 
         </div>
         <div class="header-content">
-            <div class="theme-switch-icon"></div>
-            <div class="notification dropdown">
-                <a href="#" data-bs-toggle="dropdown" aria-expanded="false">
-                    <i class="far fa-envelope"></i>
-                </a>
-                <ul class="dropdown-menu medium">
-                    <li class="menu-header">
-                        <a class="dropdown-item" href="#">Message</a>
-                    </li>
-                    <li class="menu-content ps-menu">
-                        <a href="#">
-                            <div class="message-image">
-                                <img src="{{ asset('assets/images/avatar2.png') }}" class="rounded-circle w-100"
-                                    alt="user1">
-                            </div>
-                            <div class="message-content">
-                                <div class="subject">
-                                    Michele
-                                </div>
-                                <div class="body">
-                                    Please come to my party
-                                </div>
-                                <div class="time">3 hours ago</div>
-                            </div>
-                        </a>
-                        <a href="#">
-                            <div class="message-image">
-                                <img src="{{ asset('assets/images/avatar1.png') }}" class="rounded-circle w-100"
-                                    alt="user1">
-                            </div>
-                            <div class="message-content read">
-                                <div class="subject">
-                                    Brad
-                                </div>
-                                <div class="body">
-                                    I have something to discuss, please call me soon
-                                </div>
-                                <div class="time">3 hours ago</div>
-                            </div>
-                        </a>
-                        <a href="#">
-                            <div class="message-image">
-                                <img src="{{ asset('assets/images/avatar2.png') }}" class="rounded-circle w-100"
-                                    alt="user1">
-                            </div>
-                            <div class="message-content">
-                                <div class="subject">
-                                    Anel
-                                </div>
-                                <div class="body">
-                                    Sorry i'm late
-                                </div>
-                                <div class="time">8 hours ago</div>
-                            </div>
-                        </a>
-                        <a href="#">
-                            <div class="message-image">
-                                <img src="{{ asset('assets/images/avatar2.png') }}" class="rounded-circle w-100"
-                                    alt="user1">
-                            </div>
-                            <div class="message-content">
-                                <div class="subject">
-                                    Mary
-                                </div>
-                                <div class="body">
-                                    Please answer my question last night
-                                </div>
-                                <div class="time">Last month</div>
-                            </div>
-                        </a>
-                    </li>
-                </ul>
-            </div>
-            <div class="notification dropdown">
+            <div class="theme-switch-icon" style="display: none;"></div>
+            <div class="notification dropdown me-3">
                 <a href="#" data-bs-toggle="dropdown" aria-expanded="false">
                     <i class="far fa-bell"></i>
                     <span class="badge">12</span>
                 </a>
-                <ul class="dropdown-menu medium">
+                <ul class="dropdown-menu medium" style="z-index: 9999;">
                     <li class="menu-header">
                         <a class="dropdown-item" href="#">Notification</a>
                     </li>
@@ -126,7 +54,7 @@
                     </li>
                 </ul>
             </div>
-            <div class="dropdown dropdown-menu-end">
+            <div class="dropdown dropdown-menu-end" style="z-index: 9999 !important;">
                 <a href="#" class="user-dropdown" data-bs-toggle="dropdown" aria-expanded="false">
                     <div class="label">
                         <span></span>
@@ -134,24 +62,25 @@
                     </div>
                     @if (empty(auth()->user()->karyawan->foto))
                         <img class="img-user rounded-circle" src="{{ asset('assets/images/avatar1.png') }}"
-                            alt="user"srcset="">
+                            alt="user" style="object-fit: cover; aspect-ratio: 1:1;">
                     @else
                         <img class="img-user rounded-circle"
                             src="https://e-rsudlangsa.id/hrd/user/images/profil/{{ auth()->user()->karyawan->foto }}"
-                            alt="user"srcset="">
+                            alt="user" style="object-fit: cover; aspect-ratio: 1:1;">
                     @endif
                 </a>
-                <ul class="dropdown-menu small">
-                    <li class="menu-content ps-menu">
-                        <a href="{{ route('users.edit', Auth::user()->id) }}">
-                            <div class="description">
-                                <i class="ti-user"></i> Profile
-                            </div>
+                <ul class="dropdown-menu" style="z-index: 9999 !important;">
+                    <li>
+                        <a class="dropdown-item" href="{{ route('users.edit', Auth::user()->id) }}">
+                            <i class="ti-user"></i> Profile
                         </a>
-                        <a href="{{ env('SSO_BASE_URI', route('logout')) }}">
-                            <div class="description">
-                                <i class="ti-power-off"></i> Logout
-                            </div>
+                    </li>
+                    <li>
+                        <hr class="dropdown-divider">
+                    </li>
+                    <li>
+                        <a class="dropdown-item" href="{{ env('SSO_BASE_URI', route('logout')) }}">
+                            <i class="ti-power-off"></i> Logout
                         </a>
                     </li>
                 </ul>

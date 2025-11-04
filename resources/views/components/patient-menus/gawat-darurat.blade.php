@@ -142,6 +142,10 @@
                         <a href="#" class="list-group-item list-group-item-action btn-print-labor">
                             Laboratorium
                         </a>
+                        <a href="{{ route('tindakan.print-pdf', [$dataMedis?->kd_pasien ?? '', $dataMedis?->tgl_masuk ?? '', $dataMedis->urut_masuk ?? '']) }}"
+                            target="_blank" class="list-group-item list-group-item-action">
+                            Tindakan
+                        </a>
                     </div>
                 </div>
             </div>

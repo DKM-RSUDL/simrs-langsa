@@ -128,7 +128,7 @@
                             <!-- Search Bar -->
                             <div>
                                 <form method="GET"
-                                    action="{{ route('tindakan.index', ['kd_pasien' => $dataMedis->kd_pasien, 'tgl_masuk' => \Carbon\Carbon::parse($dataMedis->tgl_masuk)->format('Y-m-d')]) }}">
+                                    action="{{ route('tindakan.index', ['kd_pasien' => $dataMedis->kd_pasien, 'tgl_masuk' => \Carbon\Carbon::parse($dataMedis->tgl_masuk)->format('Y-m-d'), $dataMedis->urut_masuk]) }}">
 
                                     <div class="input-group">
                                         <input type="text" name="search" class="form-control"
@@ -212,7 +212,7 @@
                 var periode = $(this).val();
                 var queryString = '?periode=' + periode;
                 window.location.href =
-                    "{{ route('tindakan.index', [$dataMedis->kd_pasien, \Carbon\Carbon::parse($dataMedis->tgl_masuk)->format('Y-m-d')]) }}" +
+                    "{{ route('tindakan.index', [$dataMedis->kd_pasien, \Carbon\Carbon::parse($dataMedis->tgl_masuk)->format('Y-m-d'), $dataMedis->urut_masuk]) }}" +
                     queryString;
             });
         });
@@ -232,7 +232,7 @@
                 var queryString = '?start_date=' + startDate + '&end_date=' + endDate;
 
                 window.location.href =
-                    "{{ route('tindakan.index', ['kd_pasien' => $dataMedis->kd_pasien, 'tgl_masuk' => \Carbon\Carbon::parse($dataMedis->tgl_masuk)->format('Y-m-d')]) }}" +
+                    "{{ route('tindakan.index', ['kd_pasien' => $dataMedis->kd_pasien, 'tgl_masuk' => \Carbon\Carbon::parse($dataMedis->tgl_masuk)->format('Y-m-d'), $dataMedis->urut_masuk]) }}" +
                     queryString;
             });
         });
@@ -331,7 +331,7 @@
 
             $.ajax({
                 type: "post",
-                url: "{{ route('tindakan.get-tindakan-ajax', [$dataMedis->kd_pasien, $dataMedis->tgl_masuk]) }}",
+                url: "{{ route('tindakan.get-tindakan-ajax', [$dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk]) }}",
                 data: {
                     "_token": "{{ csrf_token() }}",
                     "kd_produk": kdProduk,
@@ -447,7 +447,7 @@
 
             $.ajax({
                 type: "post",
-                url: "{{ route('tindakan.get-tindakan-ajax', [$dataMedis->kd_pasien, $dataMedis->tgl_masuk]) }}",
+                url: "{{ route('tindakan.get-tindakan-ajax', [$dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk]) }}",
                 data: {
                     "_token": "{{ csrf_token() }}",
                     "kd_produk": kdProduk,
@@ -538,7 +538,7 @@
                 if (result.isConfirmed) {
                     $.ajax({
                         type: "post",
-                        url: "{{ route('tindakan.delete', [$dataMedis->kd_pasien, $dataMedis->tgl_masuk]) }}",
+                        url: "{{ route('tindakan.delete', [$dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk]) }}",
                         data: {
                             '_method': 'delete',
                             '_token': "{{ csrf_token() }}",

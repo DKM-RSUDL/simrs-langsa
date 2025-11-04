@@ -40,9 +40,9 @@
                     </div>
 
                     <div class="col-12 col-md-5">
-                        <div class="row">
+                        <div class="row g-2">
                             {{-- Aktif (Primary) --}}
-                            <a href="{{ route('rawat-inap.unit.aktif', $unit->kd_unit) }}" class="text-decoration-none col-6">
+                            <a href="{{ route('rawat-inap.unit.aktif', $unit->kd_unit) }}" class="text-decoration-none col-12 col-md-6">
                                 <div class="rounded bg-primary text-white">
                                     <div class="card-body d-flex align-items-center gap-3 px-3">
                                         <img src="{{ asset('assets/img/icons/Sick.png') }}" alt="Icon" width="36"
@@ -57,7 +57,7 @@
 
                             {{-- Pending Order Masuk (Warning) --}}
                             <a href="{{ route('rawat-inap.unit.pending', $unit->kd_unit) }}"
-                                class="text-decoration-none col-6">
+                                class="text-decoration-none col-12 col-md-6">
                                 <div class="rounded bg-warning text-white">
                                     <div class="card-body d-flex align-items-center gap-3 px-3">
                                         <img src="{{ asset('assets/img/icons/Sick.png') }}" alt="Icon" width="36"

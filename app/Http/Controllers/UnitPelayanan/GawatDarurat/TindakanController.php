@@ -13,33 +13,37 @@ use App\Models\ListTindakanPasien;
 use App\Models\Produk;
 use App\Models\RMEResume;
 use App\Models\RmeResumeDtl;
+use App\Services\AsesmenService;
+use App\Models\SjpKunjungan;
+use App\Services\BaseService;
 use Exception;
 use Illuminate\Support\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class TindakanController extends Controller
 {
+    private $asesmenService;
+    private $baseService;
+    private $kdUnit;
+
     public function __construct()
     {
         $this->middleware('can:read unit-pelayanan/gawat-darurat');
+        $this->asesmenService = new AsesmenService();
+        $this->baseService = new BaseService();
+        $this->kdUnit = 3; // Gawat Darurat
     }
 
-    public function index(Request $request, $kd_pasien, $tgl_masuk)
+    public function index(Request $request, $kd_pasien, $tgl_masuk, $urut_masuk)
     {
-        $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
-            ->join('transaksi as t', function ($join) {
-                $join->on('kunjungan.kd_pasien', '=', 't.kd_pasien');
-                $join->on('kunjungan.kd_unit', '=', 't.kd_unit');
-                $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
-                $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
-            })
-            ->where('kunjungan.kd_pasien', $kd_pasien)
-            ->where('kunjungan.kd_unit', 3)
-            ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
-            ->first();
+        $dataMedis = $this->baseService->getDataMedis($this->kdUnit, $kd_pasien, $tgl_masuk, $urut_masuk);
+        if (empty($dataMedis)) {
+            abort(404, 'Data not found');
+        }
 
         $produk = Produk::select([
             'klas_produk.kd_klas',
@@ -156,11 +160,17 @@ class TindakanController extends Controller
         ));
     }
 
-    public function storeTindakan($kd_pasien, $tgl_masuk, Request $request)
+    public function storeTindakan($kd_pasien, $tgl_masuk, $urut_masuk, Request $request)
     {
         DB::beginTransaction();
 
+
         try {
+
+            $dataMedis = $this->baseService->getDataMedis($this->kdUnit, $kd_pasien, $tgl_masuk, $urut_masuk);
+            if (empty($dataMedis)) {
+                abort(404, 'Data not found');
+            }
 
             $messageErr = [
                 'tindakan.required'         => 'Tindakan harus dipilih!',
@@ -260,7 +270,17 @@ class TindakanController extends Controller
 
             DetailTransaksi::create($dataDetailTransaksi);
 
-            $this->createResume($kd_pasien, $tgl_masuk, $request->urut_masuk);
+            // Data vital sign untuk disimpan
+            $vitalSignStore = [];
+
+            // Simpan vital sign menggunakan service
+            $this->asesmenService->store($vitalSignStore, $dataMedis->kd_pasien, $dataMedis->no_transaksi, $dataMedis->kd_kasir);
+
+
+            // create resume
+            $resumeData = [];
+
+            $this->baseService->updateResumeMedis(3, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk, $resumeData);
 
             DB::commit();
             return back()->with('success', 'Tindakan berhasil ditambah');
@@ -270,7 +290,7 @@ class TindakanController extends Controller
         }
     }
 
-    public function getTindakanAjax($kd_pasien, $tgl_masuk, Request $request)
+    public function getTindakanAjax($kd_pasien, $tgl_masuk, $urut_masuk, Request $request)
     {
         try {
             $tindakan = ListTindakanPasien::with(['produk', 'ppa', 'unit'])
@@ -327,11 +347,15 @@ class TindakanController extends Controller
         }
     }
 
-    public function updateTindakan($kd_pasien, $tgl_masuk, Request $request)
+    public function updateTindakan($kd_pasien, $tgl_masuk, $urut_masuk, Request $request)
     {
         DB::beginTransaction();
 
         try {
+            $dataMedis = $this->baseService->getDataMedis($this->kdUnit, $kd_pasien, $tgl_masuk, $urut_masuk);
+            if (empty($dataMedis)) {
+                abort(404, 'Data not found');
+            }
 
             $messageErr = [
                 'tindakan.required'         => 'Tindakan harus dipilih!',
@@ -411,7 +435,17 @@ class TindakanController extends Controller
                 ->whereDate('tgl_transaksi', $tgl_masuk)
                 ->update($dataDetailTransaksi);
 
-            $this->createResume($kd_pasien, $tgl_masuk, $request->urut_masuk);
+            // Data vital sign untuk disimpan
+            $vitalSignStore = [];
+
+            // Simpan vital sign menggunakan service
+            $this->asesmenService->store($vitalSignStore, $dataMedis->kd_pasien, $dataMedis->no_transaksi, $dataMedis->kd_kasir);
+
+
+            // create resume
+            $resumeData = [];
+
+            $this->baseService->updateResumeMedis(3, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk, $resumeData);
 
             DB::commit();
             return back()->with('success', 'Tindakan berhasil diubah');
@@ -421,7 +455,7 @@ class TindakanController extends Controller
         }
     }
 
-    public function deleteTindakan($kd_pasien, $tgl_masuk, Request $request)
+    public function deleteTindakan($kd_pasien, $tgl_masuk, $urut_masuk, Request $request)
     {
         DB::beginTransaction();
 
@@ -466,6 +500,55 @@ class TindakanController extends Controller
                 'data'      => []
             ], 500);
         }
+    }
+
+    public function printPDF(Request $request, $kd_pasien, $tgl_masuk, $urut_masuk)
+    {
+        // 1. Logika untuk mendapatkan $dataMedis (Disalin dari fungsi index)
+        $dataMedis = $this->baseService->getDataMedis($this->kdUnit, $kd_pasien, $tgl_masuk, $urut_masuk);
+        if (empty($dataMedis)) {
+            abort(404, 'Data not found');
+        }
+
+        // 2. Logika filter dan query untuk $tindakan (Disalin dari fungsi index)
+
+        $tindakan = ListTindakanPasien::with(['produk', 'ppa', 'unit'])
+            ->where('kd_pasien', $kd_pasien)
+            ->where('tgl_masuk', $tgl_masuk)
+            ->where('kd_unit', $dataMedis->kd_unit)
+            ->where('urut_masuk', $dataMedis->urut_masuk)
+            ->get();
+
+        if (!$dataMedis) {
+            abort(404, 'Data not found');
+        }
+
+        $resume = RMEResume::where('kd_pasien', $kd_pasien)
+            ->where('kd_unit', $dataMedis->kd_unit)
+            ->where('tgl_masuk', $tgl_masuk) // <-- Menggunakan tgl_masuk (bukan whereDate)
+            ->where('urut_masuk', (int)$dataMedis->urut_masuk) // <-- Diubah jadi angka
+            ->first();
+
+        // 4. AMBIL DATA NO SJP (Cara Model - Sudah Diperbaiki)
+        $sjp = SjpKunjungan::where('KD_PASIEN', $kd_pasien)
+            ->where('KD_UNIT', $dataMedis->kd_unit)
+            ->where('TGL_MASUK', $tgl_masuk) // <-- Menggunakan tgl_masuk (bukan whereDate)
+            ->where('URUT_MASUK', (int)$dataMedis->urut_masuk) // <-- Diubah jadi angka
+            ->first();
+
+        // 4. BUAT PDF
+        $pdf = Pdf::loadView('unit-pelayanan.gawat-darurat.action-gawat-darurat.tindakan.print', compact(
+            'dataMedis',
+            'tindakan',
+            'resume',
+            'sjp'
+        ));
+
+        // Atur ukuran kertas
+        $pdf->setPaper('a4', 'potret'); // 'landscape' (horizontal) atau 'portrait' (vertikal)
+
+        // 5. TAMPILKAN PDF DI BROWSER
+        return $pdf->stream('daftar-tindakan-' . $dataMedis->pasien->nama_pasien . '.pdf');
     }
 
 

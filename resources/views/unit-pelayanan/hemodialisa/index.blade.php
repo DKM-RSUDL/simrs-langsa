@@ -75,8 +75,8 @@
                         <div class="row g-3 align-items-center">
                             {{-- Aktif (Primary) --}}
                             <div class="col-md-12">
-                                <div class="row">
-                                    <a href="{{ route('hemodialisa.index') }}" class="text-decoration-none col-6">
+                                <div class="row g-2">
+                                    <a href="{{ route('hemodialisa.index') }}" class="text-decoration-none col-12 col-md-6">
                                         <div class="rounded bg-primary text-white">
                                             <div class="card-body d-flex align-items-center gap-3 px-3">
                                                 <img src="{{ asset('assets/img/icons/Sick.png') }}" alt="Icon"
@@ -91,7 +91,7 @@
                                     </a>
 
                                     {{-- Pending Order Masuk (Warning) --}}
-                                    <a href="{{ route('hemodialisa.pending-order') }}" class="text-decoration-none col-6">
+                                    <a href="{{ route('hemodialisa.pending-order') }}" class="text-decoration-none col-12 col-md-6">
                                         <div class="rounded bg-warning text-white">
                                             <div class="card-body d-flex align-items-center gap-3 px-3">
                                                 <img src="{{ asset('assets/img/icons/Sick.png') }}" alt="Icon"
@@ -175,7 +175,7 @@
                             return `
                                 <div class="d-flex justify-content-center">
                                     <a href="${hdPelayananUrl + row.kd_pasien}/${row.tgl_masuk}/${row.urut_masuk}"
-                                       class="btn btn-primary btn-sm" title="Layani Pasien">
+                                       class="btn btn-primary" title="Layani Pasien">
                                         <i class="ti-pencil-alt"></i>
                                     </a>
                                 </div>`;

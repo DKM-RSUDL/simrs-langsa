@@ -3,20 +3,20 @@
 namespace App\Http\Controllers\UnitPelayanan\RawatJalan;
 
 use App\Http\Controllers\Controller;
-use App\Models\Dokter;
 use App\Models\DokterKlinik;
 use App\Models\Kunjungan;
-use App\Models\LabHasil;
 use App\Models\LapLisItemPemeriksaan;
+use App\Models\Otoritas;
 use App\Models\RMEResume;
 use App\Models\RmeResumeDtl;
 use App\Models\SegalaOrder;
 use App\Models\SegalaOrderDet;
 use App\Models\Transaksi;
+use App\Models\UnitAsal;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Validator;
 
 class LabPatologiKlinikController extends Controller
 {
@@ -526,5 +526,62 @@ class LabPatologiKlinikController extends Controller
         } catch (\Exception $e) {
             throw $e;
         }
+    }
+
+    public function print(Request $request, $kd_pasien, $tgl_masuk)
+    {
+
+        $validator = Validator::make($request->all(), [
+            'no_transaksi'    => 'required'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status'    => 'error',
+                'message'   => 'No Transaksi kosong !',
+                'data'      => []
+            ]);
+        }
+
+        $no_transaksi = $request->no_transaksi;
+        $unitAsal = UnitAsal::where('no_transaksi_asal', $no_transaksi)->first();
+
+        if (empty($unitAsal)) {
+            return response()->json([
+                'status'    => 'error',
+                'message'   => 'Data tidak ditemukan !',
+                'data'      => []
+            ]);
+        }
+
+        $otoritas = Otoritas::where('no_transaksi', $unitAsal->no_transaksi)
+            ->where('kd_kasir', $unitAsal->kd_kasir)
+            ->where('kd_pasien', $kd_pasien)
+            ->where('status', 1)
+            ->first();
+
+        if (empty($otoritas)) {
+            return response()->json([
+                'status'    => 'error',
+                'message'   => 'Data Otoritas tidak ditemukan !',
+                'data'      => []
+            ]);
+        }
+
+        if (empty($otoritas->file)) {
+            return response()->json([
+                'status'    => 'error',
+                'message'   => 'File tidak ditemukan !',
+                'data'      => []
+            ]);
+        }
+
+        return response()->json([
+            'status'    => 'success',
+            'message'   => 'OK',
+            'data'      => [
+                'file_url'  => "https://e-rsudlangsa.id/dokumen/lab_pk/$otoritas->file"
+            ]
+        ]);
     }
 }

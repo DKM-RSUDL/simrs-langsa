@@ -117,7 +117,7 @@
                         <a href="{{ route('asesmen-keperawatan.show', [
                             'kd_pasien' => $dataMedis->kd_pasien,
                             'tgl_masuk' => \Carbon\Carbon::parse($dataMedis->tgl_masuk)->format('Y-m-d'),
-                            // 'urut_masuk' => $dataMedis->urut_masuk,
+                            'urut_masuk' => $dataMedis->urut_masuk,
                             'id' => $item->id,
                         ]) }}"
                             class="btn btn-sm btn-info">
