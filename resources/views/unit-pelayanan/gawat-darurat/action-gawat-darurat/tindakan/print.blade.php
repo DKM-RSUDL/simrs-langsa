@@ -235,14 +235,14 @@
         <div class="slip">
             <table class="data-table">
                 <tr>
-                    <td>NO SKP / NO SEP</td>
-                    <td>:</td>
-                    <td>...........................................................</td>
-                </tr>
-                <tr>
                     <td>NO RM</td>
                     <td>:</td>
                     <td>{{ $dataMedis->pasien->kd_pasien }}</td>
+                </tr>
+                <tr>
+                    <td>NO SEP</td>
+                    <td>:</td>
+                    <td>...........................................................</td>
                 </tr>
                 <tr>
                     <td>NAMA</td>
