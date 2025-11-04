@@ -462,6 +462,9 @@ class CpptController extends Controller
     private function getLastDiagnosisByTipeCppt($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
     {
         $tipeCppt = $this->getTipeCpptByUser();
+        
+
+     
 
         // Ambil diagnosis terakhir berdasarkan tipe PPA yang sama
         $lastCppt = Cppt::join('transaksi as t', function ($join) {
