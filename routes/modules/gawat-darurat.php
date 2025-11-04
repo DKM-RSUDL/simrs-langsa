@@ -152,7 +152,7 @@ Route::prefix('gawat-darurat')->group(function () {
             });
 
             // Tindakan
-            Route::prefix('tindakan')->group(function () {
+            Route::prefix('{urut_masuk}/tindakan')->group(function () {
                 Route::name('tindakan')->group(function () {
                     Route::controller(GawatDaruratTindakanController::class)->group(function () {
                         Route::get('/', 'index')->name('.index');

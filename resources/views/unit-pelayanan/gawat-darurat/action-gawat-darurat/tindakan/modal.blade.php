@@ -1,8 +1,9 @@
 <div class="modal fade" id="addTindakanModal" tabindex="-1" aria-labelledby="addTindakanModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
-            <form action="{{ route('tindakan.store', [$dataMedis->kd_pasien, $dataMedis->tgl_masuk]) }}" method="post"
-                enctype="multipart/form-data" id="addTindakanForm">
+            <form
+                action="{{ route('tindakan.store', [$dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk]) }}"
+                method="post" enctype="multipart/form-data" id="addTindakanForm">
                 @csrf
 
                 <input type="hidden" name="urut_masuk" value="{{ $dataMedis->urut_masuk }}">
@@ -172,7 +173,7 @@
     aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
-            <form action="{{ route('tindakan.update', [$dataMedis->kd_pasien, $dataMedis->tgl_masuk]) }}"
+            <form action="{{ route('tindakan.update', [$dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk]) }}"
                 method="post" enctype="multipart/form-data" id="editTindakanForm">
                 @csrf
                 @method('put')

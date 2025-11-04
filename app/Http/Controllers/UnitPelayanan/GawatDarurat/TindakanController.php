@@ -13,6 +13,8 @@ use App\Models\ListTindakanPasien;
 use App\Models\Produk;
 use App\Models\RMEResume;
 use App\Models\RmeResumeDtl;
+use App\Services\AsesmenService;
+use App\Services\BaseService;
 use Exception;
 use Illuminate\Support\Carbon;
 use Illuminate\Http\Request;
@@ -22,24 +24,24 @@ use Illuminate\Support\Facades\Storage;
 
 class TindakanController extends Controller
 {
+    private $asesmenService;
+    private $baseService;
+    private $kdUnit;
+
     public function __construct()
     {
         $this->middleware('can:read unit-pelayanan/gawat-darurat');
+        $this->asesmenService = new AsesmenService();
+        $this->baseService = new BaseService();
+        $this->kdUnit = 3; // Gawat Darurat
     }
 
-    public function index(Request $request, $kd_pasien, $tgl_masuk)
+    public function index(Request $request, $kd_pasien, $tgl_masuk, $urut_masuk)
     {
-        $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
-            ->join('transaksi as t', function ($join) {
-                $join->on('kunjungan.kd_pasien', '=', 't.kd_pasien');
-                $join->on('kunjungan.kd_unit', '=', 't.kd_unit');
-                $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
-                $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
-            })
-            ->where('kunjungan.kd_pasien', $kd_pasien)
-            ->where('kunjungan.kd_unit', 3)
-            ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
-            ->first();
+        $dataMedis = $this->baseService->getDataMedis($this->kdUnit, $kd_pasien, $tgl_masuk, $urut_masuk);
+        if (empty($dataMedis)) {
+            abort(404, 'Data not found');
+        }
 
         $produk = Produk::select([
             'klas_produk.kd_klas',
@@ -156,11 +158,17 @@ class TindakanController extends Controller
         ));
     }
 
-    public function storeTindakan($kd_pasien, $tgl_masuk, Request $request)
+    public function storeTindakan($kd_pasien, $tgl_masuk, $urut_masuk, Request $request)
     {
         DB::beginTransaction();
 
+
         try {
+
+            $dataMedis = $this->baseService->getDataMedis($this->kdUnit, $kd_pasien, $tgl_masuk, $urut_masuk);
+            if (empty($dataMedis)) {
+                abort(404, 'Data not found');
+            }
 
             $messageErr = [
                 'tindakan.required'         => 'Tindakan harus dipilih!',
@@ -260,7 +268,17 @@ class TindakanController extends Controller
 
             DetailTransaksi::create($dataDetailTransaksi);
 
-            $this->createResume($kd_pasien, $tgl_masuk, $request->urut_masuk);
+            // Data vital sign untuk disimpan
+            $vitalSignStore = [];
+
+            // Simpan vital sign menggunakan service
+            $this->asesmenService->store($vitalSignStore, $dataMedis->kd_pasien, $dataMedis->no_transaksi, $dataMedis->kd_kasir);
+
+
+            // create resume
+            $resumeData = [];
+
+            $this->baseService->updateResumeMedis(3, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk, $resumeData);
 
             DB::commit();
             return back()->with('success', 'Tindakan berhasil ditambah');
@@ -270,7 +288,7 @@ class TindakanController extends Controller
         }
     }
 
-    public function getTindakanAjax($kd_pasien, $tgl_masuk, Request $request)
+    public function getTindakanAjax($kd_pasien, $tgl_masuk, $urut_masuk, Request $request)
     {
         try {
             $tindakan = ListTindakanPasien::with(['produk', 'ppa', 'unit'])
@@ -327,11 +345,15 @@ class TindakanController extends Controller
         }
     }
 
-    public function updateTindakan($kd_pasien, $tgl_masuk, Request $request)
+    public function updateTindakan($kd_pasien, $tgl_masuk, $urut_masuk, Request $request)
     {
         DB::beginTransaction();
 
         try {
+            $dataMedis = $this->baseService->getDataMedis($this->kdUnit, $kd_pasien, $tgl_masuk, $urut_masuk);
+            if (empty($dataMedis)) {
+                abort(404, 'Data not found');
+            }
 
             $messageErr = [
                 'tindakan.required'         => 'Tindakan harus dipilih!',
@@ -411,7 +433,17 @@ class TindakanController extends Controller
                 ->whereDate('tgl_transaksi', $tgl_masuk)
                 ->update($dataDetailTransaksi);
 
-            $this->createResume($kd_pasien, $tgl_masuk, $request->urut_masuk);
+            // Data vital sign untuk disimpan
+            $vitalSignStore = [];
+
+            // Simpan vital sign menggunakan service
+            $this->asesmenService->store($vitalSignStore, $dataMedis->kd_pasien, $dataMedis->no_transaksi, $dataMedis->kd_kasir);
+
+
+            // create resume
+            $resumeData = [];
+
+            $this->baseService->updateResumeMedis(3, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk, $resumeData);
 
             DB::commit();
             return back()->with('success', 'Tindakan berhasil diubah');
@@ -421,7 +453,7 @@ class TindakanController extends Controller
         }
     }
 
-    public function deleteTindakan($kd_pasien, $tgl_masuk, Request $request)
+    public function deleteTindakan($kd_pasien, $tgl_masuk, $urut_masuk, Request $request)
     {
         DB::beginTransaction();
 
@@ -465,45 +497,6 @@ class TindakanController extends Controller
                 'message'   => $e->getMessage(),
                 'data'      => []
             ], 500);
-        }
-    }
-
-
-    public function createResume($kd_pasien, $tgl_masuk, $urut_masuk)
-    {
-        // get resume
-        $resume = RMEResume::where('kd_pasien', $kd_pasien)
-            ->where('kd_unit', 3)
-            ->whereDate('tgl_masuk', $tgl_masuk)
-            ->where('urut_masuk', $urut_masuk)
-            ->first();
-
-        if (empty($resume)) {
-            $resumeData = [
-                'kd_pasien'     => $kd_pasien,
-                'kd_unit'       => 3,
-                'tgl_masuk'     => $tgl_masuk,
-                'urut_masuk'    => $urut_masuk,
-                'status'        => 0
-            ];
-
-            $newResume = RMEResume::create($resumeData);
-            $newResume->refresh();
-
-            // create resume detail
-            $resumeDtlData = [
-                'id_resume'     => $newResume->id
-            ];
-
-            RmeResumeDtl::create($resumeDtlData);
-        } else {
-            // get resume dtl
-            $resumeDtl = RmeResumeDtl::where('id_resume', $resume->id)->first();
-            $resumeDtlData = [
-                'id_resume'     => $resume->id
-            ];
-
-            if (empty($resumeDtl)) RmeResumeDtl::create($resumeDtlData);
         }
     }
 }

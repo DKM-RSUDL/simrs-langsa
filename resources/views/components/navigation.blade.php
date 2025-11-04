@@ -20,7 +20,7 @@
             'validate' => false,
             'icon' => 'tools.png',
             'label' => 'Tindakan',
-            'link' => route('tindakan.index', [$dataMedis->pasien->kd_pasien, $tglMasukData]),
+            'link' => route('tindakan.index', [$dataMedis->pasien->kd_pasien, $tglMasukData, $dataMedis->urut_masuk]),
         ],
         [
             'validate' => false,
