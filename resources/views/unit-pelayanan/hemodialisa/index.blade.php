@@ -175,7 +175,7 @@
                             return `
                                 <div class="d-flex justify-content-center">
                                     <a href="${hdPelayananUrl + row.kd_pasien}/${row.tgl_masuk}/${row.urut_masuk}"
-                                       class="btn btn-primary btn-sm" title="Layani Pasien">
+                                       class="btn btn-primary" title="Layani Pasien">
                                         <i class="ti-pencil-alt"></i>
                                     </a>
                                 </div>`;
