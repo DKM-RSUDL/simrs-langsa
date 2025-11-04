@@ -528,7 +528,7 @@
                                 </thead>
                                 <tbody>
                                     @forelse($laborData ?? [] as $order)
-                                        @foreach ($order->details as $detail)
+                                        @foreach ($order->details ?? [] as $detail)
                                             <tr>
                                                 <td>
                                                     {{ \Carbon\Carbon::parse($order->tgl_order)->format('d M Y H:i') }}

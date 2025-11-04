@@ -20,6 +20,8 @@ use App\Models\RujukanKunjungan;
 use App\Models\SjpKunjungan;
 use App\Models\Transaksi;
 use App\Models\Unit;
+use App\Services\AsesmenService;
+use App\Services\BaseService;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Exception;
 use Illuminate\Support\Carbon;
@@ -30,28 +32,22 @@ use Illuminate\Support\Facades\Validator;
 
 class KonsultasiController extends Controller
 {
+    private $asesmenService;
+    private $baseService;
+    private $kdUnit;
+
     public function __construct()
     {
         $this->middleware('can:read unit-pelayanan/gawat-darurat');
+        $this->asesmenService = new AsesmenService();
+        $this->baseService = new BaseService();
+        $this->kdUnit = 3; // Gawat Darurat
     }
 
     public function index($kd_pasien, $tgl_masuk, $urut_masuk, Request $request)
     {
-        $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
-            ->join('transaksi as t', function ($join) {
-                $join->on('kunjungan.kd_pasien', '=', 't.kd_pasien');
-                $join->on('kunjungan.kd_unit', '=', 't.kd_unit');
-                $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
-                $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
-            })
-            ->where('kunjungan.kd_unit', 3)
-            ->where('kunjungan.kd_pasien', $kd_pasien)
-            ->where('kunjungan.urut_masuk', $urut_masuk)
-            ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
-            ->first();
-
-
-        if (!$dataMedis) {
+        $dataMedis = $this->baseService->getDataMedis($this->kdUnit, $kd_pasien, $tgl_masuk, $urut_masuk);
+        if (empty($dataMedis)) {
             abort(404, 'Data not found');
         }
 
@@ -166,6 +162,11 @@ class KonsultasiController extends Controller
         DB::beginTransaction();
 
         try {
+            $dataMedis = $this->baseService->getDataMedis($this->kdUnit, $kd_pasien, $tgl_masuk, $urut_masuk);
+            if (empty($dataMedis)) {
+                abort(404, 'Data not found');
+            }
+
             // Validation
             $msgErr = [
                 'dokter_pengirim.required'      => 'Dokter pengirim harus dipilih!',
@@ -225,6 +226,18 @@ class KonsultasiController extends Controller
 
             KonsultasiIGD::create($dataKonsul);
 
+            // Data vital sign untuk disimpan
+            $vitalSignStore = [];
+
+            // Simpan vital sign menggunakan service
+            $this->asesmenService->store($vitalSignStore, $dataMedis->kd_pasien, $dataMedis->no_transaksi, $dataMedis->kd_kasir);
+
+
+            // create resume
+            $resumeData = [];
+
+            $this->baseService->updateResumeMedis(3, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk, $resumeData);
+
             DB::commit();
             return back()->with('success', 'Konsultasi berhasil di tambah!');
         } catch (Exception $e) {
@@ -268,6 +281,10 @@ class KonsultasiController extends Controller
         DB::beginTransaction();
 
         try {
+            $dataMedis = $this->baseService->getDataMedis($this->kdUnit, $kd_pasien, $tgl_masuk, $urut_masuk);
+            if (empty($dataMedis)) {
+                abort(404, 'Data not found');
+            }
 
             // Validation
             $msgErr = [
@@ -305,6 +322,18 @@ class KonsultasiController extends Controller
                     'instruksi'         => $request->instruksi,
                     'user_edit'       => Auth::id()
                 ]);
+
+            // Data vital sign untuk disimpan
+            $vitalSignStore = [];
+
+            // Simpan vital sign menggunakan service
+            $this->asesmenService->store($vitalSignStore, $dataMedis->kd_pasien, $dataMedis->no_transaksi, $dataMedis->kd_kasir);
+
+
+            // create resume
+            $resumeData = [];
+
+            $this->baseService->updateResumeMedis(3, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk, $resumeData);
 
             DB::commit();
             return back()->with('success', 'Konsultasi berhasil di ubah');

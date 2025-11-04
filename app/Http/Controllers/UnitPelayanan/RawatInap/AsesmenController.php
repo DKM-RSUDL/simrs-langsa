@@ -86,8 +86,6 @@ class AsesmenController extends Controller
         $dokter = Dokter::where('status', 1)->get();
         $triageClass = $this->getTriageClass($dataMedis->kd_triase);
         $riwayatObat = $this->getRiwayatObat($kd_pasien);
-        $laborData = $this->getLabor($kd_pasien);
-        $radiologiData = $this->getRadiologi($kd_pasien);
         $itemFisik = MrItemFisik::orderby('urut')->get();
         $menjalar = RmeMenjalar::all();
         $frekuensinyeri = RmeFrekuensiNyeri::all();
@@ -117,9 +115,13 @@ class AsesmenController extends Controller
 
         // GET ASAL IGD
         $asalIGD = AsalIGD::where('kd_kasir', $dataMedis->kd_kasir)->where('no_transaksi', $dataMedis->no_transaksi)->first();
+        $laborData = [];
+        $radiologiData = [];
 
         if (!empty($asalIGD)) {
             $transaksiIGD = Transaksi::where('kd_kasir', $asalIGD->kd_kasir_asal)->where('no_transaksi', $asalIGD->no_transaksi_asal)->first();
+            $laborData = $this->getLabor($transaksiIGD->kd_unit, $transaksiIGD->kd_pasien, $transaksiIGD->tgl_transaksi, $transaksiIGD->urut_masuk);
+            $radiologiData = $this->getRadiologi($transaksiIGD->kd_unit, $transaksiIGD->kd_pasien, $transaksiIGD->tgl_transaksi, $transaksiIGD->urut_masuk);
 
             $asesmenIGD = RmeAsesmen::where('kd_pasien', $transaksiIGD->kd_pasien)
                 ->where('kd_unit', $transaksiIGD->kd_unit)
@@ -683,28 +685,98 @@ class AsesmenController extends Controller
             ->get();
     }
 
-    private function getLabor($kd_pasien)
+    protected function getLabData($kd_order, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
     {
-        return SegalaOrder::with(['details.produk', 'dokter', 'labHasil'])
-            ->where('kd_pasien', $kd_pasien)
-            ->orderBy('tgl_order', 'desc')
-            ->get()
-            ->map(function ($order) {
-                $labHasil = $order->labHasil->sortByDesc('tgl_otoritas_det')->first();
-                $namaPemeriksaan = $order->details->map(function ($detail) {
-                    return $detail->produk->deskripsi ?? '';
-                })->filter()->implode(', ');
+        $results = DB::table('SEGALA_ORDER as so')
+            ->select([
+                'so.kd_order',
+                'so.kd_pasien',
+                'so.tgl_order',
+                'so.tgl_masuk',
+                'sod.kd_produk',
+                'p.deskripsi as nama_produk',
+                'kp.klasifikasi',
+                'lt.item_test',
+                'sod.jumlah',
+                'sod.status',
+                'lh.hasil',
+                'lh.satuan',
+                'lh.nilai_normal',
+                'lh.tgl_masuk',
+                'lh.KD_UNIT',
+                'lh.URUT_MASUK',
+                'lt.kd_test'
+            ])
+            ->join('SEGALA_ORDER_DET as sod', 'so.kd_order', '=', 'sod.kd_order')
+            ->join('PRODUK as p', 'sod.kd_produk', '=', 'p.kd_produk')
+            ->join('KLAS_PRODUK as kp', 'p.kd_klas', '=', 'kp.kd_klas')
+            ->join('LAB_HASIL as lh', function ($join) {
+                $join->on('p.kd_produk', '=', 'lh.kd_produk')
+                    ->on('so.kd_pasien', '=', 'lh.kd_pasien')
+                    ->on('so.tgl_masuk', '=', 'lh.tgl_masuk');
+            })
+            ->join('LAB_TEST as lt', function ($join) {
+                $join->on('lh.kd_lab', '=', 'lt.kd_lab')
+                    ->on('lh.kd_test', '=', 'lt.kd_test');
+            })
+            ->where([
+                'so.tgl_masuk' => $tgl_masuk,
+                'so.kd_order' => $kd_order,
+                'so.kd_unit' => $kd_unit,
+                'so.kd_pasien' => $kd_pasien,
+                'so.urut_masuk' => $urut_masuk
+            ])
+            ->orderBy('lt.kd_test')
+            ->get();
 
-                return [
-                    'Tanggal-Jam' => $order->tgl_order->format('d M Y H:i'),
-                    'Nama pemeriksaan' => $namaPemeriksaan,
-                    'Status' => $this->getStatusOrder($order->status_order),
-                    // 'Waktu Hasil' => $labHasil && $labHasil->tgl_otoritas_det ? $labHasil->tgl_otoritas_det->format('d M Y H:i') : '-',
-                    'Dokter Pengirim' => $order->dokter->nama_lengkap ?? '',
-                    'Cito/Non Cito' => $order->cyto == 1 ? 'Cyto' : 'Non-Cyto',
-                    'No Order' => (int) $order->kd_order
-                ];
-            });
+        // Group results by nama_produk and include klasifikasi
+        return collect($results)->groupBy('nama_produk')->map(function ($group) {
+            $klasifikasi = $group->first()->klasifikasi;
+            return [
+                'klasifikasi' => $klasifikasi,
+                'tests' => $group->map(function ($item) {
+                    return [
+                        'item_test' => $item->item_test ?? '-',
+                        'hasil' => $item->hasil ?? '-',
+                        'satuan' => $item->satuan ?? '',
+                        'nilai_normal' => $item->nilai_normal ?? '-',
+                        'kd_test' => $item->kd_test
+                    ];
+                })
+            ];
+        });
+    }
+
+    private function getLabor($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
+    {
+        // Mengambil data hasil pemeriksaan laboratorium
+        $dataLabor = SegalaOrder::with(['details.produk', 'produk.labHasil'])
+            ->where('kd_pasien', $kd_pasien)
+            ->whereDate('tgl_masuk', $tgl_masuk)
+            ->where('urut_masuk', $urut_masuk)
+            ->where('kd_unit', $kd_unit)
+            ->whereHas('details.produk', function ($query) {
+                $query->where('kategori', 'LB');
+            })
+            ->orderBy('tgl_order', 'desc')
+            ->get();
+
+        // Transform lab results
+        $dataLabor->transform(function ($item) {
+            foreach ($item->details as $detail) {
+                $labResults = $this->getLabData(
+                    $item->kd_order,
+                    $item->kd_unit,
+                    $item->kd_pasien,
+                    $item->tgl_masuk,
+                    $item->urut_masuk
+                );
+                $detail->labResults = $labResults;
+            }
+            return $item;
+        });
+
+        return $dataLabor;
     }
 
     private function getStatusOrder($statusOrder)
@@ -717,10 +789,13 @@ class AsesmenController extends Controller
         return 'Unknown';
     }
 
-    private function getRadiologi($kd_pasien)
+    private function getRadiologi($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
     {
         return SegalaOrder::with(['details.produk', 'dokter'])
             ->where('kd_pasien', $kd_pasien)
+            ->whereDate('tgl_masuk', $tgl_masuk)
+            ->where('urut_masuk', $urut_masuk)
+            ->where('kd_unit', $kd_unit)
             ->where('kategori', 'RD')
             ->orderBy('tgl_order', 'desc')
             ->get()
