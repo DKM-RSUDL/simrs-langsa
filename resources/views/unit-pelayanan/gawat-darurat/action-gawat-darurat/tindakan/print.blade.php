@@ -218,8 +218,8 @@
                     </td>
 
                     <td class="td-center">
-                        <span class="title-main">BUKTI PELAYANAN</span>
-                        <span class="title-sub">RJTL / RITL</span>
+                        <span class="title-main">TINDAKAN</span>
+                        <span class="title-sub">GAWAT DARURAT</span>
                     </td>
 
                     <td class="td-right">
