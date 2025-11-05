@@ -154,6 +154,7 @@ Route::prefix('rawat-jalan')->group(function () {
                     Route::name('.tindakan')->group(function () {
                         Route::controller(TindakanController::class)->group(function () {
                             Route::get('/', 'index')->name('.index');
+                            Route::get('/print-pdf', 'printPDF')->name('.print-pdf');
                             Route::post('/', 'storeTindakan')->name('.store');
                             Route::put('/', 'updateTindakan')->name('.update');
                             Route::delete('/', 'deleteTindakan')->name('.delete');

@@ -18,10 +18,6 @@
 
         <div class="col-md-9">
             @include('components.navigation-rajal')
-
-            <div class="header-content" hidden>
-                <h1>Dokter Dashbord</h1>
-            </div>
         </div>
     </div>
 @endsection

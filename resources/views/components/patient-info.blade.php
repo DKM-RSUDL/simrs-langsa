@@ -173,7 +173,7 @@
 
             @case(2)
                 {{-- Rawat Jalan --}}
-                <x-patient-menus.rawat-jalan :pelayananUrl="$pelayananUrl" />
+                <x-patient-menus.rawat-jalan :pelayananUrl="$pelayananUrl" :dataMedis="$dataMedis" />
             @break
 
             @case(3)

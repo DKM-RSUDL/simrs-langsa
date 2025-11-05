@@ -228,6 +228,10 @@
                         data-tglmasuk="{{ $dataMedis->tgl_masuk ?? '' }}">
                         Laboratorium
                     </a>
+                    <a href="{{ route('rawat-inap.tindakan.print-pdf', [$dataMedis?->kd_unit ?? '', $dataMedis?->kd_pasien ?? '', $dataMedis?->tgl_masuk ?? '', $dataMedis?->urut_masuk ?? '']) }}"
+                        target="_blank" class="list-group-item list-group-item-action">
+                        Tindakan
+                    </a>
                 </div>
             </div>
         </div>

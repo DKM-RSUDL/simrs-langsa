@@ -279,6 +279,7 @@ Route::prefix('rawat-inap')->group(function () {
                     Route::name('.tindakan')->group(function () {
                         Route::controller(RawatInapTindakanController::class)->group(function () {
                             Route::get('/', 'index')->name('.index');
+                            Route::get('/print-pdf', 'printPDF')->name('.print-pdf');
                             Route::post('/', 'storeTindakan')->name('.store');
                             Route::put('/', 'updateTindakan')->name('.update');
                             Route::delete('/', 'deleteTindakan')->name('.delete');
