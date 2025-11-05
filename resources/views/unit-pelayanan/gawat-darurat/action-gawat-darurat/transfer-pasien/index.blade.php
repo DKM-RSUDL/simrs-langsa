@@ -127,13 +127,13 @@
                                     <select name="petugas_menyerahkan" id="petugas_menyerahkan" class="form-select select2"
                                         required>
                                         <option value="">--Pilih--</option>
-                                        <option value="{{ auth()->user()->kd_karyawan }}" @selected($serahTerima->petugas_menyerahkan == auth()->user()->kd_karyawan)>
+                                        <option value="{{ auth()->user()->kd_karyawan }}" @selected($serahTerima->petugas_menyerahkan ?? '' == auth()->user()->kd_karyawan)>
                                             {{ auth()->user()->karyawan->gelar_depan . ' ' . str()->title(auth()->user()->karyawan->nama) . ' ' . auth()->user()->karyawan->gelar_belakang }}
                                         </option>
 
                                         @foreach ($petugasIGD as $item)
                                             @if ($item->kd_karyawan != auth()->user()->kd_karyawan)
-                                                <option value="{{ $item->kd_karyawan }}" @selected($serahTerima->petugas_menyerahkan == $item->kd_karyawan)>
+                                                <option value="{{ $item->kd_karyawan }}" @selected($serahTerima->petugas_menyerahkan ?? '' == $item->kd_karyawan)>
                                                     {{ $item->gelar_depan . ' ' . str()->title($item->nama) . ' ' . $item->gelar_belakang }}
                                                 </option>
                                             @endif
