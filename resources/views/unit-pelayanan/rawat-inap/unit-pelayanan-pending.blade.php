@@ -171,10 +171,6 @@
                         render: function(data, type, row) {
                             return `
                                 <div class="d-flex justify-content-center">
-                                    <a href="${pelayananUrl + row.kd_unit + '/pelayanan/' + row.kd_pasien + '/' + row.tgl_masuk + '/' + row.urut_masuk}" class="edit btn btn-outline-primary btn-sm disabled">
-                                        <i class="ti-pencil-alt"></i>
-                                    </a>
-
                                     <div class="dropdown ms-1">
                                         <button class="btn btn-outline-secondary btn-sm" type="button" data-bs-toggle="dropdown">
                                             <i class="bi bi-three-dots"></i>

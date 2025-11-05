@@ -269,6 +269,7 @@ Route::prefix('rawat-inap')->group(function () {
                             Route::delete('/', 'delete')->name('.delete');
                             Route::get('/create', 'create')->name('.create');
                             Route::get('/edit/{id}', 'edit')->name('.edit');
+                            Route::get('/igd/print/{data}', 'printKonsulIGD')->name('.igd.print');
                             Route::get('/getDokterBySpesial', 'getDokterBySpesial')->name('.getDokterBySpesial');
                         });
                     });

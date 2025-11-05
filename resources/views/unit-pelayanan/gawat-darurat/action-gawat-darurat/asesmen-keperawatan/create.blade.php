@@ -25,15 +25,15 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label class="form-label">Tanggal Asesmen</label>
-                                <input type="date" name="tgl_masuk" id="tgl_asesmen_keperawatan"
-                                    class="form-control" value="{{ date('Y-m-d') }}">
+                                <input type="date" name="tgl_masuk" id="tgl_asesmen_keperawatan" class="form-control"
+                                    value="{{ date('Y-m-d') }}">
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label class="form-label">Jam Asesmen</label>
-                                <input type="time" name="tgl_masuk" id="jam_asesmen_keperawatan"
-                                    class="form-control" value="{{ date('H:i') }}">
+                                <input type="time" name="tgl_masuk" id="jam_asesmen_keperawatan" class="form-control"
+                                    value="{{ date('H:i') }}">
                             </div>
                         </div>
                     </div>
@@ -74,28 +74,22 @@
                                             <div class="form-check">
                                                 <input type="checkbox"
                                                     class="form-check-input diagnosis-radio diagnose-prwt-checkbox"
-                                                    id="jalan_nafas_tidak_efektif"
-                                                    name="airway_diagnosis[]"
+                                                    id="jalan_nafas_tidak_efektif" name="airway_diagnosis[]"
                                                     value="jalan_nafas_tidak_efektif">
-                                                <label class="form-check-label"
-                                                    for="jalan_nafas_tidak_efektif">
+                                                <label class="form-check-label" for="jalan_nafas_tidak_efektif">
                                                     Jalan nafas tidak efektif
                                                 </label>
                                             </div>
                                             <div class="d-flex gap-4">
                                                 <div class="form-check">
-                                                    <input type="radio" class="form-check-input"
-                                                        id="airway_aktual" name="airway_diagnosis_type"
-                                                        value="1">
-                                                    <label class="form-check-label"
-                                                        for="airway_aktual">Aktual</label>
+                                                    <input type="radio" class="form-check-input" id="airway_aktual"
+                                                        name="airway_diagnosis_type" value="1">
+                                                    <label class="form-check-label" for="airway_aktual">Aktual</label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input type="radio" class="form-check-input"
-                                                        id="airway_risiko" name="airway_diagnosis_type"
-                                                        value="2">
-                                                    <label class="form-check-label"
-                                                        for="airway_risiko">Risiko</label>
+                                                    <input type="radio" class="form-check-input" id="airway_risiko"
+                                                        name="airway_diagnosis_type" value="2">
+                                                    <label class="form-check-label" for="airway_risiko">Risiko</label>
                                                 </div>
                                             </div>
                                         </div>
@@ -123,8 +117,7 @@
 
                         <div class="form-group">
                             <label style="min-width: 200px;">Frekuensi nafas/menit</label>
-                            <input type="text" class="form-control"
-                                name="breathing_frekuensi_nafas"
+                            <input type="text" class="form-control" name="breathing_frekuensi_nafas"
                                 value="{{ $vitalSignMedis['rr'] ?? 0 }}" readonly>
                         </div>
 
@@ -194,30 +187,22 @@
                                             <div class="form-check">
                                                 <input type="checkbox"
                                                     class="form-check-input diagnosis-checkbox diagnose-prwt-checkbox"
-                                                    id="pola_nafas_tidak_efektif"
-                                                    name="breathing_diagnosis_nafas[]"
+                                                    id="pola_nafas_tidak_efektif" name="breathing_diagnosis_nafas[]"
                                                     value="pola_nafas">
-                                                <label class="form-check-label"
-                                                    for="pola_nafas_tidak_efektif">
+                                                <label class="form-check-label" for="pola_nafas_tidak_efektif">
                                                     Pola Nafas Tidak Efektif
                                                 </label>
                                             </div>
                                             <div class="d-flex gap-4">
                                                 <div class="form-check">
-                                                    <input type="radio" class="form-check-input"
-                                                        id="breathing_aktual"
-                                                        name="breathing_diagnosis_type"
-                                                        value="1">
-                                                    <label class="form-check-label"
-                                                        for="breathing_aktual">Aktual</label>
+                                                    <input type="radio" class="form-check-input" id="breathing_aktual"
+                                                        name="breathing_diagnosis_type" value="1">
+                                                    <label class="form-check-label" for="breathing_aktual">Aktual</label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input type="radio" class="form-check-input"
-                                                        id="breathing_risiko"
-                                                        name="breathing_diagnosis_type"
-                                                        value="2">
-                                                    <label class="form-check-label"
-                                                        for="breathing_risiko">Risiko</label>
+                                                    <input type="radio" class="form-check-input" id="breathing_risiko"
+                                                        name="breathing_diagnosis_type" value="2">
+                                                    <label class="form-check-label" for="breathing_risiko">Risiko</label>
                                                 </div>
                                             </div>
                                         </div>
@@ -229,25 +214,24 @@
                                             <div class="form-check">
                                                 <input type="checkbox"
                                                     class="form-check-input diagnosis-checkbox diagnose-prwt-checkbox"
-                                                    id="gangguan_pertukaran_gas"
-                                                    name="breathing_gangguan[]" value="gangguan">
-                                                <label class="form-check-label"
-                                                    for="gangguan_pertukaran_gas">
+                                                    id="gangguan_pertukaran_gas" name="breathing_gangguan[]"
+                                                    value="gangguan">
+                                                <label class="form-check-label" for="gangguan_pertukaran_gas">
                                                     Gangguan Pertukaran Gas
                                                 </label>
                                             </div>
                                             <div class="d-flex gap-4">
                                                 <div class="form-check">
                                                     <input type="radio" class="form-check-input"
-                                                        id="breathing_aktual_1"
-                                                        name="breathing_gangguan_type" value="1">
+                                                        id="breathing_aktual_1" name="breathing_gangguan_type"
+                                                        value="1">
                                                     <label class="form-check-label"
                                                         for="breathing_aktual_1">Aktual</label>
                                                 </div>
                                                 <div class="form-check">
                                                     <input type="radio" class="form-check-input"
-                                                        id="breathing_risiko_1"
-                                                        name="breathing_gangguan_type" value="2">
+                                                        id="breathing_risiko_1" name="breathing_gangguan_type"
+                                                        value="2">
                                                     <label class="form-check-label"
                                                         for="breathing_risiko_1">Risiko</label>
                                                 </div>
@@ -265,8 +249,7 @@
                                     data-bs-target="#tindakanKeperawatanBreathingModal">
                                     <i class="ti-plus"></i> Tambah
                                 </button>
-                                <div id="selectedTindakanList-breathing"
-                                    class="d-flex flex-column gap-2">
+                                <div id="selectedTindakanList-breathing" class="d-flex flex-column gap-2">
                                 </div>
                             </div>
                         </div>
@@ -317,8 +300,7 @@
                                     <div class="mb-1">
                                         <small class="text-muted">Jumlah Frekuensi (x/mnt)</small>
                                     </div>
-                                    <input class="form-control" type="number"
-                                        name="circulation_transfusi_jumlah"
+                                    <input class="form-control" type="number" name="circulation_transfusi_jumlah"
                                         value="{{ $vitalSignMedis['nadi'] ?? 0 }}" readonly>
                                 </div>
                             </div>
@@ -359,8 +341,7 @@
                         <div class="form-group">
                             <label style="min-width: 200px;">Lainnya</label>
                             <input class="form-control" type="text"
-                                placeholder="isikan jika ada keluhan nafas lainnya"
-                                name="circulation_lain">
+                                placeholder="isikan jika ada keluhan nafas lainnya" name="circulation_lain">
                         </div>
                         <div class="form-group diagnosis-section">
                             <label style="min-width: 200px;">Diagnosis Keperawatan</label>
@@ -383,16 +364,14 @@
                                             <div class="d-flex gap-4">
                                                 <div class="form-check">
                                                     <input type="radio" class="form-check-input"
-                                                        id="circulation_aktual"
-                                                        name="circulation_diagnosis_perfusi_type"
+                                                        id="circulation_aktual" name="circulation_diagnosis_perfusi_type"
                                                         value="aktual">
                                                     <label class="form-check-label"
                                                         for="circulation_aktual">Aktual</label>
                                                 </div>
                                                 <div class="form-check">
                                                     <input type="radio" class="form-check-input"
-                                                        id="circulation_risiko"
-                                                        name="circulation_diagnosis_perfusi_type"
+                                                        id="circulation_risiko" name="circulation_diagnosis_perfusi_type"
                                                         value="risiko">
                                                     <label class="form-check-label"
                                                         for="circulation_risiko">Risiko</label>
@@ -407,11 +386,9 @@
                                             <div class="form-check">
                                                 <input type="checkbox"
                                                     class="form-check-input diagnosis-checkbox diagnose-prwt-checkbox"
-                                                    id="defisit_volume_cairan"
-                                                    name="circulation_diagnosis_defisit[]"
+                                                    id="defisit_volume_cairan" name="circulation_diagnosis_defisit[]"
                                                     value="defisit_volume_cairan">
-                                                <label class="form-check-label"
-                                                    for="defisit_volume_cairan">
+                                                <label class="form-check-label" for="defisit_volume_cairan">
                                                     Defisit Volume Cairan
                                                 </label>
                                             </div>
@@ -419,16 +396,14 @@
                                                 <div class="form-check">
                                                     <input type="radio" class="form-check-input"
                                                         id="circulation_aktual_1"
-                                                        name="circulation_diagnosis_defisit_type"
-                                                        value="aktual">
+                                                        name="circulation_diagnosis_defisit_type" value="aktual">
                                                     <label class="form-check-label"
                                                         for="circulation_aktual_1">Aktual</label>
                                                 </div>
                                                 <div class="form-check">
                                                     <input type="radio" class="form-check-input"
                                                         id="circulation_risiko_1"
-                                                        name="circulation_diagnosis_defisit_type"
-                                                        value="risiko">
+                                                        name="circulation_diagnosis_defisit_type" value="risiko">
                                                     <label class="form-check-label"
                                                         for="circulation_risiko_1">Risiko</label>
                                                 </div>
@@ -446,8 +421,7 @@
                                     data-bs-target="#tindakanKeperawatanCirculationModal">
                                     <i class="ti-plus"></i> Tambah
                                 </button>
-                                <div id="selectedTindakanList-circulation"
-                                    class="d-flex flex-column gap-2">
+                                <div id="selectedTindakanList-circulation" class="d-flex flex-column gap-2">
                                 </div>
                             </div>
                         </div>
@@ -459,12 +433,11 @@
                         <div class="form-group mb-3">
                             <label class="form-label">GCS</label>
                             <div class="input-group">
-                                <input type="text" class="form-control" name="vital_sign[gcs]"
-                                    id="gcsInput"
+                                <input type="text" class="form-control" name="vital_sign[gcs]" id="gcsInput"
                                     value="{{ isset($vitalSignMedis['gcs']) ? $vitalSignMedis['gcs'] : '' }}"
                                     placeholder="Contoh: 15 E4 V5 M6" readonly disabled>
-                                <button type="button" class="btn btn-outline-primary"
-                                    onclick="openGCSModal()" title="Lihat Detail GCS">
+                                <button type="button" class="btn btn-outline-primary" onclick="openGCSModal()"
+                                    title="Lihat Detail GCS">
                                     <i class="ti-calculator"></i> Lihat GCS
                                 </button>
                             </div>
@@ -511,8 +484,7 @@
                         </div>
                         <div class="form-group">
                             <label style="min-width: 200px;">Diameter Pupil (mm)</label>
-                            <input type="text" class="form-control"
-                                name="disability_diameter_pupil">
+                            <input type="text" class="form-control" name="disability_diameter_pupil">
                         </div>
                         <div class="form-group">
                             <label style="min-width: 200px;">Ekstremitas</label>
@@ -541,8 +513,7 @@
                         </div>
                         <div class="form-group">
                             <label style="min-width: 200px;">Kekuatan Otot</label>
-                            <input class="form-control" type="text"
-                                name="disability_kekuatan_otot">
+                            <input class="form-control" type="text" name="disability_kekuatan_otot">
                         </div>
                         <div class="form-group diagnosis-section">
                             <label style="min-width: 200px;">Diagnosis Keperawatan</label>
@@ -564,20 +535,14 @@
                                             </div>
                                             <div class="d-flex gap-4">
                                                 <div class="form-check">
-                                                    <input type="radio" class="form-check-input"
-                                                        id="disability_aktual"
-                                                        name="disability_diagnosis_perfusi_type"
-                                                        value="1">
-                                                    <label class="form-check-label"
-                                                        for="disability_aktual">Aktual</label>
+                                                    <input type="radio" class="form-check-input" id="disability_aktual"
+                                                        name="disability_diagnosis_perfusi_type" value="1">
+                                                    <label class="form-check-label" for="disability_aktual">Aktual</label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input type="radio" class="form-check-input"
-                                                        id="disability_risiko"
-                                                        name="disability_diagnosis_perfusi_type"
-                                                        value="2">
-                                                    <label class="form-check-label"
-                                                        for="disability_risiko">Risiko</label>
+                                                    <input type="radio" class="form-check-input" id="disability_risiko"
+                                                        name="disability_diagnosis_perfusi_type" value="2">
+                                                    <label class="form-check-label" for="disability_risiko">Risiko</label>
                                                 </div>
                                             </div>
                                         </div>
@@ -589,11 +554,9 @@
                                             <div class="form-check">
                                                 <input type="checkbox"
                                                     class="form-check-input diagnosis-checkbox diagnose-prwt-checkbox"
-                                                    id="intoleransi_aktivitas"
-                                                    name="disability_diagnosis_intoleransi[]"
+                                                    id="intoleransi_aktivitas" name="disability_diagnosis_intoleransi[]"
                                                     value="intoleransi_aktivitas">
-                                                <label class="form-check-label"
-                                                    for="intoleransi_aktivitas">
+                                                <label class="form-check-label" for="intoleransi_aktivitas">
                                                     Intoleransi aktivitas
                                                 </label>
                                             </div>
@@ -601,16 +564,14 @@
                                                 <div class="form-check">
                                                     <input type="radio" class="form-check-input"
                                                         id="disability_aktual_1"
-                                                        name="disability_diagnosis_intoleransi_type"
-                                                        value="1">
+                                                        name="disability_diagnosis_intoleransi_type" value="1">
                                                     <label class="form-check-label"
                                                         for="disability_aktual_1">Aktual</label>
                                                 </div>
                                                 <div class="form-check">
                                                     <input type="radio" class="form-check-input"
                                                         id="disability_risiko_1"
-                                                        name="disability_diagnosis_intoleransi_type"
-                                                        value="2">
+                                                        name="disability_diagnosis_intoleransi_type" value="2">
                                                     <label class="form-check-label"
                                                         for="disability_risiko_1">Risiko</label>
                                                 </div>
@@ -627,8 +588,7 @@
                                                     id="kendala_komunikasi_verbal"
                                                     name="disability_diagnosis_komunikasi[]"
                                                     value="kendala_komunikasi_verbal">
-                                                <label class="form-check-label"
-                                                    for="kendala_komunikasi_verbal">
+                                                <label class="form-check-label" for="kendala_komunikasi_verbal">
                                                     Kendala komunikasi verbal
                                                 </label>
                                             </div>
@@ -636,16 +596,14 @@
                                                 <div class="form-check">
                                                     <input type="radio" class="form-check-input"
                                                         id="disability_aktual_2"
-                                                        name="disability_diagnosis_komunikasi_type"
-                                                        value="1">
+                                                        name="disability_diagnosis_komunikasi_type" value="1">
                                                     <label class="form-check-label"
                                                         for="disability_aktual_2">Aktual</label>
                                                 </div>
                                                 <div class="form-check">
                                                     <input type="radio" class="form-check-input"
                                                         id="disability_risiko_2"
-                                                        name="disability_diagnosis_komunikasi_type"
-                                                        value="2">
+                                                        name="disability_diagnosis_komunikasi_type" value="2">
                                                     <label class="form-check-label"
                                                         for="disability_risiko_2">Risiko</label>
                                                 </div>
@@ -659,8 +617,7 @@
                                             <div class="form-check">
                                                 <input type="checkbox"
                                                     class="form-check-input diagnosis-checkbox diagnose-prwt-checkbox"
-                                                    id="kejang_ulang"
-                                                    name="disability_diagnosis_kejang[]"
+                                                    id="kejang_ulang" name="disability_diagnosis_kejang[]"
                                                     value="kejang_ulang">
                                                 <label class="form-check-label" for="kejang_ulang">
                                                     Kejang ulang
@@ -669,16 +626,14 @@
                                             <div class="d-flex gap-4">
                                                 <div class="form-check">
                                                     <input type="radio" class="form-check-input"
-                                                        id="disability_aktual_3"
-                                                        name="disability_diagnosis_kejang_type"
+                                                        id="disability_aktual_3" name="disability_diagnosis_kejang_type"
                                                         value="1">
                                                     <label class="form-check-label"
                                                         for="disability_aktual_3">Aktual</label>
                                                 </div>
                                                 <div class="form-check">
                                                     <input type="radio" class="form-check-input"
-                                                        id="disability_risiko_3"
-                                                        name="disability_diagnosis_kejang_type"
+                                                        id="disability_risiko_3" name="disability_diagnosis_kejang_type"
                                                         value="2">
                                                     <label class="form-check-label"
                                                         for="disability_risiko_3">Risiko</label>
@@ -693,11 +648,9 @@
                                             <div class="form-check">
                                                 <input type="checkbox"
                                                     class="form-check-input diagnosis-checkbox diagnose-prwt-checkbox"
-                                                    id="penurunan_kesadaran"
-                                                    name="disability_diagnosis_kesadaran[]"
+                                                    id="penurunan_kesadaran" name="disability_diagnosis_kesadaran[]"
                                                     value="penurunan_kesadaran">
-                                                <label class="form-check-label"
-                                                    for="penurunan_kesadaran">
+                                                <label class="form-check-label" for="penurunan_kesadaran">
                                                     Penurunan kesadaran
                                                 </label>
                                             </div>
@@ -705,16 +658,14 @@
                                                 <div class="form-check">
                                                     <input type="radio" class="form-check-input"
                                                         id="disability_aktual_4"
-                                                        name="disability_diagnosis_kesadaran_type"
-                                                        value="1">
+                                                        name="disability_diagnosis_kesadaran_type" value="1">
                                                     <label class="form-check-label"
                                                         for="disability_aktual_4">Aktual</label>
                                                 </div>
                                                 <div class="form-check">
                                                     <input type="radio" class="form-check-input"
                                                         id="disability_risiko_4"
-                                                        name="disability_diagnosis_kesadaran_type"
-                                                        value="2">
+                                                        name="disability_diagnosis_kesadaran_type" value="2">
                                                     <label class="form-check-label"
                                                         for="disability_risiko_4">Risiko</label>
                                                 </div>
@@ -727,8 +678,7 @@
                                 <div class="mt-3">
                                     <label class="form-label">Lainnya:</label>
                                     <input type="text" class="form-control"
-                                        placeholder="isikan jika ada diagnosis lainnya"
-                                        name="disability_lainnya">
+                                        placeholder="isikan jika ada diagnosis lainnya" name="disability_lainnya">
                                 </div>
                             </div>
                         </div>
@@ -740,8 +690,7 @@
                                     data-bs-target="#tindakanKeperawatanDisabilityModal">
                                     <i class="ti-plus"></i> Tambah
                                 </button>
-                                <div id="selectedTindakanList-disability"
-                                    class="d-flex flex-column gap-2">
+                                <div id="selectedTindakanList-disability" class="d-flex flex-column gap-2">
                                 </div>
                             </div>
                         </div>
@@ -755,22 +704,19 @@
                             <div class="d-flex align-items-center gap-4" style="width: 100%;">
                                 <div class="d-flex gap-4">
                                     <div class="form-check">
-                                        <input type="radio" class="form-check-input"
-                                            id="deformitas_tidak" name="exposure_deformitas"
-                                            value="0">
-                                        <label class="form-check-label"
-                                            for="deformitas_tidak">Tidak</label>
+                                        <input type="radio" class="form-check-input" id="deformitas_tidak"
+                                            name="exposure_deformitas" value="0">
+                                        <label class="form-check-label" for="deformitas_tidak">Tidak</label>
                                     </div>
                                     <div class="form-check">
-                                        <input type="radio" class="form-check-input"
-                                            id="deformitas_ya" name="exposure_deformitas"
-                                            value="1">
+                                        <input type="radio" class="form-check-input" id="deformitas_ya"
+                                            name="exposure_deformitas" value="1">
                                         <label class="form-check-label" for="deformitas_ya">Ya</label>
                                     </div>
                                 </div>
                                 <div class="flex-grow-1">
-                                    <input type="text" class="form-control"
-                                        name="exposure_deformitas_daerah" placeholder="Daerah">
+                                    <input type="text" class="form-control" name="exposure_deformitas_daerah"
+                                        placeholder="Daerah">
                                 </div>
                             </div>
                         </div>
@@ -780,22 +726,19 @@
                             <div class="d-flex align-items-center gap-4" style="width: 100%;">
                                 <div class="d-flex gap-4">
                                     <div class="form-check">
-                                        <input type="radio" class="form-check-input"
-                                            id="kontusion_tidak" name="exposure_kontusion"
-                                            value="0">
-                                        <label class="form-check-label"
-                                            for="kontusion_tidak">Tidak</label>
+                                        <input type="radio" class="form-check-input" id="kontusion_tidak"
+                                            name="exposure_kontusion" value="0">
+                                        <label class="form-check-label" for="kontusion_tidak">Tidak</label>
                                     </div>
                                     <div class="form-check">
-                                        <input type="radio" class="form-check-input"
-                                            id="kontusion_ya" name="exposure_kontusion"
-                                            value="1">
+                                        <input type="radio" class="form-check-input" id="kontusion_ya"
+                                            name="exposure_kontusion" value="1">
                                         <label class="form-check-label" for="kontusion_ya">Ya</label>
                                     </div>
                                 </div>
                                 <div class="flex-grow-1">
-                                    <input type="text" class="form-control"
-                                        name="exposure_kontusion_daerah" placeholder="Daerah">
+                                    <input type="text" class="form-control" name="exposure_kontusion_daerah"
+                                        placeholder="Daerah">
                                 </div>
                             </div>
                         </div>
@@ -805,10 +748,9 @@
                             <div class="d-flex align-items-center gap-4" style="width: 100%;">
                                 <div class="d-flex gap-4">
                                     <div class="form-check">
-                                        <input type="radio" class="form-check-input"
-                                            id="abrasi_tidak" name="exposure_abrasi" value="0">
-                                        <label class="form-check-label"
-                                            for="abrasi_tidak">Tidak</label>
+                                        <input type="radio" class="form-check-input" id="abrasi_tidak"
+                                            name="exposure_abrasi" value="0">
+                                        <label class="form-check-label" for="abrasi_tidak">Tidak</label>
                                     </div>
                                     <div class="form-check">
                                         <input type="radio" class="form-check-input" id="abrasi_ya"
@@ -817,8 +759,8 @@
                                     </div>
                                 </div>
                                 <div class="flex-grow-1">
-                                    <input type="text" class="form-control"
-                                        name="exposure_abrasi_daerah" placeholder="Daerah">
+                                    <input type="text" class="form-control" name="exposure_abrasi_daerah"
+                                        placeholder="Daerah">
                                 </div>
                             </div>
                         </div>
@@ -828,22 +770,19 @@
                             <div class="d-flex align-items-center gap-4" style="width: 100%;">
                                 <div class="d-flex gap-4">
                                     <div class="form-check">
-                                        <input type="radio" class="form-check-input"
-                                            id="penetrasi_tidak" name="exposure_penetrasi"
-                                            value="0">
-                                        <label class="form-check-label"
-                                            for="penetrasi_tidak">Tidak</label>
+                                        <input type="radio" class="form-check-input" id="penetrasi_tidak"
+                                            name="exposure_penetrasi" value="0">
+                                        <label class="form-check-label" for="penetrasi_tidak">Tidak</label>
                                     </div>
                                     <div class="form-check">
-                                        <input type="radio" class="form-check-input"
-                                            id="penetrasi_ya" name="exposure_penetrasi"
-                                            value="1">
+                                        <input type="radio" class="form-check-input" id="penetrasi_ya"
+                                            name="exposure_penetrasi" value="1">
                                         <label class="form-check-label" for="penetrasi_ya">Ya</label>
                                     </div>
                                 </div>
                                 <div class="flex-grow-1">
-                                    <input type="text" class="form-control"
-                                        name="exposure_penetrasi_daerah" placeholder="Daerah">
+                                    <input type="text" class="form-control" name="exposure_penetrasi_daerah"
+                                        placeholder="Daerah">
                                 </div>
                             </div>
                         </div>
@@ -853,21 +792,19 @@
                             <div class="d-flex align-items-center gap-4" style="width: 100%;">
                                 <div class="d-flex gap-4">
                                     <div class="form-check">
-                                        <input type="radio" class="form-check-input"
-                                            id="laserasi_tidak" name="exposure_laserasi"
-                                            value="0">
-                                        <label class="form-check-label"
-                                            for="laserasi_tidak">Tidak</label>
+                                        <input type="radio" class="form-check-input" id="laserasi_tidak"
+                                            name="exposure_laserasi" value="0">
+                                        <label class="form-check-label" for="laserasi_tidak">Tidak</label>
                                     </div>
                                     <div class="form-check">
-                                        <input type="radio" class="form-check-input"
-                                            id="laserasi_ya" name="exposure_laserasi" value="1">
+                                        <input type="radio" class="form-check-input" id="laserasi_ya"
+                                            name="exposure_laserasi" value="1">
                                         <label class="form-check-label" for="laserasi_ya">Ya</label>
                                     </div>
                                 </div>
                                 <div class="flex-grow-1">
-                                    <input type="text" class="form-control"
-                                        name="exposure_laserasi_daerah" placeholder="Daerah">
+                                    <input type="text" class="form-control" name="exposure_laserasi_daerah"
+                                        placeholder="Daerah">
                                 </div>
                             </div>
                         </div>
@@ -877,10 +814,9 @@
                             <div class="d-flex align-items-center gap-4" style="width: 100%;">
                                 <div class="d-flex gap-4">
                                     <div class="form-check">
-                                        <input type="radio" class="form-check-input"
-                                            id="edema_tidak" name="exposure_edema" value="0">
-                                        <label class="form-check-label"
-                                            for="edema_tidak">Tidak</label>
+                                        <input type="radio" class="form-check-input" id="edema_tidak"
+                                            name="exposure_edema" value="0">
+                                        <label class="form-check-label" for="edema_tidak">Tidak</label>
                                     </div>
                                     <div class="form-check">
                                         <input type="radio" class="form-check-input" id="edema_ya"
@@ -889,16 +825,15 @@
                                     </div>
                                 </div>
                                 <div class="flex-grow-1">
-                                    <input type="text" class="form-control"
-                                        name="exposure_edema_daerah" placeholder="Daerah">
+                                    <input type="text" class="form-control" name="exposure_edema_daerah"
+                                        placeholder="Daerah">
                                 </div>
                             </div>
                         </div>
 
                         <div class="form-group">
                             <label style="min-width: 200px;">Kedalaman luka (cm)</label>
-                            <input type="number" class="form-control"
-                                name="exposure_kedalaman_luka">
+                            <input type="number" class="form-control" name="exposure_kedalaman_luka">
                         </div>
 
                         <div class="form-group">
@@ -916,30 +851,22 @@
                                             <div class="form-check">
                                                 <input type="checkbox"
                                                     class="form-check-input diagnosis-checkbox diagnose-prwt-checkbox"
-                                                    id="kerusakan_mobilitas_fisik"
-                                                    name="exposure_diagnosis_mobilitasi[]"
+                                                    id="kerusakan_mobilitas_fisik" name="exposure_diagnosis_mobilitasi[]"
                                                     value="mobilitasi_type">
-                                                <label class="form-check-label"
-                                                    for="kerusakan_mobilitas_fisik">
+                                                <label class="form-check-label" for="kerusakan_mobilitas_fisik">
                                                     Kerusakan Mobilitas Fisik
                                                 </label>
                                             </div>
                                             <div class="d-flex gap-4">
                                                 <div class="form-check">
-                                                    <input type="radio" class="form-check-input"
-                                                        id="exposure_aktual"
-                                                        name="exposure_diagnosis_mobilitasi_type"
-                                                        value="1">
-                                                    <label class="form-check-label"
-                                                        for="exposure_aktual">Aktual</label>
+                                                    <input type="radio" class="form-check-input" id="exposure_aktual"
+                                                        name="exposure_diagnosis_mobilitasi_type" value="1">
+                                                    <label class="form-check-label" for="exposure_aktual">Aktual</label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input type="radio" class="form-check-input"
-                                                        id="exposure_risiko"
-                                                        name="exposure_diagnosis_mobilitasi_type"
-                                                        value="2">
-                                                    <label class="form-check-label"
-                                                        for="exposure_risiko">Risiko</label>
+                                                    <input type="radio" class="form-check-input" id="exposure_risiko"
+                                                        name="exposure_diagnosis_mobilitasi_type" value="2">
+                                                    <label class="form-check-label" for="exposure_risiko">Risiko</label>
                                                 </div>
                                             </div>
                                         </div>
@@ -952,29 +879,21 @@
                                                 <input type="checkbox"
                                                     class="form-check-input diagnosis-checkbox diagnose-prwt-checkbox"
                                                     id="kerusakan_integritas_jaringan"
-                                                    name="exposure_diagosis_integritas[]"
-                                                    value="integritas_type">
-                                                <label class="form-check-label"
-                                                    for="kerusakan_integritas_jaringan">
+                                                    name="exposure_diagosis_integritas[]" value="integritas_type">
+                                                <label class="form-check-label" for="kerusakan_integritas_jaringan">
                                                     Kerusakan Integritas Jaringan
                                                 </label>
                                             </div>
                                             <div class="d-flex gap-4">
                                                 <div class="form-check">
-                                                    <input type="radio" class="form-check-input"
-                                                        id="exposure_aktual_1"
-                                                        name="exposure_diagosis_integritas_type"
-                                                        value="1">
-                                                    <label class="form-check-label"
-                                                        for="exposure_aktual_1">Aktual</label>
+                                                    <input type="radio" class="form-check-input" id="exposure_aktual_1"
+                                                        name="exposure_diagosis_integritas_type" value="1">
+                                                    <label class="form-check-label" for="exposure_aktual_1">Aktual</label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input type="radio" class="form-check-input"
-                                                        id="exposure_risiko_1"
-                                                        name="exposure_diagosis_integritas_type"
-                                                        value="2">
-                                                    <label class="form-check-label"
-                                                        for="exposure_risiko_1">Risiko</label>
+                                                    <input type="radio" class="form-check-input" id="exposure_risiko_1"
+                                                        name="exposure_diagosis_integritas_type" value="2">
+                                                    <label class="form-check-label" for="exposure_risiko_1">Risiko</label>
                                                 </div>
                                             </div>
                                         </div>
@@ -985,8 +904,7 @@
                                 <div class="mt-3">
                                     <label class="form-label">Lainnya:</label>
                                     <input type="text" class="form-control"
-                                        placeholder="isikan jika ada diagnosis lainnya"
-                                        name="exposure_diagnosis_lainnya">
+                                        placeholder="isikan jika ada diagnosis lainnya" name="exposure_diagnosis_lainnya">
                                 </div>
                             </div>
                         </div>
@@ -998,8 +916,7 @@
                                     data-bs-target="#tindakanKeperawatanExposureModal">
                                     <i class="ti-plus"></i> Tambah
                                 </button>
-                                <div id="selectedTindakanList-exposure"
-                                    class="d-flex flex-column gap-2">
+                                <div id="selectedTindakanList-exposure" class="d-flex flex-column gap-2">
                                 </div>
                             </div>
                         </div>
@@ -1011,8 +928,7 @@
                         <div class="row mb-4">
                             <div class="col-md-6">
                                 <div class="d-flex align-items-start gap-4">
-                                    <div class="d-flex align-items-center gap-3"
-                                        style="min-width: 350px;">
+                                    <div class="d-flex align-items-center gap-3" style="min-width: 350px;">
                                         <input type="number"
                                             class="form-control flex-grow-1 @error('skala_nyeri') is-invalid @enderror"
                                             name="skala_nyeri" style="width: 100px;"
@@ -1023,20 +939,18 @@
                                                 {{ $message }}
                                             </div>
                                         @enderror
-                                        <button type="button" class="btn btn-sm btn-success"
-                                            id="skalaNyeriBtn">
+                                        <button type="button" class="btn btn-sm btn-success" id="skalaNyeriBtn">
                                             Tidak Nyeri
                                             <input type="number" class="form-control flex-grow-1"
-                                                name="skala_nyeri_nilai" style="width: 100px;"
-                                                value="0" min="0" max="10">
+                                                name="skala_nyeri_nilai" style="width: 100px;" value="0"
+                                                min="0" max="10">
                                     </div>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <!-- Button Controls -->
                                 <div class="btn-group mb-3">
-                                    <button type="button" class="btn btn-sm btn-outline-primary"
-                                        data-scale="numeric">
+                                    <button type="button" class="btn btn-sm btn-outline-primary" data-scale="numeric">
                                         A. Numeric Rating Pain Scale
                                     </button>
                                     <button type="button" class="btn btn-sm btn-outline-primary"
@@ -1046,17 +960,14 @@
                                 </div>
 
                                 <!-- Pain Scale Images -->
-                                <div id="wongBakerScale" class="pain-scale-image flex-grow-1"
-                                    style="display: none;">
-                                    <img src="{{ asset('assets/img/asesmen/asesmen.jpeg') }}"
-                                        alt="Wong Baker Pain Scale"
+                                <div id="wongBakerScale" class="pain-scale-image flex-grow-1" style="display: none;">
+                                    <img src="{{ asset('assets/img/asesmen/asesmen.jpeg') }}" alt="Wong Baker Pain Scale"
                                         style="width: 450px; height: auto;">
                                 </div>
 
-                                <div id="numericScale" class="pain-scale-image flex-grow-1"
-                                    style="display: none;">
-                                    <img src="{{ asset('assets/img/asesmen/numerik.png') }}"
-                                        alt="Numeric Pain Scale" style="width: 450px; height: auto;">
+                                <div id="numericScale" class="pain-scale-image flex-grow-1" style="display: none;">
+                                    <img src="{{ asset('assets/img/asesmen/numerik.png') }}" alt="Numeric Pain Scale"
+                                        style="width: 450px; height: auto;">
                                 </div>
                             </div>
                         </div>
@@ -1065,16 +976,13 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label style="min-width: 120px;">Lokasi</label>
-                                    <input type="text" class="form-control"
-                                        name="skala_nyeri_lokasi"
-                                        value="{{ old('skala_nyeri_lokasi', $asesmenMedis->lokasi ?? '') }}"
-                                        readonly>
+                                    <input type="text" class="form-control" name="skala_nyeri_lokasi"
+                                        value="{{ old('skala_nyeri_lokasi', $asesmenMedis->lokasi ?? '') }}" readonly>
                                 </div>
 
                                 <div class="form-group">
                                     <label style="min-width: 120px;">Pemberat</label>
-                                    <select class="form-select" name="skala_nyeri_pemberat_id"
-                                        readonly disabled>
+                                    <select class="form-select" name="skala_nyeri_pemberat_id" readonly disabled>
                                         <option value="">--Pilih--</option>
                                         @foreach ($faktorPemberat as $pemberat)
                                             <option value="{{ $pemberat->id }}"
@@ -1088,8 +996,7 @@
 
                                 <div class="form-group">
                                     <label style="min-width: 120px;">Kualitas</label>
-                                    <select class="form-select" name="skala_nyeri_kualitas_id"
-                                        readonly disabled>
+                                    <select class="form-select" name="skala_nyeri_kualitas_id" readonly disabled>
                                         <option value="">--Pilih--</option>
                                         @foreach ($kualitasNyeri as $kualitas)
                                             <option value="{{ $kualitas->id }}"
@@ -1103,8 +1010,7 @@
 
                                 <div class="form-group">
                                     <label style="min-width: 120px;">Menjalar</label>
-                                    <select class="form-select" name="skala_nyeri_menjalar_id"
-                                        readonly disabled>
+                                    <select class="form-select" name="skala_nyeri_menjalar_id" readonly disabled>
                                         <option value="">--Pilih--</option>
                                         @foreach ($menjalar as $menj)
                                             <option value="{{ $menj->id }}"
@@ -1120,16 +1026,13 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label style="min-width: 120px;">Durasi</label>
-                                    <input type="text" class="form-control"
-                                        name="skala_nyeri_durasi"
-                                        value="{{ old('skala_nyeri_durasi', $asesmenMedis->durasi ?? '') }}"
-                                        readonly>
+                                    <input type="text" class="form-control" name="skala_nyeri_durasi"
+                                        value="{{ old('skala_nyeri_durasi', $asesmenMedis->durasi ?? '') }}" readonly>
                                 </div>
 
                                 <div class="form-group">
                                     <label style="min-width: 120px;">Peringan</label>
-                                    <select class="form-select" name="skala_nyeri_peringan_id"
-                                        readonly disabled>
+                                    <select class="form-select" name="skala_nyeri_peringan_id" readonly disabled>
                                         <option value="">--Pilih--</option>
                                         @foreach ($faktorPeringan as $peringan)
                                             <option value="{{ $peringan->id }}"
@@ -1142,8 +1045,7 @@
 
                                 <div class="form-group">
                                     <label style="min-width: 120px;">Frekuensi</label>
-                                    <select class="form-select" name="skala_nyeri_frekuensi_id"
-                                        readonly disabled>
+                                    <select class="form-select" name="skala_nyeri_frekuensi_id" readonly disabled>
                                         <option value="">--Pilih--</option>
                                         @foreach ($frekuensiNyeri as $frekuensi)
                                             <option value="{{ $frekuensi->id }}"
@@ -1156,8 +1058,7 @@
 
                                 <div class="form-group">
                                     <label style="min-width: 120px;">Jenis</label>
-                                    <select class="form-select" name="skala_nyeri_jenis_id" readonly
-                                        disabled>
+                                    <select class="form-select" name="skala_nyeri_jenis_id" readonly disabled>
                                         <option value="">--Pilih--</option>
                                         @foreach ($jenisNyeri as $jenis)
                                             <option value="{{ $jenis->id }}"
@@ -1198,8 +1099,8 @@
                             <label class="form-label">Pilih jenis penilaian risiko jatuh sesuai dengan
                                 kondisi
                                 pasien:</label>
-                            <select class="form-select" id="risikoJatuhSkala"
-                                name="resiko_jatuh_jenis" onchange="showForm(this.value)">
+                            <select class="form-select" id="risikoJatuhSkala" name="resiko_jatuh_jenis"
+                                onchange="showForm(this.value)">
                                 <option value="">--Pilih Skala--</option>
                                 <option value="1">Skala Umum</option>
                                 <option value="2">Skala Morse</option>
@@ -1274,8 +1175,7 @@
                                 </select>
                             </div>
                             <div class="conclusion bg-success">
-                                <p class="conclusion-text">Kesimpulan: <span
-                                        id="kesimpulanTextForm"></span>
+                                <p class="conclusion-text">Kesimpulan: <span id="kesimpulanTextForm"></span>
                                 </p>
                                 <input type="hidden" name="risiko_jatuh_umum_kesimpulan"
                                     id="risiko_jatuh_umum_kesimpulan">
@@ -1296,8 +1196,7 @@
                             </div>
                             <div class="mb-3">
                                 <label class="form-label">Pasien memiliki diagnosis skunder?</label>
-                                <select class="form-select"
-                                    name="risiko_jatuh_morse_diagnosis_sekunder"
+                                <select class="form-select" name="risiko_jatuh_morse_diagnosis_sekunder"
                                     onchange="updateConclusion('morse')">
                                     <option value="">pilih</option>
                                     <option value="15">Ya</option>
@@ -1306,8 +1205,7 @@
                             </div>
                             <div class="mb-3">
                                 <label class="form-label">Pasien membutuhkan bantuan ambulasi?</label>
-                                <select class="form-select"
-                                    name="risiko_jatuh_morse_bantuan_ambulasi"
+                                <select class="form-select" name="risiko_jatuh_morse_bantuan_ambulasi"
                                     onchange="updateConclusion('morse')">
                                     <option value="">pilih</option>
                                     <option value="30">Meja/ kursi</option>
@@ -1318,8 +1216,7 @@
                             </div>
                             <div class="mb-3">
                                 <label class="form-label">Pasien terpasang infus?</label>
-                                <select class="form-select"
-                                    name="risiko_jatuh_morse_terpasang_infus"
+                                <select class="form-select" name="risiko_jatuh_morse_terpasang_infus"
                                     onchange="updateConclusion('morse')">
                                     <option value="">pilih</option>
                                     <option value="20">Ya</option>
@@ -1346,8 +1243,7 @@
                                 </select>
                             </div>
                             <div class="conclusion bg-success">
-                                <p class="conclusion-text">Kesimpulan: <span
-                                        id="kesimpulanTextForm"></span>
+                                <p class="conclusion-text">Kesimpulan: <span id="kesimpulanTextForm"></span>
                                 </p>
                                 <input type="hidden" name="risiko_jatuh_morse_kesimpulan"
                                     id="risiko_jatuh_morse_kesimpulan">
@@ -1370,8 +1266,7 @@
                             </div>
                             <div class="mb-3">
                                 <label class="form-label">Jenis kelamin</label>
-                                <select class="form-select"
-                                    name="risiko_jatuh_pediatrik_jenis_kelamin"
+                                <select class="form-select" name="risiko_jatuh_pediatrik_jenis_kelamin"
                                     onchange="updateConclusion('humpty')">
                                     <option value="">pilih</option>
                                     <option value="2">Laki-laki</option>
@@ -1394,8 +1289,7 @@
                             </div>
                             <div class="mb-3">
                                 <label class="form-label">Gangguan Kognitif</label>
-                                <select class="form-select"
-                                    name="risiko_jatuh_pediatrik_gangguan_kognitif"
+                                <select class="form-select" name="risiko_jatuh_pediatrik_gangguan_kognitif"
                                     onchange="updateConclusion('humpty')">
                                     <option value="">pilih</option>
                                     <option value="3">Tidak menyadari keterbatasan dirinya
@@ -1407,8 +1301,7 @@
                             </div>
                             <div class="mb-3">
                                 <label class="form-label">Faktor Lingkungan</label>
-                                <select class="form-select"
-                                    name="risiko_jatuh_pediatrik_faktor_lingkungan"
+                                <select class="form-select" name="risiko_jatuh_pediatrik_faktor_lingkungan"
                                     onchange="updateConclusion('humpty')">
                                     <option value="">pilih</option>
                                     <option value="4">Riwayat jatuh /bayi diletakkan di tempat
@@ -1436,8 +1329,7 @@
                             </div>
                             <div class="mb-3">
                                 <label class="form-label">Penggunaan Medika mentosa</label>
-                                <select class="form-select"
-                                    name="risiko_jatuh_pediatrik_penggunaan_mentosa"
+                                <select class="form-select" name="risiko_jatuh_pediatrik_penggunaan_mentosa"
                                     onchange="updateConclusion('humpty')">
                                     <option value="">pilih</option>
                                     <option value="3">Penggunaan multiple: sedative, obat
@@ -1451,8 +1343,7 @@
                                 </select>
                             </div>
                             <div class="conclusion bg-success">
-                                <p class="conclusion-text">Kesimpulan: <span
-                                        id="kesimpulanTextForm"></span>
+                                <p class="conclusion-text">Kesimpulan: <span id="kesimpulanTextForm"></span>
                                 </p>
                                 <input type="hidden" name="risiko_jatuh_pediatrik_kesimpulan"
                                     id="risiko_jatuh_pediatrik_kesimpulan">
@@ -1470,8 +1361,7 @@
                             <div class="mb-3">
                                 <label class="form-label">Apakah pasien datang kerumah sakit karena
                                     jatuh?</label>
-                                <select class="form-select"
-                                    name="risiko_jatuh_lansia_jatuh_saat_masuk_rs"
+                                <select class="form-select" name="risiko_jatuh_lansia_jatuh_saat_masuk_rs"
                                     onchange="updateConclusion('ontario')">
                                     <option value="">pilih</option>
                                     <option value="6">Ya</option>
@@ -1483,8 +1373,7 @@
                                     mengalami
                                     jatuh dalam 2
                                     bulan terakhir ini/ diagnosis multiple?</label>
-                                <select class="form-select"
-                                    name="risiko_jatuh_lansia_riwayat_jatuh_2_bulan"
+                                <select class="form-select" name="risiko_jatuh_lansia_riwayat_jatuh_2_bulan"
                                     onchange="updateConclusion('ontario')">
                                     <option value="">pilih</option>
                                     <option value="6">Ya</option>
@@ -1498,8 +1387,7 @@
                                 <label class="form-label">Apakah pasien bingung? (Tidak dapat membuat
                                     keputusan, jaga jarak
                                     tempatnya, gangguan daya ingat)</label>
-                                <select class="form-select"
-                                    name="risiko_jatuh_lansia_status_bingung"
+                                <select class="form-select" name="risiko_jatuh_lansia_status_bingung"
                                     onchange="updateConclusion('ontario')">
                                     <option value="">pilih</option>
                                     <option value="14">Ya</option>
@@ -1511,8 +1399,7 @@
                                     menyadarkan
                                     waktu, tempat atau
                                     orang)</label>
-                                <select class="form-select"
-                                    name="risiko_jatuh_lansia_status_disorientasi"
+                                <select class="form-select" name="risiko_jatuh_lansia_status_disorientasi"
                                     onchange="updateConclusion('ontario')">
                                     <option value="">pilih</option>
                                     <option value="14">Ya</option>
@@ -1523,8 +1410,7 @@
                                 <label class="form-label">Apakah pasien mengalami agitasi? (keresahan,
                                     gelisah, dan
                                     cemas)</label>
-                                <select class="form-select"
-                                    name="risiko_jatuh_lansia_status_agitasi"
+                                <select class="form-select" name="risiko_jatuh_lansia_status_agitasi"
                                     onchange="updateConclusion('ontario')">
                                     <option value="">pilih</option>
                                     <option value="14">Ya</option>
@@ -1546,8 +1432,7 @@
                             <div class="mb-3">
                                 <label class="form-label">Apakah pasien mengalami kelainya
                                     penglihatan/buram?</label>
-                                <select class="form-select"
-                                    name="risiko_jatuh_lansia_kelainan_penglihatan"
+                                <select class="form-select" name="risiko_jatuh_lansia_kelainan_penglihatan"
                                     onchange="updateConclusion('ontario')">
                                     <option value="">pilih</option>
                                     <option value="1">Ya</option>
@@ -1572,8 +1457,7 @@
                                 <label class="form-label">Apakah terdapat perubahan perilaku berkemih?
                                     (frekuensi, urgensi,
                                     inkontinensia, noktura)</label>
-                                <select class="form-select"
-                                    name="risiko_jatuh_lansia_perubahan_berkemih"
+                                <select class="form-select" name="risiko_jatuh_lansia_perubahan_berkemih"
                                     onchange="updateConclusion('ontario')">
                                     <option value="">pilih</option>
                                     <option value="2">Ya</option>
@@ -1588,8 +1472,7 @@
                             <div class="mb-3">
                                 <label class="form-label">Mandiri (boleh menolak saat bantu
                                     jatuh)</label>
-                                <select class="form-select"
-                                    name="risiko_jatuh_lansia_transfer_mandiri"
+                                <select class="form-select" name="risiko_jatuh_lansia_transfer_mandiri"
                                     onchange="updateConclusion('ontario')">
                                     <option value="">pilih</option>
                                     <option value="0">Ya</option>
@@ -1599,8 +1482,7 @@
                             <div class="mb-3">
                                 <label class="form-label">Memerlukan sedikit bantuan (1 orang) / dalam
                                     pengawasan</label>
-                                <select class="form-select"
-                                    name="risiko_jatuh_lansia_transfer_bantuan_sedikit"
+                                <select class="form-select" name="risiko_jatuh_lansia_transfer_bantuan_sedikit"
                                     onchange="updateConclusion('ontario')">
                                     <option value="">pilih</option>
                                     <option value="1">Ya</option>
@@ -1610,8 +1492,7 @@
                             <div class="mb-3">
                                 <label class="form-label">Memerlukan bantuan yang nyata (2
                                     orang)</label>
-                                <select class="form-select"
-                                    name="risiko_jatuh_lansia_transfer_bantuan_nyata"
+                                <select class="form-select" name="risiko_jatuh_lansia_transfer_bantuan_nyata"
                                     onchange="updateConclusion('ontario')">
                                     <option value="">pilih</option>
                                     <option value="2">Ya</option>
@@ -1622,8 +1503,7 @@
                                 <label class="form-label">Tidak dapat duduk dengan seimbang, perlu
                                     bantuan
                                     total</label>
-                                <select class="form-select"
-                                    name="risiko_jatuh_lansia_transfer_bantuan_total"
+                                <select class="form-select" name="risiko_jatuh_lansia_transfer_bantuan_total"
                                     onchange="updateConclusion('ontario')">
                                     <option value="">pilih</option>
                                     <option value="3">Ya</option>
@@ -1636,8 +1516,7 @@
                             <div class="mb-3">
                                 <label class="form-label">Mandiri (dapat menggunakan alat bantu
                                     jalan)</label>
-                                <select class="form-select"
-                                    name="risiko_jatuh_lansia_mobilitas_mandiri"
+                                <select class="form-select" name="risiko_jatuh_lansia_mobilitas_mandiri"
                                     onchange="updateConclusion('ontario')">
                                     <option value="">pilih</option>
                                     <option value="0">Ya</option>
@@ -1647,8 +1526,7 @@
                             <div class="mb-3">
                                 <label class="form-label">berjalan dengan bantuan 1 orang (verbal/
                                     fisik)</label>
-                                <select class="form-select"
-                                    name="risiko_jatuh_lansia_mobilitas_bantuan_1_orang"
+                                <select class="form-select" name="risiko_jatuh_lansia_mobilitas_bantuan_1_orang"
                                     onchange="updateConclusion('ontario')">
                                     <option value="">pilih</option>
                                     <option value="1">Ya</option>
@@ -1657,8 +1535,7 @@
                             </div>
                             <div class="mb-3">
                                 <label class="form-label">Menggunakan kusi roda</label>
-                                <select class="form-select"
-                                    name="risiko_jatuh_lansia_mobilitas_kursi_roda"
+                                <select class="form-select" name="risiko_jatuh_lansia_mobilitas_kursi_roda"
                                     onchange="updateConclusion('ontario')">
                                     <option value="">pilih</option>
                                     <option value="2">Ya</option>
@@ -1667,8 +1544,7 @@
                             </div>
                             <div class="mb-3">
                                 <label class="form-label">Imobilisasi</label>
-                                <select class="form-select"
-                                    name="risiko_jatuh_lansia_mobilitas_imobilisasi"
+                                <select class="form-select" name="risiko_jatuh_lansia_mobilitas_imobilisasi"
                                     onchange="updateConclusion('ontario')">
                                     <option value="">pilih</option>
                                     <option value="3">Ya</option>
@@ -1677,8 +1553,7 @@
                             </div>
 
                             <div class="conclusion bg-success">
-                                <p class="conclusion-text">Kesimpulan: <span
-                                        id="kesimpulanTextForm"></span>
+                                <p class="conclusion-text">Kesimpulan: <span id="kesimpulanTextForm"></span>
                                 </p>
                                 <input type="hidden" name="risiko_jatuh_lansia_kesimpulan"
                                     id="risiko_jatuh_lansia_kesimpulan">
@@ -1694,8 +1569,7 @@
                                 data-bs-target="#tindakanKeperawatanRisikoJatuhModal">
                                 <i class="ti-plus"></i> Tambah
                             </button>
-                            <div id="selectedTindakanList-risikojatuh"
-                                class="d-flex flex-column gap-2">
+                            <div id="selectedTindakanList-risikojatuh" class="d-flex flex-column gap-2">
                             </div>
                         </div>
                     </div>
@@ -1741,8 +1615,7 @@
 
                         <div class="form-group mb-3">
                             <label style="min-width: 200px;">Pekerjaan</label>
-                            <select class="form-select select2" name="sosial_ekonomi_pekerjaan"
-                                id="sosial_pekerjaan">
+                            <select class="form-select select2" name="sosial_ekonomi_pekerjaan" id="sosial_pekerjaan">
                                 <option value="">--Pilih Pekerjaan--</option>
                                 @foreach ($pekerjaan as $kerjaan)
                                     <option value="{{ $kerjaan->kd_pekerjaan }}">
@@ -1800,8 +1673,7 @@
 
                         <div class="form-group">
                             <label style="min-width: 200px;">Status tinggal dengan keluarga</label>
-                            <select class="form-select"
-                                name="sosial_ekonomi_tinggal_dengan_keluarga">
+                            <select class="form-select" name="sosial_ekonomi_tinggal_dengan_keluarga">
                                 <option value="">--Pilih--</option>
                                 <option value="Dengan Keluarga">Dengan Keluarga</option>
                                 <option value="Tidak Dengan Keluarga">Tidak Dengan Keluarga</option>
@@ -1827,8 +1699,7 @@
                         </div>
                         <div class="form-group">
                             <label style="min-width: 200px;">Hubungan dengan anggota keluarga</label>
-                            <select class="form-select"
-                                name="sosial_ekonomi_curiga_hubungan_keluarga">
+                            <select class="form-select" name="sosial_ekonomi_curiga_hubungan_keluarga">
                                 <option value="">--Pilih--</option>
                                 <option value="1">Baik</option>
                                 <option value="0">Tidak Baik</option>
@@ -1836,13 +1707,11 @@
                         </div>
                         <div class="form-group">
                             <label style="min-width: 200px;">Suku</label>
-                            <input type="text" class="form-control"
-                                name="sosial_ekonomi_curiga_suku">
+                            <input type="text" class="form-control" name="sosial_ekonomi_curiga_suku">
                         </div>
                         <div class="form-group">
                             <label style="min-width: 200px;">Budaya</label>
-                            <input type="text" class="form-control"
-                                name="sosial_ekonomi_curiga_budaya">
+                            <input type="text" class="form-control" name="sosial_ekonomi_curiga_budaya">
                         </div>
 
                         <div class="form-group">
@@ -1854,8 +1723,7 @@
                     <div class="section-separator">
                         <h5 class="section-title">11. Status Gizi</h5>
                         <div class="form-group mb-4">
-                            <select class="form-select" name="gizi_jenis"
-                                id="nutritionAssessment">
+                            <select class="form-select" name="gizi_jenis" id="nutritionAssessment">
                                 <option value="">--Pilih--</option>
                                 <option value="1">Malnutrition Screening Tool (MST)</option>
                                 <option value="2">The Mini Nutritional Assessment (MNA)</option>
@@ -1923,8 +1791,7 @@
                                 </div>
                                 <div class="alert alert-warning">Kesimpulan: ≥ 2 berisiko malnutrisi
                                 </div>
-                                <input type="hidden" name="gizi_mst_kesimpulan"
-                                    id="gizi_mst_kesimpulan">
+                                <input type="hidden" name="gizi_mst_kesimpulan" id="gizi_mst_kesimpulan">
                             </div>
                         </div>
 
@@ -1941,8 +1808,7 @@
                                     atau
                                     menelan?
                                 </label>
-                                <select class="form-select"
-                                    name="gizi_mna_penurunan_asupan_3_bulan">
+                                <select class="form-select" name="gizi_mna_penurunan_asupan_3_bulan">
                                     <option value="">--Pilih--</option>
                                     <option value="0">Mengalami penurunan asupan makanan yang
                                         parah
@@ -2008,17 +1874,17 @@
 
                             <div class="mb-3">
                                 <label class="form-label">Berapa Berat Badan (BB) pasien? (Kg)</label>
-                                <input type="number" name="gizi_mna_berat_badan"
-                                    class="form-control" id="mnaWeight" min="1"
-                                    step="0.1" placeholder="Masukkan berat badan dalam Kg">
+                                <input type="number" name="gizi_mna_berat_badan" class="form-control"
+                                    id="mnaWeight" min="1" step="0.1"
+                                    placeholder="Masukkan berat badan dalam Kg">
                             </div>
 
                             <div class="mb-3">
                                 <label class="form-label">Berapa Tinggi Badan (TB) pasien?
                                     (cm)</label>
-                                <input type="number" name="gizi_mna_tinggi_badan"
-                                    class="form-control" id="mnaHeight" min="1"
-                                    step="0.1" placeholder="Masukkan tinggi badan dalam cm">
+                                <input type="number" name="gizi_mna_tinggi_badan" class="form-control"
+                                    id="mnaHeight" min="1" step="0.1"
+                                    placeholder="Masukkan tinggi badan dalam cm">
                             </div>
 
                             <!-- IMT -->
@@ -2027,9 +1893,8 @@
                                 <div class="text-muted small mb-2">
                                     <i>Rumus IMT = BB (Kg) / (TB (m))²</i>
                                 </div>
-                                <input type="number" name="gizi_mna_imt"
-                                    class="form-control bg-light" id="mnaBMI" readonly
-                                    placeholder="IMT akan terhitung otomatis">
+                                <input type="number" name="gizi_mna_imt" class="form-control bg-light"
+                                    id="mnaBMI" readonly placeholder="IMT akan terhitung otomatis">
                             </div>
 
                             <!-- Kesimpulan -->
@@ -2043,8 +1908,7 @@
                                 <div class="alert alert-warning" style="display: none;">
                                     Kesimpulan: Total Skor ≤ 11 (Beresiko Malnutrisi)
                                 </div>
-                                <input type="hidden" name="gizi_mna_kesimpulan"
-                                    id="gizi_mna_kesimpulan">
+                                <input type="hidden" name="gizi_mna_kesimpulan" id="gizi_mna_kesimpulan">
                             </div>
                         </div>
 
@@ -2067,8 +1931,8 @@
                                     (berdasarkan penilaian objektif data BB bila ada/penilaian subjektif
                                     dari
                                     orang tua pasien ATAu
-                                    tidak ada peningkatan berat badan atau tinggi badan (pada bayi < 1
-                                        tahun) selama 3 bulan terakhir)</label>
+                                    tidak ada peningkatan berat badan atau tinggi badan (pada bayi < 1 tahun) selama 3 bulan
+                                        terakhir)</label>
                                         <select class="form-select" name="gizi_strong_penurunan_bb">
                                             <option value="">pilih</option>
                                             <option value="1">Ya</option>
@@ -2111,8 +1975,7 @@
                                 </div>
                                 <div class="alert alert-success">Kesimpulan: 4-5 (Beresiko Tinggi)
                                 </div>
-                                <input type="hidden" name="gizi_strong_kesimpulan"
-                                    id="gizi_strong_kesimpulan">
+                                <input type="hidden" name="gizi_strong_kesimpulan" id="gizi_strong_kesimpulan">
                             </div>
                         </div>
 
@@ -2198,8 +2061,7 @@
                             <div class="mb-3">
                                 <label class="form-label">Apakah pasien mengaluh adanya penglihatan
                                     buram?</label>
-                                <select class="form-select"
-                                    name="gizi_nrs_keluhan_penglihatan_buram"
+                                <select class="form-select" name="gizi_nrs_keluhan_penglihatan_buram"
                                     onchange="updateConclusion('ontario')">
                                     <option value="">pilih</option>
                                     <option value="1">Ya</option>
@@ -2292,8 +2154,7 @@
                             <div class="mb-3">
                                 <label class="form-label">berjalan dengan bantuan 1 orang (verbal/
                                     fisik)</label>
-                                <select class="form-select"
-                                    name="gizi_nrs_mobilitas_bantuan_1_orang"
+                                <select class="form-select" name="gizi_nrs_mobilitas_bantuan_1_orang"
                                     onchange="updateConclusion('ontario')">
                                     <option value="">pilih</option>
                                     <option value="1">Ya</option>
@@ -2323,8 +2184,7 @@
                                 <div class="alert alert-success">Kesimpulan: Beresiko rendah</div>
                                 <div class="alert alert-warning">Kesimpulan: Beresiko sedang</div>
                                 <div class="alert alert-danger">Kesimpulan: Beresiko Tinggi</div>
-                                <input type="hidden" name="gizi_nrs_kesimpulan"
-                                    id="gizi_nrs_kesimpulan">
+                                <input type="hidden" name="gizi_nrs_kesimpulan" id="gizi_nrs_kesimpulan">
                             </div>
                         </div>
                     </div>
@@ -2397,8 +2257,7 @@
 
                         <div class="form-group">
                             <label style="min-width: 200px;">Hambatan komunikasi</label>
-                            <select class="form-select"
-                                name="kebutuhan_edukasi_hambatan_komunikasi">
+                            <select class="form-select" name="kebutuhan_edukasi_hambatan_komunikasi">
                                 <option value="">--Pilih--</option>
                                 <option value="bahasa">Bahasa</option>
                                 <option value="menulis">Menulis</option>
@@ -2454,14 +2313,14 @@
 
                         <div class="form-group">
                             <label style="min-width: 200px;">Diagnosis medis</label>
-                            <input type="text" class="form-control"
-                                name="discharge_planning_diagnosis_medis" id="diagnosis_medis">
+                            <input type="text" class="form-control" name="discharge_planning_diagnosis_medis"
+                                id="diagnosis_medis">
                         </div>
 
                         <div class="form-group">
                             <label style="min-width: 200px;">Usia lanjut</label>
-                            <select class="form-select discharge-select"
-                                name="discharge_planning_usia_lanjut" id="usia_lanjut">
+                            <select class="form-select discharge-select" name="discharge_planning_usia_lanjut"
+                                id="usia_lanjut">
                                 <option value="" selected disabled>pilih</option>
                                 <option value="ya">Ya</option>
                                 <option value="tidak">Tidak</option>
@@ -2470,8 +2329,7 @@
 
                         <div class="form-group">
                             <label style="min-width: 200px;">Hambatan mobilisasi</label>
-                            <select class="form-select discharge-select"
-                                name="discharge_planning_hambatan_mobilisasi"
+                            <select class="form-select discharge-select" name="discharge_planning_hambatan_mobilisasi"
                                 id="hambatan_mobilisasi">
                                 <option value="" selected disabled>pilih</option>
                                 <option value="ya">Ya</option>
@@ -2482,8 +2340,7 @@
                         <div class="form-group">
                             <label style="min-width: 200px;">Membutuhkan pelayanan medis
                                 berkelanjutan</label>
-                            <select class="form-select discharge-select"
-                                name="discharge_planning_pelayanan_medis"
+                            <select class="form-select discharge-select" name="discharge_planning_pelayanan_medis"
                                 id="pelayanan_medis_berkelanjutan">
                                 <option value="" selected disabled>pilih</option>
                                 <option value="ya">Ya</option>
@@ -2495,8 +2352,7 @@
                             <label style="min-width: 200px;">Ketergantungan dengan orang lain dalam
                                 aktivitas harian</label>
                             <select class="form-select discharge-select"
-                                name="discharge_planning_ketergantungan_aktivitas"
-                                id="ketergantungan_aktivitas">
+                                name="discharge_planning_ketergantungan_aktivitas" id="ketergantungan_aktivitas">
                                 <option value="" selected disabled>pilih</option>
                                 <option value="ya">Ya</option>
                                 <option value="tidak">Tidak</option>
@@ -2506,26 +2362,22 @@
                         <div class="form-group mt-4">
                             <label style="min-width: 200px;">KESIMPULAN</label>
                             <div class="d-flex flex-column gap-2">
-                                <div class="alert alert-warning" id="kesimpulan_khusus"
-                                    style="display: none;">
+                                <div class="alert alert-warning" id="kesimpulan_khusus" style="display: none;">
                                     Membutuhkan rencana pulang khusus
                                 </div>
-                                <div class="alert alert-success" id="kesimpulan_tidak_khusus"
-                                    style="display: none;">
+                                <div class="alert alert-success" id="kesimpulan_tidak_khusus" style="display: none;">
                                     Tidak membutuhkan rencana pulang khusus
                                 </div>
                             </div>
-                            <input type="hidden" name="discharge_planning_kesimpulan"
-                                id="kesimpulan_value">
+                            <input type="hidden" name="discharge_planning_kesimpulan" id="kesimpulan_value">
                         </div>
                     </div>
 
                     <div>
                         <!-- Hidden inputs untuk menyimpan data JSON -->
-                        <input type="hidden" id="implementationDataInput"
-                            name="implementasi_keperawatan" value="">
-                        <input type="hidden" id="evaluationDataInput" name="evaluasi_keperawatan"
+                        <input type="hidden" id="implementationDataInput" name="implementasi_keperawatan"
                             value="">
+                        <input type="hidden" id="evaluationDataInput" name="evaluasi_keperawatan" value="">
 
                         <!-- Implementasi Section -->
                         <div class="section-separator">
@@ -2539,8 +2391,7 @@
                             </div>
 
                             <div class="table-responsive">
-                                <table class="table table-bordered table-sm"
-                                    id="implementationTable">
+                                <table class="table table-bordered table-sm" id="implementationTable">
                                     <thead class="table-light">
                                         <tr>
                                             <th width="15%">Tanggal</th>
@@ -2563,8 +2414,7 @@
                             <h5 class="section-title">16. Evaluasi Keperawatan (SOAP)</h5>
                             <div class="d-flex justify-content-between align-items-center mb-3">
                                 <span>Daftar Evaluasi Keperawatan</span>
-                                <button type="button" class="btn btn-success btn-sm"
-                                    onclick="openEvaluationModal()">
+                                <button type="button" class="btn btn-success btn-sm" onclick="openEvaluationModal()">
                                     <i class="bi bi-plus-circle"></i> Tambah Evaluasi
                                 </button>
                             </div>
@@ -2665,7 +2515,8 @@
                         <div class="mb-3">
                             <label class="form-label">O (Objective) - Data Objektif</label>
                             <textarea class="form-control soap-format" id="eval_objective" rows="2"
-                                placeholder="O: TD: 120/80 mmHg, N: 80x/menit, RR: 20x/menit, S: 36.5°C..."></textarea>
+                                placeholder="O: TD: 120/80 mmHg, N: 80x/menit, RR: 20x/menit, S: 36.5°C...">{{ $objectiveCreate }}
+                            </textarea>
                         </div>
                         <div class="mb-3">
                             <label class="form-label">A (Assessment) - Analisa</label>

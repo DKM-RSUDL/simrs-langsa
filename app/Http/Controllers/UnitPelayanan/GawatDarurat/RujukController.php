@@ -7,6 +7,7 @@ use App\Models\Kunjungan;
 use App\Models\RmeRujukKeluar;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Yajra\DataTables\Facades\DataTables;
 
 class RujukController extends Controller
 {
@@ -15,7 +16,7 @@ class RujukController extends Controller
         $this->middleware('can:read unit-pelayanan/gawat-darurat');
     }
 
-    public function index($kd_pasien, $tgl_masuk, $urut_masuk)
+    public function index($kd_pasien, $tgl_masuk, $urut_masuk, Request $request)
     {
         $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
             ->join('transaksi as t', function ($join) {
@@ -36,6 +37,25 @@ class RujukController extends Controller
             ->orderBy('tanggal', 'desc')
             ->orderBy('id', 'desc')
             ->get();
+
+        if ($request->ajax()) {
+            $data = RmeRujukKeluar::where('kd_pasien', $kd_pasien)
+                ->where('urut_masuk', $urut_masuk)
+                ->orderBy('tanggal', 'desc')
+                ->orderBy('id', 'desc');
+
+            return DataTables::of($data)
+                ->order(function ($query) {
+                    $query->orderBy('tanggal', 'desc')
+                        ->orderBy('id', 'desc');
+                })
+                ->addColumn('waktu_rujuk', function($row) {
+                    $waktu = date('d-m-Y', strtotime($row->tanggal)) . ' ' . date('H:i', strtotime($row->jam));
+                    return $waktu;
+                })
+                ->rawColumns(['action', 'del', 'profile'])
+                ->make(true);
+        }
 
         return view('unit-pelayanan.gawat-darurat.action-gawat-darurat.rujuk-antar-rs.index', compact('dataMedis', 'rujukan'));
     }
