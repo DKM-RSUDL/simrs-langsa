@@ -141,29 +141,6 @@
 @push('js')
     <script>
         $(document).ready(function() {
-            // Inisialisasi DataTable
-            $('#rujukanTable').DataTable({
-                "ordering": false,
-                "searching": true,
-                "paging": true,
-                // "info": true,
-                // "pageLength": 10,
-                // "language": {
-                //     "search": "Cari:",
-                //     "lengthMenu": "Tampilkan _MENU_ data",
-                //     "zeroRecords": "Tidak ada data yang ditemukan",
-                //     "info": "Menampilkan _START_ sampai _END_ dari _TOTAL_ data",
-                //     "infoEmpty": "Tidak ada data tersedia",
-                //     "infoFiltered": "(difilter dari _MAX_ total data)",
-                //     "paginate": {
-                //         "first": "Pertama",
-                //         "last": "Terakhir",
-                //         "next": "Selanjutnya",
-                //         "previous": "Sebelumnya"
-                //     }
-                // }
-            });
-
             // Konfirmasi hapus dengan SweetAlert
             $(document).on('click', '.delete-btn', function() {
                 const form = $(this).closest('form');
