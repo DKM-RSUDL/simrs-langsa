@@ -14,6 +14,7 @@ use App\Models\Produk;
 use App\Models\RMEResume;
 use App\Models\RmeResumeDtl;
 use App\Services\AsesmenService;
+use App\Models\SjpKunjungan;
 use App\Services\BaseService;
 use Exception;
 use Illuminate\Support\Carbon;
@@ -21,6 +22,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class TindakanController extends Controller
 {
@@ -497,6 +499,94 @@ class TindakanController extends Controller
                 'message'   => $e->getMessage(),
                 'data'      => []
             ], 500);
+        }
+    }
+
+    public function printPDF(Request $request, $kd_pasien, $tgl_masuk, $urut_masuk)
+    {
+        // 1. Logika untuk mendapatkan $dataMedis (Disalin dari fungsi index)
+        $dataMedis = $this->baseService->getDataMedis($this->kdUnit, $kd_pasien, $tgl_masuk, $urut_masuk);
+        if (empty($dataMedis)) {
+            abort(404, 'Data not found');
+        }
+
+        // 2. Logika filter dan query untuk $tindakan (Disalin dari fungsi index)
+
+        $tindakan = ListTindakanPasien::with(['produk', 'ppa', 'unit'])
+            ->where('kd_pasien', $kd_pasien)
+            ->where('tgl_masuk', $tgl_masuk)
+            ->where('kd_unit', $dataMedis->kd_unit)
+            ->where('urut_masuk', $dataMedis->urut_masuk)
+            ->get();
+
+        if (!$dataMedis) {
+            abort(404, 'Data not found');
+        }
+
+        $resume = RMEResume::where('kd_pasien', $kd_pasien)
+            ->where('kd_unit', $dataMedis->kd_unit)
+            ->where('tgl_masuk', $tgl_masuk) // <-- Menggunakan tgl_masuk (bukan whereDate)
+            ->where('urut_masuk', (int)$dataMedis->urut_masuk) // <-- Diubah jadi angka
+            ->first();
+
+        // 4. AMBIL DATA NO SJP (Cara Model - Sudah Diperbaiki)
+        $sjp = SjpKunjungan::where('KD_PASIEN', $kd_pasien)
+            ->where('KD_UNIT', $dataMedis->kd_unit)
+            ->where('TGL_MASUK', $tgl_masuk) // <-- Menggunakan tgl_masuk (bukan whereDate)
+            ->where('URUT_MASUK', (int)$dataMedis->urut_masuk) // <-- Diubah jadi angka
+            ->first();
+
+        // 4. BUAT PDF
+        $pdf = Pdf::loadView('unit-pelayanan.gawat-darurat.action-gawat-darurat.tindakan.print', compact(
+            'dataMedis',
+            'tindakan',
+            'resume',
+            'sjp'
+        ));
+
+        // Atur ukuran kertas
+        $pdf->setPaper('a4', 'potret'); // 'landscape' (horizontal) atau 'portrait' (vertikal)
+
+        // 5. TAMPILKAN PDF DI BROWSER
+        return $pdf->stream('daftar-tindakan-' . $dataMedis->pasien->nama_pasien . '.pdf');
+    }
+
+
+    public function createResume($kd_pasien, $tgl_masuk, $urut_masuk)
+    {
+        // get resume
+        $resume = RMEResume::where('kd_pasien', $kd_pasien)
+            ->where('kd_unit', 3)
+            ->whereDate('tgl_masuk', $tgl_masuk)
+            ->where('urut_masuk', $urut_masuk)
+            ->first();
+
+        if (empty($resume)) {
+            $resumeData = [
+                'kd_pasien'     => $kd_pasien,
+                'kd_unit'       => 3,
+                'tgl_masuk'     => $tgl_masuk,
+                'urut_masuk'    => $urut_masuk,
+                'status'        => 0
+            ];
+
+            $newResume = RMEResume::create($resumeData);
+            $newResume->refresh();
+
+            // create resume detail
+            $resumeDtlData = [
+                'id_resume'     => $newResume->id
+            ];
+
+            RmeResumeDtl::create($resumeDtlData);
+        } else {
+            // get resume dtl
+            $resumeDtl = RmeResumeDtl::where('id_resume', $resume->id)->first();
+            $resumeDtlData = [
+                'id_resume'     => $resume->id
+            ];
+
+            if (empty($resumeDtl)) RmeResumeDtl::create($resumeDtlData);
         }
     }
 }

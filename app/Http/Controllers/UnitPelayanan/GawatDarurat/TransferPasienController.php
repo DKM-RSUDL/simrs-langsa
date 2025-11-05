@@ -529,25 +529,33 @@ class TransferPasienController extends Controller
 
         try {
 
-            $validator = Validator::make($request->all(), [
-                // HANDOVER
-                'subjective'            => 'required',
-                'background'            => 'required',
-                'assessment'            => 'required',
-                'recomendation'         => 'required',
-            ]);
+            // $validator = Validator::make($request->all(), [
+            //     // HANDOVER
+            //     'subjective'            => 'required',
+            //     'background'            => 'required',
+            //     'assessment'            => 'required',
+            //     'recomendation'         => 'required',
+            // ]);
 
-            if ($validator->fails()) throw new Exception('SBAR harus diisi semua!');
+            // if ($validator->fails()) throw new Exception('SBAR harus diisi semua!');
 
             $dataMedis = $this->baseService->getDataMedis(3, $kd_pasien, $tgl_masuk, $urut_masuk);
             if ($dataMedis->status_kunjungan == 1) return back()->with('error', 'Pasien sudah di transfer, tidak dapat mengubah data !');
 
             // CREATE DATA SERAH TERIMA
             $handOverData = [
+                'petugas_menyerahkan'   => $request->petugas_menyerahkan,
+                'tanggal_menyerahkan'   => $request->tanggal_menyerahkan,
+                'jam_menyerahkan'       => $request->jam_menyerahkan,
                 'subjective'            => $request->subjective,
                 'background'            => $request->background,
                 'assessment'            => $request->assessment,
                 'recomendation'         => $request->recomendation,
+                'kd_spesial'            => $request->kd_spesial,
+                'kd_dokter'             => $request->kd_dokter,
+                'kd_kelas'              => $request->kd_kelas,
+                'no_kamar'              => $request->no_kamar,
+                'kd_unit_tujuan'        => $request->kd_unit
             ];
 
             RmeSerahTerima::updateOrCreate([
