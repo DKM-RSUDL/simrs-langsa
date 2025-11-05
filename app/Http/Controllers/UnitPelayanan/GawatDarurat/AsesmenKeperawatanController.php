@@ -552,7 +552,7 @@ class AsesmenKeperawatanController extends Controller
     }
 
 
-    public function show($kd_pasien, $tgl_masuk, $id)
+    public function show($kd_pasien, $tgl_masuk, $urut_masuk, $id)
     {
         try {
             // Ambil data asesmen beserta relasinya
@@ -571,17 +571,12 @@ class AsesmenKeperawatanController extends Controller
                 ->where('id', $id)
                 ->where('kd_pasien', $kd_pasien)
                 ->whereDate('tgl_masuk', $tgl_masuk)
+                ->where('urut_masuk', $urut_masuk)
                 ->firstOrFail();
 
             // Ambil data medis pasien
-            $dataMedis = Kunjungan::with('pasien')
-                ->where('kd_pasien', $kd_pasien)
-                ->whereDate('tgl_masuk', $tgl_masuk)
-                ->first();
-
-            if (!$dataMedis) {
-                return back()->with('error', 'Data medis tidak ditemukan untuk pasien ini.');
-            }
+            $dataMedis = $this->baseService->getDataMedis($this->kdUnit, $kd_pasien, $tgl_masuk, $urut_masuk);
+            if (!$dataMedis) abort(404, 'Data not found');
 
             // Ambil data master yang diperlukan
             $pekerjaan = Pekerjaan::all();

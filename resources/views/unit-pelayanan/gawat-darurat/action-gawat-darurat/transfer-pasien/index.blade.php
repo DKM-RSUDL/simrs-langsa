@@ -127,13 +127,13 @@
                                     <select name="petugas_menyerahkan" id="petugas_menyerahkan" class="form-select select2"
                                         required>
                                         <option value="">--Pilih--</option>
-                                        <option value="{{ auth()->user()->kd_karyawan }}" selected>
+                                        <option value="{{ auth()->user()->kd_karyawan }}" @selected($serahTerima->petugas_menyerahkan ?? '' == auth()->user()->kd_karyawan)>
                                             {{ auth()->user()->karyawan->gelar_depan . ' ' . str()->title(auth()->user()->karyawan->nama) . ' ' . auth()->user()->karyawan->gelar_belakang }}
                                         </option>
 
                                         @foreach ($petugasIGD as $item)
                                             @if ($item->kd_karyawan != auth()->user()->kd_karyawan)
-                                                <option value="{{ $item->kd_karyawan }}">
+                                                <option value="{{ $item->kd_karyawan }}" @selected($serahTerima->petugas_menyerahkan ?? '' == $item->kd_karyawan)>
                                                     {{ $item->gelar_depan . ' ' . str()->title($item->nama) . ' ' . $item->gelar_belakang }}
                                                 </option>
                                             @endif
@@ -178,6 +178,12 @@
 
 @push('js')
     <script>
+        $(document).ready(function() {
+            @if (!empty($serahTerima))
+                $('#kd_spesial').val("{{ $serahTerima->kd_spesial }}").trigger('change');
+            @endif
+        });
+
         $('#kd_spesial').change(function(e) {
             let $this = $(this);
             let kdSpesial = $this.val();
@@ -207,6 +213,14 @@
 
                     $('#kd_dokter').html(data.dokterOption);
                     $('#kd_kelas').html(data.kelasOption);
+
+                    @if (!empty($serahTerima))
+                        $('#kd_dokter').val("{{ $serahTerima->kd_dokter }}");
+                    @endif
+
+                    @if (!empty($serahTerima))
+                        $('#kd_kelas').val("{{ $serahTerima->kd_kelas }}").trigger('change');
+                    @endif
                 },
                 error: function() {
                     Swal.fire({
@@ -246,6 +260,10 @@
                     }
 
                     $('#kd_unit').html(data);
+
+                    @if (!empty($serahTerima))
+                        $('#kd_unit').val("{{ $serahTerima->kd_unit_tujuan }}").trigger('change');
+                    @endif
                 },
                 error: function() {
                     Swal.fire({
@@ -286,6 +304,10 @@
                     }
 
                     $('#no_kamar').html(data);
+
+                    @if (!empty($serahTerima))
+                        $('#no_kamar').val("{{ $serahTerima->no_kamar }}").trigger('change');
+                    @endif
                 },
                 error: function() {
                     Swal.fire({

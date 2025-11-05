@@ -55,13 +55,6 @@
             font-weight: 500;
         }
 
-        .form-control {
-            border-radius: 0.4rem;
-            border: 1px solid #ced4da;
-            padding: 0.5rem 0.75rem;
-            font-size: 0.95rem;
-        }
-
         .form-control:focus {
             border-color: #007bff;
             box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.1);
@@ -153,239 +146,232 @@
 
         {{-- Form Column --}}
         <div class="col-md-9">
-            <div class="card">
-                <div class="card-body">
-                    {{-- Back Button --}}
-                    <a href="{{ url()->previous() }}" class="btn btn-outline-secondary mb-4">
-                        <i class="ti-arrow-left"></i> Kembali
-                    </a>
+            <x-content-card>
+                <x-button-previous />
 
-                    <h5 class="card-title mb-4">Form Tambah Surat Kematian Pasien</h5>
-                    <p class="text-muted mb-4">Lengkapi data berikut untuk membuat surat kematian pasien.</p>
+                @include('components.page-header', [
+                    'title' => 'Form Tambah Surat Kematian Pasien',
+                    'description' => 'Lengkapi data berikut untuk membuat surat kematian pasien.',
+                ])
+                {{-- The Form --}}
+                <form
+                    action="{{ route('rawat-inap.surat-kematian.store', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}"
+                    method="POST">
+                    @csrf
 
-                    {{-- The Form --}}
-                    <form
-                        action="{{ route('rawat-inap.surat-kematian.store', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}"
-                        method="POST">
-                        @csrf
-
-                        {{-- Section 1: Data Kematian --}}
-                        <div class="section-separator" id="data-kematian">
-                            <div class="row g-3">
-                                {{-- Tanggal Kematian --}}
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label for="tanggal_kematian" class="form-label required">Tanggal Kematian</label>
-                                        <input type="date"
-                                            class="form-control @error('tanggal_kematian') is-invalid @enderror"
-                                            id="tanggal_kematian" name="tanggal_kematian"
-                                            value="{{ old('tanggal_kematian', date('Y-m-d')) }}" required>
-                                        @error('tanggal_kematian')
-                                            <div class="invalid-feedback">{{ $message }}</div>
-                                        @enderror
-                                    </div>
-                                </div>
-
-                                {{-- Jam Kematian --}}
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label for="jam_kematian" class="form-label required">Jam Kematian</label>
-                                        <input type="time"
-                                            class="form-control @error('jam_kematian') is-invalid @enderror"
-                                            id="jam_kematian" name="jam_kematian"
-                                            value="{{ old('jam_kematian', date('H:i')) }}" required>
-                                        @error('jam_kematian')
-                                            <div class="invalid-feedback">{{ $message }}</div>
-                                        @enderror
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="row g-3">
-                                {{-- Dokter --}}
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label for="dokter" class="form-label required">Dokter</label>
-                                        <select class="form-control select2 @error('dokter') is-invalid @enderror" id="dokter"
-                                            name="dokter" required>
-                                            <option value="">Pilih Dokter</option>
-                                            @foreach ($dataDokter as $dokter)
-                                                <option value="{{ $dokter->kd_dokter }}"
-                                                    {{ old('dokter') == $dokter->kd_dokter ? 'selected' : '' }}>
-                                                    {{ $dokter->nama_lengkap }}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                </div>
-
-                            </div>
-
-                            <div class="row g-3">
-                                {{-- Tempat Kematian --}}
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label for="tempat_kematian" class="form-label required">Tempat Kematian</label>
-                                        <input type="text"
-                                            class="form-control @error('tempat_kematian') is-invalid @enderror"
-                                            id="tempat_kematian" name="tempat_kematian"
-                                            value="{{ old('tempat_kematian') }}" required>
-                                        @error('tempat_kematian')
-                                            <div class="invalid-feedback">{{ $message }}</div>
-                                        @enderror
-                                    </div>
-                                </div>
-
-                                {{-- Kab/Kota --}}
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label for="kab_kota" class="form-label">Kabupaten/Kota</label>
-                                        <input type="text" class="form-control @error('kab_kota') is-invalid @enderror"
-                                            id="kab_kota" name="kab_kota" value="{{ old('kab_kota') }}">
-                                        @error('kab_kota')
-                                            <div class="invalid-feedback">{{ $message }}</div>
-                                        @enderror
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="row g-3">
-                                <div class="col-md-12">
-                                    <div class="form-group">
-                                        <label class="form-label required">Umur</label>
-                                        <div class="row g-2">
-                                            <div class="col-md-3">
-                                                <input type="number"
-                                                    class="form-control @error('umur_tahun') is-invalid @enderror"
-                                                    id="umur_tahun" name="umur_tahun" value="{{ old('umur_tahun') }}"
-                                                    placeholder="Tahun" min="0">
-                                                @error('umur_tahun')
-                                                    <div class="invalid-feedback">{{ $message }}</div>
-                                                @enderror
-                                            </div>
-                                            <div class="col-md-3">
-                                                <input type="number"
-                                                    class="form-control @error('umur_bulan') is-invalid @enderror"
-                                                    id="umur_bulan" name="umur_bulan" value="{{ old('umur_bulan') }}"
-                                                    placeholder="Bulan" min="0" max="11">
-                                                @error('umur_bulan')
-                                                    <div class="invalid-feedback">{{ $message }}</div>
-                                                @enderror
-                                            </div>
-                                            <div class="col-md-3">
-                                                <input type="number"
-                                                    class="form-control @error('umur_hari') is-invalid @enderror"
-                                                    id="umur_hari" name="umur_hari" value="{{ old('umur_hari') }}"
-                                                    placeholder="Hari" min="0" max="30">
-                                                @error('umur_hari')
-                                                    <div class="invalid-feedback">{{ $message }}</div>
-                                                @enderror
-                                            </div>
-                                            <div class="col-md-3">
-                                                <input type="number"
-                                                    class="form-control @error('umur_jam') is-invalid @enderror"
-                                                    id="umur_jam" name="umur_jam" value="{{ old('umur_jam') }}"
-                                                    placeholder="Jam/Menit" min="0">
-                                                @error('umur_jam')
-                                                    <div class="invalid-feedback">{{ $message }}</div>
-                                                @enderror
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        {{-- Section 2: Diagnosis Penyebab Kematian --}}
-                        <div class="section-separator" id="diagnosis-penyebab-kematian">
-                            <h6 class="section-title">Diagnosis Penyebab Kematian</h6>
-                            <div class="diagnosis-container">
+                    {{-- Section 1: Data Kematian --}}
+                    <div class="section-separator" id="data-kematian">
+                        <div class="row g-3">
+                            {{-- Tanggal Kematian --}}
+                            <div class="col-md-6">
                                 <div class="form-group">
-                                    <label class="form-label required">I. Penyakit atau keadaan yang langsung mengakibatkan
-                                        kematian</label>
-                                    <div id="penyakit-sebab-container">
-                                        {{-- Initial Diagnosis Field --}}
-                                        <div class="row g-2 diagnosis-field align-items-end" data-field-id="1">
-                                            <div class="col-md-4">
-                                                <input type="text"
-                                                    class="form-control @error('diagnosa_1') is-invalid @enderror"
-                                                    id="diagnosa_1" name="diagnosa_1" value="{{ old('diagnosa_1') }}"
-                                                    placeholder="Diagnosa" required>
-                                                @error('diagnosa_1')
-                                                    <div class="invalid-feedback">{{ $message }}</div>
-                                                @enderror
-                                            </div>
-                                            <div class="col-md-4">
-                                                <input type="text"
-                                                    class="form-control @error('akibat_1') is-invalid @enderror"
-                                                    id="akibat_1" name="akibat_1" value="{{ old('akibat_1') }}"
-                                                    placeholder="Disebabkan atau akibat dari">
-                                                @error('akibat_1')
-                                                    <div class="invalid-feedback">{{ $message }}</div>
-                                                @enderror
-                                            </div>
-                                            <div class="col-md-3">
-                                                <input type="text"
-                                                    class="form-control @error('lama_diagnosa_1') is-invalid @enderror"
-                                                    id="lama_diagnosa_1" name="lama_diagnosa_1"
-                                                    value="{{ old('lama_diagnosa_1') }}"
-                                                    placeholder="Lamanya (kira-kira)">
-                                                @error('lama_diagnosa_1')
-                                                    <div class="invalid-feedback">{{ $message }}</div>
-                                                @enderror
-                                            </div>
-                                            <div class="col-md-1 field-actions">
-                                                <button type="button" class="btn add-field-btn" id="add-field-btn">
-                                                    <i class="ti-plus"></i>
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
+                                    <label for="tanggal_kematian" class="form-label required">Tanggal Kematian</label>
+                                    <input type="date"
+                                        class="form-control @error('tanggal_kematian') is-invalid @enderror"
+                                        id="tanggal_kematian" name="tanggal_kematian"
+                                        value="{{ old('tanggal_kematian', date('Y-m-d')) }}" required>
+                                    @error('tanggal_kematian')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
                                 </div>
+                            </div>
 
-                                <div class="form-group mt-4">
-                                    <label class="form-label">II. Penyakit-penyakit lain yang mempengaruhi pula kematian
-                                        itu, tetapi tidak ada hubungannya dengan penyakit-penyakit diatas</label>
-                                    <div id="penyakit-lain-container">
-                                        <div class="row g-2 diagnosis-field align-items-end" data-field-id="other_2">
-                                            <div class="col-md-5">
-                                                <input type="text"
-                                                    class="form-control @error('penyakit_lain_2') is-invalid @enderror"
-                                                    id="penyakit_lain_2" name="penyakit_lain_2"
-                                                    value="{{ old('penyakit_lain_2') }}"
-                                                    placeholder="Disamping penyakit-penyakit tersebut, Diatas terdapat pula penyakit">
-                                                @error('penyakit_lain_2')
-                                                    <div class="invalid-feedback">{{ $message }}</div>
-                                                @enderror
-                                            </div>
-                                            <div class="col-md-6">
-                                                <input type="text"
-                                                    class="form-control @error('lama_penyakit_lain_2') is-invalid @enderror"
-                                                    id="lama_penyakit_lain_2" name="lama_penyakit_lain_2"
-                                                    value="{{ old('lama_penyakit_lain_2') }}"
-                                                    placeholder="Lamanya (kira-kira)">
-                                                @error('lama_penyakit_lain_2')
-                                                    <div class="invalid-feedback">{{ $message }}</div>
-                                                @enderror
-                                            </div>
-                                            <div class="col-md-1 field-actions">
-                                                <button type="button" class="btn add-field-btn"
-                                                    id="add-other-field-btn">
-                                                    <i class="ti-plus"></i>
-                                                </button>
-                                            </div>
+                            {{-- Jam Kematian --}}
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="jam_kematian" class="form-label required">Jam Kematian</label>
+                                    <input type="time" class="form-control @error('jam_kematian') is-invalid @enderror"
+                                        id="jam_kematian" name="jam_kematian" value="{{ old('jam_kematian', date('H:i')) }}"
+                                        required>
+                                    @error('jam_kematian')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row g-3">
+                            {{-- Dokter --}}
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="dokter" class="form-label required">Dokter</label>
+                                    <select class="form-control select2 @error('dokter') is-invalid @enderror"
+                                        id="dokter" name="dokter" required>
+                                        <option value="">Pilih Dokter</option>
+                                        @foreach ($dataDokter as $dokter)
+                                            <option value="{{ $dokter->kd_dokter }}"
+                                                {{ old('dokter') == $dokter->kd_dokter ? 'selected' : '' }}>
+                                                {{ $dokter->nama_lengkap }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="row g-3">
+                            {{-- Tempat Kematian --}}
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="tempat_kematian" class="form-label required">Tempat Kematian</label>
+                                    <input type="text"
+                                        class="form-control @error('tempat_kematian') is-invalid @enderror"
+                                        id="tempat_kematian" name="tempat_kematian" value="{{ old('tempat_kematian') }}"
+                                        required>
+                                    @error('tempat_kematian')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                            </div>
+
+                            {{-- Kab/Kota --}}
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="kab_kota" class="form-label">Kabupaten/Kota</label>
+                                    <input type="text" class="form-control @error('kab_kota') is-invalid @enderror"
+                                        id="kab_kota" name="kab_kota" value="{{ old('kab_kota') }}">
+                                    @error('kab_kota')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row g-3">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label class="form-label required">Umur</label>
+                                    <div class="row g-2">
+                                        <div class="col-md-3">
+                                            <input type="number"
+                                                class="form-control @error('umur_tahun') is-invalid @enderror"
+                                                id="umur_tahun" name="umur_tahun" value="{{ old('umur_tahun') }}"
+                                                placeholder="Tahun" min="0">
+                                            @error('umur_tahun')
+                                                <div class="invalid-feedback">{{ $message }}</div>
+                                            @enderror
+                                        </div>
+                                        <div class="col-md-3">
+                                            <input type="number"
+                                                class="form-control @error('umur_bulan') is-invalid @enderror"
+                                                id="umur_bulan" name="umur_bulan" value="{{ old('umur_bulan') }}"
+                                                placeholder="Bulan" min="0" max="11">
+                                            @error('umur_bulan')
+                                                <div class="invalid-feedback">{{ $message }}</div>
+                                            @enderror
+                                        </div>
+                                        <div class="col-md-3">
+                                            <input type="number"
+                                                class="form-control @error('umur_hari') is-invalid @enderror" id="umur_hari"
+                                                name="umur_hari" value="{{ old('umur_hari') }}" placeholder="Hari"
+                                                min="0" max="30">
+                                            @error('umur_hari')
+                                                <div class="invalid-feedback">{{ $message }}</div>
+                                            @enderror
+                                        </div>
+                                        <div class="col-md-3">
+                                            <input type="number"
+                                                class="form-control @error('umur_jam') is-invalid @enderror" id="umur_jam"
+                                                name="umur_jam" value="{{ old('umur_jam') }}" placeholder="Jam/Menit"
+                                                min="0">
+                                            @error('umur_jam')
+                                                <div class="invalid-feedback">{{ $message }}</div>
+                                            @enderror
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
+                    </div>
 
-                        {{-- Submit Button --}}
-                        <div class="d-flex justify-content-end mt-4">
-                            <button type="submit" class="btn btn-primary">Simpan</button>
+                    {{-- Section 2: Diagnosis Penyebab Kematian --}}
+                    <div class="section-separator" id="diagnosis-penyebab-kematian">
+                        <h6 class="section-title">Diagnosis Penyebab Kematian</h6>
+                        <div class="diagnosis-container">
+                            <div class="form-group">
+                                <label class="form-label required">I. Penyakit atau keadaan yang langsung mengakibatkan
+                                    kematian</label>
+                                <div id="penyakit-sebab-container">
+                                    {{-- Initial Diagnosis Field --}}
+                                    <div class="row g-2 diagnosis-field align-items-end" data-field-id="1">
+                                        <div class="col-md-4">
+                                            <input type="text"
+                                                class="form-control @error('diagnosa_1') is-invalid @enderror"
+                                                id="diagnosa_1" name="diagnosa_1" value="{{ old('diagnosa_1') }}"
+                                                placeholder="Diagnosa" required>
+                                            @error('diagnosa_1')
+                                                <div class="invalid-feedback">{{ $message }}</div>
+                                            @enderror
+                                        </div>
+                                        <div class="col-md-4">
+                                            <input type="text"
+                                                class="form-control @error('akibat_1') is-invalid @enderror"
+                                                id="akibat_1" name="akibat_1" value="{{ old('akibat_1') }}"
+                                                placeholder="Disebabkan atau akibat dari">
+                                            @error('akibat_1')
+                                                <div class="invalid-feedback">{{ $message }}</div>
+                                            @enderror
+                                        </div>
+                                        <div class="col-md-3">
+                                            <input type="text"
+                                                class="form-control @error('lama_diagnosa_1') is-invalid @enderror"
+                                                id="lama_diagnosa_1" name="lama_diagnosa_1"
+                                                value="{{ old('lama_diagnosa_1') }}" placeholder="Lamanya (kira-kira)">
+                                            @error('lama_diagnosa_1')
+                                                <div class="invalid-feedback">{{ $message }}</div>
+                                            @enderror
+                                        </div>
+                                        <div class="col-md-1 field-actions">
+                                            <button type="button" class="btn add-field-btn" id="add-field-btn">
+                                                <i class="ti-plus"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group mt-4">
+                                <label class="form-label">II. Penyakit-penyakit lain yang mempengaruhi pula kematian
+                                    itu, tetapi tidak ada hubungannya dengan penyakit-penyakit diatas</label>
+                                <div id="penyakit-lain-container">
+                                    <div class="row g-2 diagnosis-field align-items-end" data-field-id="other_2">
+                                        <div class="col-md-5">
+                                            <input type="text"
+                                                class="form-control @error('penyakit_lain_2') is-invalid @enderror"
+                                                id="penyakit_lain_2" name="penyakit_lain_2"
+                                                value="{{ old('penyakit_lain_2') }}"
+                                                placeholder="Disamping penyakit-penyakit tersebut, Diatas terdapat pula penyakit">
+                                            @error('penyakit_lain_2')
+                                                <div class="invalid-feedback">{{ $message }}</div>
+                                            @enderror
+                                        </div>
+                                        <div class="col-md-6">
+                                            <input type="text"
+                                                class="form-control @error('lama_penyakit_lain_2') is-invalid @enderror"
+                                                id="lama_penyakit_lain_2" name="lama_penyakit_lain_2"
+                                                value="{{ old('lama_penyakit_lain_2') }}"
+                                                placeholder="Lamanya (kira-kira)">
+                                            @error('lama_penyakit_lain_2')
+                                                <div class="invalid-feedback">{{ $message }}</div>
+                                            @enderror
+                                        </div>
+                                        <div class="col-md-1 field-actions">
+                                            <button type="button" class="btn add-field-btn" id="add-other-field-btn">
+                                                <i class="ti-plus"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                    </form>
-                </div>
-            </div>
+                    </div>
+
+                    {{-- Submit Button --}}
+                    <div class="text-end">
+                        <x-button-submit />
+                    </div>
+                </form>
+            </x-content-card>
         </div>
     </div>
 @endsection

@@ -3,12 +3,6 @@
 @section('content')
     @push('css')
         <link rel="stylesheet" href="{{ asset('assets/css/MedisGawatDaruratController.css') }}">
-        <style>
-            .header-background {
-                height: 100%;
-                background-image: url("{{ asset('assets/img/background_gawat_darurat.png') }}");
-            }
-        </style>
     @endpush
 
     <div class="row">
@@ -17,121 +11,124 @@
         </div>
 
         <div class="col-md-9">
-
-            <div class="d-flex justify-content-between align-items-center m-3">
+            <x-content-card>
+                @include('components.page-header', [
+                    'title' => 'Daftar Rujukan Gawat Darurat',
+                    'description' => 'Berikut daftar rujukan keluar/antar RS.',
+                ])
                 <div class="row">
-                    <!-- Filter by Service Type -->
-                    <div class="col-md-2">
-                        <select class="form-select" id="SelectService" aria-label="Pilih...">
-                            <option value="semua" selected>Semua Pelayanan</option>
-                        </select>
-                    </div>
+                    <div class="col-md-10 d-flex flex-wrap flex-md-nowrap gap-2">
+                        <!-- Filter by Service Type -->
+                        <div>
+                            <select class="form-select" id="SelectService" aria-label="Pilih...">
+                                <option value="semua" selected>Semua Pelayanan</option>
+                            </select>
+                        </div>
 
-                    <!-- Date Range -->
-                    <div class="col-md-4">
-                        <div class="row">
-                            <div class="col-md-6">
-                                <input type="date" name="start_date" id="start_date" class="form-control"
-                                    placeholder="Dari Tanggal">
+                        <!-- Date Range -->
+                        <div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <input type="date" name="start_date" id="start_date" class="form-control"
+                                        placeholder="Dari Tanggal">
+                                </div>
+                                <div class="col-md-6">
+                                    <input type="date" name="end_date" id="end_date" class="form-control"
+                                        placeholder="S.d Tanggal">
+                                </div>
                             </div>
-                            <div class="col-md-6">
-                                <input type="date" name="end_date" id="end_date" class="form-control"
-                                    placeholder="S.d Tanggal">
+                        </div>
+
+                        <!-- Search Bar -->
+                        <div>
+                            <div class="input-group">
+                                <input type="text" name="search" id="searchInput" class="form-control"
+                                    placeholder="Cari..." aria-label="Cari">
+                                <button type="button" class="btn btn-primary" id="searchBtn">Cari</button>
                             </div>
                         </div>
                     </div>
-
-                    <!-- Search Bar -->
-                    <div class="col-md-4">
-                        <div class="input-group">
-                            <input type="text" name="search" id="searchInput" class="form-control" placeholder="Cari..."
-                                aria-label="Cari">
-                            <button type="button" class="btn btn-primary" id="searchBtn">Cari</button>
-                        </div>
-                    </div>
-
-                    <!-- Add Button -->
-                    <div class="col-md-2">
+                    <div class="col-md-2 text-end">
                         <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createRujukAntarRs"
                             type="button">
                             <i class="ti-plus"></i> Tambah
                         </button>
                     </div>
                 </div>
-            </div>
 
-            <div class="table-responsive">
-                <table class="table table-bordered table-hover" id="rujukanTable">
-                    <thead class="table-primary">
-                        <tr>
-                            <th>Tanggal & Jam</th>
-                            <th>Transportasi</th>
-                            <th>Pendamping</th>
-                            <th>Alasan Masuk/Dirujuk</th>
-                            <th>Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @forelse($rujukan ?? [] as $r)
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover" id="rujukanTable">
+                        <thead class="table-primary">
                             <tr>
-                                <td>
-                                    {{ \Carbon\Carbon::parse($r->tanggal)->format('d M Y') }}
-                                    {{ $r->jam ? \Carbon\Carbon::parse($r->jam)->format('H:i') : '-' }}
-                                </td>
-                                <td>
-                                    @if ($r->transportasi == 'ambulans')
-                                        Ambulans RS
-                                    @else
-                                        {{ $r->detail_kendaraan }}
-                                    @endif
-                                    <br>
-                                    <small class="text-muted">{{ $r->nomor_polisi }}</small>
-                                </td>
-                                <td>
-                                    @if ($r->pendamping_dokter)
-                                        <span class="badge bg-info">Dokter</span>
-                                    @endif
-                                    @if ($r->pendamping_perawat)
-                                        <span class="badge bg-info">Perawat</span>
-                                    @endif
-                                    @if ($r->pendamping_keluarga)
-                                        <span class="badge bg-info">Keluarga</span>
-                                    @endif
-                                    @if ($r->pendamping_tidak_ada)
-                                        <span class="badge bg-warning">Tidak Ada</span>
-                                    @endif
-                                </td>
-                                <td>
-                                    {{ Str::limit($r->alasan_masuk_dirujuk, 50) }}
-                                </td>
-                                <td>
-                                    <button class="btn btn-sm btn-info show-btn" data-id="{{ $r->id }}"
-                                        data-bs-toggle="modal" data-bs-target="#showRujukAntarRs" title="Lihat Detail">
-                                        <i class="bi bi-eye"></i>
-                                    </button>
-                                    <button class="btn btn-sm btn-warning edit-btn" data-id="{{ $r->id }}"
-                                        data-bs-toggle="modal" data-bs-target="#editRujukAntarRs" title="Edit">
-                                        <i class="bi bi-pencil-square"></i>
-                                    </button>
-                                    <form
-                                        action="/unit-pelayanan/gawat-darurat/pelayanan/{{ $dataMedis->kd_pasien }}/{{ $dataMedis->tgl_masuk }}/{{ $dataMedis->urut_masuk }}/rujuk-antar-rs/{{ $r->id }}"
-                                        method="POST" class="d-inline delete-form">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="button" class="btn btn-sm btn-danger delete-btn" title="Hapus">
-                                            <i class="bi bi-trash"></i>
+                                <th>Tanggal & Jam</th>
+                                <th>Transportasi</th>
+                                <th>Pendamping</th>
+                                <th>Alasan Masuk/Dirujuk</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @forelse($rujukan ?? [] as $r)
+                                <tr>
+                                    <td>
+                                        {{ \Carbon\Carbon::parse($r->tanggal)->format('d M Y') }}
+                                        {{ $r->jam ? \Carbon\Carbon::parse($r->jam)->format('H:i') : '-' }}
+                                    </td>
+                                    <td>
+                                        @if ($r->transportasi == 'ambulans')
+                                            Ambulans RS
+                                        @else
+                                            {{ $r->detail_kendaraan }}
+                                        @endif
+                                        <br>
+                                        <small class="text-muted">{{ $r->nomor_polisi }}</small>
+                                    </td>
+                                    <td>
+                                        @if ($r->pendamping_dokter)
+                                            <span class="badge bg-info">Dokter</span>
+                                        @endif
+                                        @if ($r->pendamping_perawat)
+                                            <span class="badge bg-info">Perawat</span>
+                                        @endif
+                                        @if ($r->pendamping_keluarga)
+                                            <span class="badge bg-info">Keluarga</span>
+                                        @endif
+                                        @if ($r->pendamping_tidak_ada)
+                                            <span class="badge bg-warning">Tidak Ada</span>
+                                        @endif
+                                    </td>
+                                    <td>
+                                        {{ Str::limit($r->alasan_masuk_dirujuk, 50) }}
+                                    </td>
+                                    <td>
+                                        <button class="btn btn-sm btn-info show-btn" data-id="{{ $r->id }}"
+                                            data-bs-toggle="modal" data-bs-target="#showRujukAntarRs" title="Lihat Detail">
+                                            <i class="bi bi-eye"></i>
                                         </button>
-                                    </form>
-                                </td>
-                            </tr>
-                        @empty
-                            <tr>
-                                <td colspan="5" class="text-center">Belum ada data rujukan</td>
-                            </tr>
-                        @endforelse
-                    </tbody>
-                </table>
-            </div>
+                                        <button class="btn btn-sm btn-warning edit-btn" data-id="{{ $r->id }}"
+                                            data-bs-toggle="modal" data-bs-target="#editRujukAntarRs" title="Edit">
+                                            <i class="bi bi-pencil-square"></i>
+                                        </button>
+                                        <form
+                                            action="/unit-pelayanan/gawat-darurat/pelayanan/{{ $dataMedis->kd_pasien }}/{{ $dataMedis->tgl_masuk }}/{{ $dataMedis->urut_masuk }}/rujuk-antar-rs/{{ $r->id }}"
+                                            method="POST" class="d-inline delete-form">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="button" class="btn btn-sm btn-danger delete-btn" title="Hapus">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="5" class="text-center">Belum ada data rujukan</td>
+                                </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
+            </x-content-card>
         </div>
     </div>
 

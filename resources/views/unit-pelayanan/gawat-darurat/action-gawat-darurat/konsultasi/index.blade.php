@@ -238,23 +238,24 @@
                         let konsultasi = data.konsultasi;
 
                         $modal.find('#id_konsul').val(konsultasi.id);
-                        $modal.find('#subjective').val(konsultasi.subjective);
-                        $modal.find('#background').val(konsultasi.background);
-                        $modal.find('#assesment').val(konsultasi.assesment);
-                        $modal.find('#recomendation').val(konsultasi.recomendation);
+                        $modal.find('#subjective').val(konsultasi.subjective || '');
+                        $modal.find('#background').val(konsultasi.background || '');
+                        $modal.find('#assesment').val(konsultasi.assesment || '');
+                        $modal.find('#recomendation').val(konsultasi.recomendation || '');
                         $modal.find('#dokter_pengirim').val(konsultasi.kd_dokter).trigger('change');
                         $modal.find('#tgl_konsul').val(konsultasi.tgl_konsul);
-                        $modal.find('#jam_konsul').val(konsultasi.jam_konsul.split('.')[0]);
+                        $modal.find('#jam_konsul').val(konsultasi.jam_konsul ? konsultasi.jam_konsul
+                            .split('.')[0] : '');
                         $modal.find('#dokter_tujuan').val(konsultasi.kd_dokter_tujuan).trigger(
                             'change');
-                        $modal.find('#konsultasi').val(konsultasi.konsultasi);
+                        $modal.find('#konsultasi').val(konsultasi.konsultasi || '');
 
                         // Dapatkan element trix-editor
                         var trixEditor = $('trix-editor[input="instruksi-edit"]')[0];
 
                         // Set content menggunakan Trix API
                         if (trixEditor && trixEditor.editor) {
-                            trixEditor.editor.loadHTML(konsultasi.instruksi);
+                            trixEditor.editor.loadHTML(konsultasi.instruksi || '');
                         }
 
                         $modal.modal('show');

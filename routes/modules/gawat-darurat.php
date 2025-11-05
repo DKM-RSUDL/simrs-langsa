@@ -156,6 +156,7 @@ Route::prefix('gawat-darurat')->group(function () {
                 Route::name('tindakan')->group(function () {
                     Route::controller(GawatDaruratTindakanController::class)->group(function () {
                         Route::get('/', 'index')->name('.index');
+                        Route::get('/print-pdf', 'printPDF')->name('.print-pdf');
                         Route::post('/', 'storeTindakan')->name('.store');
                         Route::put('/', 'updateTindakan')->name('.update');
                         Route::delete('/', 'deleteTindakan')->name('.delete');
@@ -213,7 +214,7 @@ Route::prefix('gawat-darurat')->group(function () {
                     Route::controller(AsesmenKeperawatanController::class)->group(function () {
                         Route::get('/{urut_masuk}/', 'index')->name('.index');
                         Route::post('/{urut_masuk}/', 'store')->name('.store');
-                        Route::get('/{id}', 'show')->name('.show');
+                        Route::get('{urut_masuk}/{id}', 'show')->name('.show');
                         Route::get('/{urut_masuk}/{id}/edit', 'edit')->name('.edit');
                         Route::put('/{urut_masuk}/{id}', 'update')->name('.update');
                         Route::get('/{id}/print-pdf', 'generatePDF')->name('.print-pdf');
