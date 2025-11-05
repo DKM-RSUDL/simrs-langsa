@@ -175,7 +175,7 @@ class TransferPasienController extends Controller
             $sisaBed = KamarInduk::select(DB::raw('(jumlah_bed - digunakan - booking) as sisa'))
                 ->where('no_kamar', $request->no_kamar)
                 ->first()
-                ->sisa;
+                ->sisa ?? 0;
 
             return response()->json([
                 'status'    => 'success',
