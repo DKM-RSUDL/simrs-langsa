@@ -34,7 +34,7 @@
         <div class="row">
             <div class="col-md-12">
                 {{-- Header + kartu ringkas (Bootstrap-only) --}}
-                <div class="row g-3 align-items-center">
+                <div class="row g-3 align-items-start">
                     <div class="col-12 col-md-7">
                         <h4 class="fw-bold m-0">{{ $unit->nama_unit }} (Aktif)</h4>
                     </div>
@@ -120,7 +120,7 @@
                         render: function(data, type, row) {
                             return `
                                 <div class="d-flex justify-content-center">
-                                    <a href="${pelayananUrl + row.kd_unit + '/pelayanan/' + row.kd_pasien + '/' + row.tgl_masuk + '/' + row.urut_masuk}" class="edit btn btn-primary btn-sm">
+                                    <a href="${pelayananUrl + row.kd_unit + '/pelayanan/' + row.kd_pasien + '/' + row.tgl_masuk + '/' + row.urut_masuk}" class="edit btn btn-primary">
                                         <i class="ti-pencil-alt"></i>
                                     </a>
                                 </div>

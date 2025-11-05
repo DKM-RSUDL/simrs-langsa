@@ -109,7 +109,7 @@
                             {{-- Filter Dokter --}}
                             <div class="col-12 d-flex align-items-center justify-content-md-end">
                                 <label for="dokterSelect" class="form-label me-2 mb-0">Dokter:</label>
-                                <select class="form-select" id="dokterSelect" aria-label="Pilih dokter">
+                                <select class="form-select select2" id="dokterSelect" aria-label="Pilih dokter">
                                     <option value="" selected>Semua</option>
                                     @foreach ($dokter as $d)
                                         <option value="{{ $d->dokter->kd_dokter }}">{{ $d->dokter->nama_lengkap }}</option>
