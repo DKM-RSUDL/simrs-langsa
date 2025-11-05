@@ -577,7 +577,7 @@ class ResumeController extends Controller
         $rr = "RR : $rrKonpas x/mnt";
 
         $respKonpas = isset($konpas['nadi']['hasil']) ? $konpas['nadi']['hasil'] : '-';
-        $resp = "Resp : $respKonpas x/mnt";
+        $resp = "Nadi : $respKonpas x/mnt";
 
         $tempKonpas = isset($konpas['suhu']['hasil']) ? $konpas['suhu']['hasil'] : '-';
         $temp = "Suhu : $tempKonpas C";
