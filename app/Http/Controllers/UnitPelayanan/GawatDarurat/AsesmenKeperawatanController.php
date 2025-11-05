@@ -1268,8 +1268,10 @@ class AsesmenKeperawatanController extends Controller
             $asesmenTanggal = $asesmen->created_at ?? now();
             $tglMasukFormatted = $dataMedis->tgl_masuk ?? now();
 
+
+         
             // Generate PDF with null checks
-            $pdf = PDF::loadView('unit-pelayanan.gawat-darurat.action-gawat-darurat.asesmen-keperawatan.print-pdfv2', [
+            $pdf = PDF::loadView('unit-pelayanan.gawat-darurat.action-gawat-darurat.asesmen-keperawatan.print-pdf', [
                 'asesmen' => $asesmen ?? null,
                 'pasien' => optional($dataMedis)->pasien ?? null,
                 'dataMedis' => $dataMedis ?? null,
