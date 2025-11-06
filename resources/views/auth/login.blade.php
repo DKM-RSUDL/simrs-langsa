@@ -45,7 +45,7 @@
 
                     {{-- Tombol Login --}}
                     <a href="{{ route('home') }}" class="btn btn-success w-100 fw-semibold mb-3">
-                        <i class="bi bi-box-arrow-in-right me-2"></i>Login
+                        <i class="bi bi-box-arrow-in-right me-2"></i>Masuk ke RME
                     </a>
 
                     <div class="text-start">
