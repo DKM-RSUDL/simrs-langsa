@@ -86,7 +86,7 @@
                 {{-- Header + kartu ringkas (Bootstrap-only) --}}
                 <div class="row g-3 align-items-start">
                     <div class="col-12 col-md-7">
-                        <h4 class="fw-bold m-0">{{ $unit->nama_unit }} (Aktif)</h4>
+                        <h4 class="fw-bold m-0">{{ $unit->nama_unit }} (Pending Order Masuk)</h4>
                     </div>
 
                     <div class="col-12 col-md-5">
