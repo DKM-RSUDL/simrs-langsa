@@ -52,23 +52,21 @@
                                     <div class="d-flex justify-content-between my-3">
                                         <div class="row d-flex justify-content-between w-100">
                                             <!-- Start Date -->
-                                                <div class="col-md-2">
-                                                    <input type="date" name="start_date" id="start_date"
-                                                        class="form-control" placeholder="Dari Tanggal"
-                                                        value="{{ request('start_date') }}">
-                                                </div>
+                                            <div class="col-md-2">
+                                                <input type="date" name="start_date" id="start_date" class="form-control"
+                                                    placeholder="Dari Tanggal" value="{{ request('start_date') }}">
+                                            </div>
 
-                                                <!-- End Date -->
-                                                <div class="col-md-2">
-                                                    <input type="date" name="end_date" id="end_date"
-                                                        class="form-control" placeholder="S.d Tanggal"
-                                                        value="{{ request('end_date') }}">
-                                                </div>
+                                            <!-- End Date -->
+                                            <div class="col-md-2">
+                                                <input type="date" name="end_date" id="end_date" class="form-control"
+                                                    placeholder="S.d Tanggal" value="{{ request('end_date') }}">
+                                            </div>
 
-                                                <div class="col-md-2">
-                                                    <a href="#" class="btn btn-secondary rounded-3"
-                                                        id="filterButton"><i class="bi bi-funnel-fill"></i></a>
-                                                </div>
+                                            <div class="col-md-2">
+                                                <a href="#" class="btn btn-secondary rounded-3" id="filterButton"><i
+                                                        class="bi bi-funnel-fill"></i></a>
+                                            </div>
                                             <!-- Search Bar -->
                                             <div class="col-md-4">
                                                 <form method="GET" action="{{ request()->fullUrl() }}">
@@ -123,30 +121,31 @@
                                                         <td>{{ str()->title($item->userCreate->name ?? 'Tidak Diketahui') }}
                                                         </td>
                                                         <td>
-                                                            <div class="btn-group" role="group">
-
+                                                            <x-table-action>
                                                                 <a href="{{ route('rawat-inap.resiko-jatuh.morse.show', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
-                                                                    class="btn btn-info btn-sm ms-1" title="Detail">
+                                                                    class="btn btn-info btn-sm" title="Detail">
                                                                     <i class="ti-eye"></i>
                                                                 </a>
 
                                                                 <a href="{{ route('rawat-inap.resiko-jatuh.morse.edit', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
-                                                                    class="btn btn-warning btn-sm ms-1" title="Edit">
+                                                                    class="btn btn-warning btn-sm" title="Edit">
                                                                     <i class="ti-pencil"></i>
                                                                 </a>
 
                                                                 <form
                                                                     action="{{ route('rawat-inap.resiko-jatuh.morse.destroy', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
-                                                                    method="POST" class="delete-form ms-1"
-                                                                    style="display: inline;">
+                                                                    method="post">
                                                                     @csrf
-                                                                    @method('DELETE')
-                                                                    <button type="submit" class="btn btn-danger btn-sm"
-                                                                        title="Hapus">
-                                                                        <i class="ti-trash"></i>
+                                                                    @method('delete')
+
+                                                                    <button type="submit" class="btn btn-sm btn-danger"
+                                                                        data-confirm data-confirm-title="Anda yakin?"
+                                                                        data-confirm-text="Data yang dihapus tidak dapat dikembalikan"
+                                                                        title="Hapus operasi" aria-label="Hapus operasi">
+                                                                        <i class="fas fa-trash"></i>
                                                                     </button>
                                                                 </form>
-                                                            </div>
+                                                            </x-table-action>
                                                         </td>
                                                     </tr>
                                                 @empty
@@ -174,3 +173,7 @@
         </div>
     </div>
 @endsection
+
+@push('js')
+    <script src="{{ asset('js/helpers/confirm.js') }}"></script>
+@endpush
