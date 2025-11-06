@@ -220,8 +220,7 @@
                     </td>
                     <td class="td-right">
                         <div class="igd-box">
-                            <span class="igd-text"
-                                style="font-size: 16px; padding: 10px;">{{ $dataMedis->unit->nama_unit ?? 'POLI' }}</span>
+                            <span class="igd-text" style="font-size: 16px; padding: 10px;">RWI</span>
                         </div>
                     </td>
                 </tr>
