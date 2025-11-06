@@ -190,7 +190,5 @@
 @endsection
 
 @push('js')
-    @push('js')
-        <script src="{{ asset('js/helpers/confirm.js') }}"></script>
-    @endpush
+    <script src="{{ asset('js/helpers/confirm.js') }}"></script>
 @endpush
