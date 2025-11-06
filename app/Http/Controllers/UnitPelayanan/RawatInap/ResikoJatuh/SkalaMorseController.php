@@ -36,12 +36,6 @@ class SkalaMorseController extends Controller
             ->where('kunjungan.urut_masuk', $urut_masuk)
             ->first();
 
-        if ($dataMedis && $dataMedis->pasien && $dataMedis->pasien->tgl_lahir) {
-            $dataMedis->pasien->umur = Carbon::parse($dataMedis->pasien->tgl_lahir)->age;
-        } else if ($dataMedis && $dataMedis->pasien) {
-            $dataMedis->pasien->umur = 'Tidak Diketahui';
-        }
-
         if (!$dataMedis) {
             abort(404, 'Data not found');
         }
