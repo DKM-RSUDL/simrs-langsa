@@ -501,7 +501,7 @@ class TindakanController extends Controller
             ->first();
 
 
-        $pdf = Pdf::loadView('unit-pelayanan.rawat-jalan.pelayanan.tindakan.print', compact(
+        $pdf = Pdf::loadView('unit-pelayanan.rawat-inap.pelayanan.tindakan.print', compact(
             'dataMedis',
             'tindakan',
             'resume',
