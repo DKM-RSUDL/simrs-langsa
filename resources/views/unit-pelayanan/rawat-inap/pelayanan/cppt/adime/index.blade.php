@@ -115,23 +115,25 @@
                                                                     </span>
                                                                 </div>
                                                             </a>
-                                                            <input type="hidden" name="diagnose_name[]" value="{{ $item }}}">
+                                                            <input type="hidden" name="diagnose_name[]" value="{{ $item }}">
                                                         </div>
                                                     @endforeach
                                                 @else
-                                                    @foreach ($cppt['cppt_penyakit'] as $index => $item )
-                                                         <div class="diag-item-wrap">
-                                                            <a href="#" class="fw-bold text-decoration-none">
-                                                                <div class="d-flex align-items-center justify-content-between">
-                                                                    <p class="m-0 p-0">{{ $item['nama_penyakit'] }}</p>
-                                                                    <span class="btnListDiagnose" data-name="{{ $item['nama_penyakit'] }}" data-id="{{ $index }}">
-                                                                        <i class="ti-close text-danger"></i>
-                                                                    </span>
-                                                                </div>
-                                                            </a>
-                                                            <input type="hidden" name="diagnose_name[]" value="{{ $item['nama_penyakit'] }}}">
-                                                        </div>
-                                                    @endforeach
+                                                   @if(!empty($cppt))
+                                                        @foreach ($cppt['cppt_penyakit'] as $index => $item )
+                                                            <div class="diag-item-wrap">
+                                                                <a href="#" class="fw-bold text-decoration-none">
+                                                                    <div class="d-flex align-items-center justify-content-between">
+                                                                        <p class="m-0 p-0">{{ $item['nama_penyakit'] }}</p>
+                                                                        <span class="btnListDiagnose" data-name="{{ $item['nama_penyakit'] }}" data-id="{{ $index }}">
+                                                                            <i class="ti-close text-danger"></i>
+                                                                        </span>
+                                                                    </div>
+                                                                </a>
+                                                                <input type="hidden" name="diagnose_name[]" value="{{ $item['nama_penyakit'] }}">
+                                                            </div>
+                                                        @endforeach
+                                                   @endif
                                                 @endif
                                             </div>
                                         </div>

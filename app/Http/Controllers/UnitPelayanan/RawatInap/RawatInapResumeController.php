@@ -18,12 +18,16 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
+use App\Services\AsesmenService;
+
 
 class RawatInapResumeController extends Controller
 {
+    protected $asesmenService;
     public function __construct()
     {
         $this->middleware('can:read unit-pelayanan/rawat-inap');
+        $this->asesmenService = new AsesmenService();
     }
 
     public function index(Request $request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
@@ -171,6 +175,8 @@ class RawatInapResumeController extends Controller
             $dataMedis->pasien->umur = 'Tidak Diketahui';
         }
 
+        $vitalSign = $this->asesmenService->getVitalSignData($dataMedis->kd_kasir, $dataMedis->no_transaksi);
+
         return view(
             'unit-pelayanan.rawat-inap.pelayanan.resume.index',
             compact(
@@ -184,7 +190,8 @@ class RawatInapResumeController extends Controller
                 'kodeICD9',
                 'dataResume',
                 'dataGet',
-                'unitKonsul'
+                'unitKonsul',
+                'vitalSign'
             )
         );
     }
