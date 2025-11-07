@@ -1,5 +1,6 @@
 @extends('layouts.administrator.master')
 
+
 @push('css')
     <link rel="stylesheet" href="{{ asset('assets/css/MedisGawatDaruratController.css') }}">
     <style>
@@ -28,7 +29,7 @@
         </div>
 
         <!-- Main Content -->
-        <div class="col-md-9" id="addCpptModal">
+        <div class="col-md-9" >
             @include('components.navigation-ranap')
 
             <div class="card shadow-sm border-0">
@@ -103,9 +104,35 @@
                                     <div class="row">
                                         <div class="col-12">
                                             <div class="bg-secondary-subtle rounded-2 p-3" id="diagnoseList">
-                                                {{-- <a href="#" class="fw-bold">HYPERTENSI KRONIS</a> <br>
-                                                <a href="#" class="fw-bold">DYSPEPSIA</a> <br>
-                                                <a href="#" class="fw-bold">DEPRESIVE EPISODE</a> <br> --}}
+                                                @if (!empty($lastDiagnoses) && empty($isEdit))
+                                                    @foreach ($lastDiagnoses as $index => $item)
+                                                        <div class="diag-item-wrap">
+                                                            <a href="#" class="fw-bold text-decoration-none">
+                                                                <div class="d-flex align-items-center justify-content-between">
+                                                                    <p class="m-0 p-0">{{ $item }}</p>
+                                                                    <span class="btnListDiagnose" data-name="{{ $item }}" data-id="{{ $index }}">
+                                                                        <i class="ti-close text-danger"></i>
+                                                                    </span>
+                                                                </div>
+                                                            </a>
+                                                            <input type="hidden" name="diagnose_name[]" value="{{ $item }}}">
+                                                        </div>
+                                                    @endforeach
+                                                @else
+                                                    @foreach ($cppt['cppt_penyakit'] as $index => $item )
+                                                         <div class="diag-item-wrap">
+                                                            <a href="#" class="fw-bold text-decoration-none">
+                                                                <div class="d-flex align-items-center justify-content-between">
+                                                                    <p class="m-0 p-0">{{ $item['nama_penyakit'] }}</p>
+                                                                    <span class="btnListDiagnose" data-name="{{ $item['nama_penyakit'] }}" data-id="{{ $index }}">
+                                                                        <i class="ti-close text-danger"></i>
+                                                                    </span>
+                                                                </div>
+                                                            </a>
+                                                            <input type="hidden" name="diagnose_name[]" value="{{ $item['nama_penyakit'] }}}">
+                                                        </div>
+                                                    @endforeach
+                                                @endif
                                             </div>
                                         </div>
                                     </div>

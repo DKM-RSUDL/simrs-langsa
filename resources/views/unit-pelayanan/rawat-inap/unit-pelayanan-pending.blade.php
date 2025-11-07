@@ -84,9 +84,9 @@
         <div class="row">
             <div class="col-md-12">
                 {{-- Header + kartu ringkas (Bootstrap-only) --}}
-                <div class="row g-3 align-items-center">
+                <div class="row g-3 align-items-start">
                     <div class="col-12 col-md-7">
-                        <h4 class="fw-bold m-0">{{ $unit->nama_unit }} (Aktif)</h4>
+                        <h4 class="fw-bold m-0">{{ $unit->nama_unit }} (Pending Order Masuk)</h4>
                     </div>
 
                     <div class="col-12 col-md-5">
@@ -171,10 +171,6 @@
                         render: function(data, type, row) {
                             return `
                                 <div class="d-flex justify-content-center">
-                                    <a href="${pelayananUrl + row.kd_unit + '/pelayanan/' + row.kd_pasien + '/' + row.tgl_masuk + '/' + row.urut_masuk}" class="edit btn btn-outline-primary btn-sm disabled">
-                                        <i class="ti-pencil-alt"></i>
-                                    </a>
-
                                     <div class="dropdown ms-1">
                                         <button class="btn btn-outline-secondary btn-sm" type="button" data-bs-toggle="dropdown">
                                             <i class="bi bi-three-dots"></i>

@@ -38,7 +38,7 @@
                                                     {{ $vitalSign->respiration ?? '__' }}
                                                     x/mnt
                                                 </small><br>
-                                                <small>Resp: {{ $vitalSign->nadi ?? '__' }}
+                                                <small>Nadi: {{ $vitalSign->nadi ?? '__' }}
                                                     x/mnt</small>
                                             </div>
                                             <div class="col-6 col-md-4">

@@ -552,40 +552,36 @@ class ResumeController extends Controller
             ->where('id', $resumeId)
             ->first();
 
-        $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
-            ->join('transaksi as t', function ($join) {
-                $join->on('kunjungan.kd_pasien', '=', 't.kd_pasien');
-                $join->on('kunjungan.kd_unit', '=', 't.kd_unit');
-                $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
-                $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
-            })
-            ->where('kunjungan.kd_pasien', $kd_pasien)
-            ->where('kunjungan.kd_unit', 3)
-            ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
-            ->where('kunjungan.urut_masuk', $urut_masuk)
-            ->first();
+        $dataMedis = $this->baseService->getDataMedis(3, $kd_pasien, $tgl_masuk, $urut_masuk);
+
+        if (!$dataMedis) {
+            abort(404, 'Data not found');
+        }
 
         if (empty($resume)) return back()->with('error', 'Gagal menemukan data resume !');
 
+        // get last ttv
+        $vitalSign = $this->asesmenService->getVitalSignData($dataMedis->kd_kasir, $dataMedis->no_transaksi);
+
         $konpas = $resume->konpas;
 
-        $sistole = isset($konpas['sistole']['hasil']) ? $konpas['sistole']['hasil'] : '-';
-        $distole = isset($konpas['distole']['hasil']) ? $konpas['distole']['hasil'] : '-';
+        $sistole = $vitalSign->sistole ?? '-';
+        $distole = $vitalSign->diastole ?? '-';
         $tdKonpas = "TD : $sistole/$distole mmHg";
 
-        $rrKonpas = isset($konpas['respiration_rate']['hasil']) ? $konpas['respiration_rate']['hasil'] : '-';
+        $rrKonpas = $vitalSign->respiration ?? '-';
         $rr = "RR : $rrKonpas x/mnt";
 
-        $respKonpas = isset($konpas['nadi']['hasil']) ? $konpas['nadi']['hasil'] : '-';
-        $resp = "Resp : $respKonpas x/mnt";
+        $nadiKonpas = $vitalSign->nadi ?? '-';
+        $resp = "Nadi : $nadiKonpas x/mnt";
 
-        $tempKonpas = isset($konpas['suhu']['hasil']) ? $konpas['suhu']['hasil'] : '-';
+        $tempKonpas = $vitalSign->suhu ?? '-';
         $temp = "Suhu : $tempKonpas C";
 
-        $tbKonpas = isset($konpas['tinggi_badan']['hasil']) ? $konpas['tinggi_badan']['hasil'] : '-';
+        $tbKonpas = $vitalSign->tinggi_badan ?? '-';
         $tb = "TB : $tbKonpas cm";
 
-        $bbKonpas = isset($konpas['berat_badan']['hasil']) ? $konpas['berat_badan']['hasil'] : '-';
+        $bbKonpas = $vitalSign->berat_badan ?? '-';
         $bb = "BB : $bbKonpas kg";
 
         $hasilKonpas = "$tdKonpas, $rr, $resp, $temp, $tb, $bb";

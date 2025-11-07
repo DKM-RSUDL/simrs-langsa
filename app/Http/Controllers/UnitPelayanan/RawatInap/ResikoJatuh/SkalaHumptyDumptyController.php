@@ -37,12 +37,6 @@ class SkalaHumptyDumptyController extends Controller
             abort(404, 'Data not found');
         }
 
-        if ($dataMedis->pasien && $dataMedis->pasien->tgl_lahir) {
-            $dataMedis->pasien->umur = Carbon::parse($dataMedis->pasien->tgl_lahir)->age;
-        } else {
-            $dataMedis->pasien->umur = 'Tidak Diketahui';
-        }
-
         // Query data Humpty Dumpty dengan filter
         $query = RmeSkalaHumptyDumpty::with('userCreated')
             ->where('kd_pasien', $kd_pasien)

@@ -138,8 +138,19 @@ class KonsultasiController extends Controller
 
         $backgroundCreate = '';
 
+        $mappKeyTTV = [
+            'td_sistole'    => 'sistole',
+            'td_diastole'    => 'diastole',
+            'nadi'    => 'nadi',
+            'temp'    => 'suhu',
+            'rr'    => 'rr',
+            'spo2_tanpa_o2'    => 'spo2 tanpa o2',
+            'spo2_dengan_o2'    => 'spo2 dengan o2',
+            'gcs'    => 'gcs',
+        ];
+
         foreach ($vitalSign as $key => $value) {
-            $backgroundCreate .= "$key: $value, ";
+            $backgroundCreate .= $mappKeyTTV[$key] . " : " . ($value ?? '-') . ", ";
         }
 
         return view(
@@ -378,7 +389,7 @@ class KonsultasiController extends Controller
         }
     }
 
-    public function pdf($kd_pasien, $tgl_masuk, $urut_amsuk, $konsul)
+    public function pdf($kd_pasien, $tgl_masuk, $urut_masuk, $konsul)
     {
         $idKonsul = decrypt($konsul);
         $konsultasi = KonsultasiIGD::with(['pasien', 'dokterAsal', 'dokterTujuan'])->find($idKonsul);

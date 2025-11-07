@@ -261,600 +261,589 @@
         </div>
 
         <div class="col-md-9">
-            <a href="{{ route('rawat-inap.resiko-jatuh.humpty-dumpty.index', [$dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk]) }}"
-                class="btn btn-outline-primary mb-3">
-                <i class="ti-arrow-left"></i> Kembali
-            </a>
+            <x-content-card>
+                <x-button-previous />
+                @include('components.page-header', [
+                    'title' => 'Perbarui Pengkajian Resiko Jatuh - Humpty Dumpty',
+                    'description' =>
+                        'Perbarui data pengkajian resiko jatuh - humpty dumpty pasien rawat inap dengan mengisi formulir di bawah ini.',
+                ])
 
-            <form id="humptyDumptyForm" method="POST"
-                action="{{ route('rawat-inap.resiko-jatuh.humpty-dumpty.update', [$dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk, $dataHumptyDumpty->id]) }}">
-                @csrf
-                @method('PUT')
+                <form id="humptyDumptyForm" method="POST"
+                    action="{{ route('rawat-inap.resiko-jatuh.humpty-dumpty.update', [$dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk, $dataHumptyDumpty->id]) }}">
+                    @csrf
+                    @method('PUT')
+                    <!-- Basic Information Section -->
+                    <div class="form-section">
+                        <h5 class="section-title">Informasi Dasar</h5>
 
-                <div class="card shadow-sm">
-                    <div class="card-body">
-                        <h4 class="header-asesmen">Edit Pengkajian Resiko Jatuh Skala Humpty Dumpty</h4>
-
-                        <!-- Basic Information Section -->
-                        <div class="form-section">
-                            <h5 class="section-title">Informasi Dasar</h5>
-
-                            <div class="form-group">
-                                <label class="form-label">Tanggal dan Jam Implementasi</label>
-                                <div class="datetime-group">
-                                    <div class="datetime-item">
-                                        <label>Tanggal</label>
-                                        <input type="date" class="form-control" name="tanggal_implementasi"
-                                            id="tanggal_implementasi"
-                                            value="{{ date('Y-m-d', strtotime($dataHumptyDumpty->tanggal_implementasi)) }}"
-                                            required>
-                                    </div>
-                                    <div class="datetime-item">
-                                        <label>Jam</label>
-                                        <input type="time" class="form-control" name="jam_implementasi"
-                                            id="jam_implementasi"
-                                            value="{{ date('H:i', strtotime($dataHumptyDumpty->jam_implementasi)) }}"
-                                            required>
-                                    </div>
+                        <div class="form-group">
+                            <label class="form-label">Tanggal dan Jam Implementasi</label>
+                            <div class="datetime-group">
+                                <div class="datetime-item">
+                                    <label>Tanggal</label>
+                                    <input type="date" class="form-control" name="tanggal_implementasi"
+                                        id="tanggal_implementasi"
+                                        value="{{ date('Y-m-d', strtotime($dataHumptyDumpty->tanggal_implementasi)) }}"
+                                        required>
                                 </div>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="shift" class="form-label">Shift</label>
-                                <select class="form-control" id="shift" name="shift" required>
-                                    <option value="">Pilih Shift</option>
-                                    <option value="pagi" {{ $dataHumptyDumpty->shift == 'pagi' ? 'selected' : '' }}>Pagi
-                                    </option>
-                                    <option value="siang" {{ $dataHumptyDumpty->shift == 'siang' ? 'selected' : '' }}>Siang
-                                    </option>
-                                    <option value="malam" {{ $dataHumptyDumpty->shift == 'malam' ? 'selected' : '' }}>Malam
-                                    </option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <!-- Assessment Criteria Section -->
-                        <div class="form-section">
-                            <h5 class="section-title">Kriteria Penilaian Humpty Dumpty</h5>
-
-                            <div class="form-group">
-                                <div class="radio-group">
-                                    <div class="form-label">Usia</div>
-                                    <div class="radio-options">
-                                        <label class="radio-item {{ $dataHumptyDumpty->usia == 4 ? 'selected' : '' }}"
-                                            for="usia_1">
-                                            <input type="radio" id="usia_1" name="usia" value="4"
-                                                class="assessment-field" data-field="usia"
-                                                {{ $dataHumptyDumpty->usia == 4 ? 'checked' : '' }}>
-                                            <span>&lt;3 tahun</span>
-                                            <span class="radio-value">4</span>
-                                        </label>
-                                        <label class="radio-item {{ $dataHumptyDumpty->usia == 3 ? 'selected' : '' }}"
-                                            for="usia_2">
-                                            <input type="radio" id="usia_2" name="usia" value="3"
-                                                class="assessment-field" data-field="usia"
-                                                {{ $dataHumptyDumpty->usia == 3 ? 'checked' : '' }}>
-                                            <span>3 sampai 7 tahun</span>
-                                            <span class="radio-value">3</span>
-                                        </label>
-                                        <label class="radio-item {{ $dataHumptyDumpty->usia == 2 ? 'selected' : '' }}"
-                                            for="usia_3">
-                                            <input type="radio" id="usia_3" name="usia" value="2"
-                                                class="assessment-field" data-field="usia"
-                                                {{ $dataHumptyDumpty->usia == 2 ? 'checked' : '' }}>
-                                            <span>7 sampai 13 tahun</span>
-                                            <span class="radio-value">2</span>
-                                        </label>
-                                        <label class="radio-item {{ $dataHumptyDumpty->usia == 1 ? 'selected' : '' }}"
-                                            for="usia_4">
-                                            <input type="radio" id="usia_4" name="usia" value="1"
-                                                class="assessment-field" data-field="usia"
-                                                {{ $dataHumptyDumpty->usia == 1 ? 'checked' : '' }}>
-                                            <span>&gt;13 tahun</span>
-                                            <span class="radio-value">1</span>
-                                        </label>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <div class="radio-group">
-                                    <div class="form-label">Jenis Kelamin</div>
-                                    <div class="radio-options">
-                                        <label
-                                            class="radio-item {{ $dataHumptyDumpty->jenis_kelamin == 2 ? 'selected' : '' }}"
-                                            for="jk_1">
-                                            <input type="radio" id="jk_1" name="jenis_kelamin" value="2"
-                                                class="assessment-field" data-field="jenis_kelamin"
-                                                {{ $dataHumptyDumpty->jenis_kelamin == 2 ? 'checked' : '' }}>
-                                            <span>Laki-laki</span>
-                                            <span class="radio-value">2</span>
-                                        </label>
-                                        <label
-                                            class="radio-item {{ $dataHumptyDumpty->jenis_kelamin == 1 ? 'selected' : '' }}"
-                                            for="jk_2">
-                                            <input type="radio" id="jk_2" name="jenis_kelamin" value="1"
-                                                class="assessment-field" data-field="jenis_kelamin"
-                                                {{ $dataHumptyDumpty->jenis_kelamin == 1 ? 'checked' : '' }}>
-                                            <span>Perempuan</span>
-                                            <span class="radio-value">1</span>
-                                        </label>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <div class="radio-group">
-                                    <div class="form-label">Diagnosis</div>
-                                    <div class="radio-options">
-                                        <label
-                                            class="radio-item {{ $dataHumptyDumpty->diagnosis == 3 ? 'selected' : '' }}"
-                                            for="diagnosis_1">
-                                            <input type="radio" id="diagnosis_1" name="diagnosis" value="3"
-                                                class="assessment-field" data-field="diagnosis"
-                                                {{ $dataHumptyDumpty->diagnosis == 3 ? 'checked' : '' }}>
-                                            <span>Perubahan oksigenasi (diagnosis respiratorik, dehidrasi, anemia, syncope,
-                                                pusing)</span>
-                                            <span class="radio-value">3</span>
-                                        </label>
-                                        <label
-                                            class="radio-item {{ $dataHumptyDumpty->diagnosis == 2 ? 'selected' : '' }}"
-                                            for="diagnosis_2">
-                                            <input type="radio" id="diagnosis_2" name="diagnosis" value="2"
-                                                class="assessment-field" data-field="diagnosis"
-                                                {{ $dataHumptyDumpty->diagnosis == 2 ? 'checked' : '' }}>
-                                            <span>Gangguan perilaku / psikiatri</span>
-                                            <span class="radio-value">2</span>
-                                        </label>
-                                        <label
-                                            class="radio-item {{ $dataHumptyDumpty->diagnosis == 1 ? 'selected' : '' }}"
-                                            for="diagnosis_3">
-                                            <input type="radio" id="diagnosis_3" name="diagnosis" value="1"
-                                                class="assessment-field" data-field="diagnosis"
-                                                {{ $dataHumptyDumpty->diagnosis == 1 ? 'checked' : '' }}>
-                                            <span>Diagnosis lainnya</span>
-                                            <span class="radio-value">1</span>
-                                        </label>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <div class="radio-group">
-                                    <div class="form-label">Gangguan Kognitif</div>
-                                    <div class="radio-options">
-                                        <label
-                                            class="radio-item {{ $dataHumptyDumpty->gangguan_kognitif == 3 ? 'selected' : '' }}"
-                                            for="kognitif_1">
-                                            <input type="radio" id="kognitif_1" name="gangguan_kognitif"
-                                                value="3" class="assessment-field" data-field="gangguan_kognitif"
-                                                {{ $dataHumptyDumpty->gangguan_kognitif == 3 ? 'checked' : '' }}>
-                                            <span>Tidak menyadari keterbatasan dirinya</span>
-                                            <span class="radio-value">3</span>
-                                        </label>
-                                        <label
-                                            class="radio-item {{ $dataHumptyDumpty->gangguan_kognitif == 2 ? 'selected' : '' }}"
-                                            for="kognitif_2">
-                                            <input type="radio" id="kognitif_2" name="gangguan_kognitif"
-                                                value="2" class="assessment-field" data-field="gangguan_kognitif"
-                                                {{ $dataHumptyDumpty->gangguan_kognitif == 2 ? 'checked' : '' }}>
-                                            <span>Lupa akan adanya keterbatasan</span>
-                                            <span class="radio-value">2</span>
-                                        </label>
-                                        <label
-                                            class="radio-item {{ $dataHumptyDumpty->gangguan_kognitif == 1 ? 'selected' : '' }}"
-                                            for="kognitif_3">
-                                            <input type="radio" id="kognitif_3" name="gangguan_kognitif"
-                                                value="1" class="assessment-field" data-field="gangguan_kognitif"
-                                                {{ $dataHumptyDumpty->gangguan_kognitif == 1 ? 'checked' : '' }}>
-                                            <span>Orientasi baik terhadap diri sendiri</span>
-                                            <span class="radio-value">1</span>
-                                        </label>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <div class="radio-group">
-                                    <div class="form-label">Faktor Lingkungan</div>
-                                    <div class="radio-options">
-                                        <label
-                                            class="radio-item {{ $dataHumptyDumpty->faktor_lingkungan == 4 ? 'selected' : '' }}"
-                                            for="lingkungan_1">
-                                            <input type="radio" id="lingkungan_1" name="faktor_lingkungan"
-                                                value="4" class="assessment-field" data-field="faktor_lingkungan"
-                                                {{ $dataHumptyDumpty->faktor_lingkungan == 4 ? 'checked' : '' }}>
-                                            <span>Riwayat jatuh / bayi diletakkan di tempat tidur dewasa</span>
-                                            <span class="radio-value">4</span>
-                                        </label>
-                                        <label
-                                            class="radio-item {{ $dataHumptyDumpty->faktor_lingkungan == 3 ? 'selected' : '' }}"
-                                            for="lingkungan_2">
-                                            <input type="radio" id="lingkungan_2" name="faktor_lingkungan"
-                                                value="3" class="assessment-field" data-field="faktor_lingkungan"
-                                                {{ $dataHumptyDumpty->faktor_lingkungan == 3 ? 'checked' : '' }}>
-                                            <span>Pasien menggunakan alat bantu / bayi diletakkan di tempat tidur bayi /
-                                                perabot rumah</span>
-                                            <span class="radio-value">3</span>
-                                        </label>
-                                        <label
-                                            class="radio-item {{ $dataHumptyDumpty->faktor_lingkungan == 2 ? 'selected' : '' }}"
-                                            for="lingkungan_3">
-                                            <input type="radio" id="lingkungan_3" name="faktor_lingkungan"
-                                                value="2" class="assessment-field" data-field="faktor_lingkungan"
-                                                {{ $dataHumptyDumpty->faktor_lingkungan == 2 ? 'checked' : '' }}>
-                                            <span>Pasien diletakkan di tempat tidur</span>
-                                            <span class="radio-value">2</span>
-                                        </label>
-                                        <label
-                                            class="radio-item {{ $dataHumptyDumpty->faktor_lingkungan == 1 ? 'selected' : '' }}"
-                                            for="lingkungan_4">
-                                            <input type="radio" id="lingkungan_4" name="faktor_lingkungan"
-                                                value="1" class="assessment-field" data-field="faktor_lingkungan"
-                                                {{ $dataHumptyDumpty->faktor_lingkungan == 1 ? 'checked' : '' }}>
-                                            <span>Area diluar rumah</span>
-                                            <span class="radio-value">1</span>
-                                        </label>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <div class="radio-group">
-                                    <div class="form-label">Pembedahan/Sedasi/Anestesi</div>
-                                    <div class="radio-options">
-                                        <label
-                                            class="radio-item {{ $dataHumptyDumpty->pembedahan_sedasi == 3 ? 'selected' : '' }}"
-                                            for="bedah_1">
-                                            <input type="radio" id="bedah_1" name="pembedahan_sedasi" value="3"
-                                                class="assessment-field" data-field="pembedahan_sedasi"
-                                                {{ $dataHumptyDumpty->pembedahan_sedasi == 3 ? 'checked' : '' }}>
-                                            <span>Dalam 24 jam</span>
-                                            <span class="radio-value">3</span>
-                                        </label>
-                                        <label
-                                            class="radio-item {{ $dataHumptyDumpty->pembedahan_sedasi == 2 ? 'selected' : '' }}"
-                                            for="bedah_2">
-                                            <input type="radio" id="bedah_2" name="pembedahan_sedasi" value="2"
-                                                class="assessment-field" data-field="pembedahan_sedasi"
-                                                {{ $dataHumptyDumpty->pembedahan_sedasi == 2 ? 'checked' : '' }}>
-                                            <span>Dalam 48 jam</span>
-                                            <span class="radio-value">2</span>
-                                        </label>
-                                        <label
-                                            class="radio-item {{ $dataHumptyDumpty->pembedahan_sedasi == 1 ? 'selected' : '' }}"
-                                            for="bedah_3">
-                                            <input type="radio" id="bedah_3" name="pembedahan_sedasi" value="1"
-                                                class="assessment-field" data-field="pembedahan_sedasi"
-                                                {{ $dataHumptyDumpty->pembedahan_sedasi == 1 ? 'checked' : '' }}>
-                                            <span>&gt;48 jam atau tidak menjalani pembedahan/sedasi/anestesi</span>
-                                            <span class="radio-value">1</span>
-                                        </label>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <div class="radio-group">
-                                    <div class="form-label">Penggunaan Medikamentosa</div>
-                                    <div class="radio-options">
-                                        <label
-                                            class="radio-item {{ $dataHumptyDumpty->penggunaan_medikamentosa == 3 ? 'selected' : '' }}"
-                                            for="obat_1">
-                                            <input type="radio" id="obat_1" name="penggunaan_medikamentosa"
-                                                value="3" class="assessment-field"
-                                                data-field="penggunaan_medikamentosa"
-                                                {{ $dataHumptyDumpty->penggunaan_medikamentosa == 3 ? 'checked' : '' }}>
-                                            <span>Penggunaan multiple: sedative, obat hipnosis, barbiturate, fenotiazi,
-                                                antidepresan, pencahar, diuretik, narkose</span>
-                                            <span class="radio-value">3</span>
-                                        </label>
-                                        <label
-                                            class="radio-item {{ $dataHumptyDumpty->penggunaan_medikamentosa == 2 ? 'selected' : '' }}"
-                                            for="obat_2">
-                                            <input type="radio" id="obat_2" name="penggunaan_medikamentosa"
-                                                value="2" class="assessment-field"
-                                                data-field="penggunaan_medikamentosa"
-                                                {{ $dataHumptyDumpty->penggunaan_medikamentosa == 2 ? 'checked' : '' }}>
-                                            <span>Penggunaan salah satu obat di atas</span>
-                                            <span class="radio-value">2</span>
-                                        </label>
-                                        <label
-                                            class="radio-item {{ $dataHumptyDumpty->penggunaan_medikamentosa == 1 ? 'selected' : '' }}"
-                                            for="obat_3">
-                                            <input type="radio" id="obat_3" name="penggunaan_medikamentosa"
-                                                value="1" class="assessment-field"
-                                                data-field="penggunaan_medikamentosa"
-                                                {{ $dataHumptyDumpty->penggunaan_medikamentosa == 1 ? 'checked' : '' }}>
-                                            <span>Penggunaan medikasi lainnya/tidak ada medikasi</span>
-                                            <span class="radio-value">1</span>
-                                        </label>
-                                    </div>
+                                <div class="datetime-item">
+                                    <label>Jam</label>
+                                    <input type="time" class="form-control" name="jam_implementasi" id="jam_implementasi"
+                                        value="{{ date('H:i', strtotime($dataHumptyDumpty->jam_implementasi)) }}" required>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- Score Display Section -->
-                        <div class="score-display" id="scoreDisplay">
-                            <div class="score-number" id="totalScore">{{ $dataHumptyDumpty->total_skor }}</div>
-                            <div class="score-category {{ $dataHumptyDumpty->kategori_risiko == 'Risiko Rendah' ? 'low-risk' : 'high-risk' }}"
-                                id="riskCategory">{{ $dataHumptyDumpty->kategori_risiko }}</div>
-                            <div class="score-description" id="riskDescription">
-                                @if ($dataHumptyDumpty->kategori_risiko == 'Risiko Rendah')
-                                    Skor 6-11: Pasien memiliki risiko jatuh rendah
-                                @else
-                                    Skor ≥12: Pasien memiliki risiko jatuh tinggi
-                                @endif
-                            </div>
-                        </div>
-
-                        <!-- Intervention Section -->
-                        <div class="form-section" id="interventionSection">
-                            <h5 class="section-title">Intervensi Pencegahan Jatuh</h5>
-
-                            <!-- Intervensi untuk Risiko Rendah -->
-                            <div id="lowRiskInterventions"
-                                style="{{ $dataHumptyDumpty->kategori_risiko == 'Risiko Rendah' ? 'display: block;' : 'display: none;' }}">
-                                <div class="alert alert-info mb-3">
-                                    <i class="ti-info-circle"></i> <strong>Intervensi untuk Risiko Rendah</strong>
-                                </div>
-
-                                <div class="form-group">
-                                    <div class="form-check mb-3">
-                                        <input class="form-check-input" type="checkbox" id="observasi_ambulasi"
-                                            name="observasi_ambulasi" value="1"
-                                            {{ $dataHumptyDumpty->observasi_ambulasi ? 'checked' : '' }}>
-                                        <label class="form-check-label" for="observasi_ambulasi">
-                                            Tingkatkan observasi bantuan yang sesuai saat ambulasi
-                                        </label>
-                                    </div>
-                                </div>
-
-                                <div class="form-group">
-                                    <label class="form-label">Orientasikan pasien terhadap lingkungan dan rutinitas
-                                        RS</label>
-                                    <div class="ml-3">
-                                        <div class="form-check mb-2">
-                                            <input class="form-check-input" type="checkbox" id="orientasi_kamar_mandi"
-                                                name="orientasi_kamar_mandi" value="1"
-                                                {{ $dataHumptyDumpty->orientasi_kamar_mandi ? 'checked' : '' }}>
-                                            <label class="form-check-label" for="orientasi_kamar_mandi">
-                                                Tunjukkan lokasi kamar mandi
-                                            </label>
-                                        </div>
-                                        <div class="form-check mb-2">
-                                            <input class="form-check-input" type="checkbox" id="orientasi_bertahap"
-                                                name="orientasi_bertahap" value="1"
-                                                {{ $dataHumptyDumpty->orientasi_bertahap ? 'checked' : '' }}>
-                                            <label class="form-check-label" for="orientasi_bertahap">
-                                                Jika pasien linglung, orientasi dilaksanakan bertahap
-                                            </label>
-                                        </div>
-                                        <div class="form-check mb-2">
-                                            <input class="form-check-input" type="checkbox" id="tempatkan_bel"
-                                                name="tempatkan_bel" value="1"
-                                                {{ $dataHumptyDumpty->tempatkan_bel ? 'checked' : '' }}>
-                                            <label class="form-check-label" for="tempatkan_bel">
-                                                Tempatkan bel ditempat yang mudah dicapai
-                                            </label>
-                                        </div>
-                                        <div class="form-check mb-2">
-                                            <input class="form-check-input" type="checkbox" id="instruksi_bantuan"
-                                                name="instruksi_bantuan" value="1"
-                                                {{ $dataHumptyDumpty->instruksi_bantuan ? 'checked' : '' }}>
-                                            <label class="form-check-label" for="instruksi_bantuan">
-                                                Instruksikan meminta bantuan perawat sebelum turun dari tempat tidur
-                                            </label>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="form-group">
-                                    <div class="form-check mb-3">
-                                        <input class="form-check-input" type="checkbox" id="pagar_pengaman"
-                                            name="pagar_pengaman" value="1"
-                                            {{ $dataHumptyDumpty->pagar_pengaman ? 'checked' : '' }}>
-                                        <label class="form-check-label" for="pagar_pengaman">
-                                            Pagar pengaman tempat tidur dinaikkan, kaji agar kaki/ tangan tidak tersangkut
-                                        </label>
-                                    </div>
-                                </div>
-
-                                <div class="form-group">
-                                    <div class="form-check mb-3">
-                                        <input class="form-check-input" type="checkbox" id="tempat_tidur_rendah"
-                                            name="tempat_tidur_rendah" value="1"
-                                            {{ $dataHumptyDumpty->tempat_tidur_rendah ? 'checked' : '' }}>
-                                        <label class="form-check-label" for="tempat_tidur_rendah">
-                                            Tempat tidur dalam posisi rendah dan terkunci
-                                        </label>
-                                    </div>
-                                </div>
-
-                                <div class="form-group">
-                                    <div class="form-check mb-3">
-                                        <input class="form-check-input" type="checkbox" id="edukasi_perilaku"
-                                            name="edukasi_perilaku" value="1"
-                                            {{ $dataHumptyDumpty->edukasi_perilaku ? 'checked' : '' }}>
-                                        <label class="form-check-label" for="edukasi_perilaku">
-                                            Edukasi perilaku yang lebih aman saat jatuh atau transfer
-                                        </label>
-                                    </div>
-                                </div>
-
-                                <div class="form-group">
-                                    <div class="form-check mb-3">
-                                        <input class="form-check-input" type="checkbox" id="monitor_berkala"
-                                            name="monitor_berkala" value="1"
-                                            {{ $dataHumptyDumpty->monitor_berkala ? 'checked' : '' }}>
-                                        <label class="form-check-label" for="monitor_berkala">
-                                            Monitor kebutuhan pasien secara berkala (minimalnya tiap 2 jam)
-                                        </label>
-                                    </div>
-                                </div>
-
-                                <div class="form-group">
-                                    <div class="form-check mb-3">
-                                        <input class="form-check-input" type="checkbox" id="anjuran_kaus_kaki"
-                                            name="anjuran_kaus_kaki" value="1"
-                                            {{ $dataHumptyDumpty->anjuran_kaus_kaki ? 'checked' : '' }}>
-                                        <label class="form-check-label" for="anjuran_kaus_kaki">
-                                            Anjurkan pasien tidak menggunakan kaus kaki atau sepatu yang licin
-                                        </label>
-                                    </div>
-                                </div>
-
-                                <div class="form-group">
-                                    <div class="form-check mb-3">
-                                        <input class="form-check-input" type="checkbox" id="lantai_antislip"
-                                            name="lantai_antislip" value="1"
-                                            {{ $dataHumptyDumpty->lantai_antislip ? 'checked' : '' }}>
-                                        <label class="form-check-label" for="lantai_antislip">
-                                            Lantai kamar mandi dengan karpet antislip, tidak licin
-                                        </label>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Intervensi untuk Risiko Tinggi -->
-                            <div id="highRiskInterventions"
-                                style="{{ $dataHumptyDumpty->kategori_risiko == 'Risiko Tinggi' ? 'display: block;' : 'display: none;' }}">
-                                <div class="alert alert-danger mb-3">
-                                    <i class="ti-alert-triangle"></i> <strong>Intervensi untuk Risiko Tinggi</strong>
-                                </div>
-
-                                <div class="form-group">
-                                    <div class="form-check mb-3">
-                                        <input class="form-check-input" type="checkbox" id="semua_intervensi_rendah"
-                                            name="semua_intervensi_rendah" value="1"
-                                            {{ $dataHumptyDumpty->semua_intervensi_rendah ? 'checked' : '' }}>
-                                        <label class="form-check-label" for="semua_intervensi_rendah">
-                                            Lakukan SEMUA intervensi jatuh resiko rendah / standar
-                                        </label>
-                                    </div>
-                                </div>
-
-                                <div class="form-group">
-                                    <div class="form-check mb-3">
-                                        <input class="form-check-input" type="checkbox" id="gelang_kuning"
-                                            name="gelang_kuning" value="1"
-                                            {{ $dataHumptyDumpty->gelang_kuning ? 'checked' : '' }}>
-                                        <label class="form-check-label" for="gelang_kuning">
-                                            Pakailah gelang risiko jatuh berwarna kuning
-                                        </label>
-                                    </div>
-                                </div>
-
-                                <div class="form-group">
-                                    <div class="form-check mb-3">
-                                        <input class="form-check-input" type="checkbox" id="pasang_gambar"
-                                            name="pasang_gambar" value="1"
-                                            {{ $dataHumptyDumpty->pasang_gambar ? 'checked' : '' }}>
-                                        <label class="form-check-label" for="pasang_gambar">
-                                            Pasang gambar risiko jatuh diatas tempat tidur pasien dan pada pintu kamar
-                                            pasien
-                                        </label>
-                                    </div>
-                                </div>
-
-                                <div class="form-group">
-                                    <div class="form-check mb-3">
-                                        <input class="form-check-input" type="checkbox" id="tanda_daftar_nama"
-                                            name="tanda_daftar_nama" value="1"
-                                            {{ $dataHumptyDumpty->tanda_daftar_nama ? 'checked' : '' }}>
-                                        <label class="form-check-label" for="tanda_daftar_nama">
-                                            Tempatkan tanda resiko pasien jatuh pada daftar nama pasien (warna kuning)
-                                        </label>
-                                    </div>
-                                </div>
-
-                                <div class="form-group">
-                                    <div class="form-check mb-3">
-                                        <input class="form-check-input" type="checkbox" id="pertimbangkan_obat"
-                                            name="pertimbangkan_obat" value="1"
-                                            {{ $dataHumptyDumpty->pertimbangkan_obat ? 'checked' : '' }}>
-                                        <label class="form-check-label" for="pertimbangkan_obat">
-                                            Pertimbangkan riwayat obat-obatan dan suplemen untuk mengevaluasi pengobatan
-                                        </label>
-                                    </div>
-                                </div>
-
-                                <div class="form-group">
-                                    <div class="form-check mb-3">
-                                        <input class="form-check-input" type="checkbox" id="alat_bantu_jalan"
-                                            name="alat_bantu_jalan" value="1"
-                                            {{ $dataHumptyDumpty->alat_bantu_jalan ? 'checked' : '' }}>
-                                        <label class="form-check-label" for="alat_bantu_jalan">
-                                            Gunakan alat bantu jalan (walker, handrail)
-                                        </label>
-                                    </div>
-                                </div>
-
-                                <div class="form-group">
-                                    <div class="form-check mb-3">
-                                        <input class="form-check-input" type="checkbox" id="pintu_terbuka"
-                                            name="pintu_terbuka" value="1"
-                                            {{ $dataHumptyDumpty->pintu_terbuka ? 'checked' : '' }}>
-                                        <label class="form-check-label" for="pintu_terbuka">
-                                            Biarkan pintu ruangan terbuka kecuali untuk tujuan isolasi
-                                        </label>
-                                    </div>
-                                </div>
-
-                                <div class="form-group">
-                                    <div class="form-check mb-3">
-                                        <input class="form-check-input" type="checkbox" id="jangan_tinggalkan"
-                                            name="jangan_tinggalkan" value="1"
-                                            {{ $dataHumptyDumpty->jangan_tinggalkan ? 'checked' : '' }}>
-                                        <label class="form-check-label" for="jangan_tinggalkan">
-                                            Jangan tinggalkan pasien saat di ruangan diagnostic atau tindakan
-                                        </label>
-                                    </div>
-                                </div>
-
-                                <div class="form-group">
-                                    <div class="form-check mb-3">
-                                        <input class="form-check-input" type="checkbox" id="dekat_nurse_station"
-                                            name="dekat_nurse_station" value="1"
-                                            {{ $dataHumptyDumpty->dekat_nurse_station ? 'checked' : '' }}>
-                                        <label class="form-check-label" for="dekat_nurse_station">
-                                            Penempatan pasien dekat nurse station untuk memudahkan observasi (24-48 jam)
-                                        </label>
-                                    </div>
-                                </div>
-
-                                <div class="form-group">
-                                    <div class="form-check mb-3">
-                                        <input class="form-check-input" type="checkbox" id="bed_posisi_rendah"
-                                            name="bed_posisi_rendah" value="1"
-                                            {{ $dataHumptyDumpty->bed_posisi_rendah ? 'checked' : '' }}>
-                                        <label class="form-check-label" for="bed_posisi_rendah">
-                                            Posisi Bed atur ke posisi paling rendah
-                                        </label>
-                                    </div>
-                                </div>
-
-                                <div class="form-group">
-                                    <div class="form-check mb-3">
-                                        <input class="form-check-input" type="checkbox" id="edukasi_keluarga"
-                                            name="edukasi_keluarga" value="1"
-                                            {{ $dataHumptyDumpty->edukasi_keluarga ? 'checked' : '' }}>
-                                        <label class="form-check-label" for="edukasi_keluarga">
-                                            Edukasi pasien/ keluarga yang harus diperhatikan sesuai protokol
-                                        </label>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="d-flex justify-content-end">
-                            <button type="submit" class="btn btn-primary px-4" id="simpan">
-                                <i class="ti-save mr-2"></i> Update Data
-                            </button>
+                        <div class="form-group">
+                            <label for="shift" class="form-label">Shift</label>
+                            <select class="form-control" id="shift" name="shift" required>
+                                <option value="">Pilih Shift</option>
+                                <option value="pagi" {{ $dataHumptyDumpty->shift == 'pagi' ? 'selected' : '' }}>
+                                    Pagi
+                                </option>
+                                <option value="siang" {{ $dataHumptyDumpty->shift == 'siang' ? 'selected' : '' }}>
+                                    Siang
+                                </option>
+                                <option value="malam" {{ $dataHumptyDumpty->shift == 'malam' ? 'selected' : '' }}>
+                                    Malam
+                                </option>
+                            </select>
                         </div>
                     </div>
-                </div>
-            </form>
+
+                    <!-- Assessment Criteria Section -->
+                    <div class="form-section">
+                        <h5 class="section-title">Kriteria Penilaian Humpty Dumpty</h5>
+
+                        <div class="form-group">
+                            <div class="radio-group">
+                                <div class="form-label">Usia</div>
+                                <div class="radio-options">
+                                    <label class="radio-item {{ $dataHumptyDumpty->usia == 4 ? 'selected' : '' }}"
+                                        for="usia_1">
+                                        <input type="radio" id="usia_1" name="usia" value="4"
+                                            class="assessment-field" data-field="usia"
+                                            {{ $dataHumptyDumpty->usia == 4 ? 'checked' : '' }}>
+                                        <span>&lt;3 tahun</span>
+                                        <span class="radio-value">4</span>
+                                    </label>
+                                    <label class="radio-item {{ $dataHumptyDumpty->usia == 3 ? 'selected' : '' }}"
+                                        for="usia_2">
+                                        <input type="radio" id="usia_2" name="usia" value="3"
+                                            class="assessment-field" data-field="usia"
+                                            {{ $dataHumptyDumpty->usia == 3 ? 'checked' : '' }}>
+                                        <span>3 sampai 7 tahun</span>
+                                        <span class="radio-value">3</span>
+                                    </label>
+                                    <label class="radio-item {{ $dataHumptyDumpty->usia == 2 ? 'selected' : '' }}"
+                                        for="usia_3">
+                                        <input type="radio" id="usia_3" name="usia" value="2"
+                                            class="assessment-field" data-field="usia"
+                                            {{ $dataHumptyDumpty->usia == 2 ? 'checked' : '' }}>
+                                        <span>7 sampai 13 tahun</span>
+                                        <span class="radio-value">2</span>
+                                    </label>
+                                    <label class="radio-item {{ $dataHumptyDumpty->usia == 1 ? 'selected' : '' }}"
+                                        for="usia_4">
+                                        <input type="radio" id="usia_4" name="usia" value="1"
+                                            class="assessment-field" data-field="usia"
+                                            {{ $dataHumptyDumpty->usia == 1 ? 'checked' : '' }}>
+                                        <span>&gt;13 tahun</span>
+                                        <span class="radio-value">1</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="radio-group">
+                                <div class="form-label">Jenis Kelamin</div>
+                                <div class="radio-options">
+                                    <label class="radio-item {{ $dataHumptyDumpty->jenis_kelamin == 2 ? 'selected' : '' }}"
+                                        for="jk_1">
+                                        <input type="radio" id="jk_1" name="jenis_kelamin" value="2"
+                                            class="assessment-field" data-field="jenis_kelamin"
+                                            {{ $dataHumptyDumpty->jenis_kelamin == 2 ? 'checked' : '' }}>
+                                        <span>Laki-laki</span>
+                                        <span class="radio-value">2</span>
+                                    </label>
+                                    <label class="radio-item {{ $dataHumptyDumpty->jenis_kelamin == 1 ? 'selected' : '' }}"
+                                        for="jk_2">
+                                        <input type="radio" id="jk_2" name="jenis_kelamin" value="1"
+                                            class="assessment-field" data-field="jenis_kelamin"
+                                            {{ $dataHumptyDumpty->jenis_kelamin == 1 ? 'checked' : '' }}>
+                                        <span>Perempuan</span>
+                                        <span class="radio-value">1</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="radio-group">
+                                <div class="form-label">Diagnosis</div>
+                                <div class="radio-options">
+                                    <label class="radio-item {{ $dataHumptyDumpty->diagnosis == 3 ? 'selected' : '' }}"
+                                        for="diagnosis_1">
+                                        <input type="radio" id="diagnosis_1" name="diagnosis" value="3"
+                                            class="assessment-field" data-field="diagnosis"
+                                            {{ $dataHumptyDumpty->diagnosis == 3 ? 'checked' : '' }}>
+                                        <span>Perubahan oksigenasi (diagnosis respiratorik, dehidrasi, anemia,
+                                            syncope,
+                                            pusing)</span>
+                                        <span class="radio-value">3</span>
+                                    </label>
+                                    <label class="radio-item {{ $dataHumptyDumpty->diagnosis == 2 ? 'selected' : '' }}"
+                                        for="diagnosis_2">
+                                        <input type="radio" id="diagnosis_2" name="diagnosis" value="2"
+                                            class="assessment-field" data-field="diagnosis"
+                                            {{ $dataHumptyDumpty->diagnosis == 2 ? 'checked' : '' }}>
+                                        <span>Gangguan perilaku / psikiatri</span>
+                                        <span class="radio-value">2</span>
+                                    </label>
+                                    <label class="radio-item {{ $dataHumptyDumpty->diagnosis == 1 ? 'selected' : '' }}"
+                                        for="diagnosis_3">
+                                        <input type="radio" id="diagnosis_3" name="diagnosis" value="1"
+                                            class="assessment-field" data-field="diagnosis"
+                                            {{ $dataHumptyDumpty->diagnosis == 1 ? 'checked' : '' }}>
+                                        <span>Diagnosis lainnya</span>
+                                        <span class="radio-value">1</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="radio-group">
+                                <div class="form-label">Gangguan Kognitif</div>
+                                <div class="radio-options">
+                                    <label
+                                        class="radio-item {{ $dataHumptyDumpty->gangguan_kognitif == 3 ? 'selected' : '' }}"
+                                        for="kognitif_1">
+                                        <input type="radio" id="kognitif_1" name="gangguan_kognitif" value="3"
+                                            class="assessment-field" data-field="gangguan_kognitif"
+                                            {{ $dataHumptyDumpty->gangguan_kognitif == 3 ? 'checked' : '' }}>
+                                        <span>Tidak menyadari keterbatasan dirinya</span>
+                                        <span class="radio-value">3</span>
+                                    </label>
+                                    <label
+                                        class="radio-item {{ $dataHumptyDumpty->gangguan_kognitif == 2 ? 'selected' : '' }}"
+                                        for="kognitif_2">
+                                        <input type="radio" id="kognitif_2" name="gangguan_kognitif" value="2"
+                                            class="assessment-field" data-field="gangguan_kognitif"
+                                            {{ $dataHumptyDumpty->gangguan_kognitif == 2 ? 'checked' : '' }}>
+                                        <span>Lupa akan adanya keterbatasan</span>
+                                        <span class="radio-value">2</span>
+                                    </label>
+                                    <label
+                                        class="radio-item {{ $dataHumptyDumpty->gangguan_kognitif == 1 ? 'selected' : '' }}"
+                                        for="kognitif_3">
+                                        <input type="radio" id="kognitif_3" name="gangguan_kognitif" value="1"
+                                            class="assessment-field" data-field="gangguan_kognitif"
+                                            {{ $dataHumptyDumpty->gangguan_kognitif == 1 ? 'checked' : '' }}>
+                                        <span>Orientasi baik terhadap diri sendiri</span>
+                                        <span class="radio-value">1</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="radio-group">
+                                <div class="form-label">Faktor Lingkungan</div>
+                                <div class="radio-options">
+                                    <label
+                                        class="radio-item {{ $dataHumptyDumpty->faktor_lingkungan == 4 ? 'selected' : '' }}"
+                                        for="lingkungan_1">
+                                        <input type="radio" id="lingkungan_1" name="faktor_lingkungan" value="4"
+                                            class="assessment-field" data-field="faktor_lingkungan"
+                                            {{ $dataHumptyDumpty->faktor_lingkungan == 4 ? 'checked' : '' }}>
+                                        <span>Riwayat jatuh / bayi diletakkan di tempat tidur dewasa</span>
+                                        <span class="radio-value">4</span>
+                                    </label>
+                                    <label
+                                        class="radio-item {{ $dataHumptyDumpty->faktor_lingkungan == 3 ? 'selected' : '' }}"
+                                        for="lingkungan_2">
+                                        <input type="radio" id="lingkungan_2" name="faktor_lingkungan" value="3"
+                                            class="assessment-field" data-field="faktor_lingkungan"
+                                            {{ $dataHumptyDumpty->faktor_lingkungan == 3 ? 'checked' : '' }}>
+                                        <span>Pasien menggunakan alat bantu / bayi diletakkan di tempat tidur bayi /
+                                            perabot rumah</span>
+                                        <span class="radio-value">3</span>
+                                    </label>
+                                    <label
+                                        class="radio-item {{ $dataHumptyDumpty->faktor_lingkungan == 2 ? 'selected' : '' }}"
+                                        for="lingkungan_3">
+                                        <input type="radio" id="lingkungan_3" name="faktor_lingkungan" value="2"
+                                            class="assessment-field" data-field="faktor_lingkungan"
+                                            {{ $dataHumptyDumpty->faktor_lingkungan == 2 ? 'checked' : '' }}>
+                                        <span>Pasien diletakkan di tempat tidur</span>
+                                        <span class="radio-value">2</span>
+                                    </label>
+                                    <label
+                                        class="radio-item {{ $dataHumptyDumpty->faktor_lingkungan == 1 ? 'selected' : '' }}"
+                                        for="lingkungan_4">
+                                        <input type="radio" id="lingkungan_4" name="faktor_lingkungan" value="1"
+                                            class="assessment-field" data-field="faktor_lingkungan"
+                                            {{ $dataHumptyDumpty->faktor_lingkungan == 1 ? 'checked' : '' }}>
+                                        <span>Area diluar rumah</span>
+                                        <span class="radio-value">1</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="radio-group">
+                                <div class="form-label">Pembedahan/Sedasi/Anestesi</div>
+                                <div class="radio-options">
+                                    <label
+                                        class="radio-item {{ $dataHumptyDumpty->pembedahan_sedasi == 3 ? 'selected' : '' }}"
+                                        for="bedah_1">
+                                        <input type="radio" id="bedah_1" name="pembedahan_sedasi" value="3"
+                                            class="assessment-field" data-field="pembedahan_sedasi"
+                                            {{ $dataHumptyDumpty->pembedahan_sedasi == 3 ? 'checked' : '' }}>
+                                        <span>Dalam 24 jam</span>
+                                        <span class="radio-value">3</span>
+                                    </label>
+                                    <label
+                                        class="radio-item {{ $dataHumptyDumpty->pembedahan_sedasi == 2 ? 'selected' : '' }}"
+                                        for="bedah_2">
+                                        <input type="radio" id="bedah_2" name="pembedahan_sedasi" value="2"
+                                            class="assessment-field" data-field="pembedahan_sedasi"
+                                            {{ $dataHumptyDumpty->pembedahan_sedasi == 2 ? 'checked' : '' }}>
+                                        <span>Dalam 48 jam</span>
+                                        <span class="radio-value">2</span>
+                                    </label>
+                                    <label
+                                        class="radio-item {{ $dataHumptyDumpty->pembedahan_sedasi == 1 ? 'selected' : '' }}"
+                                        for="bedah_3">
+                                        <input type="radio" id="bedah_3" name="pembedahan_sedasi" value="1"
+                                            class="assessment-field" data-field="pembedahan_sedasi"
+                                            {{ $dataHumptyDumpty->pembedahan_sedasi == 1 ? 'checked' : '' }}>
+                                        <span>&gt;48 jam atau tidak menjalani pembedahan/sedasi/anestesi</span>
+                                        <span class="radio-value">1</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="radio-group">
+                                <div class="form-label">Penggunaan Medikamentosa</div>
+                                <div class="radio-options">
+                                    <label
+                                        class="radio-item {{ $dataHumptyDumpty->penggunaan_medikamentosa == 3 ? 'selected' : '' }}"
+                                        for="obat_1">
+                                        <input type="radio" id="obat_1" name="penggunaan_medikamentosa"
+                                            value="3" class="assessment-field" data-field="penggunaan_medikamentosa"
+                                            {{ $dataHumptyDumpty->penggunaan_medikamentosa == 3 ? 'checked' : '' }}>
+                                        <span>Penggunaan multiple: sedative, obat hipnosis, barbiturate, fenotiazi,
+                                            antidepresan, pencahar, diuretik, narkose</span>
+                                        <span class="radio-value">3</span>
+                                    </label>
+                                    <label
+                                        class="radio-item {{ $dataHumptyDumpty->penggunaan_medikamentosa == 2 ? 'selected' : '' }}"
+                                        for="obat_2">
+                                        <input type="radio" id="obat_2" name="penggunaan_medikamentosa"
+                                            value="2" class="assessment-field" data-field="penggunaan_medikamentosa"
+                                            {{ $dataHumptyDumpty->penggunaan_medikamentosa == 2 ? 'checked' : '' }}>
+                                        <span>Penggunaan salah satu obat di atas</span>
+                                        <span class="radio-value">2</span>
+                                    </label>
+                                    <label
+                                        class="radio-item {{ $dataHumptyDumpty->penggunaan_medikamentosa == 1 ? 'selected' : '' }}"
+                                        for="obat_3">
+                                        <input type="radio" id="obat_3" name="penggunaan_medikamentosa"
+                                            value="1" class="assessment-field" data-field="penggunaan_medikamentosa"
+                                            {{ $dataHumptyDumpty->penggunaan_medikamentosa == 1 ? 'checked' : '' }}>
+                                        <span>Penggunaan medikasi lainnya/tidak ada medikasi</span>
+                                        <span class="radio-value">1</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Score Display Section -->
+                    <div class="score-display" id="scoreDisplay">
+                        <div class="score-number" id="totalScore">{{ $dataHumptyDumpty->total_skor }}</div>
+                        <div class="score-category {{ $dataHumptyDumpty->kategori_risiko == 'Risiko Rendah' ? 'low-risk' : 'high-risk' }}"
+                            id="riskCategory">{{ $dataHumptyDumpty->kategori_risiko }}</div>
+                        <div class="score-description" id="riskDescription">
+                            @if ($dataHumptyDumpty->kategori_risiko == 'Risiko Rendah')
+                                Skor 6-11: Pasien memiliki risiko jatuh rendah
+                            @else
+                                Skor ≥12: Pasien memiliki risiko jatuh tinggi
+                            @endif
+                        </div>
+                    </div>
+
+                    <!-- Intervention Section -->
+                    <div class="form-section" id="interventionSection">
+                        <h5 class="section-title">Intervensi Pencegahan Jatuh</h5>
+
+                        <!-- Intervensi untuk Risiko Rendah -->
+                        <div id="lowRiskInterventions"
+                            style="{{ $dataHumptyDumpty->kategori_risiko == 'Risiko Rendah' ? 'display: block;' : 'display: none;' }}">
+                            <div class="alert alert-info mb-3">
+                                <i class="ti-info-circle"></i> <strong>Intervensi untuk Risiko Rendah</strong>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="form-check mb-3">
+                                    <input class="form-check-input" type="checkbox" id="observasi_ambulasi"
+                                        name="observasi_ambulasi" value="1"
+                                        {{ $dataHumptyDumpty->observasi_ambulasi ? 'checked' : '' }}>
+                                    <label class="form-check-label" for="observasi_ambulasi">
+                                        Tingkatkan observasi bantuan yang sesuai saat ambulasi
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Orientasikan pasien terhadap lingkungan dan rutinitas
+                                    RS</label>
+                                <div class="ml-3">
+                                    <div class="form-check mb-2">
+                                        <input class="form-check-input" type="checkbox" id="orientasi_kamar_mandi"
+                                            name="orientasi_kamar_mandi" value="1"
+                                            {{ $dataHumptyDumpty->orientasi_kamar_mandi ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="orientasi_kamar_mandi">
+                                            Tunjukkan lokasi kamar mandi
+                                        </label>
+                                    </div>
+                                    <div class="form-check mb-2">
+                                        <input class="form-check-input" type="checkbox" id="orientasi_bertahap"
+                                            name="orientasi_bertahap" value="1"
+                                            {{ $dataHumptyDumpty->orientasi_bertahap ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="orientasi_bertahap">
+                                            Jika pasien linglung, orientasi dilaksanakan bertahap
+                                        </label>
+                                    </div>
+                                    <div class="form-check mb-2">
+                                        <input class="form-check-input" type="checkbox" id="tempatkan_bel"
+                                            name="tempatkan_bel" value="1"
+                                            {{ $dataHumptyDumpty->tempatkan_bel ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="tempatkan_bel">
+                                            Tempatkan bel ditempat yang mudah dicapai
+                                        </label>
+                                    </div>
+                                    <div class="form-check mb-2">
+                                        <input class="form-check-input" type="checkbox" id="instruksi_bantuan"
+                                            name="instruksi_bantuan" value="1"
+                                            {{ $dataHumptyDumpty->instruksi_bantuan ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="instruksi_bantuan">
+                                            Instruksikan meminta bantuan perawat sebelum turun dari tempat tidur
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="form-check mb-3">
+                                    <input class="form-check-input" type="checkbox" id="pagar_pengaman"
+                                        name="pagar_pengaman" value="1"
+                                        {{ $dataHumptyDumpty->pagar_pengaman ? 'checked' : '' }}>
+                                    <label class="form-check-label" for="pagar_pengaman">
+                                        Pagar pengaman tempat tidur dinaikkan, kaji agar kaki/ tangan tidak
+                                        tersangkut
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="form-check mb-3">
+                                    <input class="form-check-input" type="checkbox" id="tempat_tidur_rendah"
+                                        name="tempat_tidur_rendah" value="1"
+                                        {{ $dataHumptyDumpty->tempat_tidur_rendah ? 'checked' : '' }}>
+                                    <label class="form-check-label" for="tempat_tidur_rendah">
+                                        Tempat tidur dalam posisi rendah dan terkunci
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="form-check mb-3">
+                                    <input class="form-check-input" type="checkbox" id="edukasi_perilaku"
+                                        name="edukasi_perilaku" value="1"
+                                        {{ $dataHumptyDumpty->edukasi_perilaku ? 'checked' : '' }}>
+                                    <label class="form-check-label" for="edukasi_perilaku">
+                                        Edukasi perilaku yang lebih aman saat jatuh atau transfer
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="form-check mb-3">
+                                    <input class="form-check-input" type="checkbox" id="monitor_berkala"
+                                        name="monitor_berkala" value="1"
+                                        {{ $dataHumptyDumpty->monitor_berkala ? 'checked' : '' }}>
+                                    <label class="form-check-label" for="monitor_berkala">
+                                        Monitor kebutuhan pasien secara berkala (minimalnya tiap 2 jam)
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="form-check mb-3">
+                                    <input class="form-check-input" type="checkbox" id="anjuran_kaus_kaki"
+                                        name="anjuran_kaus_kaki" value="1"
+                                        {{ $dataHumptyDumpty->anjuran_kaus_kaki ? 'checked' : '' }}>
+                                    <label class="form-check-label" for="anjuran_kaus_kaki">
+                                        Anjurkan pasien tidak menggunakan kaus kaki atau sepatu yang licin
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="form-check mb-3">
+                                    <input class="form-check-input" type="checkbox" id="lantai_antislip"
+                                        name="lantai_antislip" value="1"
+                                        {{ $dataHumptyDumpty->lantai_antislip ? 'checked' : '' }}>
+                                    <label class="form-check-label" for="lantai_antislip">
+                                        Lantai kamar mandi dengan karpet antislip, tidak licin
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Intervensi untuk Risiko Tinggi -->
+                        <div id="highRiskInterventions"
+                            style="{{ $dataHumptyDumpty->kategori_risiko == 'Risiko Tinggi' ? 'display: block;' : 'display: none;' }}">
+                            <div class="alert alert-danger mb-3">
+                                <i class="ti-alert-triangle"></i> <strong>Intervensi untuk Risiko Tinggi</strong>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="form-check mb-3">
+                                    <input class="form-check-input" type="checkbox" id="semua_intervensi_rendah"
+                                        name="semua_intervensi_rendah" value="1"
+                                        {{ $dataHumptyDumpty->semua_intervensi_rendah ? 'checked' : '' }}>
+                                    <label class="form-check-label" for="semua_intervensi_rendah">
+                                        Lakukan SEMUA intervensi jatuh resiko rendah / standar
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="form-check mb-3">
+                                    <input class="form-check-input" type="checkbox" id="gelang_kuning"
+                                        name="gelang_kuning" value="1"
+                                        {{ $dataHumptyDumpty->gelang_kuning ? 'checked' : '' }}>
+                                    <label class="form-check-label" for="gelang_kuning">
+                                        Pakailah gelang risiko jatuh berwarna kuning
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="form-check mb-3">
+                                    <input class="form-check-input" type="checkbox" id="pasang_gambar"
+                                        name="pasang_gambar" value="1"
+                                        {{ $dataHumptyDumpty->pasang_gambar ? 'checked' : '' }}>
+                                    <label class="form-check-label" for="pasang_gambar">
+                                        Pasang gambar risiko jatuh diatas tempat tidur pasien dan pada pintu kamar
+                                        pasien
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="form-check mb-3">
+                                    <input class="form-check-input" type="checkbox" id="tanda_daftar_nama"
+                                        name="tanda_daftar_nama" value="1"
+                                        {{ $dataHumptyDumpty->tanda_daftar_nama ? 'checked' : '' }}>
+                                    <label class="form-check-label" for="tanda_daftar_nama">
+                                        Tempatkan tanda resiko pasien jatuh pada daftar nama pasien (warna kuning)
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="form-check mb-3">
+                                    <input class="form-check-input" type="checkbox" id="pertimbangkan_obat"
+                                        name="pertimbangkan_obat" value="1"
+                                        {{ $dataHumptyDumpty->pertimbangkan_obat ? 'checked' : '' }}>
+                                    <label class="form-check-label" for="pertimbangkan_obat">
+                                        Pertimbangkan riwayat obat-obatan dan suplemen untuk mengevaluasi pengobatan
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="form-check mb-3">
+                                    <input class="form-check-input" type="checkbox" id="alat_bantu_jalan"
+                                        name="alat_bantu_jalan" value="1"
+                                        {{ $dataHumptyDumpty->alat_bantu_jalan ? 'checked' : '' }}>
+                                    <label class="form-check-label" for="alat_bantu_jalan">
+                                        Gunakan alat bantu jalan (walker, handrail)
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="form-check mb-3">
+                                    <input class="form-check-input" type="checkbox" id="pintu_terbuka"
+                                        name="pintu_terbuka" value="1"
+                                        {{ $dataHumptyDumpty->pintu_terbuka ? 'checked' : '' }}>
+                                    <label class="form-check-label" for="pintu_terbuka">
+                                        Biarkan pintu ruangan terbuka kecuali untuk tujuan isolasi
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="form-check mb-3">
+                                    <input class="form-check-input" type="checkbox" id="jangan_tinggalkan"
+                                        name="jangan_tinggalkan" value="1"
+                                        {{ $dataHumptyDumpty->jangan_tinggalkan ? 'checked' : '' }}>
+                                    <label class="form-check-label" for="jangan_tinggalkan">
+                                        Jangan tinggalkan pasien saat di ruangan diagnostic atau tindakan
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="form-check mb-3">
+                                    <input class="form-check-input" type="checkbox" id="dekat_nurse_station"
+                                        name="dekat_nurse_station" value="1"
+                                        {{ $dataHumptyDumpty->dekat_nurse_station ? 'checked' : '' }}>
+                                    <label class="form-check-label" for="dekat_nurse_station">
+                                        Penempatan pasien dekat nurse station untuk memudahkan observasi (24-48 jam)
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="form-check mb-3">
+                                    <input class="form-check-input" type="checkbox" id="bed_posisi_rendah"
+                                        name="bed_posisi_rendah" value="1"
+                                        {{ $dataHumptyDumpty->bed_posisi_rendah ? 'checked' : '' }}>
+                                    <label class="form-check-label" for="bed_posisi_rendah">
+                                        Posisi Bed atur ke posisi paling rendah
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="form-check mb-3">
+                                    <input class="form-check-input" type="checkbox" id="edukasi_keluarga"
+                                        name="edukasi_keluarga" value="1"
+                                        {{ $dataHumptyDumpty->edukasi_keluarga ? 'checked' : '' }}>
+                                    <label class="form-check-label" for="edukasi_keluarga">
+                                        Edukasi pasien/ keluarga yang harus diperhatikan sesuai protokol
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="text-end">
+                        <x-button-submit id="simpan">Perbarui</x-button-submit>
+                    </div>
+                </form>
+            </x-content-card>
         </div>
     </div>
 @endsection

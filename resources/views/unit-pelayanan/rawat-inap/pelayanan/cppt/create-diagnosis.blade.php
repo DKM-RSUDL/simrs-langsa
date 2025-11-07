@@ -9,7 +9,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="addDiagnosisModal">Input Asesmen/Diagnosis</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button type="button" class="btn-close CancelDiagnose" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
 
@@ -31,11 +31,15 @@
 
                 <h6 class="fw-bold mt-5">Daftar Diagnosis</h6>
                 <ol type="1" id="listDiagnosa">
-                    <!-- Diagnosis yang akan ditambahkan -->
+                    @if(!empty($lastDiagnoses))
+                        @foreach ($lastDiagnoses as $item)
+                            <li>{{ $item }}</li>
+                        @endforeach
+                    @endif
                 </ol>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button  type="button" class="btn btn-secondary CancelDiagnose"  data-bs-dismiss="modal">Close</button>
                 <button type="button" id="btnSaveDiagnose" class="btn btn-primary">Simpan</button>
             </div>
         </div>
@@ -50,5 +54,13 @@
             keyboard: false // Agar tidak bisa ditutup dengan tombol ESC
         });
         modalKedua.show();
+
+        let ListData = $('#listDiagnosa')
+        ListData.empty();
+        DiagnoseArray.map((item) => {
+            ListData.append(`<li>${item}</li>`)
+        })
+
+        console.log(DiagnoseArray)
     });
 </script>

@@ -19,7 +19,6 @@ use App\Http\Middleware\CheckUnitAccess;
 
 Auth::routes(['register' => false]); // Nonaktifkan register
 // Auth::routes();
-Auth::routes();
 Route::middleware('guest')->group(function () {
     Route::get('/', function () {
         return view('auth.login');

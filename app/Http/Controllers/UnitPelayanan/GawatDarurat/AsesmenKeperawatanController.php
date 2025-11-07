@@ -101,6 +101,23 @@ class AsesmenKeperawatanController extends Controller
 
         $vitalSignMedis = json_decode($asesmenMedis->vital_sign ?? '{}', true);
 
+        $objectiveCreate = '';
+
+        $mappKeyTTV = [
+            'td_sistole'    => 'sistole',
+            'td_diastole'    => 'diastole',
+            'nadi'    => 'nadi',
+            'temp'    => 'suhu',
+            'rr'    => 'rr',
+            'spo2_tanpa_o2'    => 'spo2 tanpa o2',
+            'spo2_dengan_o2'    => 'spo2 dengan o2',
+            'gcs'    => 'gcs',
+        ];
+
+        foreach ($vitalSignMedis as $key => $value) {
+            $objectiveCreate .= $mappKeyTTV[$key] . " : " . ($value ?? '-') . ", ";
+        }
+
 
         return view('unit-pelayanan.gawat-darurat.action-gawat-darurat.asesmen-keperawatan.create', compact(
             'kd_pasien',
@@ -118,7 +135,8 @@ class AsesmenKeperawatanController extends Controller
             'agama',
             'pendidikan',
             'asesmenMedis',
-            'vitalSignMedis'
+            'vitalSignMedis',
+            'objectiveCreate'
         ));
     }
 
@@ -1263,8 +1281,10 @@ class AsesmenKeperawatanController extends Controller
             $asesmenTanggal = $asesmen->created_at ?? now();
             $tglMasukFormatted = $dataMedis->tgl_masuk ?? now();
 
+
+         
             // Generate PDF with null checks
-            $pdf = PDF::loadView('unit-pelayanan.gawat-darurat.action-gawat-darurat.asesmen-keperawatan.print-pdfv2', [
+            $pdf = PDF::loadView('unit-pelayanan.gawat-darurat.action-gawat-darurat.asesmen-keperawatan.print-pdf', [
                 'asesmen' => $asesmen ?? null,
                 'pasien' => optional($dataMedis)->pasien ?? null,
                 'dataMedis' => $dataMedis ?? null,
