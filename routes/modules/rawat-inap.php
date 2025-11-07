@@ -101,6 +101,7 @@ Route::prefix('rawat-inap')->group(function () {
             Route::name('.unit')->group(function () {
                 Route::get('/', [RawatInapController::class, 'unitPelayanan']);
                 Route::get('/aktif', [RawatInapController::class, 'unitPelayanan'])->name('.aktif');
+                Route::get('/selesai', [RawatInapController::class, 'selesai'])->name('.selesai');
                 Route::get('/pending', [RawatInapController::class, 'pending'])->name('.pending');
             });
 
