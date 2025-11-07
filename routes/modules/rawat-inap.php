@@ -416,6 +416,11 @@ Route::prefix('rawat-inap')->group(function () {
                             Route::get('/', 'index')->name('.index');
                             Route::post('/', 'store')->name('.store');
                             Route::get('/order-obat', 'orderObat')->name('.order-obat');
+
+                            // E-Resep Pulang
+                            Route::post('/e-resep-pulang', 'storeEResepPulang')->name('.storeEResepPulang');
+                            Route::get('/order-obat-e-resep-pulang', 'orderObatEResepPulang')->name('.order-obat-e-resep-pulang');
+
                             Route::get('/search-obat', 'searchObat')->name('.searchObat');
                             Route::post('/catatanObat', 'catatanObat')->name('.catatanObat');
                             Route::put('/catatanObat/validasi', 'validasiCatatanObat')->name('.catatanObat.validasi');

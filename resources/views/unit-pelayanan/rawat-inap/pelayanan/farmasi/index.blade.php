@@ -46,8 +46,9 @@
                                     Penggunaan Obat</button>
                             </li>
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link" id="catatan-tab" data-bs-toggle="tab" data-bs-target="#catatanTab"
-                                    type="button" role="tab" aria-controls="catatanTab" aria-selected="false">
+                                <button class="nav-link" id="catatan-tab-2" data-bs-toggle="tab"
+                                    data-bs-target="#catatanTab" type="button" role="tab" aria-controls="catatanTab"
+                                    aria-selected="false">
                                     Catatan Pemberian Obat</button>
                             </li>
                             <li class="nav-item" role="presentation">
@@ -60,6 +61,13 @@
                                     data-bs-target="#rekonsiliasiTransfer" type="button" role="tab"
                                     aria-controls="rekonsiliasiTransfer" aria-selected="false">
                                     Rekonsiliasi Obat Transfer
+                                </button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="e-resep-obat-pulang-tab" data-bs-toggle="tab"
+                                    data-bs-target="#e-resep-obat-pulang" type="button" role="tab"
+                                    aria-controls="e-resep-obat-pulang" aria-selected="false">
+                                    E-Resep Obat Pulang
                                 </button>
                             </li>
                         </ul>
@@ -75,7 +83,7 @@
                                 {{-- TAB 2. buatlah list disini --}}
                                 @include('unit-pelayanan.rawat-inap.pelayanan.farmasi.tab-riwayat.riwayat')
                             </div>
-                            <div class="tab-pane fade" id="catatanTab" role="tabpanel" aria-labelledby="catatan-tab">
+                            <div class="tab-pane fade" id="catatanTab" role="tabpanel" aria-labelledby="catatan-tab-2">
                                 {{-- TAB 3. buatlah list disini --}}
                                 @include('unit-pelayanan.rawat-inap.pelayanan.farmasi.tabcatatan')
                             </div>
@@ -83,9 +91,15 @@
                                 {{-- TAB 4. buatlah list disini --}}
                                 @include('unit-pelayanan.rawat-inap.pelayanan.farmasi.tabsrekonsiliasi')
                             </div>
-                            <div class="tab-pane fade" id="rekonsiliasiTransfer" role="tabpanel" aria-labelledby="rekonsiliasi-transfer-tab">
+                            <div class="tab-pane fade" id="rekonsiliasiTransfer" role="tabpanel"
+                                aria-labelledby="rekonsiliasi-transfer-tab">
                                 <!-- TAB 5. Rekonsiliasi Obat Transfer -->
                                 @include('unit-pelayanan.rawat-inap.pelayanan.farmasi.tabsrekonsiliasitransfer')
+                            </div>
+                            <div class="tab-pane fade" id="e-resep-obat-pulang" role="tabpanel"
+                                aria-labelledby="e-resep-obat-pulang-tab">
+                                {{-- TAB 6. E-Resep Obat Pulang --}}
+                                @include('unit-pelayanan.rawat-inap.pelayanan.farmasi.tab-eresep-pulang.resep')
                             </div>
                         </div>
                     </div>

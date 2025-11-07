@@ -11,20 +11,29 @@ class MrResep extends Model
 
     protected $table = 'MR_RESEP';
     public $timestamps = false;
-    // protected $guarded = [];
+    protected $guarded = [];
 
-    protected $fillable = [
-        'KD_PASIEN',
-        'TGL_MASUK',
-        'KD_UNIT',
-        'KD_DOKTER',
-        'ID_MRRESEP',
-        'CAT_RACIKAN',
-        'TGL_ORDER',
-        'STATUS',
-        'URUT_MASUK',
-        'DILAYANI',
-        // Tambahkan kolom lain yang ada di tabel MR_RESEP
+    // protected $fillable = [
+    //     'KD_PASIEN',
+    //     'TGL_MASUK',
+    //     'KD_UNIT',
+    //     'KD_DOKTER',
+    //     'ID_MRRESEP',
+    //     'CAT_RACIKAN',
+    //     'TGL_ORDER',
+    //     'JAM_ORDER',
+    //     'STATUS',
+    //     'URUT_MASUK',
+    //     'DILAYANI',
+    //     'RESEP_PULANG',
+    //     'STTS_TERIMA',
+    //     'KRONIS',
+    //     'PRB',
+    //     // Tambahkan kolom lain yang ada di tabel MR_RESEP
+    // ];
+
+    protected $casts = [
+        'RESEP_PULANG' => 'integer'
     ];
 
     // Relasi dengan model Pasien
