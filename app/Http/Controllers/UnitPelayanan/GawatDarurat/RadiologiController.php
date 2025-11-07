@@ -333,8 +333,6 @@ class RadiologiController extends Controller
                 $noUrut++;
             }
 
-            $this->createResume($kd_pasien, $tgl_masuk, $request->urut_masuk);
-
             DB::commit();
             return back()->with('success', 'Order berhasil');
         } catch (Exception $e) {
@@ -458,8 +456,6 @@ class RadiologiController extends Controller
                 $noUrut++;
             }
 
-            $this->createResume($kd_pasien, $tgl_masuk, $request->urut_masuk);
-
             DB::commit();
             return back()->with('success', 'Order berhasil di ubah');
         } catch (Exception $e) {
@@ -494,44 +490,6 @@ class RadiologiController extends Controller
                 'message'   => $e->getMessage(),
                 'data'      => []
             ], 500);
-        }
-    }
-
-    public function createResume($kd_pasien, $tgl_masuk, $urut_masuk)
-    {
-        // get resume
-        $resume = RMEResume::where('kd_pasien', $kd_pasien)
-            ->where('kd_unit', 3)
-            ->whereDate('tgl_masuk', $tgl_masuk)
-            ->where('urut_masuk', $urut_masuk)
-            ->first();
-
-        if (empty($resume)) {
-            $resumeData = [
-                'kd_pasien'     => $kd_pasien,
-                'kd_unit'       => 3,
-                'tgl_masuk'     => $tgl_masuk,
-                'urut_masuk'    => $urut_masuk,
-                'status'        => 0
-            ];
-
-            $newResume = RMEResume::create($resumeData);
-            $newResume->refresh();
-
-            // create resume detail
-            $resumeDtlData = [
-                'id_resume'     => $newResume->id
-            ];
-
-            RmeResumeDtl::create($resumeDtlData);
-        } else {
-            // get resume dtl
-            $resumeDtl = RmeResumeDtl::where('id_resume', $resume->id)->first();
-            $resumeDtlData = [
-                'id_resume'     => $resume->id
-            ];
-
-            if (empty($resumeDtl)) RmeResumeDtl::create($resumeDtlData);
         }
     }
 }
