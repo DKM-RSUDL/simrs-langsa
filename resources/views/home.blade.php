@@ -101,12 +101,22 @@
     <!-- Unit Stats Cards -->
     <div class="row">
         @php
+            // Determine if current user is an admin (allow admins to see everything)
+            $isAdmin = false;
+            if (auth()->check()) {
+                $roleName = optional(optional(auth()->user())->roles[0])->name;
+                $isAdmin = $roleName && in_array(strtolower($roleName), ['admin', 'administrator']);
+            }
+
+            // Add a permission key for each unit so we can check role access similar to navigation.blade.php
+            // Permission strings follow the same convention used in navigation (e.g. the menu/url slug)
             $units = [
                 [
                     'name' => 'Rawat Jalan',
                     'icon' => 'fa-wheelchair',
                     'color' => 'primary',
                     'route' => 'rawat-jalan.index',
+                    'permission' => 'rawat-jalan',
                     'count' => countActivePatientAllRajal(),
                 ],
                 [
@@ -114,6 +124,7 @@
                     'icon' => 'fa-procedures',
                     'color' => 'success',
                     'route' => 'rawat-inap.index',
+                    'permission' => 'rawat-inap',
                     'count' => countAktivePatientAllRanap(),
                 ],
                 [
@@ -121,6 +132,7 @@
                     'icon' => 'fa-truck-medical',
                     'color' => 'danger',
                     'route' => 'gawat-darurat.index',
+                    'permission' => 'gawat-darurat',
                     'count' => countActivePatientAllIGD(),
                 ],
                 [
@@ -128,6 +140,7 @@
                     'icon' => 'fa-person-dots-from-line',
                     'color' => 'warning',
                     'route' => 'operasi.index',
+                    'permission' => 'operasi',
                     'count' => $visits->where('unit.kd_unit', '71')->count(),
                 ],
                 [
@@ -135,20 +148,23 @@
                     'icon' => 'fa-lungs',
                     'color' => 'info',
                     'route' => 'hemodialisa.index',
+                    'permission' => 'hemodialisa',
                     'count' => $visits->where('unit.kd_unit', '71')->count(),
                 ],
-                [
-                    'name' => 'Cathlab',
-                    'icon' => 'fa-flask',
-                    'color' => 'secondary',
-                    'route' => null,
-                    'count' => $visits->where('unit.nama_unit', 'Cathlab')->count(),
-                ],
+                // [
+                //     'name' => 'Cathlab',
+                //     'icon' => 'fa-flask',
+                //     'color' => 'secondary',
+                //     'route' => null,
+                //     'permission' => null,
+                //     'count' => $visits->where('unit.nama_unit', 'Cathlab')->count(),
+                // ],
                 [
                     'name' => 'Forensik',
                     'icon' => 'fa-magnifying-glass',
                     'color' => 'dark',
                     'route' => 'forensik.index',
+                    'permission' => 'forensik',
                     'count' => $visits->where('unit.kd_unit', '76')->count(),
                 ],
                 [
@@ -156,38 +172,69 @@
                     'icon' => 'fa-notes-medical',
                     'color' => 'primary',
                     'route' => 'rehab-medis.index',
+                    'permission' => 'rehab-medis',
                     'count' => $visits->where('unit.nama_unit', 'Rehab Medik')->count(),
                 ],
-                [
-                    'name' => 'Gizi Klinis',
-                    'icon' => 'fa-mortar-pestle',
-                    'color' => 'success',
-                    'route' => null,
-                    'count' => $visits->where('unit.nama_unit', 'Gizi Klinis')->count(),
-                ],
+                // [
+                //     'name' => 'Gizi Klinis',
+                //     'icon' => 'fa-mortar-pestle',
+                //     'color' => 'success',
+                //     'route' => null,
+                //     'permission' => null,
+                //     'count' => $visits->where('unit.nama_unit', 'Gizi Klinis')->count(),
+                // ],
             ];
         @endphp
 
         @foreach ($units as $unit)
-            <div class="col-6 col-md-4 col-lg-3">
-                @if ($unit['route'])
-                    <a href="{{ route($unit['route']) }}" class="text-decoration-none">
-                    @else
-                        <a href="#" class="text-decoration-none">
-                @endif
-                <x-content-card>
-                    <div class="d-flex align-items-center">
-                        <div class="bg-{{ $unit['color'] }} text-white rounded p-3 me-3">
-                            <i class="fa {{ $unit['icon'] }} fa-lg"></i>
-                        </div>
-                        <div>
-                            <small class="fw-semibold">{{ $unit['name'] }}</small>
-                            <h5 class="fw-bold mb-0">{{ $unit['count'] }}</h5>
-                        </div>
+            {{-- If a permission is provided, show the unit when the user can read it OR when user is admin. Otherwise show by default. --}}
+            @if (!empty($unit['permission']))
+                @if (
+                    $isAdmin ||
+                        auth()->user()
+                            ?->can('read ' . $unit['permission']))
+                    <div class="col-6 col-md-4 col-lg-3">
+                        @if ($unit['route'])
+                            <a href="{{ route($unit['route']) }}" class="text-decoration-none">
+                            @else
+                                <a href="#" class="text-decoration-none">
+                        @endif
+                        <x-content-card>
+                            <div class="d-flex align-items-center">
+                                <div class="bg-{{ $unit['color'] }} text-white rounded p-3 me-3">
+                                    <i class="fa {{ $unit['icon'] }} fa-lg"></i>
+                                </div>
+                                <div>
+                                    <small class="fw-semibold">{{ $unit['name'] }}</small>
+                                    <h5 class="fw-bold mb-0">{{ $unit['count'] }}</h5>
+                                </div>
+                            </div>
+                        </x-content-card>
+                        </a>
                     </div>
-                </x-content-card>
-                </a>
-            </div>
+                @endif
+            @else
+                {{-- Render items without specific permission for everyone --}}
+                <div class="col-6 col-md-4 col-lg-3">
+                    @if ($unit['route'])
+                        <a href="{{ route($unit['route']) }}" class="text-decoration-none">
+                        @else
+                            <a href="#" class="text-decoration-none">
+                    @endif
+                    <x-content-card>
+                        <div class="d-flex align-items-center">
+                            <div class="bg-{{ $unit['color'] }} text-white rounded p-3 me-3">
+                                <i class="fa {{ $unit['icon'] }} fa-lg"></i>
+                            </div>
+                            <div>
+                                <small class="fw-semibold">{{ $unit['name'] }}</small>
+                                <h5 class="fw-bold mb-0">{{ $unit['count'] }}</h5>
+                            </div>
+                        </div>
+                    </x-content-card>
+                    </a>
+                </div>
+            @endif
         @endforeach
     </div>
 

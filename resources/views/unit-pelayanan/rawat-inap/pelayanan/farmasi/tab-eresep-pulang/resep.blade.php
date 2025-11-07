@@ -1,5 +1,3 @@
-{{-- resources/views/tabs/resep.blade.php --}}
-
 <div>
     {{-- Filter Tabel: Episode, Tanggal Pemberian Obat, Radio Button, dan Tombol Tambah --}}
     <div class="d-flex justify-content-between align-items-center m-3 flex-wrap">
@@ -14,7 +12,7 @@
 
         <!-- Tombol "Tambah" di Sebelah Kanan -->
         <div class="mt-2">
-            <a href="{{ route('rawat-inap.farmasi.order-obat', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}"
+            <a href="{{ route('rawat-inap.farmasi.order-obat-e-resep-pulang', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}"
                 class="btn btn-primary" aria-label="Tambah Resep Baru">
                 <i class="ti-plus"></i> Tambah
             </a>
@@ -24,9 +22,9 @@
 
     </div>
 
-    {{-- Tabel E-Resep Obat & BMHP --}}
+    {{-- Tabel E-Resep Obat Pulang --}}
     <div class="table-responsive">
-        <table class="table table-bordered" id="tabelResep">
+        <table class="table table-bordered" id="tabelResepPulang">
             <thead>
                 <tr>
                     <th>#Order</th>
@@ -42,7 +40,7 @@
                 </tr>
             </thead>
             <tbody>
-                @forelse ($riwayatObatHariIniInap as $resep)
+                @forelse ($riwayatObatHariIniPulang as $resep)
                     @php
                         $cara_pakai_parts = explode(',', $resep->cara_pakai);
                         $frekuensi = trim($cara_pakai_parts[0] ?? '');
@@ -97,11 +95,10 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="10" class="text-center">Tidak ada data resep obat inap untuk hari ini.</td>
+                        <td colspan="10" class="text-center">Tidak ada data resep pulang untuk hari ini.</td>
                     </tr>
                 @endforelse
             </tbody>
         </table>
     </div>
-    <div id="pesanKosong" class="alert alert-info d-none">Tidak ada data resep obat untuk hari ini.</div>
 </div>

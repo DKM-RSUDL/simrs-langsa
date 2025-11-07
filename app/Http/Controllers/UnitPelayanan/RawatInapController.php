@@ -7,17 +7,14 @@ use App\Models\AsalIGD;
 use App\Models\HrdKaryawan;
 use App\Models\Kunjungan;
 use App\Models\PasienInap;
-use App\Models\RmeKetStatusKunjungan;
 use App\Models\RmeSerahTerima;
 use App\Models\Unit;
-use App\Models\User;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\Facades\DataTables;
 use App\Services\BaseService;
-use Barryvdh\DomPDF\Facade\Pdf;
 
 class RawatInapController extends Controller
 {
@@ -31,7 +28,6 @@ class RawatInapController extends Controller
 
     public function index()
     {
-
         $unit = Unit::with(['bagian'])
             ->where('kd_bagian', 1)
             ->where('aktif', 1)
@@ -45,7 +41,6 @@ class RawatInapController extends Controller
         $unit = Unit::with(['bagian'])
             ->where('kd_unit', $kd_unit)
             ->first();
-
 
         if ($request->ajax()) {
             $data = Kunjungan::with(['pasien', 'dokter', 'customer'])
@@ -73,7 +68,7 @@ class RawatInapController extends Controller
                 })
                 ->whereNull('kunjungan.tgl_pulang')
                 ->whereNull('kunjungan.jam_pulang')
-                ->whereYear('kunjungan.tgl_masuk', '>=', 2024);
+                ->whereYear('kunjungan.tgl_masuk', '>=', 2025);
 
             return DataTables::of($data)
                 ->filter(function ($query) use ($request) {
@@ -126,17 +121,95 @@ class RawatInapController extends Controller
         return view('unit-pelayanan.rawat-inap.unit-pelayanan', compact('unit'));
     }
 
+    public function selesai($kd_unit, Request $request)
+    {
+        $unit = Unit::with(['bagian'])
+            ->where('kd_unit', $kd_unit)
+            ->first();
+
+        if ($request->ajax()) {
+            $data = Kunjungan::with(['pasien', 'dokter', 'customer'])
+                ->join('nginap', function ($q) {
+                    $q->on('kunjungan.kd_pasien', 'nginap.kd_pasien');
+                    $q->on('kunjungan.kd_unit', 'nginap.kd_unit');
+                    $q->on('kunjungan.tgl_masuk', 'nginap.tgl_masuk');
+                    $q->on('kunjungan.urut_masuk', 'nginap.urut_masuk');
+                })
+                ->join('transaksi as t', function ($q) {
+                    $q->on('kunjungan.kd_pasien', '=', 't.kd_pasien');
+                    $q->on('kunjungan.kd_unit', '=', 't.kd_unit');
+                    $q->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
+                    $q->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
+                })
+                ->leftJoin('rme_ket_status_kunjungan as sk', function ($q) {
+                    $q->on('t.kd_kasir', '=', 'sk.kd_kasir');
+                    $q->on('t.no_transaksi', '=', 'sk.no_transaksi');
+                })
+                ->where('nginap.kd_unit_kamar', $kd_unit)
+                ->where('nginap.akhir', 1)
+                ->where(function ($q) {
+                    $q->whereNull('kunjungan.status_inap');
+                    $q->orWhere('kunjungan.status_inap', 1);
+                })
+                ->whereNotNull('kunjungan.tgl_pulang')
+                ->whereNotNull('kunjungan.jam_pulang')
+                ->whereYear('kunjungan.tgl_masuk', '>=', 2025);
+
+            return DataTables::of($data)
+                ->filter(function ($query) use ($request) {
+                    if ($searchValue = $request->get('search')['value']) {
+                        $query->where(function ($q) use ($searchValue) {
+                            if (is_numeric($searchValue) && strlen($searchValue) == 4) {
+                                $q->whereRaw("YEAR(kunjungan.tgl_masuk) = ?", [$searchValue]);
+                            } elseif (preg_match('/^\d{4}-\d{2}-\d{2}$/', $searchValue)) {
+                                $q->whereRaw("CONVERT(varchar, kunjungan.tgl_masuk, 23) like ?", ["%{$searchValue}%"]);
+                            } elseif (preg_match('/^\d{2}:\d{2}$/', $searchValue)) {
+                                $q->whereRaw("FORMAT(kunjungan.jam_masuk, 'HH:mm') like ?", ["%{$searchValue}%"]);
+                            } else {
+                                $q->where('kunjungan.kd_pasien', 'like', "%{$searchValue}%")
+                                    ->orWhereHas('pasien', function ($q) use ($searchValue) {
+                                        $q->where('nama', 'like', "%{$searchValue}%")
+                                            ->orWhere('alamat', 'like', "%{$searchValue}%");
+                                    })
+                                    ->orWhereHas('customer', function ($q) use ($searchValue) {
+                                        $q->where('customer', 'like', "%{$searchValue}%");
+                                    });
+                            }
+                        });
+                    }
+                })
+
+                ->order(function ($query) {
+                    $query->orderBy('kunjungan.tgl_masuk', 'desc')
+                        ->orderBy('kunjungan.jam_masuk', 'desc');
+                })
+                ->editColumn('tgl_masuk', fn($row) => date('Y-m-d', strtotime($row->tgl_masuk)) ?: '-')
+                ->addColumn('no_rm', fn($row) => $row->kd_pasien ?: '-')
+                ->addColumn('alamat', fn($row) =>  $row->pasien->alamat ?: '-')
+                ->addColumn('jaminan', fn($row) =>  $row->customer->customer ?: '-')
+                ->addColumn('status_pelayanan', fn($row) => '' ?: '-')
+                ->addColumn('keterangan', fn($row) => '' ?: '-')
+                ->addColumn('tindak_lanjut', fn($row) => '' ?: '-')
+                ->addColumn('no_antrian', fn($row) => '' ?: '-')
+                // Hitung umur dari tabel pasien
+                ->addColumn('umur', function ($row) {
+                    return $row->pasien && $row->pasien->tgl_lahir
+                        ? Carbon::parse($row->pasien->tgl_lahir)->age . ''
+                        : 'Tidak diketahui';
+                })
+                ->addColumn('profile', fn($row) => $row)
+                ->addColumn('action', fn($row) => $row->kd_pasien)
+                ->rawColumns(['action', 'profile'])
+                ->make(true);
+        }
+
+        return view('unit-pelayanan.rawat-inap.unit-pelayanan-selesai', compact('unit'));
+    }
+
     public function pelayanan($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
     {
         // Use BaseService to include transaksi join so kd_kasir and no_transaksi are available
         $dataMedis = $this->baseService->getDataMedis($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
-
-        // Menghitung umur berdasarkan tgl_lahir jika ada
-        if ($dataMedis->pasien && $dataMedis->pasien->tgl_lahir) {
-            $dataMedis->pasien->umur = Carbon::parse($dataMedis->pasien->tgl_lahir)->age;
-        } else {
-            $dataMedis->pasien->umur = 'Tidak Diketahui';
-        }
 
         if (!$dataMedis) {
             abort(404, 'Data not found');
@@ -150,7 +223,6 @@ class RawatInapController extends Controller
         $unit = Unit::with(['bagian'])
             ->where('kd_unit', $kd_unit)
             ->first();
-
 
         if ($request->ajax()) {
             $data = Kunjungan::with(['pasien', 'dokter', 'customer'])
@@ -248,18 +320,10 @@ class RawatInapController extends Controller
             abort(404, 'Data not found');
         }
 
-        // Menghitung umur berdasarkan tgl_lahir jika ada
-        if ($dataMedis->pasien && $dataMedis->pasien->tgl_lahir) {
-            $dataMedis->pasien->umur = Carbon::parse($dataMedis->pasien->tgl_lahir)->age;
-        } else {
-            $dataMedis->pasien->umur = 'Tidak Diketahui';
-        }
-
         // Get Pasien Inap Data
         $pasienInap = PasienInap::where('kd_kasir', $dataMedis->kd_kasir)
             ->where('no_transaksi', $dataMedis->no_transaksi)
             ->first();
-
 
         $serahTerimaData = RmeSerahTerima::with(['unitAsal', 'unitTujuan', 'petugasAsal', 'petugasTerima'])
             ->where('kd_pasien', $kd_pasien)
@@ -338,6 +402,4 @@ class RawatInapController extends Controller
             return back()->with('error', $e->getMessage());
         }
     }
-
-   
 }

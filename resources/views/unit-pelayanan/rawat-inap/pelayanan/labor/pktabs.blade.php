@@ -137,6 +137,58 @@
 
                     </tr>
                 @endforeach
+
+                @foreach ($laborIGD as $laborPK)
+                    <tr>
+                        <td>{{ (int) $laborPK->kd_order }}</td>
+                        <td>
+                            @foreach ($laborPK->details as $detail)
+                                {{ $detail->produk->deskripsi ?? '' }},
+                            @endforeach
+                        </td>
+                        <td>{{ \Carbon\Carbon::parse($laborPK->tgl_order)->format('d M Y H:i') }}</td>
+                        <td>
+                            @php
+                                $labHasil = $laborPK->labHasil->sortByDesc('tgl_otoritas_det')->first();
+                            @endphp
+                            @if ($labHasil && $labHasil->tgl_otoritas_det)
+                                {{ \Carbon\Carbon::parse($labHasil->tgl_otoritas_det)->format('d M Y H:i') }}
+                            @else
+                                -
+                            @endif
+                        </td>
+                        <td>{{ $laborPK->dokter->nama_lengkap }}</td>
+                        <td>{{ $laborPK->cyto == 1 ? 'Cyto' : 'Non-Cyto' }}</td>
+                        <td>
+                            @php
+                                $statusOrder = $laborPK->status_order;
+                                $statusLabel = '';
+
+                                if ($statusOrder == 0) {
+                                    $statusLabel = '<span class="text-warning">Diproses</span>';
+                                }
+                                if ($statusOrder == 1) {
+                                    $statusLabel = '<span class="text-secondary">Diorder</span>';
+                                }
+                                if ($statusOrder == 2) {
+                                    $statusLabel = '<span class="text-success">Selesai</span>';
+                                }
+                            @endphp
+
+                            {!! $statusLabel !!}
+                        </td>
+
+                        <td>
+                            @if ($laborPK->status_order != 1)
+                                <a href="#" class="btn btn-sm btn-primary" data-bs-toggle="modal"
+                                    data-bs-target="#laborModal{{ str_replace('.', '_', $laborPK->kd_order) }}">
+                                    <i class="ti-eye"></i>
+                                </a>
+                            @endif
+                        </td>
+
+                    </tr>
+                @endforeach
             </tbody>
         </table>
         {{ $dataLabor->withQueryString()->links() }}
@@ -147,6 +199,15 @@
 
 <!-- Include Modals Edit and Showand delete -->
 @foreach ($dataLabor as $laborPK)
+    @if ($laborPK->status_order == 1)
+        @include('unit-pelayanan.rawat-inap.pelayanan.labor.editpk', ['laborPK' => $laborPK])
+        @include('unit-pelayanan.rawat-inap.pelayanan.labor.deletepk', ['laborPK' => $laborPK])
+    @else
+        @include('unit-pelayanan.rawat-inap.pelayanan.labor.showpk', ['laborPK' => $laborPK])
+    @endif
+@endforeach
+
+@foreach ($laborIGD as $laborPK)
     @if ($laborPK->status_order == 1)
         @include('unit-pelayanan.rawat-inap.pelayanan.labor.editpk', ['laborPK' => $laborPK])
         @include('unit-pelayanan.rawat-inap.pelayanan.labor.deletepk', ['laborPK' => $laborPK])

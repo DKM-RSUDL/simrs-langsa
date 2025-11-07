@@ -94,16 +94,6 @@
         // ],
         [
             'icon' => 'cv.png',
-            'label' => 'Resume',
-            'link' => route('rawat-jalan.rawat-jalan-resume.index', [
-                $dataMedis->kd_unit,
-                $dataMedis->kd_pasien,
-                $tglMasukData,
-                $dataMedis->urut_masuk,
-            ]),
-        ],
-        [
-            'icon' => 'cv.png',
             'label' => 'PRMRJ',
             'link' => route('rawat-jalan.prmrj.index', [
                 $dataMedis->kd_unit,
@@ -246,6 +236,16 @@
             'icon' => 'tools.png',
             'label' => 'KFR Rehab Medik',
             'link' => route('rawat-jalan.tindakan-rehab-medik.index', [
+                $dataMedis->kd_unit,
+                $dataMedis->kd_pasien,
+                $tglMasukData,
+                $dataMedis->urut_masuk,
+            ]),
+        ],
+        [
+            'icon' => 'cv.png',
+            'label' => 'Resume',
+            'link' => route('rawat-jalan.rawat-jalan-resume.index', [
                 $dataMedis->kd_unit,
                 $dataMedis->kd_pasien,
                 $tglMasukData,

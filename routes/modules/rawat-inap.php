@@ -101,6 +101,7 @@ Route::prefix('rawat-inap')->group(function () {
             Route::name('.unit')->group(function () {
                 Route::get('/', [RawatInapController::class, 'unitPelayanan']);
                 Route::get('/aktif', [RawatInapController::class, 'unitPelayanan'])->name('.aktif');
+                Route::get('/selesai', [RawatInapController::class, 'selesai'])->name('.selesai');
                 Route::get('/pending', [RawatInapController::class, 'pending'])->name('.pending');
             });
 
@@ -280,6 +281,7 @@ Route::prefix('rawat-inap')->group(function () {
                     Route::name('.tindakan')->group(function () {
                         Route::controller(RawatInapTindakanController::class)->group(function () {
                             Route::get('/', 'index')->name('.index');
+                            Route::get('/print-pdf', 'printPDF')->name('.print-pdf');
                             Route::post('/', 'storeTindakan')->name('.store');
                             Route::put('/', 'updateTindakan')->name('.update');
                             Route::delete('/', 'deleteTindakan')->name('.delete');
@@ -415,6 +417,11 @@ Route::prefix('rawat-inap')->group(function () {
                             Route::get('/', 'index')->name('.index');
                             Route::post('/', 'store')->name('.store');
                             Route::get('/order-obat', 'orderObat')->name('.order-obat');
+
+                            // E-Resep Pulang
+                            Route::post('/e-resep-pulang', 'storeEResepPulang')->name('.storeEResepPulang');
+                            Route::get('/order-obat-e-resep-pulang', 'orderObatEResepPulang')->name('.order-obat-e-resep-pulang');
+
                             Route::get('/search-obat', 'searchObat')->name('.searchObat');
                             Route::post('/catatanObat', 'catatanObat')->name('.catatanObat');
                             Route::put('/catatanObat/validasi', 'validasiCatatanObat')->name('.catatanObat.validasi');

@@ -37,14 +37,14 @@
         ],
         [
             'icon' => 'agree.png',
-            'label' => 'Konsultasi',
+            'label' => 'Konsultasi Rajal',
             'link' => route('rawat-inap.konsultasi.index', [
                 $dataMedis->kd_unit,
                 $dataMedis->kd_pasien,
                 $tglMasukData,
                 $dataMedis->urut_masuk,
             ]),
-             'active' => 'rawat-inap.konsultasi.*',
+            'active' => 'rawat-inap.konsultasi.*',
         ],
 
         [
@@ -142,16 +142,6 @@
             'icon' => 'goal.png',
             'label' => 'Care Plan',
             'link' => '#',
-        ],
-        [
-            'icon' => 'cv.png',
-            'label' => 'Resume',
-            'link' => route('rawat-inap.rawat-inap-resume.index', [
-                $dataMedis->kd_unit,
-                $dataMedis->kd_pasien,
-                $tglMasukData,
-                $dataMedis->urut_masuk,
-            ]),
         ],
         [
             'icon' => 'observasi.png',
@@ -257,6 +247,16 @@
             'icon' => 'verified_badge.png',
             'label' => 'Audiometri',
             'link' => route('rawat-inap.audiometri.index', [
+                $dataMedis->kd_unit,
+                $dataMedis->kd_pasien,
+                $tglMasukData,
+                $dataMedis->urut_masuk,
+            ]),
+        ],
+        [
+            'icon' => 'cv.png',
+            'label' => 'Resume',
+            'link' => route('rawat-inap.rawat-inap-resume.index', [
                 $dataMedis->kd_unit,
                 $dataMedis->kd_pasien,
                 $tglMasukData,

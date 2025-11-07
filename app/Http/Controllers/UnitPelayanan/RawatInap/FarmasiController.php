@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\UnitPelayanan\RawatInap;
 
 use App\Http\Controllers\Controller;
-use App\Models\AptObat;
 use App\Models\Dokter;
 use App\Models\Kunjungan;
 use App\Models\MrResep;
@@ -19,7 +18,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
 class FarmasiController extends Controller
@@ -56,6 +54,57 @@ class FarmasiController extends Controller
 
         $riwayatObat = $this->getRiwayatObat($kd_pasien);
         $riwayatObatHariIni = $this->getRiwayatObatHariIni($kd_pasien);
+
+        // Pisahkan resep hari ini menjadi Inap (RESEP_PULANG = 0) dan Pulang (RESEP_PULANG = 1)
+        $today = Carbon::today()->toDateString();
+
+        $riwayatObatHariIniInap = DB::table('MR_RESEP')
+            ->join('DOKTER', 'MR_RESEP.KD_DOKTER', '=', 'DOKTER.KD_DOKTER')
+            ->leftJoin('MR_RESEPDTL', 'MR_RESEP.ID_MRRESEP', '=', 'MR_RESEPDTL.ID_MRRESEP')
+            ->leftJoin('APT_OBAT', 'MR_RESEPDTL.KD_PRD', '=', 'APT_OBAT.KD_PRD')
+            ->leftJoin('APT_SATUAN', 'APT_OBAT.KD_SATUAN', '=', 'APT_SATUAN.KD_SATUAN')
+            ->where('MR_RESEP.KD_PASIEN', $kd_pasien)
+            ->whereDate('MR_RESEP.TGL_ORDER', $today)
+            ->where('MR_RESEP.RESEP_PULANG', '!=', 1)
+            ->select(
+                'MR_RESEP.TGL_ORDER',
+                'DOKTER.NAMA as NAMA_DOKTER',
+                'MR_RESEP.ID_MRRESEP',
+                'MR_RESEP.STATUS',
+                'MR_RESEPDTL.CARA_PAKAI',
+                'MR_RESEPDTL.JUMLAH',
+                'MR_RESEPDTL.KET',
+                'MR_RESEPDTL.JUMLAH_TAKARAN',
+                'MR_RESEPDTL.SATUAN_TAKARAN',
+                'APT_OBAT.NAMA_OBAT'
+            )
+            ->distinct()
+            ->orderBy('MR_RESEP.TGL_ORDER', 'desc')
+            ->get();
+
+        $riwayatObatHariIniPulang = DB::table('MR_RESEP')
+            ->join('DOKTER', 'MR_RESEP.KD_DOKTER', '=', 'DOKTER.KD_DOKTER')
+            ->leftJoin('MR_RESEPDTL', 'MR_RESEP.ID_MRRESEP', '=', 'MR_RESEPDTL.ID_MRRESEP')
+            ->leftJoin('APT_OBAT', 'MR_RESEPDTL.KD_PRD', '=', 'APT_OBAT.KD_PRD')
+            ->leftJoin('APT_SATUAN', 'APT_OBAT.KD_SATUAN', '=', 'APT_SATUAN.KD_SATUAN')
+            ->where('MR_RESEP.KD_PASIEN', $kd_pasien)
+            ->whereDate('MR_RESEP.TGL_ORDER', $today)
+            ->where('MR_RESEP.RESEP_PULANG', 1)
+            ->select(
+                'MR_RESEP.TGL_ORDER',
+                'DOKTER.NAMA as NAMA_DOKTER',
+                'MR_RESEP.ID_MRRESEP',
+                'MR_RESEP.STATUS',
+                'MR_RESEPDTL.CARA_PAKAI',
+                'MR_RESEPDTL.JUMLAH',
+                'MR_RESEPDTL.KET',
+                'MR_RESEPDTL.JUMLAH_TAKARAN',
+                'MR_RESEPDTL.SATUAN_TAKARAN',
+                'APT_OBAT.NAMA_OBAT'
+            )
+            ->distinct()
+            ->orderBy('MR_RESEP.TGL_ORDER', 'desc')
+            ->get();
         $riwayatCatatanObat = $this->getRiwayatCatatanPemberianObat($kd_pasien, $kd_unit, $tgl_masuk, $urut_masuk);
         $rekonsiliasiObat = $this->getRekonsiliasi($kd_pasien, $kd_unit, $tgl_masuk, $urut_masuk);
 
@@ -67,7 +116,19 @@ class FarmasiController extends Controller
 
         return view(
             'unit-pelayanan.rawat-inap.pelayanan.farmasi.index',
-            compact('dataMedis', 'riwayatObat', 'riwayatObatHariIni', 'riwayatCatatanObat', 'kd_pasien', 'tgl_masuk', 'dokters', 'rekonsiliasiObat', 'rekonsiliasiObatTransfer')
+            compact(
+                'dataMedis',
+                'riwayatObat',
+                'riwayatObatHariIni',
+                'riwayatObatHariIniInap',
+                'riwayatObatHariIniPulang',
+                'riwayatCatatanObat',
+                'kd_pasien',
+                'tgl_masuk',
+                'dokters',
+                'rekonsiliasiObat',
+                'rekonsiliasiObatTransfer'
+            )
         );
     }
 
@@ -182,7 +243,6 @@ class FarmasiController extends Controller
                 'KRONIS' => '0', // varchar(2)
                 'PRB' => '0', // varchar(2)
             ];
-
             // Simpan ke MR_RESEP
             $mrResep = new MrResep();
             $mrResep->KD_PASIEN = $kunjungan->kd_pasien; // varchar(12)
@@ -215,7 +275,6 @@ class FarmasiController extends Controller
                     'KET' => $obat['aturanTambahan'],
                     'STATUS' => '0',
                 ];
-                Log::info('Data untuk insert MR_RESEPDTL', $resepDtlData);
 
                 $mrResepDtl = new MrResepDtl();
                 $mrResepDtl->ID_MRRESEP = $ID_MRRESEP;
@@ -236,8 +295,6 @@ class FarmasiController extends Controller
             // Panggil fungsi resume (sesuaikan jika ada)
             $this->createResume($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
 
-            Log::info('Resep berhasil disimpan', ['id_mrresep' => $ID_MRRESEP]);
-
             DB::commit();
 
             return to_route('rawat-inap.farmasi.index', [
@@ -245,7 +302,7 @@ class FarmasiController extends Controller
                 $kd_pasien,
                 date('Y-m-d', strtotime($tgl_masuk)),
                 $urut_masuk
-            ])->with('success', 'Resep berhasil disimpan dengan ID: ' . $ID_MRRESEP);
+            ])->with('success', 'Resep berhasil disimpan');
         } catch (\Illuminate\Validation\ValidationException $e) {
             DB::rollback();
             return redirect()->back()->withErrors($e->errors())->withInput();
@@ -254,6 +311,172 @@ class FarmasiController extends Controller
             return redirect()->back()->withErrors(['error' => 'Terjadi kesalahan: ' . $e->getMessage()])->withInput();
         }
     }
+
+    public function storeEResepPulang($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, Request $request)
+    {
+        DB::beginTransaction();
+        try {
+            // Validasi input sesuai struktur tabel
+            $validatedData = $request->validate([
+                'kd_dokter' => 'required|max:3', // varchar(3)
+                'tgl_order' => 'required|date', // datetime-local
+                'cat_racikan' => 'nullable|string', // varchar(max)
+                'obat' => 'required|array|min:1',
+                'obat.*.id' => 'required|max:12', // Sesuaikan dengan MR_RESEPDTL
+                'obat.*.frekuensi' => 'required|max:50',
+                'obat.*.jumlah' => 'required|numeric|min:1',
+                'obat.*.dosis' => 'required|max:50',
+                'obat.*.sebelumSesudahMakan' => 'required|max:50',
+                'obat.*.aturanTambahan' => 'nullable|string|max:255',
+                'obat.*.satuan' => 'nullable|max:50',
+            ]);
+
+            // Konversi tgl_order ke format datetime
+            $tglOrder = Carbon::parse($validatedData['tgl_order'])->format('Y-m-d H:i:s');
+            // JAM_ORDER harus datetime penuh, gunakan TGL_ORDER untuk jam
+            $jamOrder = $tglOrder;
+
+            // Cari kunjungan
+            $kunjungan = Kunjungan::join('transaksi as t', function ($join) {
+                $join->on('kunjungan.kd_pasien', '=', 't.kd_pasien')
+                    ->on('kunjungan.kd_unit', '=', 't.kd_unit')
+                    ->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi')
+                    ->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
+            })
+                ->where('kunjungan.kd_unit', $kd_unit)
+                ->where('kunjungan.kd_pasien', $kd_pasien)
+                ->where('kunjungan.urut_masuk', $urut_masuk)
+                ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
+                ->first();
+
+            if (!$kunjungan) {
+                throw new \Exception('Data kunjungan tidak ditemukan.');
+            }
+
+            // Generate ID_MRRESEP (sebagai string)
+            $tglMasuk = Carbon::parse($kunjungan->tgl_masuk);
+            $prefix = $tglMasuk->format('Ymd');
+            $lastResep = MrResep::where('ID_MRRESEP', 'like', $prefix . '%')
+                ->orderBy('ID_MRRESEP', 'desc')
+                ->first();
+
+            $newNumber = $lastResep ? intval(substr($lastResep->ID_MRRESEP, -4)) + 1 : 1;
+            $ID_MRRESEP = $prefix . str_pad($newNumber, 4, '0', STR_PAD_LEFT);
+
+            // Periksa apakah ID sudah ada
+            while (MrResep::where('ID_MRRESEP', $ID_MRRESEP)->exists()) {
+                $newNumber++;
+                $ID_MRRESEP = $prefix . str_pad($newNumber, 4, '0', STR_PAD_LEFT);
+            }
+
+            // Simpan ke MR_RESEP
+            $mrResep = MrResep::create([
+                'KD_PASIEN' => $kunjungan->kd_pasien,
+                'KD_UNIT' => $kunjungan->kd_unit,
+                'TGL_MASUK' => $kunjungan->tgl_masuk,
+                'URUT_MASUK' => $kunjungan->urut_masuk,
+                'KD_DOKTER' => $validatedData['kd_dokter'],
+                'ID_MRRESEP' => $ID_MRRESEP,
+                'CAT_RACIKAN' => $validatedData['cat_racikan'] ?? null,
+                'TGL_ORDER' => $tglOrder,
+                'JAM_ORDER' => $jamOrder,
+                'STATUS' => '0', // varchar(50)
+                'DILAYANI' => 0, // tinyint
+                'STTS_TERIMA' => '0', // varchar(50)
+                'KRONIS' => '0', // varchar(2)
+                'PRB' => '0', // varchar(2)
+                'RESEP_PULANG' => 1,
+            ]);
+
+            // Simpan detail resep ke MR_RESEPDTL
+            foreach ($validatedData['obat'] as $index => $obat) {
+                $resepDtlData = [
+                    'ID_MRRESEP' => $ID_MRRESEP,
+                    'URUT' => $index + 1,
+                    'KD_PRD' => $obat['id'],
+                    'CARA_PAKAI' => $obat['frekuensi'] . ', ' . $obat['sebelumSesudahMakan'],
+                    'JUMLAH' => $obat['jumlah'],
+                    'JUMLAH_TAKARAN' => $obat['dosis'],
+                    'SATUAN_TAKARAN' => $obat['satuan'],
+                    'KD_DOKTER' => $validatedData['kd_dokter'],
+                    'KET' => $obat['aturanTambahan'],
+                    'STATUS' => '0',
+                ];
+
+                $mrResepDtl = new MrResepDtl();
+                $mrResepDtl->ID_MRRESEP = $ID_MRRESEP;
+                $mrResepDtl->URUT = $index + 1;
+                $mrResepDtl->KD_PRD = $obat['id'];
+                $mrResepDtl->CARA_PAKAI = $obat['frekuensi'] . ', ' . $obat['sebelumSesudahMakan'];
+                $mrResepDtl->JUMLAH = $obat['jumlah'];
+                $mrResepDtl->JUMLAH_TAKARAN = $obat['dosis'];
+                $mrResepDtl->SATUAN_TAKARAN = $obat['satuan'];
+                $mrResepDtl->KD_DOKTER = $validatedData['kd_dokter'];
+                $mrResepDtl->KET = $obat['aturanTambahan'];
+                $mrResepDtl->RACIKAN = 0;
+                $mrResepDtl->VERIFIED = 1;
+                $mrResepDtl->STATUS = 0;
+                $mrResepDtl->save();
+            }
+
+            // Panggil fungsi resume (sesuaikan jika ada)
+            $this->createResume($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
+
+            // DEBUG: Log semua query yang dijalankan
+            DB::commit();
+
+            return to_route('rawat-inap.farmasi.index', [
+                $kd_unit,
+                $kd_pasien,
+                date('Y-m-d', strtotime($tgl_masuk)),
+                $urut_masuk
+            ])->with('success', 'Order Obat Pulang Berhasil disimpan');
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            DB::rollback();
+            return redirect()->back()->withErrors($e->errors())->withInput();
+        } catch (\Exception $e) {
+            DB::rollback();
+            return redirect()->back()->withErrors(['error' => 'Terjadi kesalahan: ' . $e->getMessage()])->withInput();
+        }
+    }
+
+
+    // === E-Resep Pulang ===
+    public function orderObatEResepPulang($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
+    {
+        $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
+            ->join('transaksi as t', function ($join) {
+                $join->on('kunjungan.kd_pasien', '=', 't.kd_pasien');
+                $join->on('kunjungan.kd_unit', '=', 't.kd_unit');
+                $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
+                $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
+            })
+            ->where('kunjungan.kd_pasien', $kd_pasien)
+            ->where('kunjungan.kd_unit', $kd_unit)
+            ->where('kunjungan.urut_masuk', $urut_masuk)
+            ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
+            ->first();
+
+        if (!$dataMedis) {
+            abort(404, 'Data not found');
+        }
+
+        if ($dataMedis->pasien && $dataMedis->pasien->tgl_lahir) {
+            $dataMedis->pasien->umur = Carbon::parse($dataMedis->pasien->tgl_lahir)->age;
+        } else {
+            $dataMedis->pasien->umur = 'Tidak Diketahui';
+        }
+
+        $riwayatObat = $this->getRiwayatObat($kd_pasien);
+
+        $dokters = Dokter::where('status', 1)->get();
+
+        return view(
+            'unit-pelayanan.rawat-inap.pelayanan.farmasi.tab-eresep-pulang.order-obat',
+            compact('dataMedis', 'riwayatObat', 'kd_pasien', 'tgl_masuk', 'dokters', 'kd_unit')
+        );
+    }
+
 
     public function searchObat(Request $request)
     {

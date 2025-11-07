@@ -1,4 +1,4 @@
-@props(['pelayananUrl'])
+@props(['pelayananUrl', 'dataMedis' => null])
 
 <div class="accordion accordion-flush" id="patientMenuAccordionRawatJalan">
     {{-- Menu Direct (tanpa submenu) --}}
@@ -170,13 +170,19 @@
             data-bs-parent="#patientMenuAccordionRawatJalan">
             <div class="accordion-body p-0">
                 <div class="list-group list-group-flush">
+
                     <a href="#" class="list-group-item list-group-item-action btn-print-labor"
-                        data-kasir="{{ $dataMedis->kd_kasir ?? '' }}"
-                        data-transaksi="{{ $dataMedis->no_transaksi ?? '' }}"
-                        data-pasien="{{ $dataMedis->kd_pasien ?? '' }}"
-                        data-tglmasuk="{{ $dataMedis->tgl_masuk ?? '' }}">
+                        data-kasir="{{ $dataMedis?->kd_kasir ?? '' }}"
+                        data-transaksi="{{ $dataMedis?->no_transaksi ?? '' }}"
+                        data-pasien="{{ $dataMedis?->kd_pasien ?? '' }}"
+                        data-tglmasuk="{{ $dataMedis?->tgl_masuk ?? '' }}">
                         Laboratorium
                     </a>
+                    <a href="{{ route('rawat-jalan.tindakan.print-pdf', [$dataMedis?->kd_unit ?? '', $dataMedis?->kd_pasien ?? '', $dataMedis?->tgl_masuk ?? '', $dataMedis?->urut_masuk ?? '']) }}"
+                        target="_blank" class="list-group-item list-group-item-action">
+                        Tindakan
+                    </a>
+
                 </div>
             </div>
         </div>
@@ -212,7 +218,7 @@
                 beforeSend: function() {
                     $this.html(
                         '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading...'
-                        );
+                    );
                     $this.prop('disabled', true);
                 },
                 success: function(res) {
