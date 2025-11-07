@@ -46,7 +46,7 @@
                         {{-- Tab Content --}}
                         <div class="tab-content" id="myTabContent">
                             <div class="tab-pane fade show active">
-                                
+
                                 <div class="row">
                                     <div class="row m-3">
                                         <div class="col-md-3">
@@ -54,24 +54,27 @@
                                                 <span class="input-group-text">
                                                     <i class="ti-search"></i>
                                                 </span>
-                                                <input type="text" name="search" class="form-control" placeholder="Cari data..." value="{{ request('search') }}">
+                                                <input type="text" name="search" class="form-control"
+                                                    placeholder="Cari data..." value="{{ request('search') }}">
                                             </div>
                                         </div>
-                                        
+
                                         <div class="col-md-2">
-                                            <input type="date" name="dari_tanggal" class="form-control" placeholder="Dari Tanggal" value="{{ request('dari_tanggal') }}">
+                                            <input type="date" name="dari_tanggal" class="form-control"
+                                                placeholder="Dari Tanggal" value="{{ request('dari_tanggal') }}">
                                         </div>
-                                        
+
                                         <div class="col-md-2">
-                                            <input type="date" name="sampai_tanggal" class="form-control" placeholder="Sampai Tanggal" value="{{ request('sampai_tanggal') }}">
+                                            <input type="date" name="sampai_tanggal" class="form-control"
+                                                placeholder="Sampai Tanggal" value="{{ request('sampai_tanggal') }}">
                                         </div>
-                                        
+
                                         <div class="col-md-2">
                                             <button class="btn btn-outline-secondary" type="button">
                                                 <i class="ti-filter"></i> Filter
                                             </button>
                                         </div>
-                                        
+
                                         <div class="col-md-3 text-end">
                                             <a href="{{ route('rawat-inap.resiko-jatuh.humpty-dumpty.create', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}"
                                                 class="btn btn-primary">
@@ -99,54 +102,62 @@
                                                         <td>{{ $index + 1 }}</td>
                                                         <td>
                                                             <strong>{{ date('d/m/Y', strtotime($data->tanggal_implementasi)) }}</strong><br>
-                                                            <small class="text-muted">{{ date('H:i', strtotime($data->jam_implementasi)) }} WIB</small>
+                                                            <small
+                                                                class="text-muted">{{ date('H:i', strtotime($data->jam_implementasi)) }}
+                                                                WIB</small>
                                                         </td>
                                                         <td>
-                                                            <span class="badge bg-secondary">{{ ucfirst($data->shift) }}</span>
+                                                            <span
+                                                                class="badge bg-secondary">{{ ucfirst($data->shift) }}</span>
                                                         </td>
                                                         <td class="text-center">
                                                             <h5 class="mb-0">{{ $data->total_skor }}</h5>
                                                         </td>
                                                         <td>
-                                                            @if($data->kategori_risiko == 'Risiko Rendah')
+                                                            @if ($data->kategori_risiko == 'Risiko Rendah')
                                                                 <span class="badge bg-success">
                                                                     <i class="ti-check"></i> {{ $data->kategori_risiko }}
                                                                 </span>
                                                             @elseif($data->kategori_risiko == 'Risiko Tinggi')
                                                                 <span class="badge bg-danger">
-                                                                    <i class="ti-alert-triangle"></i> {{ $data->kategori_risiko }}
+                                                                    <i class="ti-alert-triangle"></i>
+                                                                    {{ $data->kategori_risiko }}
                                                                 </span>
                                                             @else
-                                                                <span class="badge bg-secondary">{{ $data->kategori_risiko }}</span>
+                                                                <span
+                                                                    class="badge bg-secondary">{{ $data->kategori_risiko }}</span>
                                                             @endif
                                                         </td>
                                                         <td>
                                                             {{ $data->userCreated->name ?? 'Unknown' }}<br>
-                                                            <small class="text-muted">{{ $data->userCreated->username ?? '-' }}</small>
+                                                            <small
+                                                                class="text-muted">{{ $data->userCreated->username ?? '-' }}</small>
                                                         </td>
                                                         <td>
-                                                            <div class="btn-group" role="group">
-                                                                <a href="{{ route('rawat-inap.resiko-jatuh.humpty-dumpty.show', [$dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk, $data->id]) }}" 
-                                                                   class="btn btn-sm btn-outline-info" title="Lihat Detail">
+                                                            <x-table-action>
+                                                                <a href="{{ route('rawat-inap.resiko-jatuh.humpty-dumpty.show', [$dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk, $data->id]) }}"
+                                                                    class="btn btn-sm btn-info" title="Lihat Detail">
                                                                     <i class="ti-eye"></i>
                                                                 </a>
-                                                                <a href="{{ route('rawat-inap.resiko-jatuh.humpty-dumpty.edit', [$dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk, $data->id]) }}" 
-                                                                   class="btn btn-sm btn-outline-warning" title="Edit">
+                                                                <a href="{{ route('rawat-inap.resiko-jatuh.humpty-dumpty.edit', [$dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk, $data->id]) }}"
+                                                                    class="btn btn-sm btn-warning" title="Edit">
                                                                     <i class="ti-pencil"></i>
                                                                 </a>
-                                                                <button type="button" class="btn btn-sm btn-outline-danger" 
-                                                                        onclick="confirmDelete({{ $data->id }})" title="Hapus">
-                                                                    <i class="ti-trash"></i>
-                                                                </button>
-                                                            </div>
 
-                                                            {{-- Hidden Delete Form --}}
-                                                            <form id="delete-form-{{ $data->id }}" 
-                                                                  action="{{ route('rawat-inap.resiko-jatuh.humpty-dumpty.destroy', [$dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk, $data->id]) }}" 
-                                                                  method="POST" style="display: none;">
-                                                                @csrf
-                                                                @method('DELETE')
-                                                            </form>
+                                                                <form
+                                                                    action="{{ route('rawat-inap.resiko-jatuh.humpty-dumpty.destroy', [$dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk, $data->id]) }}"
+                                                                    method="post">
+                                                                    @csrf
+                                                                    @method('delete')
+
+                                                                    <button type="submit" class="btn btn-sm btn-danger"
+                                                                        data-confirm data-confirm-title="Anda yakin?"
+                                                                        data-confirm-text="Data yang dihapus tidak dapat dikembalikan"
+                                                                        title="Hapus operasi" aria-label="Hapus operasi">
+                                                                        <i class="fas fa-trash"></i>
+                                                                    </button>
+                                                                </form>
+                                                            </x-table-action>
                                                         </td>
                                                     </tr>
                                                 @empty
@@ -154,9 +165,10 @@
                                                         <td colspan="7" class="text-center py-4">
                                                             <div class="text-muted">
                                                                 <i class="ti-info-alt" style="font-size: 2rem;"></i>
-                                                                <p class="mt-2">Belum ada data pengkajian Humpty Dumpty</p>
-                                                                <a href="{{ route('rawat-inap.resiko-jatuh.humpty-dumpty.create', [$dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk]) }}" 
-                                                                   class="btn btn-primary btn-sm">
+                                                                <p class="mt-2">Belum ada data pengkajian Humpty Dumpty
+                                                                </p>
+                                                                <a href="{{ route('rawat-inap.resiko-jatuh.humpty-dumpty.create', [$dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk]) }}"
+                                                                    class="btn btn-primary btn-sm">
                                                                     <i class="ti-plus"></i> Tambah Data Pertama
                                                                 </a>
                                                             </div>
@@ -178,16 +190,5 @@
 @endsection
 
 @push('js')
-    <script>
-        function confirmDelete(id) {
-            if (confirm('Apakah Anda yakin ingin menghapus data ini?')) {
-                document.getElementById('delete-form-' + id).submit();
-            }
-        }
-
-        // Auto dismiss alerts after 5 seconds
-        setTimeout(function() {
-            $('.alert').fadeOut('slow');
-        }, 5000);
-    </script>
+    <script src="{{ asset('js/helpers/confirm.js') }}"></script>
 @endpush

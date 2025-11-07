@@ -6,10 +6,12 @@
             background-color: #28a745;
             color: white;
         }
+
         .badge-risiko-sedang {
             background-color: #ffc107;
             color: black;
         }
+
         .badge-risiko-tinggi {
             background-color: #dc3545;
             color: white;
@@ -59,31 +61,35 @@
                             <div class="tab-pane fade show active">
 
                                 <div class="row">
-                                    <form method="GET" action="{{ route('rawat-inap.resiko-jatuh.geriatri.index', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}">
+                                    <form method="GET"
+                                        action="{{ route('rawat-inap.resiko-jatuh.geriatri.index', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}">
                                         <div class="row m-3">
                                             <div class="col-md-3">
                                                 <div class="input-group">
                                                     <span class="input-group-text">
                                                         <i class="ti-search"></i>
                                                     </span>
-                                                    <input type="text" name="search" class="form-control" placeholder="Cari data..." value="{{ request('search') }}">
+                                                    <input type="text" name="search" class="form-control"
+                                                        placeholder="Cari data..." value="{{ request('search') }}">
                                                 </div>
                                             </div>
-                                            
+
                                             <div class="col-md-2">
-                                                <input type="date" name="dari_tanggal" class="form-control" placeholder="Dari Tanggal" value="{{ request('dari_tanggal') }}">
+                                                <input type="date" name="dari_tanggal" class="form-control"
+                                                    placeholder="Dari Tanggal" value="{{ request('dari_tanggal') }}">
                                             </div>
-                                            
+
                                             <div class="col-md-2">
-                                                <input type="date" name="sampai_tanggal" class="form-control" placeholder="Sampai Tanggal" value="{{ request('sampai_tanggal') }}">
+                                                <input type="date" name="sampai_tanggal" class="form-control"
+                                                    placeholder="Sampai Tanggal" value="{{ request('sampai_tanggal') }}">
                                             </div>
-                                            
+
                                             <div class="col-md-2">
                                                 <button class="btn btn-outline-secondary" type="submit">
                                                     <i class="ti-filter"></i> Filter
                                                 </button>
                                             </div>
-                                            
+
                                             <div class="col-md-3 text-end">
                                                 <a href="{{ route('rawat-inap.resiko-jatuh.geriatri.create', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}"
                                                     class="btn btn-primary">
@@ -113,47 +119,62 @@
                                                         <td>
                                                             {{ \Carbon\Carbon::parse($item->tanggal_implementasi)->format('d/m/Y') }}
                                                             <br>
-                                                            <small class="text-muted">{{ \Carbon\Carbon::parse($item->jam_implementasi)->format('H:i') }}</small>
+                                                            <small
+                                                                class="text-muted">{{ \Carbon\Carbon::parse($item->jam_implementasi)->format('H:i') }}</small>
                                                         </td>
                                                         <td>
-                                                            <span class="badge bg-secondary">{{ ucfirst($item->shift) }}</span>
+                                                            <span
+                                                                class="badge bg-secondary">{{ ucfirst($item->shift) }}</span>
                                                         </td>
                                                         <td>
                                                             <span class="badge bg-info">{{ $item->total_skor }}</span>
                                                         </td>
                                                         <td>
-                                                            @if($item->kategori_risiko == 'Risiko Rendah')
-                                                                <span class="badge badge-risiko-rendah">{{ $item->kategori_risiko }}</span>
+                                                            @if ($item->kategori_risiko == 'Risiko Rendah')
+                                                                <span
+                                                                    class="badge badge-risiko-rendah">{{ $item->kategori_risiko }}</span>
                                                             @elseif($item->kategori_risiko == 'Risiko Sedang')
-                                                                <span class="badge badge-risiko-sedang">{{ $item->kategori_risiko }}</span>
+                                                                <span
+                                                                    class="badge badge-risiko-sedang">{{ $item->kategori_risiko }}</span>
                                                             @elseif($item->kategori_risiko == 'Risiko Tinggi')
-                                                                <span class="badge badge-risiko-tinggi">{{ $item->kategori_risiko }}</span>
+                                                                <span
+                                                                    class="badge badge-risiko-tinggi">{{ $item->kategori_risiko }}</span>
                                                             @else
-                                                                <span class="badge bg-dark">{{ $item->kategori_risiko }}</span>
+                                                                <span
+                                                                    class="badge bg-dark">{{ $item->kategori_risiko }}</span>
                                                             @endif
                                                         </td>
                                                         <td>
-                                                            @if($item->userCreated)
+                                                            @if ($item->userCreated)
                                                                 {{ $item->userCreated->name }}
                                                             @else
                                                                 <span class="text-muted">-</span>
                                                             @endif
                                                         </td>
                                                         <td>
-                                                            <div class="btn-group" role="group">
+                                                            <x-table-action>
                                                                 <a href="{{ route('rawat-inap.resiko-jatuh.geriatri.show', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
-                                                                    class="btn btn-sm btn-outline-info" title="Lihat Detail">
+                                                                    class="btn btn-sm btn-info" title="Lihat Detail">
                                                                     <i class="ti-eye"></i>
                                                                 </a>
                                                                 <a href="{{ route('rawat-inap.resiko-jatuh.geriatri.edit', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
-                                                                    class="btn btn-sm btn-outline-warning" title="Edit">
+                                                                    class="btn btn-sm btn-warning" title="Edit">
                                                                     <i class="ti-pencil"></i>
                                                                 </a>
-                                                                <button type="button" class="btn btn-sm btn-outline-danger" 
-                                                                    onclick="confirmDelete({{ $item->id }})" title="Hapus">
-                                                                    <i class="ti-trash"></i>
-                                                                </button>
-                                                            </div>
+                                                                <form
+                                                                    action="{{ route('rawat-inap.resiko-jatuh.geriatri.destroy', [$dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk, $item->id]) }}"
+                                                                    method="post">
+                                                                    @csrf
+                                                                    @method('delete')
+
+                                                                    <button type="submit" class="btn btn-sm btn-danger"
+                                                                        data-confirm data-confirm-title="Anda yakin?"
+                                                                        data-confirm-text="Data yang dihapus tidak dapat dikembalikan"
+                                                                        title="Hapus operasi" aria-label="Hapus operasi">
+                                                                        <i class="fas fa-trash"></i>
+                                                                    </button>
+                                                                </form>
+                                                            </x-table-action>
                                                         </td>
                                                     </tr>
                                                 @empty
@@ -171,7 +192,7 @@
                                     </div>
 
                                     {{-- Pagination --}}
-                                    @if($dataGeriatri->hasPages())
+                                    @if ($dataGeriatri->hasPages())
                                         <div class="d-flex justify-content-center mt-3">
                                             {{ $dataGeriatri->links() }}
                                         </div>
@@ -186,50 +207,8 @@
         </div>
     </div>
 
-    {{-- Delete Confirmation Modal --}}
-    <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="deleteModalLabel">Konfirmasi Hapus</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    Apakah Anda yakin ingin menghapus data Skala Geriatri ini?
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                    <form id="deleteForm" method="POST" style="display: inline;">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" class="btn btn-danger">Hapus</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
 @endsection
 
 @push('js')
-    <script>
-        function confirmDelete(id) {
-            const deleteForm = document.getElementById('deleteForm');
-            deleteForm.action = `{{ route('rawat-inap.resiko-jatuh.geriatri.index', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}/${id}`;
-            
-            const deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'));
-            deleteModal.show();
-        }
-
-        // Auto hide alert after 5 seconds
-        document.addEventListener('DOMContentLoaded', function() {
-            setTimeout(function() {
-                const alerts = document.querySelectorAll('.alert');
-                alerts.forEach(function(alert) {
-                    if (alert.querySelector('.btn-close')) {
-                        alert.querySelector('.btn-close').click();
-                    }
-                });
-            }, 5000);
-        });
-    </script>
+    <script src="{{ asset('js/helpers/confirm.js') }}"></script>
 @endpush

@@ -8,36 +8,54 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Log;
 
-class SsoController extends Controller 
+class SsoController extends Controller
 {
     private $ssoUrl_;
     private $clientId_;
     private $secretKey_;
+    private $appUrl_;
 
     public function __construct()
     {
-        $this->ssoUrl_ = env('SSO_BASE_URI');
+        $this->ssoUrl_ = rtrim(env('SSO_BASE_URI'), '/');
         $this->clientId_ = env('SSO_CLIENT_ID');
         $this->secretKey_ = env('SSO_SECRET_KEY');
+        $this->appUrl_ = rtrim(config('app.url'), '/');
     }
 
     public function redirectToSso()
     {
-        $redirectUri = route('callback');
-        $ssoUrl = "$this->ssoUrl_/oauth/authorize?client_id={$this->clientId_}&redirect_uri={$redirectUri}&response_type=code&scope=user-info";
+        // Redirect ke halaman login SSO, bukan langsung ke authorize
+        // SSO akan handle authorize setelah user login
+        $ssoLoginUrl = $this->ssoUrl_ . '/login';
 
-        return redirect($ssoUrl);
+        Log::info('Redirecting to SSO Login', [
+            'sso_login_url' => $ssoLoginUrl
+        ]);
+
+        return redirect($ssoLoginUrl);
     }
 
     public function handleCallback(Request $request)
     {
         $code = $request->query('code');
-        $redirectUri = route('callback');
+
+        if (!$code) {
+            Log::error('SSO Callback: No authorization code');
+            return redirect('/login')->withErrors(['message' => 'Authorization code not found']);
+        }
+
+        $redirectUri = $this->appUrl_ . '/callback';
+
+        Log::info('SSO Callback received', [
+            'code' => substr($code, 0, 10) . '...',
+            'redirect_uri' => $redirectUri
+        ]);
 
         // Request access token
-        $response = Http::post("$this->ssoUrl_/oauth/token", [
+        $response = Http::asForm()->post($this->ssoUrl_ . '/oauth/token', [
             'grant_type' => 'authorization_code',
             'client_id' => $this->clientId_,
             'client_secret' => $this->secretKey_,
@@ -47,58 +65,73 @@ class SsoController extends Controller
 
         $responseData = $response->json();
 
-        // Pastikan response berhasil
+        Log::info('SSO Token Response', [
+            'status' => $response->status(),
+            'has_token' => isset($responseData['access_token']),
+        ]);
+
+        // Cek jika ada error
+        if (!$response->successful() || isset($responseData['error'])) {
+            Log::error('SSO Token Error', [
+                'response' => $responseData,
+                'status' => $response->status()
+            ]);
+
+            return redirect('/login')->withErrors([
+                'message' => $responseData['error_description'] ?? 'Failed to obtain access token'
+            ]);
+        }
+
         if (isset($responseData['access_token'])) {
             $accessToken = $responseData['access_token'];
-            $expiresIn = $responseData['expires_in'] ?? 3600; // Default 1 jam jika tidak ada expires_in
-
-            // Hitung waktu kedaluwarsa (dalam detik)
+            $expiresIn = $responseData['expires_in'] ?? 3600;
             $expiresAt = now()->addSeconds($expiresIn)->timestamp;
 
-            // Simpan Access Token ke cookie
+            // Simpan ke cookie
             Cookie::queue(
                 'sso_tok',
                 $accessToken,
-                $expiresIn / 60, // Waktu kedaluwarsa dalam menit
-                '/', // Path eksplisit ke root
-                env('COOKIE_DOMAIN'), // Pastikan domain sesuai
-                false, // Secure (ubah ke true jika HTTPS)
-                false, // HttpOnly
-                false, // Raw
-                'Lax' // SameSite
+                $expiresIn / 60,
+                '/',
+                env('COOKIE_DOMAIN'),
+                env('SESSION_SECURE_COOKIE', false),
+                true,
+                false,
+                'Lax'
             );
 
-            // Simpan waktu kedaluwarsa ke cookie terpisah
             Cookie::queue(
                 'sso_tok_expired',
                 $expiresAt,
                 $expiresIn / 60,
                 '/',
                 env('COOKIE_DOMAIN'),
-                false,
-                false,
+                env('SESSION_SECURE_COOKIE', false),
+                true,
                 false,
                 'Lax'
             );
 
-            $SsoUser = $this->getUserBypass($accessToken);
+            $ssoUser = $this->getUserBypass($accessToken);
 
-            if (!empty($SsoUser)) {
+            if (!empty($ssoUser) && isset($ssoUser['kd_karyawan'])) {
                 $user = User::updateOrCreate(
-                    ['kd_karyawan' => $SsoUser['kd_karyawan']],
+                    ['kd_karyawan' => $ssoUser['kd_karyawan']],
                     [
-                        'name' => $SsoUser['name'],
-                        'email' => $SsoUser['email'],
+                        'name' => $ssoUser['name'],
+                        'email' => $ssoUser['email'],
+                        'password' => bcrypt('password'),
                     ]
                 );
 
-                // Set data pengguna ke request
-                $request->attributes->set('user', $SsoUser);
-
-                // Autentikasi pengguna lokal (opsional, untuk session Laravel)
                 auth()->login($user);
 
-                if (auth()->check()) return to_route('home');
+                Log::info('User logged in successfully', ['user_id' => $user->id]);
+
+                return redirect()->intended('/home');
+            } else {
+                Log::error('Failed to get SSO user data', ['response' => $ssoUser]);
+                return redirect('/login')->withErrors(['message' => 'Failed to get user information']);
             }
         }
 
@@ -107,18 +140,53 @@ class SsoController extends Controller
 
     public function getUserBypass($token)
     {
-        $response = Http::withToken($token)->get("$this->ssoUrl_/api/user");
-        $user = $response->json();
-        return $user;
+        try {
+            $response = Http::withToken($token)
+                ->timeout(10)
+                ->get($this->ssoUrl_ . '/api/user');
+
+            if ($response->successful()) {
+                return $response->json();
+            }
+
+            Log::error('SSO Get User Error', [
+                'status' => $response->status(),
+                'body' => $response->body()
+            ]);
+
+            return null;
+        } catch (\Exception $e) {
+            Log::error('SSO Get User Exception', ['error' => $e->getMessage()]);
+            return null;
+        }
+    }
+
+    public function getUser()
+    {
+        $accessToken = request()->cookie('sso_tok');
+
+        if (!$accessToken) {
+            return response()->json(['error' => 'No access token'], 401);
+        }
+
+        return response()->json($this->getUserBypass($accessToken));
     }
 
     public function logout(Request $request)
     {
+        Log::info('User logging out', ['user_id' => auth()->id()]);
+
         Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        // Redirect ke SSO Server untuk logout (opsional, untuk mengakhiri sesi di SSO)
-        return redirect('/');
+        // Hapus cookie
+        Cookie::queue(Cookie::forget('sso_tok', '/', env('COOKIE_DOMAIN')));
+        Cookie::queue(Cookie::forget('sso_tok_expired', '/', env('COOKIE_DOMAIN')));
+
+        // Redirect ke SSO logout juga (opsional)
+        // return redirect($this->ssoUrl_ . '/logout');
+
+        return redirect('/login');
     }
 }
