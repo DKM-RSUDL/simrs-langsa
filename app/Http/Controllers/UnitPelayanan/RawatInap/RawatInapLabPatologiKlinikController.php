@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\UnitPelayanan\RawatInap;
 
 use App\Http\Controllers\Controller;
+use App\Models\AsalIGD;
 use App\Models\Dokter;
 use App\Models\DokterInap;
 use App\Models\Kunjungan;
@@ -14,6 +15,7 @@ use App\Models\SegalaOrder;
 use App\Models\SegalaOrderDet;
 use App\Models\Transaksi;
 use App\Models\UnitAsal;
+use App\Services\BaseService;
 use App\Services\CheckResumeService;
 use Exception;
 use Illuminate\Http\Request;
@@ -24,26 +26,22 @@ use Illuminate\Support\Facades\Validator;
 class RawatInapLabPatologiKlinikController extends Controller
 {
     protected $checkResumeService;
+    private $baseService;
+
     public function __construct()
     {
         $this->middleware('can:read unit-pelayanan/rawat-inap');
         $this->checkResumeService = new CheckResumeService();
+        $this->baseService = new BaseService();
     }
 
     public function index(Request $request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
     {
-        $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
-            ->join('transaksi as t', function ($join) {
-                $join->on('kunjungan.kd_pasien', '=', 't.kd_pasien');
-                $join->on('kunjungan.kd_unit', '=', 't.kd_unit');
-                $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
-                $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
-            })
-            ->where('kunjungan.kd_pasien', $kd_pasien)
-            ->where('kunjungan.kd_unit', $kd_unit)
-            ->where('kunjungan.urut_masuk', $urut_masuk)
-            ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
-            ->first();
+        $dataMedis = $this->baseService->getDataMedis($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
+
+        if (!$dataMedis) {
+            abort(404, 'Data not found');
+        }
 
         $DataLapPemeriksaan = LapLisItemPemeriksaan::with('produk')
             ->select('kategori', 'kd_produk')
@@ -136,15 +134,7 @@ class RawatInapLabPatologiKlinikController extends Controller
             return $item;
         });
 
-        if ($dataMedis->pasien && $dataMedis->pasien->tgl_lahir) {
-            $dataMedis->pasien->umur = Carbon::parse($dataMedis->pasien->tgl_lahir)->age;
-        } else {
-            $dataMedis->pasien->umur = 'Tidak Diketahui';
-        }
-
-        if (!$dataMedis) {
-            abort(404, 'Data not found');
-        }
+        $laborIGD = $this->getDataIGD($dataMedis);
 
         return view('unit-pelayanan.rawat-inap.pelayanan.labor.index', compact(
             'dataMedis',
@@ -152,8 +142,47 @@ class RawatInapLabPatologiKlinikController extends Controller
             'dataDokter',
             'dataLabor',
             'dataDiagnosis',
-            'diagnosisList'
+            'diagnosisList',
+            'laborIGD'
         ));
+    }
+
+    private function getDataIGD($dataMedis)
+    {
+        $dataLabor = [];
+
+        // GET ASAL IGD
+        $asalIGD = AsalIGD::where('kd_kasir', $dataMedis->kd_kasir)->where('no_transaksi', $dataMedis->no_transaksi)->first();
+
+        if (!empty($asalIGD)) {
+            $kunjunganIGD = $this->baseService->getDataMedisbyTransaksi($asalIGD->kd_kasir_asal, $asalIGD->no_transaksi_asal);
+
+            // Get main data
+            $dataLabor = SegalaOrder::with(['details', 'laplisitempemeriksaan', 'dokter', 'produk', 'unit'])
+                ->where('kategori', 'LB')
+                ->where('kd_pasien', $kunjunganIGD->kd_pasien)
+                ->where('tgl_masuk', $kunjunganIGD->tgl_transaksi)
+                ->where('urut_masuk', $kunjunganIGD->urut_masuk)
+                ->where('kd_unit', $kunjunganIGD->kd_unit)
+                ->orderBy('tgl_order', 'desc')
+                ->paginate(10);
+
+            // Transform the data to include lab results
+            $dataLabor->getCollection()->transform(function ($item) {
+                $labResults = $this->getLabData(
+                    $item->kd_order,
+                    $item->kd_pasien,
+                    $item->tgl_masuk,
+                    $item->kd_unit,
+                    $item->urut_masuk
+                );
+
+                $item->labResults = $labResults;
+                return $item;
+            });
+        }
+
+        return $dataLabor;
     }
 
     // hasil data raboratorium

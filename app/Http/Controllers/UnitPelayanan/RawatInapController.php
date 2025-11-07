@@ -131,13 +131,6 @@ class RawatInapController extends Controller
         // Use BaseService to include transaksi join so kd_kasir and no_transaksi are available
         $dataMedis = $this->baseService->getDataMedis($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
 
-        // Menghitung umur berdasarkan tgl_lahir jika ada
-        if ($dataMedis->pasien && $dataMedis->pasien->tgl_lahir) {
-            $dataMedis->pasien->umur = Carbon::parse($dataMedis->pasien->tgl_lahir)->age;
-        } else {
-            $dataMedis->pasien->umur = 'Tidak Diketahui';
-        }
-
         if (!$dataMedis) {
             abort(404, 'Data not found');
         }
@@ -339,5 +332,5 @@ class RawatInapController extends Controller
         }
     }
 
-   
+
 }

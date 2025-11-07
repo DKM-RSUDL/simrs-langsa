@@ -37,7 +37,7 @@
         ],
         [
             'icon' => 'agree.png',
-            'label' => 'Konsultasi',
+            'label' => 'Konsultasi Rajal',
             'link' => route('rawat-inap.konsultasi.index', [
                 $dataMedis->kd_unit,
                 $dataMedis->kd_pasien,

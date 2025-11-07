@@ -15,6 +15,10 @@ use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\DB;
+use Barryvdh\DomPDF\Facade\Pdf;
+use App\Models\SjpKunjungan;
+
 
 class TindakanController extends Controller
 {
@@ -146,7 +150,6 @@ class TindakanController extends Controller
         if (!$dataMedis) {
             abort(404, 'Data not found');
         }
-
 
         return view('unit-pelayanan.rawat-jalan.pelayanan.tindakan.index', compact(
             'dataMedis',
@@ -555,6 +558,59 @@ class TindakanController extends Controller
         return $code;
     }
 
+    public function printPDF(Request $request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
+    {
+        // 1. Logika untuk mendapatkan $dataMedis
+        $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
+            ->join('transaksi as t', function ($join) {
+                $join->on('kunjungan.kd_pasien', '=', 't.kd_pasien');
+                $join->on('kunjungan.kd_unit', '=', 't.kd_unit');
+                $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
+                $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
+            })
+            ->where('kunjungan.kd_pasien', $kd_pasien)
+            ->where('kunjungan.kd_unit', $kd_unit)
+            ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
+            ->where('kunjungan.urut_masuk', $urut_masuk)
+            ->first();
+
+        $tindakan = ListTindakanPasien::with(['produk', 'ppa', 'unit'])
+            ->where('kd_pasien', $kd_pasien)
+            ->where('tgl_masuk', $tgl_masuk)
+            ->where('kd_unit', $dataMedis->kd_unit)
+            ->where('urut_masuk', (int)$dataMedis->urut_masuk)
+            ->get();
+
+        if (!$dataMedis) {
+            abort(404, 'Data not found');
+        }
+
+        $resume = RMEResume::where('kd_pasien', $kd_pasien)
+            ->where('kd_unit', $dataMedis->kd_unit)
+            ->where('tgl_masuk', $tgl_masuk)
+            ->where('urut_masuk', (int)$dataMedis->urut_masuk)
+            ->first();
+
+        $sjp = SjpKunjungan::where('KD_PASIEN', $kd_pasien)
+            ->where('KD_UNIT', $dataMedis->kd_unit)
+            ->where('TGL_MASUK', $tgl_masuk)
+            ->where('URUT_MASUK', (int)$dataMedis->urut_masuk)
+            ->first();
+
+        // 5. BUAT PDF
+        $pdf = Pdf::loadView('unit-pelayanan.rawat-jalan.pelayanan.tindakan.print', compact(
+            'dataMedis',
+            'tindakan',
+            'resume',
+            'sjp'
+        ));
+
+        // Atur ukuran kertas
+        $pdf->setPaper('a4', 'portrait');
+
+        // 6. TAMPILKAN PDF DI BROWSER
+        return $pdf->stream('daftar-tindakan-' . $dataMedis->pasien->nama_pasien . '.pdf');
+    }
 
     public function createResume($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
     {

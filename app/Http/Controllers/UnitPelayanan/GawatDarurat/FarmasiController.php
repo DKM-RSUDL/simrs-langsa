@@ -157,8 +157,6 @@ class FarmasiController extends Controller
                 $mrResepDtl->save();
             }
 
-            $this->createResume($kd_pasien, $tgl_masuk, $request->urut_masuk);
-
             DB::commit();
             return response()->json(['message' => 'Resep berhasil disimpan', 'id_mrresep' => $ID_MRRESEP], 200);
         } catch (\Exception $e) {
@@ -291,44 +289,6 @@ class FarmasiController extends Controller
             ->distinct()
             ->orderBy('MR_RESEP.TGL_ORDER', 'desc')
             ->get();
-    }
-
-    public function createResume($kd_pasien, $tgl_masuk, $urut_masuk)
-    {
-        // get resume
-        $resume = RMEResume::where('kd_pasien', $kd_pasien)
-            ->where('kd_unit', 3)
-            ->whereDate('tgl_masuk', $tgl_masuk)
-            ->where('urut_masuk', $urut_masuk)
-            ->first();
-
-        if (empty($resume)) {
-            $resumeData = [
-                'kd_pasien'     => $kd_pasien,
-                'kd_unit'       => 3,
-                'tgl_masuk'     => $tgl_masuk,
-                'urut_masuk'    => $urut_masuk,
-                'status'        => 0
-            ];
-
-            $newResume = RMEResume::create($resumeData);
-            $newResume->refresh();
-
-            // create resume detail
-            $resumeDtlData = [
-                'id_resume'     => $newResume->id
-            ];
-
-            RmeResumeDtl::create($resumeDtlData);
-        } else {
-            // get resume dtl
-            $resumeDtl = RmeResumeDtl::where('id_resume', $resume->id)->first();
-            $resumeDtlData = [
-                'id_resume'     => $resume->id
-            ];
-
-            if (empty($resumeDtl)) RmeResumeDtl::create($resumeDtlData);
-        }
     }
 
     public function rekonsiliasiObat($kd_pasien, $tgl_masuk, Request $request)
