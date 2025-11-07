@@ -74,12 +74,6 @@
             ]),
         ],
         [
-            'validate' => false,
-            'icon' => 'cv.png',
-            'label' => 'Resume',
-            'link' => route('resume.index', [$dataMedis->pasien->kd_pasien, $tglMasukData]),
-        ],
-        [
             'validate' => true,
             'icon' => 'verified_badge.png',
             'label' => 'Resiko Jatuh',
@@ -134,6 +128,12 @@
             'icon' => 'verified_badge.png',
             'label' => 'Audiometri',
             'link' => route('audiometri.index', [$dataMedis->pasien->kd_pasien, $tglMasukData, $dataMedis->urut_masuk]),
+        ],
+        [
+            'validate' => false,
+            'icon' => 'cv.png',
+            'label' => 'Resume',
+            'link' => route('resume.index', [$dataMedis->pasien->kd_pasien, $tglMasukData]),
         ],
     ];
 @endphp
