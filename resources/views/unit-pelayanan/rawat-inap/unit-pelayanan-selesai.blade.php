@@ -127,7 +127,7 @@
             $('#patientUnitDatatable').DataTable({
                 processing: true,
                 serverSide: true,
-                ajax: "{{ route('rawat-inap.unit', $unit->kd_unit) }}",
+                ajax: "{{ route('rawat-inap.unit.selesai', $unit->kd_unit) }}",
                 columns: [{
                         data: 'action',
                         name: 'action',
