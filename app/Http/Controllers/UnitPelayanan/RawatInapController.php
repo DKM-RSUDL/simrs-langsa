@@ -15,6 +15,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\Facades\DataTables;
 use App\Services\BaseService;
+use Illuminate\Support\Facades\Cache;
 
 class RawatInapController extends Controller
 {
@@ -33,7 +34,55 @@ class RawatInapController extends Controller
             ->where('aktif', 1)
             ->get();
 
-        return view('unit-pelayanan.rawat-inap.index', compact('unit'));
+
+        // Ambil semua kd_unit yang akan ditampilkan
+        $unitIds = $unit->pluck('kd_unit')->toArray();
+
+        // Hitung semua pasien aktif untuk semua unit sekaligus
+        $patientCounts = $this->getActivePatientCounts($unitIds);
+
+        return view('unit-pelayanan.rawat-inap.index', compact('unit', 'patientCounts'));
+    }
+
+    private function getActivePatientCounts(array $unitIds)
+    {
+        $cacheKey = "count_active_ranap_multiple_" . md5(implode(',', $unitIds));
+
+        return Cache::remember($cacheKey, 300, function () use ($unitIds) {
+            $counts = Kunjungan::join('transaksi as t', function ($join) {
+                $join->on('kunjungan.kd_pasien', '=', 't.kd_pasien');
+                $join->on('kunjungan.kd_unit', '=', 't.kd_unit');
+                $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
+                $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
+            })
+                ->join('nginap', function ($q) {
+                    $q->on('kunjungan.kd_pasien', '=', 'nginap.kd_pasien');
+                    $q->on('kunjungan.kd_unit', '=', 'nginap.kd_unit');
+                    $q->on('kunjungan.tgl_masuk', '=', 'nginap.tgl_masuk');
+                    $q->on('kunjungan.urut_masuk', '=', 'nginap.urut_masuk');
+                })
+                ->join('pasien_inap as pi', function ($q) {
+                    $q->on('t.kd_kasir', '=', 'pi.kd_kasir');
+                    $q->on('t.no_transaksi', '=', 'pi.no_transaksi');
+                })
+                ->whereIn('nginap.kd_unit_kamar', $unitIds)
+                ->where('nginap.akhir', 1)
+                ->where(function ($q) {
+                    $q->whereNull('kunjungan.status_inap');
+                    $q->orWhere('kunjungan.status_inap', 1);
+                })
+                ->whereNull('kunjungan.tgl_pulang')
+                ->whereNull('kunjungan.jam_pulang')
+                ->whereYear('kunjungan.tgl_masuk', '>=', 2025)
+                ->select('nginap.kd_unit_kamar', DB::raw('COUNT(*) as total'))
+                ->groupBy('nginap.kd_unit_kamar')
+                ->pluck('total', 'kd_unit_kamar');
+
+            // Pastikan semua unit punya value, defaultkan 0 jika tidak ada data
+            return collect($unitIds)->mapWithKeys(function ($unitId) use ($counts) {
+                return [$unitId => $counts->get($unitId, 0)];
+            });
+        });
     }
 
     public function unitPelayanan($kd_unit, Request $request)
