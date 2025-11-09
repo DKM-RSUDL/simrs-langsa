@@ -5,6 +5,7 @@ namespace App\Http\Middleware;
 use App\Models\User;
 use Closure;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Http;
 use Symfony\Component\HttpFoundation\Response;
@@ -64,39 +65,61 @@ class CheckSsoTokenExpiration
             }
 
             return to_route('login')->withErrors(['message' => 'Access token has expired']);
-        } else {
-            // get sso token user
-            $response = Http::withToken($accessToken)->get("$this->ssoUrl_/api/user");
-            $ssoUser = $response->json();
+        }
 
-            if (!empty($ssoUser)) {
 
-                $user = User::updateOrCreate(
-                    ['kd_karyawan' => $ssoUser['kd_karyawan']],
-                    [
-                        'name' => $ssoUser['name'],
-                        'email' => $ssoUser['email'],
-                        'password' => bcrypt('password'),
-                    ]
-                );
+        // get sso token user
+        // Cache user data untuk menghindari HTTP call berulang
+        $cacheKey = "sso_user_{$accessToken}";
 
-                // Set data pengguna ke request
-                $request->attributes->set('user', $ssoUser);
+        $ssoUser = Cache::remember($cacheKey, 300, function () use ($accessToken) {
+            // HTTP call hanya jika belum ada di cache
+            $response = Http::withToken($accessToken)->get("{$this->ssoUrl_}/api/user");
+            return $response->json();
+        });
 
-                // Autentikasi pengguna lokal (opsional, untuk session Laravel)
-                auth()->login($user);
 
-                if (auth()->check()) return $next($request);
-            } else {
-                // hapus session auth
-                if (auth()->check()) {
-                    auth()->logout();
-                    $request->session()->invalidate();
-                    $request->session()->regenerateToken();
-                }
-
-                return to_route('login')->withErrors(['message' => 'SSO User not found']);
+        // SSO user null
+        if (empty($ssoUser)) {
+            // hapus session auth
+            if (auth()->check()) {
+                auth()->logout();
+                $request->session()->invalidate();
+                $request->session()->regenerateToken();
             }
+
+            return to_route('login')->withErrors(['message' => 'SSO User not found']);
+        }
+
+
+        // Cek dulu apakah user sudah ada, hindari updateOrCreate yang tidak perlu
+        $user = User::where('kd_karyawan', $ssoUser['kd_karyawan'])->first();
+
+        if (empty($user)) {
+            // User baru, buat record
+            $user = User::create([
+                'kd_karyawan' => $ssoUser['kd_karyawan'],
+                'name' => $ssoUser['name'],
+                'email' => $ssoUser['email'],
+                'password' => bcrypt('password'), // Hanya dipanggil sekali saat create
+            ]);
+        } else {
+            // User sudah ada, update hanya jika ada perubahan
+            if ($user->name !== $ssoUser['name'] || $user->email !== $ssoUser['email']) {
+                $user->update([
+                    'name' => $ssoUser['name'],
+                    'email' => $ssoUser['email'],
+                ]);
+            }
+        }
+
+        // Set data pengguna ke request
+        $request->attributes->set('user', $ssoUser);
+
+        // Autentikasi pengguna lokal (opsional, untuk session Laravel)
+        // Login hanya jika belum login
+        if (!auth()->check() || auth()->id() !== $user->id) {
+            auth()->login($user);
         }
 
         return $next($request);

@@ -32,7 +32,23 @@ class RawatJalanController extends Controller
             ->where('aktif', 1)
             ->get();
 
-        return view('unit-pelayanan.rawat-jalan.index', compact('unit'));
+
+        $unitIds = $unit->pluck('kd_unit')->toArray();
+
+        $patientCounts = Kunjungan::join('transaksi as t', function ($join) {
+            $join->on('kunjungan.kd_pasien', '=', 't.kd_pasien');
+            $join->on('kunjungan.kd_unit', '=', 't.kd_unit');
+            $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
+            $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
+        })
+            ->whereIn('kunjungan.kd_unit', $unitIds)
+            ->where('t.Dilayani', 0)
+            ->whereDate('kunjungan.tgl_masuk', today())  // Use today() filter
+            ->selectRaw('kunjungan.kd_unit, COUNT(*) as total')
+            ->groupBy('kunjungan.kd_unit')
+            ->pluck('total', 'kd_unit');
+
+        return view('unit-pelayanan.rawat-jalan.index', compact('unit', 'unitIds'));
     }
 
     public function unitPelayanan($kd_unit, Request $request)
@@ -44,7 +60,8 @@ class RawatJalanController extends Controller
         if ($request->ajax()) {
             $data = Kunjungan::with(['pasien', 'dokter', 'customer'])
                 ->where('kd_unit', $kd_unit)
-                ->whereYear('tgl_masuk', '>=', 2025);
+                ->whereDate('kunjungan.tgl_masuk', '>=', now()->subDay()->format('Y-m-d'))
+                ->whereDate('kunjungan.tgl_masuk', '<=', now()->endOfDay()->format('Y-m-d'));
 
             return DataTables::of($data)
                 ->filter(function ($query) use ($request) {
@@ -135,7 +152,8 @@ class RawatJalanController extends Controller
                     $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
                 })
                 ->where('kunjungan.kd_unit', $kd_unit)
-                ->whereYear('kunjungan.tgl_masuk', '>=', 2025)
+                ->whereDate('kunjungan.tgl_masuk', '>=', now()->subDay()->format('Y-m-d'))
+                ->whereDate('kunjungan.tgl_masuk', '<=', now()->endOfDay()->format('Y-m-d'))
                 ->where('t.Dilayani', 0);
 
             return DataTables::of($data)
@@ -204,7 +222,8 @@ class RawatJalanController extends Controller
                     $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
                 })
                 ->where('kunjungan.kd_unit', $kd_unit)
-                ->whereYear('kunjungan.tgl_masuk', '>=', 2025)
+                ->whereDate('kunjungan.tgl_masuk', '>=', now()->subDay()->format('Y-m-d'))
+                ->whereDate('kunjungan.tgl_masuk', '<=', now()->endOfDay()->format('Y-m-d'))
                 ->where('t.Dilayani', 1);
 
             return DataTables::of($data)

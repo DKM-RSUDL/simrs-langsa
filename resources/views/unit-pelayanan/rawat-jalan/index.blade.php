@@ -32,7 +32,7 @@
                                                 <img src="{{ asset('assets/img/Account.png') }}" alt="" width="20"
                                                     class="me-2">
                                                 <small class="text-muted">Pasien: <span
-                                                        class="fw-bold text-dark">{{ countUnfinishedPatientRajal($unt->kd_unit) }}</span></small>
+                                                        class="fw-bold text-dark">{{ $patientCounts[$unt->kd_unit] ?? 0 }}</span></small>
                                             </div>
                                         </div>
                                     </div>
