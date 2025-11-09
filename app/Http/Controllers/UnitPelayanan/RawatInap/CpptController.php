@@ -673,6 +673,8 @@ class CpptController extends Controller
             'skala_nyeri.max' => 'Nilai skala nyeri minimal 10!',
         ];
 
+     
+
         $validatedData = $request->validate([
             'anamnesis' => 'required',
             'skala_nyeri' => 'nullable|min:0|max:10',
