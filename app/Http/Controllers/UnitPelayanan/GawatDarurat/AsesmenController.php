@@ -1188,8 +1188,6 @@ class AsesmenController extends Controller
                 $tindakLanjutDtl->save();
             }
 
-
-
             // Data vital sign untuk disimpan
             $vitalSignStore = [
                 'sistole' => $request->vital_sign['td_sistole'] ? (int)$request->vital_sign['td_sistole'] : null,
@@ -1205,7 +1203,6 @@ class AsesmenController extends Controller
 
             // Simpan vital sign menggunakan service
             $this->asesmenService->store($vitalSignStore, $dataMedis->kd_pasien, $dataMedis->no_transaksi, $dataMedis->kd_kasir);
-
 
 
             // create resume
