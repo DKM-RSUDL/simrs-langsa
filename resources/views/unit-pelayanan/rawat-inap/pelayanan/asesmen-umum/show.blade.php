@@ -1502,7 +1502,7 @@
                                             disabled>
                                         <label class="form-check-label"
                                             for="pemeriksaan_gastrointestinal_bisingusmenurun2">Bising usus
-                                            menurun</label>
+                                            meningkat</label>
                                     </div>
                                     <div class="form-check">
                                         <input class="form-check-input" type="checkbox"

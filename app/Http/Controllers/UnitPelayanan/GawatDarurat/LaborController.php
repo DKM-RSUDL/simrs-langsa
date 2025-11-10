@@ -345,14 +345,6 @@ class LaborController extends Controller
                 ]);
             }
 
-            // Panggil ResumeService
-            $resume = $this->checkResumeService->checkAndCreateResume([
-                'kd_pasien' => $validatedData['kd_pasien'],
-                'kd_unit' => $validatedData['kd_unit'],
-                'tgl_masuk' => $validatedData['tgl_masuk'],
-                'urut_masuk' => $validatedData['urut_masuk']
-            ]);
-
             DB::commit();
 
             return redirect()->route('labor.index', [
@@ -458,14 +450,6 @@ class LaborController extends Controller
                     'kd_dokter' => 381,
                 ]);
             }
-
-            // Panggil ResumeService
-            $resume = $this->checkResumeService->checkAndCreateResume([
-                'kd_pasien' => $validatedData['kd_pasien'],
-                'kd_unit' => $validatedData['kd_unit'],
-                'tgl_masuk' => $validatedData['tgl_masuk'],
-                'urut_masuk' => $validatedData['urut_masuk']
-            ]);
 
             DB::commit();
 

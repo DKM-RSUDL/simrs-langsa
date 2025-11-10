@@ -486,22 +486,6 @@ class AsesmenMedisAnakController extends Controller
 
     public function update(Request $request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $id)
     {
-        $request->validate([
-            'kd_pasien' => 'required',
-            'kd_unit' => 'required',
-            'tgl_masuk' => 'required|date',
-            'urut_masuk' => 'required',
-            'tanggal' => 'required|date',
-            'jam_masuk' => 'required',
-            'sistole' => 'nullable|numeric',
-            'diastole' => 'nullable|numeric',
-            'respirasi' => 'nullable|numeric',
-            'suhu' => 'nullable|numeric',
-            'nadi' => 'nullable|numeric',
-            'riwayat_imunisasi' => 'nullable|array',
-            'riwayat_imunisasi.*' => 'in:hep_b_ii,hep_b_iii,hep_b_iv,hep_b_v,dpt_ii,dpt_iii,bcg,booster_ii,booster_iii,hib_ii,hib_iii,hib_iv,mmr,varilrix,typhim',
-        ]);
-
         DB::beginTransaction();
         try {
 

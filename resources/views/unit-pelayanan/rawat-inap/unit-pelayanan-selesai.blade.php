@@ -2,24 +2,6 @@
 
 @push('css')
     <style>
-        .badge {
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-        }
-
-        .badge-triage-yellow {
-            background-color: #ffeb3b;
-        }
-
-        .badge-triage-red {
-            background-color: #f44336;
-        }
-
-        .badge-triage-green {
-            background-color: #4caf50;
-        }
-
         /* Profile */
         .profile {
             display: flex;
@@ -44,38 +26,6 @@
             font-size: 12px;
             color: #777;
         }
-
-        /* Dropdown submenu (kalau diperlukan) */
-        .dropdown-submenu {
-            position: relative;
-        }
-
-        .dropdown-submenu>.dropdown-menu {
-            top: 0;
-            left: 100%;
-            margin-top: -6px;
-            margin-left: -1px;
-        }
-
-        .dropdown-submenu:hover>.dropdown-menu {
-            display: block;
-        }
-
-        .dropdown-submenu>a.dropdown-toggle {
-            position: relative;
-            padding-right: 30px;
-        }
-
-        .dropdown-submenu>a.dropdown-toggle::after {
-            position: absolute;
-            right: 10px;
-            top: 50%;
-            transform: translateY(-50%);
-        }
-
-        .dropdown-submenu:hover>a.dropdown-toggle::after {
-            transform: translateY(-50%) rotate(-90deg);
-        }
     </style>
 @endpush
 
@@ -86,7 +36,7 @@
                 {{-- Header + kartu ringkas (Bootstrap-only) --}}
                 <div class="row g-3 align-items-start">
                     <div class="col-12 col-md-6">
-                        <h4 class="fw-bold m-0">{{ $unit->nama_unit }} (Pending Masuk)</h4>
+                        <h4 class="fw-bold m-0">{{ $unit->nama_unit }} (Selesai)</h4>
                     </div>
 
                     <div class="col-12 col-md-6">
@@ -155,8 +105,8 @@
                                 <th>Alamat</th>
                                 <th>Jaminan</th>
                                 <th>Status Pelayanan</th>
-                                <th>Keterangan</th>
-                                <th>Tindak Lanjut</th>
+                                {{-- <th>Keterangan</th>
+                                <th>Tindak Lanjut</th> --}}
                             </tr>
                         </thead>
                         <tbody>
@@ -172,13 +122,12 @@
 @push('js')
     <script>
         let pelayananUrl = "{{ url('unit-pelayanan/rawat-inap/unit') }}/";
-        var medisGawatDaruratIndexUrl = "{{ url('unit-pelayanan/gawat-darurat/pelayanan/') }}/";
 
         $(document).ready(function() {
             $('#patientUnitDatatable').DataTable({
                 processing: true,
                 serverSide: true,
-                ajax: "{{ route('rawat-inap.unit.pending', $unit->kd_unit) }}",
+                ajax: "{{ route('rawat-inap.unit.selesai', $unit->kd_unit) }}",
                 columns: [{
                         data: 'action',
                         name: 'action',
@@ -187,15 +136,9 @@
                         render: function(data, type, row) {
                             return `
                                 <div class="d-flex justify-content-center">
-                                    <div class="dropdown ms-1">
-                                        <button class="btn btn-outline-secondary btn-sm" type="button" data-bs-toggle="dropdown">
-                                            <i class="bi bi-three-dots"></i>
-                                        </button>
-                                        <ul class="dropdown-menu shadow-lg">
-                                            <li><a class="dropdown-item m-1" href="${pelayananUrl + row.kd_unit + '/pelayanan/' + row.kd_pasien + '/' + row.tgl_masuk + '/' + row.urut_masuk + '/serah-terima'}">Serah Terima / Handover</a></li>
-                                            <li><a class="dropdown-item m-1" href="#">Batalkan Serah Terima</a></li>
-                                        </ul>
-                                    </div>
+                                    <a href="${pelayananUrl + row.kd_unit + '/pelayanan/' + row.kd_pasien + '/' + row.tgl_masuk + '/' + row.urut_masuk}" class="edit btn btn-primary">
+                                        <i class="ti-pencil-alt"></i>
+                                    </a>
                                 </div>
                             `;
                         }
@@ -248,18 +191,15 @@
                     {
                         data: 'status_pelayanan',
                         name: 'status_pelayanan',
+                        render: function(data, type, row) {
+                            let bgBadge = 'secondary';
+                            if (row.status_inap == 1) bgBadge = 'success';
+                            return `<span class="badge text-bg-${bgBadge}">${row.keterangan_kunjungan ?? '-'}</span>`;
+                        },
                         defaultContent: ''
                     },
-                    {
-                        data: 'keterangan',
-                        name: 'keterangan',
-                        defaultContent: ''
-                    },
-                    {
-                        data: 'tindak_lanjut',
-                        name: 'tindak_lanjut',
-                        defaultContent: ''
-                    },
+                    // { data: 'keterangan', name: 'keterangan', defaultContent: '' },
+                    // { data: 'tindak_lanjut', name: 'tindak_lanjut', defaultContent: '' },
                 ],
                 paging: true,
                 lengthChange: true,
@@ -269,16 +209,6 @@
                 autoWidth: false,
                 responsive: true,
             });
-
-            // Optional hover submenu behavior (kalau ada submenu)
-            $('.dropdown-submenu').hover(
-                function() {
-                    $(this).find('.dropdown-menu').addClass('show');
-                },
-                function() {
-                    $(this).find('.dropdown-menu').removeClass('show');
-                }
-            );
         });
     </script>
 @endpush

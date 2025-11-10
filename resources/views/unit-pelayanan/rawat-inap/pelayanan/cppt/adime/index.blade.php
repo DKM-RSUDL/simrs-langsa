@@ -29,7 +29,7 @@
         </div>
 
         <!-- Main Content -->
-        <div class="col-md-9" >
+        <div class="col-md-9">
             @include('components.navigation-ranap')
 
             <div class="card shadow-sm border-0">
@@ -40,23 +40,24 @@
 
                 <div class="card-body">
                     @php
-                        $urlAction = !empty($isEdit)
-                            ? 'rawat-inap.cppt.update'
-                            : 'rawat-inap.cppt.store';
+                        $urlAction = !empty($isEdit) ? 'rawat-inap.cppt.update' : 'rawat-inap.cppt.store';
                     @endphp
 
-                    <form action="{{ route($urlAction, [
-        $dataMedis->kd_unit,
-        $dataMedis->kd_pasien,
-        date('Y-m-d', strtotime($dataMedis->tgl_masuk)),
-        $dataMedis->urut_masuk
-    ]) }}" id="formAddCppt" method="POST">
+                    <form
+                        action="{{ route($urlAction, [
+                            $dataMedis->kd_unit,
+                            $dataMedis->kd_pasien,
+                            date('Y-m-d', strtotime($dataMedis->tgl_masuk)),
+                            $dataMedis->urut_masuk,
+                        ]) }}"
+                        id="formAddCppt" method="POST">
                         @csrf
                         @method(!empty($isEdit) ? 'PUT' : 'POST')
                         @if (!empty($isEdit))
                             <input type="hidden" id="tgl_cppt" name="tgl_cppt" value="{{ $cppt['tanggal'] }}">
                             <input type="hidden" id="urut_cppt" name="urut_cppt" value="{{ $cppt['urut'] }}">
-                            <input type="hidden" id="urut_total_cppt" name="urut_total_cppt" value="{{ $cppt['urut_total'] }}">
+                            <input type="hidden" id="urut_total_cppt" name="urut_total_cppt"
+                                value="{{ $cppt['urut_total'] }}">
                             <input type="hidden" id="unit_cppt" name="unit_cppt" value="{{ $cppt['kd_unit'] }}">
                             <input type="hidden" id="no_transaksi" name="no_transaksi" value="{{ $cppt['no_transaksi'] }}">
                         @endif
@@ -83,8 +84,7 @@
                                 <!-- Asesmen -->
                                 <div class="mb-3">
                                     <label for="anamnesis" class="fw-bold mb-2">Asesmen</label>
-                                    <textarea class="form-control @error('anamnesis') is-invalid @enderror" name="anamnesis"
-                                        id="anamnesis" rows="3"
+                                    <textarea class="form-control @error('anamnesis') is-invalid @enderror" name="anamnesis" id="anamnesis" rows="3"
                                         required>{{ !empty($isEdit) ? $cppt['anamnesis'] : '' }}</textarea>
                                     @error('anamnesis')
                                         <div class="invalid-feedback">{{ $message }}</div>
@@ -108,28 +108,36 @@
                                                     @foreach ($lastDiagnoses as $index => $item)
                                                         <div class="diag-item-wrap">
                                                             <a href="#" class="fw-bold text-decoration-none">
-                                                                <div class="d-flex align-items-center justify-content-between">
+                                                                <div
+                                                                    class="d-flex align-items-center justify-content-between">
                                                                     <p class="m-0 p-0">{{ $item }}</p>
-                                                                    <span class="btnListDiagnose" data-name="{{ $item }}" data-id="{{ $index }}">
+                                                                    <span class="btnListDiagnose"
+                                                                        data-name="{{ $item }}"
+                                                                        data-id="{{ $index }}">
                                                                         <i class="ti-close text-danger"></i>
                                                                     </span>
                                                                 </div>
                                                             </a>
-                                                            <input type="hidden" name="diagnose_name[]" value="{{ $item }}}">
+                                                            <input type="hidden" name="diagnose_name[]"
+                                                                value="{{ $item }}}">
                                                         </div>
                                                     @endforeach
                                                 @else
-                                                    @foreach ($cppt['cppt_penyakit'] as $index => $item )
-                                                         <div class="diag-item-wrap">
+                                                    @foreach (($cppt['cppt_penyakit'] ?? []) as $index => $item)
+                                                        <div class="diag-item-wrap">
                                                             <a href="#" class="fw-bold text-decoration-none">
-                                                                <div class="d-flex align-items-center justify-content-between">
+                                                                <div
+                                                                    class="d-flex align-items-center justify-content-between">
                                                                     <p class="m-0 p-0">{{ $item['nama_penyakit'] }}</p>
-                                                                    <span class="btnListDiagnose" data-name="{{ $item['nama_penyakit'] }}" data-id="{{ $index }}">
+                                                                    <span class="btnListDiagnose"
+                                                                        data-name="{{ $item['nama_penyakit'] }}"
+                                                                        data-id="{{ $index }}">
                                                                         <i class="ti-close text-danger"></i>
                                                                     </span>
                                                                 </div>
                                                             </a>
-                                                            <input type="hidden" name="diagnose_name[]" value="{{ $item['nama_penyakit'] }}}">
+                                                            <input type="hidden" name="diagnose_name[]"
+                                                                value="{{ $item['nama_penyakit'] }}}">
                                                         </div>
                                                     @endforeach
                                                 @endif
@@ -155,37 +163,54 @@
                                                         $vitalValue = $vitalSignData['nadi'] ?? '';
                                                     } elseif (str_contains($kondisiName, 'sistole')) {
                                                         $vitalValue = $vitalSignData['sistole'] ?? '';
-                                                    } elseif (str_contains($kondisiName, 'diastole') || str_contains($kondisiName, 'distole')) {
+                                                    } elseif (
+                                                        str_contains($kondisiName, 'diastole') ||
+                                                        str_contains($kondisiName, 'distole')
+                                                    ) {
                                                         $vitalValue = $vitalSignData['diastole'] ?? '';
-                                                    } elseif (str_contains($kondisiName, 'tinggi badan') || str_contains($kondisiName, 'tinggi')) {
+                                                    } elseif (
+                                                        str_contains($kondisiName, 'tinggi badan') ||
+                                                        str_contains($kondisiName, 'tinggi')
+                                                    ) {
                                                         $vitalValue = $vitalSignData['tinggi_badan'] ?? '';
-                                                    } elseif (str_contains($kondisiName, 'berat badan') || str_contains($kondisiName, 'berat')) {
+                                                    } elseif (
+                                                        str_contains($kondisiName, 'berat badan') ||
+                                                        str_contains($kondisiName, 'berat')
+                                                    ) {
                                                         $vitalValue = $vitalSignData['berat_badan'] ?? '';
-                                                    } elseif (str_contains($kondisiName, 'respiration rate') || str_contains($kondisiName, 'respiration')) {
+                                                    } elseif (
+                                                        str_contains($kondisiName, 'respiration rate') ||
+                                                        str_contains($kondisiName, 'respiration')
+                                                    ) {
                                                         $vitalValue = $vitalSignData['respiration'] ?? '';
                                                     } elseif (str_contains($kondisiName, 'suhu')) {
                                                         $vitalValue = $vitalSignData['suhu'] ?? '';
-                                                    } elseif (str_contains($kondisiName, 'spo2 dengan') || str_contains($kondisiName, 'golongan darah')) {
+                                                    } elseif (
+                                                        str_contains($kondisiName, 'spo2 dengan') ||
+                                                        str_contains($kondisiName, 'golongan darah')
+                                                    ) {
                                                         $vitalValue = $vitalSignData['spo2_dengan_o2'] ?? '';
-                                                    } elseif (str_contains($kondisiName, 'sensorium') || str_contains($kondisiName, 'sensorium')) {
+                                                    } elseif (
+                                                        str_contains($kondisiName, 'sensorium') ||
+                                                        str_contains($kondisiName, 'sensorium')
+                                                    ) {
                                                         $vitalValue = $vitalSignData['sensorium'] ?? '';
                                                     }
                                                 }
 
                                                 // Flag untuk kondisi yang disembunyikan
-                                                $isHidden = (
+                                                $isHidden =
                                                     str_contains($kondisiName, 'nadi') ||
                                                     str_contains($kondisiName, 'respiration') ||
                                                     str_contains($kondisiName, 'spo2') ||
                                                     str_contains($kondisiName, 'golongan darah') ||
-                                                    str_contains($kondisiName, 'skala nyeri')
-                                                );
+                                                    str_contains($kondisiName, 'skala nyeri');
                                             @endphp
 
-                                            @if($isHidden)
+                                            @if ($isHidden)
                                                 {{-- Hidden input agar tetap submit --}}
-                                                <input type="hidden" name="tanda_vital[]" id="kondisi{{ $item->id_kondisi }}"
-                                                    value="{{ $vitalValue }}">
+                                                <input type="hidden" name="tanda_vital[]"
+                                                    id="kondisi{{ $item->id_kondisi }}" value="{{ $vitalValue }}">
                                             @else
                                                 <div class="col-md-4">
                                                     <label for="kondisi{{ $item->id_kondisi }}" class="form-label">
@@ -207,9 +232,8 @@
                             <div class="col-md-5">
                                 <div class="mb-3">
                                     <label for="pemeriksaan_fisik" class="fw-bold mb-2">Intervensi</label>
-                                    <textarea class="form-control @error('pemeriksaan_fisik') is-invalid @enderror"
-                                        name="pemeriksaan_fisik" id="pemeriksaan_fisik"
-                                        rows="3">{{ !empty($isEdit) ? $cppt['pemeriksaan_fisik'] : '' }}</textarea>
+                                    <textarea class="form-control @error('pemeriksaan_fisik') is-invalid @enderror" name="pemeriksaan_fisik"
+                                        id="pemeriksaan_fisik" rows="3">{{ !empty($isEdit) ? $cppt['pemeriksaan_fisik'] : '' }}</textarea>
                                     @error('pemeriksaan_fisik')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
@@ -217,8 +241,7 @@
 
                                 <div class="mb-3">
                                     <label for="data_objektif" class="fw-bold mb-2">Monitoring</label>
-                                    <textarea class="form-control @error('data_objektif') is-invalid @enderror"
-                                        name="data_objektif" id="data_objektif"
+                                    <textarea class="form-control @error('data_objektif') is-invalid @enderror" name="data_objektif" id="data_objektif"
                                         rows="3">{{ !empty($isEdit) ? $cppt['obyektif'] : '' }}</textarea>
                                     @error('data_objektif')
                                         <div class="invalid-feedback">{{ $message }}</div>
@@ -227,8 +250,8 @@
 
                                 <div class="mb-3">
                                     <label for="planning" class="fw-bold mb-2">Evaluasi</label>
-                                    <textarea class="form-control @error('planning') is-invalid @enderror" name="planning"
-                                        id="planning" rows="3">{{ !empty($isEdit) ? $cppt['planning'] : '' }}</textarea>
+                                    <textarea class="form-control @error('planning') is-invalid @enderror" name="planning" id="planning"
+                                        rows="3">{{ !empty($isEdit) ? $cppt['planning'] : '' }}</textarea>
                                     @error('planning')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
@@ -249,19 +272,23 @@
                                             <!-- Form Input untuk ADD Modal (ID yang benar) -->
                                             <div class="row g-3 mb-4">
                                                 <div class="col-md-4">
-                                                    <label for="{{  !empty($isEdit) ? "edit_instruksi_ppa_search_input" : "instruksi_ppa_search_input" }}" class="form-label fw-bold">
+                                                    <label
+                                                        for="{{ !empty($isEdit) ? 'edit_instruksi_ppa_search_input' : 'instruksi_ppa_search_input' }}"
+                                                        class="form-label fw-bold">
                                                         <i class="bi bi-person-badge text-primary me-1"></i>Pilih PPA
                                                     </label>
                                                     <!-- Custom searchable dropdown untuk ADD -->
                                                     <div class="position-relative">
-                                                        <input type="text" id="{{  !empty($isEdit) ? "edit_instruksi_ppa_search_input" : "instruksi_ppa_search_input" }}"
+                                                        <input type="text"
+                                                            id="{{ !empty($isEdit) ? 'edit_instruksi_ppa_search_input' : 'instruksi_ppa_search_input' }}"
                                                             class="form-control" placeholder="Ketik nama ppa mencari..."
                                                             autocomplete="off">
-                                                        <input type="hidden" id= "{{ !empty($isEdit) ? "edit_instruksi_ppa_selected_value" : "instruksi_ppa_selected_value" }}"
+                                                        <input type="hidden"
+                                                            id= "{{ !empty($isEdit) ? 'edit_instruksi_ppa_selected_value' : 'instruksi_ppa_selected_value' }}"
                                                             name="instruksi_ppa_perawat_select">
 
                                                         <!-- Dropdown list untuk ADD -->
-                                                        <div id="{{!empty($isEdit) ? "edit_instruksi_ppa_dropdown" : "instruksi_ppa_dropdown" }}"
+                                                        <div id="{{ !empty($isEdit) ? 'edit_instruksi_ppa_dropdown' : 'instruksi_ppa_dropdown' }}"
                                                             class="dropdown-menu w-100 shadow-lg"
                                                             style="display: none; max-height: 250px; overflow-y: auto; position: absolute; top: 100%; z-index: 1000;">
                                                             <!-- Items will be generated by JavaScript -->
@@ -273,16 +300,18 @@
                                                 </div>
 
                                                 <div class="col-md-6">
-                                                    <label for=" {{ !empty($isEdit) ? "edit_instruksi_ppa_text_input" : "instruksi_ppa_text_input" }}"  class="form-label fw-bold">
+                                                    <label
+                                                        for=" {{ !empty($isEdit) ? 'edit_instruksi_ppa_text_input' : 'instruksi_ppa_text_input' }}"
+                                                        class="form-label fw-bold">
                                                         <i class="bi bi-card-text text-primary me-1"></i>Instruksi
                                                     </label>
-                                                    <textarea id="{{ !empty($isEdit) ? "edit_instruksi_ppa_text_input" : "instruksi_ppa_text_input" }}"  class="form-control" rows="2"
-                                                        placeholder="Masukkan instruksi untuk PPA yang dipilih..."></textarea>
+                                                    <textarea id="{{ !empty($isEdit) ? 'edit_instruksi_ppa_text_input' : 'instruksi_ppa_text_input' }}"
+                                                        class="form-control" rows="2" placeholder="Masukkan instruksi untuk PPA yang dipilih..."></textarea>
                                                 </div>
 
                                                 <div class="col-md-2 d-flex align-items-end">
                                                     <button type="button" class="btn btn-primary w-100"
-                                                        id={{ !empty($isEdit) ? "edit_instruksi_ppa_tambah_btn":"instruksi_ppa_tambah_btn" }}>
+                                                        id={{ !empty($isEdit) ? 'edit_instruksi_ppa_tambah_btn' : 'instruksi_ppa_tambah_btn' }}>
                                                         <i class="bi bi-plus-square me-1"></i>Tambah
                                                     </button>
                                                 </div>
@@ -296,7 +325,7 @@
                                                         <i class="bi bi-list-check me-2"></i>List Instruksi PPA
                                                     </h6>
                                                     <span class="badge bg-secondary fs-6"
-                                                        id="{{!empty($isEdit) ? "edit_instruksi_ppa_count_badge" : "instruksi_ppa_count_badge" }}">0</span>
+                                                        id="{{ !empty($isEdit) ? 'edit_instruksi_ppa_count_badge' : 'instruksi_ppa_count_badge' }}">0</span>
                                                 </div>
 
                                                 <div class="table-responsive">
@@ -311,13 +340,15 @@
                                                         </thead>
                                                         <tbody
                                                             id="{{ !empty($isEdit) ? 'edit_instruksi_ppa_table_body' : 'instruksi_ppa_table_body' }}">
-                                                            @if(!empty($cppt['instruksi_ppa']))
+                                                            @if (!empty($cppt['instruksi_ppa']))
                                                                 @foreach ($cppt['instruksi_ppa_nama'] as $index => $item)
                                                                     <tr>
-                                                                        <td class="text-center fw-bold">{{ $index + 1 }}</td>
+                                                                        <td class="text-center fw-bold">
+                                                                            {{ $index + 1 }}</td>
                                                                         <td>
                                                                             <div class="d-flex align-items-center">
-                                                                                <i class="bi bi-person-badge text-primary me-2"></i>
+                                                                                <i
+                                                                                    class="bi bi-person-badge text-primary me-2"></i>
                                                                                 <div>
                                                                                     <strong>{{ $item['nama_lengkap'] }}</strong><br>
                                                                                     <small
@@ -326,7 +357,8 @@
                                                                             </div>
                                                                         </td>
                                                                         <td>
-                                                                            <div class="mb-2">{{ $item['instruksi'] }}</div>
+                                                                            <div class="mb-2">{{ $item['instruksi'] }}
+                                                                            </div>
                                                                         </td>
                                                                         <td class="text-center">
                                                                             <button type="button"
@@ -338,10 +370,10 @@
                                                                         </td>
                                                                     </tr>
                                                                 @endforeach
-
                                                             @else
                                                                 <tr>
-                                                                    <td colspan="4" class="text-center text-muted py-5">
+                                                                    <td colspan="4"
+                                                                        class="text-center text-muted py-5">
                                                                         <i
                                                                             class="bi bi-inbox display-4 d-block mb-3 opacity-50"></i>
                                                                         <span class="fs-6">Belum ada instruksi yang
@@ -357,14 +389,16 @@
                                     </div>
 
                                     <!-- Hidden inputs untuk ADD Modal -->
-                                    <div id="{{ !empty($isEdit) ? "edit_instruksi_ppa_hidden_inputs":"instruksi_ppa_hidden_inputs" }}">
-                                        @if(!empty($cppt['instruksi_ppa_nama']))
+                                    <div
+                                        id="{{ !empty($isEdit) ? 'edit_instruksi_ppa_hidden_inputs' : 'instruksi_ppa_hidden_inputs' }}">
+                                        @if (!empty($cppt['instruksi_ppa_nama']))
                                             @foreach ($cppt['instruksi_ppa_nama'] as $item)
                                                 <input type="hidden" name="perawat_kode[]" value="{{ $item['ppa'] }}">
-                                                <input type="hidden" name="perawat_nama[]" value="{{ $item['nama_lengkap'] }}">
-                                                <input type="hidden" name="instruksi_text[]" value="{{ $item['instruksi'] }}">
+                                                <input type="hidden" name="perawat_nama[]"
+                                                    value="{{ $item['nama_lengkap'] }}">
+                                                <input type="hidden" name="instruksi_text[]"
+                                                    value="{{ $item['instruksi'] }}">
                                             @endforeach
-
                                         @endif
                                     </div>
                                     <input type="hidden" id="instruksi_ppa_json_input" name="instruksi" value="">

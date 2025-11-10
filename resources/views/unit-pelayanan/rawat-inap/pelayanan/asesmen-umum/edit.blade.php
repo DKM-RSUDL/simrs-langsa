@@ -1326,7 +1326,7 @@
                                 <input class="form-check-input" type="checkbox" name="pemeriksaan_gastrointestinal[]"
                                     id="pemeriksaan_gastrointestinal_bisingusmenurun2" value="bising_usus_menurun2"
                                     {{ in_array('bising_usus_menurun2', old('pemeriksaan_gastrointestinal', $asesmen->asesmenKetDewasaRanapFisik->pemeriksaan_gastrointestinal ?? [])) ? 'checked' : '' }}>
-                                <label class="form-check-label" for="pemeriksaan_gastrointestinal_bisingusmenurun2">Bising usus menurun</label>
+                                <label class="form-check-label" for="pemeriksaan_gastrointestinal_bisingusmenurun2">Bising usus meningkat</label>
                             </div>
                             <div class="form-check">
                                 <input class="form-check-input" type="checkbox" name="pemeriksaan_gastrointestinal[]"
