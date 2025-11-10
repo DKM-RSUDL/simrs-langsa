@@ -20,7 +20,29 @@
             flex-grow: 1;
             width: 350px;
         }
+
+        #diagnoseList {
+            min-height: 80px;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border: 1px dashed #dee2e6;
+        }
+        .diag-item:hover {
+            background: #f1f3f5 !important;
+        }
+        .drag-handle {
+            cursor: grab;
+            width: 40px;
+        }
+        .drag-handle:active { cursor: grabbing; }
+        .dragging {
+            opacity: 0.5;
+            background: #0d6efd !important;
+            transform: rotate(4deg);
+        }
     </style>
+    
 @endpush
 
 @section('content')
