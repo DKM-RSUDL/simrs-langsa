@@ -18,14 +18,19 @@ use App\Models\RmeAsesmenMedisAnakFisik;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use App\Services\AsesmenService;
+use App\Services\BaseService;
+use Exception;
 
 class AsesmenMedisAnakController extends Controller
 {
     protected $asesmenService;
+    private $baseService;
+
     public function __construct()
     {
         $this->middleware('can:read unit-pelayanan/rawat-inap');
         $this->asesmenService = new AsesmenService();
+        $this->baseService = new BaseService();
     }
 
     private function getDataMedis($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
@@ -53,8 +58,6 @@ class AsesmenMedisAnakController extends Controller
 
         return $dataMedis;
     }
-
-
 
     private function getMasterData($kd_pasien)
     {
@@ -175,12 +178,8 @@ class AsesmenMedisAnakController extends Controller
     {
         DB::beginTransaction();
         try {
-            // Get transaksi data
-            $transaksiData = $this->asesmenService->getTransaksiData($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
-            if (!$transaksiData) {
-                throw new \Exception('Data transaksi tidak ditemukan');
-            }
-
+            $dataMedis = $this->baseService->getDataMedis($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
+            if (empty($dataMedis)) throw new Exception('Data kunjungan tidak ditemukan !');
 
             // 1. Buat record RmeAsesmen
             $asesmen = new RmeAsesmen();
@@ -213,7 +212,7 @@ class AsesmenMedisAnakController extends Controller
             ];
 
             // Simpan vital sign menggunakan service
-            $this->asesmenService->store($vitalSignData, $kd_pasien, $transaksiData->no_transaksi, $transaksiData->kd_kasir);
+            $this->asesmenService->store($vitalSignData, $kd_pasien, $dataMedis->no_transaksi, $dataMedis->kd_kasir);
 
             // Vital signs untuk kolom vital_sign JSON
             $vitalSign = [
@@ -230,8 +229,8 @@ class AsesmenMedisAnakController extends Controller
             // 2. Store ke RME_ASESMEN_MEDIS_ANAK (tabel utama)
             $asesmenMedisAnak = RmeAsesmenMedisAnak::create([
                 'id_asesmen' => $asesmen->id,
-                'kd_kasir' => $transaksiData->kd_kasir,
-                'no_transaksi' => $transaksiData->no_transaksi,
+                'kd_kasir' => $dataMedis->kd_kasir,
+                'no_transaksi' => $dataMedis->no_transaksi,
                 'tanggal' => $request->tanggal ?? date('Y-m-d'),
                 'jam' => $request->jam_masuk ?? date('H:i:s'),
                 'anamnesis' => $request->anamnesis,
@@ -365,33 +364,43 @@ class AsesmenMedisAnakController extends Controller
                 $this->saveDiagnosisToMaster($diagnosisKerja);
             }
 
+            $allDiagnoses = array_merge(($diagnosisBanding ?? []), ($diagnosisKerja ?? []));
+
             // Handle alergi
             $this->handleAlergiData($request, $kd_pasien);
 
-            // Simpan resume
+            // create resume
             $resumeData = [
-                'anamnesis' => $request->anamnesis,
-                'diagnosis' => [],
-                'tindak_lanjut_code' => null,
-                'tindak_lanjut_name' => null,
-                'tgl_kontrol_ulang' => null,
-                'unit_rujuk_internal' => null,
-                'rs_rujuk' => null,
-                'rs_rujuk_bagian' => null,
-                'konpas' => [
-                    'sistole' => ['hasil' => $vitalSignData['sistole']],
-                    'diastole' => ['hasil' => $vitalSignData['diastole']],
-                    'respiration_rate' => ['hasil' => $vitalSignData['respiration']],
-                    'suhu' => ['hasil' => $vitalSignData['suhu']],
-                    'nadi' => ['hasil' => $vitalSignData['nadi']],
-                    'tinggi_badan' => ['hasil' => $vitalSignData['tinggi_badan']],
-                    'berat_badan' => ['hasil' => $vitalSignData['berat_badan']],
-                    'spo2_tanpa_o2' => ['hasil' => $vitalSignData['spo2_tanpa_o2']],
-                    'spo2_dengan_o2' => ['hasil' => $vitalSignData['spo2_dengan_o2']],
-                ],
+                'anamnesis'             => $request->anamnesis,
+                'diagnosis'             => $allDiagnoses,
+
+                'konpas'                =>
+                [
+                    'sistole'   => [
+                        'hasil' => $vitalSignData['sistole'] ?? null
+                    ],
+                    'distole'   => [
+                        'hasil' => $vitalSignData['diastole'] ?? null
+                    ],
+                    'respiration_rate'   => [
+                        'hasil' => $vitalSignData['respiration'] ?? null
+                    ],
+                    'suhu'   => [
+                        'hasil' => $vitalSignData['suhu'] ?? null
+                    ],
+                    'nadi'   => [
+                        'hasil' => $vitalSignData['nadi'] ?? null
+                    ],
+                    'tinggi_badan'   => [
+                        'hasil' => $vitalSignData['tinggi_badan'] ?? null
+                    ],
+                    'berat_badan'   => [
+                        'hasil' => $vitalSignData['berat_badan'] ?? null
+                    ]
+                ]
             ];
 
-            // $this->createResume($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $resumeData);
+            $this->baseService->updateResumeMedis($dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk, $resumeData);
 
             DB::commit();
 
@@ -403,7 +412,7 @@ class AsesmenMedisAnakController extends Controller
                     'urut_masuk' => $urut_masuk
                 ])
                 ->with('success', 'Data asesmen medis anak berhasil disimpan');
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             DB::rollback();
             return back()
                 ->withInput()
@@ -421,8 +430,7 @@ class AsesmenMedisAnakController extends Controller
                 'asesmenMedisAnakFisik',
                 'asesmenMedisAnakDtl'
             ])->findOrFail($id);
-
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $asesmen = RmeAsesmen::findOrFail($id);
         }
 
@@ -458,8 +466,7 @@ class AsesmenMedisAnakController extends Controller
                 'asesmenMedisAnakFisik',
                 'asesmenMedisAnakDtl'
             ])->findOrFail($id);
-
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $asesmen = RmeAsesmen::findOrFail($id);
         }
 
@@ -489,11 +496,8 @@ class AsesmenMedisAnakController extends Controller
         DB::beginTransaction();
         try {
 
-            $transaksiData = $this->getTransaksiData($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
-
-            if (!$transaksiData) {
-                throw new \Exception('Data transaksi tidak ditemukan');
-            }
+            $dataMedis = $this->baseService->getDataMedis($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
+            if (empty($dataMedis)) throw new Exception('Data kunjungan tidak ditemukan !');
 
             // Process JSON data dengan format yang benar
             $riwayatObat = $this->processJsonData($request->riwayat_penggunaan_obat);
@@ -525,28 +529,29 @@ class AsesmenMedisAnakController extends Controller
             // Update main table (RME_ASESMEN_MEDIS_ANAK)
             $asesmen->asesmenMedisAnak()->updateOrCreate(
                 ['id_asesmen' => $asesmen->id],
-        [
-                'tanggal' => $request->tanggal ?? date('Y-m-d'),
-                'jam' => $request->jam_masuk ?? date('H:i:s'),
-                'anamnesis' => $request->anamnesis,
-                'keluhan_utama' => $request->keluhan_utama,
-                'riwayat_penyakit_terdahulu' => $request->riwayat_penyakit_terdahulu,
-                'riwayat_penyakit_keluarga' => $request->riwayat_penyakit_keluarga,
-                'riwayat_penyakit_sekarang' => $request->riwayat_penyakit_sekarang,
-                'riwayat_penggunaan_obat' => $this->formatJsonForDatabase($riwayatObat),
-                'kesadaran' => $request->kesadaran,
-                'vital_sign' => $this->formatJsonForDatabase($vitalSign),
-                'sistole' => $request->sistole,
-                'diastole' => $request->diastole,
-                'nadi' => $request->nadi,
-                'suhu' => $request->suhu,
-                'rr' => $request->rr,
-                'berat_badan' => $request->berat_badan,
-                'tinggi_badan' => $request->tinggi_badan,
-                'user_edit' => Auth::id()
-            ]);
+                [
+                    'tanggal' => $request->tanggal ?? date('Y-m-d'),
+                    'jam' => $request->jam_masuk ?? date('H:i:s'),
+                    'anamnesis' => $request->anamnesis,
+                    'keluhan_utama' => $request->keluhan_utama,
+                    'riwayat_penyakit_terdahulu' => $request->riwayat_penyakit_terdahulu,
+                    'riwayat_penyakit_keluarga' => $request->riwayat_penyakit_keluarga,
+                    'riwayat_penyakit_sekarang' => $request->riwayat_penyakit_sekarang,
+                    'riwayat_penggunaan_obat' => $this->formatJsonForDatabase($riwayatObat),
+                    'kesadaran' => $request->kesadaran,
+                    'vital_sign' => $this->formatJsonForDatabase($vitalSign),
+                    'sistole' => $request->sistole,
+                    'diastole' => $request->diastole,
+                    'nadi' => $request->nadi,
+                    'suhu' => $request->suhu,
+                    'rr' => $request->rr,
+                    'berat_badan' => $request->berat_badan,
+                    'tinggi_badan' => $request->tinggi_badan,
+                    'user_edit' => Auth::id()
+                ]
+            );
             $asesmen->asesmenMedisAnakFisik()->updateOrCreate(
-            ['id_asesmen' => $asesmen->id],
+                ['id_asesmen' => $asesmen->id],
                 [
                     'kepala_bentuk' => $request->kepala_bentuk,
                     'kepala_uub' => $request->kepala_uub,
@@ -606,7 +611,7 @@ class AsesmenMedisAnakController extends Controller
 
             // Update or create detail data - DIPERBAIKI
             $asesmen->asesmenMedisAnakDtl()->updateOrCreate(
-            ['id_asesmen' => $asesmen->id],
+                ['id_asesmen' => $asesmen->id],
                 [
                     // Riwayat Prenatal - PERBAIKI LOGIKA RADIO
                     'lama_kehamilan' => $request->lama_kehamilan,
@@ -687,6 +692,57 @@ class AsesmenMedisAnakController extends Controller
             // Handle alergi
             $this->handleAlergiData($request, $kd_pasien);
 
+            $allDiagnoses = array_merge(($diagnosisBanding ?? []), ($diagnosisKerja ?? []));
+
+            // Process vital signs untuk disimpan via service
+            $vitalSignData = [
+                'sistole' => $request->sistole ? (int)$request->sistole : null,
+                'diastole' => $request->diastole ? (int)$request->diastole : null,
+                'nadi' => $request->nadi ? (int)$request->nadi : null,
+                'respiration' => $request->rr ? (int)$request->rr : null,
+                'suhu' => $request->suhu ? (float)$request->suhu : null,
+                'spo2_tanpa_o2' => null, // Tidak ada di pediatric, set null
+                'spo2_dengan_o2' => null, // Tidak ada di pediatric, set null
+                'tinggi_badan' => $request->tinggi_badan ? (int)$request->tinggi_badan : null,
+                'berat_badan' => $request->berat_badan ? (int)$request->berat_badan : null,
+            ];
+
+            // Simpan vital sign menggunakan service
+            $this->asesmenService->store($vitalSignData, $kd_pasien, $dataMedis->no_transaksi, $dataMedis->kd_kasir);
+
+            // create resume
+            $resumeData = [
+                'anamnesis'             => $request->anamnesis,
+                'diagnosis'             => $allDiagnoses,
+
+                'konpas'                =>
+                [
+                    'sistole'   => [
+                        'hasil' => $vitalSignData['sistole'] ?? null
+                    ],
+                    'distole'   => [
+                        'hasil' => $vitalSignData['diastole'] ?? null
+                    ],
+                    'respiration_rate'   => [
+                        'hasil' => $vitalSignData['respiration'] ?? null
+                    ],
+                    'suhu'   => [
+                        'hasil' => $vitalSignData['suhu'] ?? null
+                    ],
+                    'nadi'   => [
+                        'hasil' => $vitalSignData['nadi'] ?? null
+                    ],
+                    'tinggi_badan'   => [
+                        'hasil' => $vitalSignData['tinggi_badan'] ?? null
+                    ],
+                    'berat_badan'   => [
+                        'hasil' => $vitalSignData['berat_badan'] ?? null
+                    ]
+                ]
+            ];
+
+            $this->baseService->updateResumeMedis($dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk, $resumeData);
+
             DB::commit();
 
             return redirect()
@@ -697,8 +753,7 @@ class AsesmenMedisAnakController extends Controller
                     'urut_masuk' => $urut_masuk
                 ])
                 ->with('success', 'Data asesmen medis anak berhasil diperbarui');
-
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             DB::rollback();
             return back()
                 ->withInput()
@@ -714,14 +769,14 @@ class AsesmenMedisAnakController extends Controller
             $transaksiData = $this->getTransaksiData($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
 
             if (!$transaksiData) {
-                throw new \Exception('Data transaksi tidak ditemukan');
+                throw new Exception('Data transaksi tidak ditemukan');
             }
 
             // Find existing asesmen
             $asesmenMedisAnak = RmeAsesmenMedisAnak::where('no_transaksi', $transaksiData->no_transaksi)->first();
 
             if (!$asesmenMedisAnak) {
-                throw new \Exception('Data asesmen tidak ditemukan');
+                throw new Exception('Data asesmen tidak ditemukan');
             }
 
             // Delete related data first
@@ -749,8 +804,7 @@ class AsesmenMedisAnakController extends Controller
                     'urut_masuk' => $urut_masuk
                 ])
                 ->with('success', 'Data asesmen medis anak berhasil dihapus');
-
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             DB::rollback();
             return back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
         }
