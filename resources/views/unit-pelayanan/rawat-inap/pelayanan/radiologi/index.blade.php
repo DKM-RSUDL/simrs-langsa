@@ -1,11 +1,6 @@
 @extends('layouts.administrator.master')
 @push('css')
     <link rel="stylesheet" href="{{ asset('assets/css/MedisGawatDaruratController.css') }}">
-    <style>
-        /* .header-background {
-                                                                background-image: url("{{ asset('assets/img/background_gawat_darurat.png') }}");
-                                                            } */
-    </style>
 @endpush
 
 @section('content')
@@ -171,6 +166,71 @@
                                                         class="btn btn-sm {{ $rad->status_order == 1 ? 'btn-delete-rad' : '' }}"
                                                         data-kode="{{ intval($rad->kd_order) }}"><i
                                                             class="bi bi-x-circle {{ $rad->status_order == 1 ? 'text-danger' : 'text-secondary' }}"></i></button>
+                                                </td>
+                                            </tr>
+                                        @endforeach
+
+                                        {{-- IGD orders (tandai dengan (IGD)) --}}
+                                        @foreach ($radiologiIGD as $radIGD)
+                                            <tr>
+                                                <td>{{ (int) $radIGD->kd_order }} <span class="text-danger">(IGD)</span>
+                                                </td>
+                                                <td>
+                                                    @php
+                                                        $namaPemeriksaan = '';
+
+                                                        foreach ($radIGD->details as $dtl) {
+                                                            $namaPemeriksaan .= empty($namaPemeriksaan)
+                                                                ? $dtl->produk->deskripsi
+                                                                : ', ' . $dtl->produk->deskripsi;
+                                                        }
+                                                    @endphp
+
+                                                    {{ $namaPemeriksaan }}
+                                                </td>
+                                                <td>{{ date('d M Y H:i', strtotime($radIGD->tgl_order)) }}</td>
+                                                <td></td>
+                                                <td>{{ $radIGD->dokter->nama_lengkap . '(' . $radIGD->unit->nama_unit . ')' }}
+                                                </td>
+                                                <td align="middle">
+                                                    {{ $radIGD->cyto == 1 ? 'Cito' : 'Non Cito' }}
+                                                </td>
+                                                <td>
+                                                    @php
+                                                        $statusOrder = $radIGD->status_order;
+                                                        $statusLabel = '';
+
+                                                        if ($statusOrder == 0) {
+                                                            $statusLabel = '<span class="text-warning">Diproses</span>';
+                                                        }
+                                                        if ($statusOrder == 1) {
+                                                            $statusLabel =
+                                                                '<span class="text-secondary">Diorder</span>';
+                                                        }
+                                                        if ($statusOrder == 2) {
+                                                            $statusLabel = '<span class="text-success">Selesai</span>';
+                                                        }
+                                                    @endphp
+
+                                                    {!! $statusLabel !!}
+                                                </td>
+
+                                                <td>
+                                                    @if ($radIGD->status_order == 1)
+                                                        <button class="btn btn-sm btn-secondary btn-edit-rad"
+                                                            data-kode="{{ intval($radIGD->kd_order) }}"
+                                                            data-bs-target="#editRadiologiModal"><i
+                                                                class="ti-pencil"></i></button>
+                                                    @else
+                                                        <button class="btn btn-sm btn-primary btn-show-rad"
+                                                            data-kode="{{ intval($radIGD->kd_order) }}"
+                                                            data-bs-target="#showRadiologiModal"><i
+                                                                class="ti-eye"></i></button>
+                                                    @endif
+                                                    <button
+                                                        class="btn btn-sm {{ $radIGD->status_order == 1 ? 'btn-delete-rad' : '' }}"
+                                                        data-kode="{{ intval($radIGD->kd_order) }}"><i
+                                                            class="bi bi-x-circle {{ $radIGD->status_order == 1 ? 'text-danger' : 'text-secondary' }}"></i></button>
                                                 </td>
                                             </tr>
                                         @endforeach

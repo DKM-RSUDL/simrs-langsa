@@ -45,12 +45,12 @@ class RadiologiController extends Controller
         // get tab
         $tabContent = $request->query('tab');
 
-        $laborIGD = $this->getDataIGD($dataMedis);
+        $radiologiIGD = $this->getDataIGD($dataMedis);
 
         if ($tabContent == 'hasil') {
-            return $this->hasilTabs($kd_unit, $dataMedis, $laborIGD, $request);
+            return $this->hasilTabs($kd_unit, $dataMedis, $radiologiIGD, $request);
         } else {
-            return $this->orderTabs($kd_unit, $dataMedis, $laborIGD, $request);
+            return $this->orderTabs($kd_unit, $dataMedis, $radiologiIGD, $request);
         }
     }
 
@@ -351,7 +351,7 @@ class RadiologiController extends Controller
         }
     }
 
-    private function orderTabs($kd_unit, $dataMedis, $laborIGD, $request)
+    private function orderTabs($kd_unit, $dataMedis, $radiologiIGD, $request)
     {
         $dokter = DokterInap::with(['dokter', 'unit'])
             ->where('kd_unit', '1001')
@@ -437,11 +437,12 @@ class RadiologiController extends Controller
             'dataMedis'     => $dataMedis,
             'dokter'        => $dokter,
             'produk'        => $produk,
-            'radList'       => $radList
+            'radList'       => $radList,
+            'radiologiIGD'  => $radiologiIGD
         ]);
     }
 
-    private function hasilTabs($kd_unit, $dataMedis, $laborIGD, $request)
+    private function hasilTabs($kd_unit, $dataMedis, $radiologiIGD, $request)
     {
         // Dapatkan data radiologi menggunakan query yang lengkap
         $dataRadiologi = $this->getRadiologyResults(
