@@ -21,6 +21,9 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Barryvdh\DomPDF\Facade\Pdf;
+use App\Models\SjpKunjungan;
+use App\Models\RMEResume;
 
 class AsesmenMedisController extends Controller
 {
@@ -506,5 +509,79 @@ class AsesmenMedisController extends Controller
         $asesmen = RmeHdAsesmen::find($id);
 
         return view('unit-pelayanan.hemodialisa.pelayanan.asesmen.medis.show', compact('dataMedis', 'itemFisik', 'rmeMasterDiagnosis', 'dokterPelaksana', 'dokter', 'perawat', 'asesmen'));
+    }
+    public function printPDF($kd_pasien, $tgl_masuk, $urut_masuk, $id)
+    {
+        // 1. Ambil Data Medis (dari fungsi show)
+        $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
+            ->join('transaksi as t', function ($join) {
+                $join->on('kunjungan.kd_pasien', '=', 't.kd_pasien');
+                $join->on('kunjungan.kd_unit', '=', 't.kd_unit');
+                $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
+                $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
+            })
+            ->where('kunjungan.kd_unit', $this->kdUnitDef_)
+            ->where('kunjungan.kd_pasien', $kd_pasien)
+            ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
+            ->where('kunjungan.urut_masuk', $urut_masuk)
+            ->first();
+
+        if (!$dataMedis) {
+            abort(404, 'Data not found');
+        }
+        if ($dataMedis->pasien && $dataMedis->pasien->tgl_lahir) {
+            $dataMedis->pasien->umur = Carbon::parse($dataMedis->pasien->tgl_lahir)->age;
+        } else {
+            $dataMedis->pasien->umur = 'Tidak Diketahui';
+        }
+
+        // 2. Ambil Data Asesmen dengan SEMUA relasinya
+        // (Kita pakai $id dari URL untuk mencari asesmen yang spesifik)
+        // ...
+        $asesmen = RmeHdAsesmen::with([
+            'fisik',
+            'pemeriksaanFisik.itemFisik', // <-- PASTIKAN NAMANYA INI
+            'penunjang',
+            'deskripsi',
+            'evaluasi.dokterPelaksana',
+            'evaluasi.dokterDpjp',
+            'evaluasi.perawatPelaksana'
+        ])->find($id);
+        // ...
+
+
+
+        if (!$asesmen) {
+            abort(404, 'Data Asesmen not found');
+        }
+
+
+        // 4. AMBIL DATA DIAGNOSIS (Cara Model)
+        $resume = RMEResume::where('kd_pasien', $kd_pasien)
+            ->where('kd_unit', $dataMedis->kd_unit)
+            ->where('tgl_masuk', $tgl_masuk)
+            ->where('urut_masuk', (int)$dataMedis->urut_masuk)
+            ->first();
+
+        // 5. AMBIL DATA NO SJP (Cara Model)
+        $sjp = SjpKunjungan::where('KD_PASIEN', $kd_pasien)
+            ->where('KD_UNIT', $dataMedis->kd_unit)
+            ->where('TGL_MASUK', $tgl_masuk)
+            ->where('URUT_MASUK', (int)$dataMedis->urut_masuk)
+            ->first();
+
+        // 6. BUAT PDF
+        $pdf = Pdf::loadView('unit-pelayanan.hemodialisa.pelayanan.asesmen.medis.print', compact(
+            'dataMedis',
+            'asesmen',
+            'resume',
+            'sjp'
+        ));
+
+        // Atur ukuran kertas
+        $pdf->setPaper('a4', 'portrait');
+
+        // 7. TAMPILKAN PDF DI BROWSER
+        return $pdf->stream('asesmen-medis-hd-' . $dataMedis->pasien->nama_pasien . '.pdf');
     }
 }
