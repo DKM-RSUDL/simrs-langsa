@@ -765,7 +765,7 @@
                                                             <thead class="table-light">
                                                                 <tr>
                                                                     <th>No</th>
-                                                                    <th>Diagnosis Banding</th>
+                                                                    <th>Diagnosis Kerja</th>
                                                                 </tr>
                                                             </thead>
                                                             <tbody>

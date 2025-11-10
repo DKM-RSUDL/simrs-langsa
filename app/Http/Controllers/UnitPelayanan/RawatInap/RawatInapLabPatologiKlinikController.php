@@ -266,7 +266,7 @@ class RawatInapLabPatologiKlinikController extends Controller
         return view('unit-pelayanan.rawat-inap.pelayanan.labor.createpk', compact('kd_pasien', 'tgl_masuk'));
     }
 
-    public function store(Request $request)
+    public function store(Request $request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
     {
         $validatedData = $request->validate([
             // Field untuk SegalaOrder
@@ -328,23 +328,18 @@ class RawatInapLabPatologiKlinikController extends Controller
                 }
             }
 
-            $tglOrder = \Carbon\Carbon::parse($validatedData['tgl_order'])->format('Ymd');
+            $tglOrder = (int) Carbon::parse($tgl_masuk)->format('Ymd');
+
             $lastOrder = SegalaOrder::where('kd_order', 'like', $tglOrder . '%')
                 ->orderBy('kd_order', 'desc')
                 ->first();
 
             $newOrderNumber = $lastOrder ? ((int)substr($lastOrder->kd_order, -4)) + 1 : 1;
             $newOrderNumber = str_pad((string)$newOrderNumber, 4, '0', STR_PAD_LEFT);
-            $newKdOrder = $tglOrder . $newOrderNumber;
-
-            while (SegalaOrder::where('kd_order', $newKdOrder)->exists()) {
-                $newOrderNumber = (int)$newOrderNumber + 1;
-                $newOrderNumber = str_pad((string)$newOrderNumber, 4, '0', STR_PAD_LEFT);
-                $newKdOrder = $tglOrder . $newOrderNumber;
-            }
+            $newOrderNumber = $tglOrder . $newOrderNumber;
 
             $segalaOrder = SegalaOrder::create([
-                'kd_order' => $newKdOrder,
+                'kd_order' => $newOrderNumber,
                 'kd_pasien' => $validatedData['kd_pasien'],
                 'kd_unit' => $validatedData['kd_unit'],
                 'tgl_masuk' => $validatedData['tgl_masuk'],
@@ -365,7 +360,7 @@ class RawatInapLabPatologiKlinikController extends Controller
 
             foreach ($validatedData['kd_produk'] as $index => $kd_produk) {
                 $segalaOrderDet = SegalaOrderDet::create([
-                    'kd_order' => $newKdOrder,
+                    'kd_order' => $newOrderNumber,
                     'urut' => $validatedData['urut'][$index],
                     'kd_produk' => $kd_produk,
                     'jumlah' => 1,

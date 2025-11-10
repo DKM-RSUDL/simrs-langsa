@@ -80,29 +80,30 @@
                                 <div class="bg-light p-3 border rounded">
                                     <div class="row">
                                         <div class="col-6 col-md-4">
-                                            <small>TD:
-                                                {{ $dataResume->konpas['sistole']['hasil'] ?? '__' }} /
-                                                {{ $dataResume->konpas['distole']['hasil'] ?? '__' }} mmHg
+                                            <small>
+                                                TD: {{ $vitalSign->sistole ?? '__' }} / {{ $vitalSign->diastole ?? '__' }} mmHg
                                             </small><br>
-                                            <small>Temp: {{ $dataResume->konpas['suhu']['hasil'] ?? '__' }}
-                                                C</small><br>
+                                            <small>
+                                                Temp: {{ $vitalSign->suhu ?? '__' }} °C
+                                            </small><br>
                                         </div>
+
                                         <div class="col-6 col-md-4">
                                             <small>
-                                                RR:
-                                                {{ $dataResume->konpas['respiration_rate']['hasil'] ?? '__' }}
-                                                x/mnt
+                                                RR: {{ $vitalSign->respiration ?? '__' }} x/mnt
                                             </small><br>
-                                            <small>Resp: {{ $dataResume->konpas['nadi']['hasil'] ?? '__' }}
-                                                x/mnt</small>
+                                            <small>
+                                                Nadi: {{ $vitalSign->nadi ?? '__' }} x/mnt
+                                            </small>
                                         </div>
+
                                         <div class="col-6 col-md-4">
-                                            <small>TB:
-                                                {{ $dataResume->konpas['tinggi_badan']['hasil'] ?? '__' }}
-                                                M</small><br>
-                                            <small>BB:
-                                                {{ $dataResume->konpas['berat_badan']['hasil'] ?? '__' }}
-                                                Kg</small><br>
+                                            <small>
+                                                TB: {{ $vitalSign->tinggi_badan ?? '__' }} cm
+                                            </small><br>
+                                            <small>
+                                                BB: {{ $vitalSign->berat_badan ?? '__' }} kg
+                                            </small><br>
                                         </div>
                                     </div>
 

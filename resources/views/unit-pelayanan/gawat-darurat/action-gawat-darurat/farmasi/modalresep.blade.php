@@ -56,9 +56,9 @@
                                                     <label for="dokterPengirim" class="form-label">Dokter Pengirim</label>
                                                     <select class="form-select" id="dokterPengirim" name="kd_dokter" @cannot('is-admin') disabled @endcannot>
                                                         @foreach ($dokters as $dok)
-                                                            <option value="{{ $dok->dokter->kd_dokter }}"
-                                                                @selected($dok->dokter->kd_karyawan == auth()->user()->kd_karyawan)>
-                                                                {{ $dok->dokter->nama_lengkap }}
+                                                            <option value="{{ $dok->kd_dokter }}"
+                                                                @selected($dok->kd_karyawan == auth()->user()->kd_karyawan)>
+                                                                {{ $dok->nama_lengkap }}
                                                             </option>
                                                         @endforeach
                                                     </select>

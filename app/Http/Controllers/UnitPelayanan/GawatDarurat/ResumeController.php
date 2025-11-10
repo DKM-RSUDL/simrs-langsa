@@ -189,6 +189,8 @@ class ResumeController extends Controller
             $dataMedis->pasien->umur = 'Tidak Diketahui';
         }
 
+      
+
         return view(
             'unit-pelayanan.gawat-darurat.action-gawat-darurat.resume.index',
             compact(
@@ -202,7 +204,8 @@ class ResumeController extends Controller
                 'kodeICD9',
                 'dataResume',
                 'dataGet',
-                'unitKonsul'
+                'unitKonsul',
+                'vitalSign'
             )
         );
     }

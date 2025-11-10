@@ -82,7 +82,6 @@
 
 @push('js')
     <script>
-        jQuery.noConflict();
         (function($) {
             $(document).ready(function() {
                 $(document).on('click', '.btn-delete-rekonsiliasi', function() {

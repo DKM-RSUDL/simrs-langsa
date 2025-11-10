@@ -88,7 +88,6 @@ class FarmasiController extends Controller
             ->leftJoin('APT_OBAT', 'MR_RESEPDTL.KD_PRD', '=', 'APT_OBAT.KD_PRD')
             ->leftJoin('APT_SATUAN', 'APT_OBAT.KD_SATUAN', '=', 'APT_SATUAN.KD_SATUAN')
             ->where('MR_RESEP.KD_PASIEN', $kd_pasien)
-            ->whereDate('MR_RESEP.TGL_ORDER', $today)
             ->where('MR_RESEP.RESEP_PULANG', 1)
             ->select(
                 'MR_RESEP.TGL_ORDER',
