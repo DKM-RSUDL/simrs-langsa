@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Dokter;
+use App\Models\HrdKaryawan;
 
 class RmeHdAsesmenMedisEvaluasi extends Model
 {
@@ -21,4 +23,21 @@ class RmeHdAsesmenMedisEvaluasi extends Model
         'diagnosis_banding',
         'diagnosis_kerja',
     ];
+    public function dokterPelaksana()
+    {
+        // Relasi ini mengambil data Dokter berdasarkan kolom 'dokter_pelaksana'
+        return $this->belongsTo(Dokter::class, 'dokter_pelaksana', 'kd_dokter');
+    }
+
+    public function dokterDpjp()
+    {
+        // Relasi ini mengambil data Dokter berdasarkan kolom 'dpjp'
+        return $this->belongsTo(Dokter::class, 'dpjp', 'kd_dokter');
+    }
+
+    public function perawatPelaksana()
+    {
+        // Relasi ini mengambil data Karyawan (Perawat) berdasarkan kolom 'perawat'
+        return $this->belongsTo(HrdKaryawan::class, 'perawat', 'kd_karyawan');
+    }
 }

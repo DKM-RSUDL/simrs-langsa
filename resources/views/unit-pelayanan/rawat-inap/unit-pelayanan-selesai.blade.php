@@ -104,7 +104,7 @@
                                 <th>No RM / Reg</th>
                                 <th>Alamat</th>
                                 <th>Jaminan</th>
-                                <th>Status Pelayanan</th>
+                                {{-- <th>Status Pelayanan</th> --}}
                                 {{-- <th>Keterangan</th>
                                 <th>Tindak Lanjut</th> --}}
                             </tr>
@@ -127,7 +127,7 @@
             $('#patientUnitDatatable').DataTable({
                 processing: true,
                 serverSide: true,
-                ajax: "{{ route('rawat-inap.unit', $unit->kd_unit) }}",
+                ajax: "{{ route('rawat-inap.unit.selesai', $unit->kd_unit) }}",
                 columns: [{
                         data: 'action',
                         name: 'action',
@@ -188,16 +188,16 @@
                         name: 'jaminan',
                         defaultContent: ''
                     },
-                    {
-                        data: 'status_pelayanan',
-                        name: 'status_pelayanan',
-                        render: function(data, type, row) {
-                            let bgBadge = 'secondary';
-                            if (row.status_inap == 1) bgBadge = 'success';
-                            return `<span class="badge text-bg-${bgBadge}">${row.keterangan_kunjungan ?? '-'}</span>`;
-                        },
-                        defaultContent: ''
-                    },
+                    // {
+                    //     data: 'status_pelayanan',
+                    //     name: 'status_pelayanan',
+                    //     render: function(data, type, row) {
+                    //         let bgBadge = 'secondary';
+                    //         if (row.status_inap == 1) bgBadge = 'success';
+                    //         return `<span class="badge text-bg-${bgBadge}">${row.keterangan_kunjungan ?? '-'}</span>`;
+                    //     },
+                    //     defaultContent: ''
+                    // },
                     // { data: 'keterangan', name: 'keterangan', defaultContent: '' },
                     // { data: 'tindak_lanjut', name: 'tindak_lanjut', defaultContent: '' },
                 ],

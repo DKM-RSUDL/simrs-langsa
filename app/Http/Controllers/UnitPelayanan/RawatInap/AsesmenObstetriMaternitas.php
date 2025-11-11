@@ -19,6 +19,7 @@ use App\Models\RMEResume;
 use App\Models\RmeResumeDtl;
 use App\Models\SatsetPrognosis;
 use App\Services\AsesmenService;
+use App\Services\BaseService;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -31,12 +32,13 @@ use Illuminate\Support\Facades\Storage;
 class AsesmenObstetriMaternitas extends Controller
 {
     protected $asesmenService;
+    private $baseService;
 
     public function __construct()
     {
         $this->middleware('can:read unit-pelayanan/rawat-inap');
-        $this->asesmenService = new AsesmenService;
-
+        $this->asesmenService = new AsesmenService();
+        $this->baseService = new BaseService();
     }
 
     public function index(Request $request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
@@ -81,7 +83,7 @@ class AsesmenObstetriMaternitas extends Controller
             $dataMedis->riwayat_alergi = [];
         }
 
-        $dataMedis->waktu_masuk = Carbon::parse($dataMedis->TGL_MASUK.' '.$dataMedis->JAM_MASUK)->format('Y-m-d H:i:s');
+        $dataMedis->waktu_masuk = Carbon::parse($dataMedis->TGL_MASUK . ' ' . $dataMedis->JAM_MASUK)->format('Y-m-d H:i:s');
         // Get latest vital signs data for the patient
         $vitalSignsData = $this->asesmenService->getLatestVitalSignsByPatient($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
 
@@ -105,6 +107,9 @@ class AsesmenObstetriMaternitas extends Controller
         DB::beginTransaction();
 
         try {
+            $dataMedis = $this->baseService->getDataMedis($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
+            if (empty($dataMedis)) throw new Exception("Data kunjungan tidak ditemukan");
+
             $asesmen = new RmeAsesmen;
             $asesmen->kd_pasien = $request->kd_pasien;
             $asesmen->kd_unit = $request->kd_unit;
@@ -123,22 +128,6 @@ class AsesmenObstetriMaternitas extends Controller
                 'hasil_pemeriksaan_penunjang_histopatology' => 'nullable|mimes:pdf,jpg,jpeg,png|max:2048',
             ]);
 
-            // 2. Data vital sign untuk disimpan
-            $vitalSignData = [
-                'sistole' => $request->tekanan_darah_sistole ? (int) $request->tekanan_darah_sistole : null,
-                'diastole' => $request->tekanan_darah_diastole ? (int) $request->tekanan_darah_diastole : null,
-                'nadi' => $request->nadi ? (int) $request->nadi : null,
-                'respiration' => $request->pernafasan ? (int) $request->pernafasan : null,
-                'suhu' => $request->suhu ? (float) $request->suhu : null,
-                'tinggi_badan' => $request->antropometri_tinggi_badan ? (int) $request->antropometri_tinggi_badan : null,
-                'berat_badan' => $request->antropometr_berat_badan ? (int) $request->antropometr_berat_badan : null,
-            ];
-
-            // 3. Ambil transaksi terakhir untuk pasien
-            $lastTransaction = $this->asesmenService->getTransaksiData($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
-
-            // 4. Simpan vital sign menggunakan service
-            $this->asesmenService->store($vitalSignData, $kd_pasien, $lastTransaction->no_transaksi, $lastTransaction->kd_kasir);
 
             // 5. Simpan ke tabel obstetri (contoh)
             $asesmenObstetri = new RmeAsesmenObstetri;
@@ -242,8 +231,8 @@ class AsesmenObstetriMaternitas extends Controller
             $itemFisik = MrItemFisik::all();
             foreach ($itemFisik as $item) {
                 $itemName = strtolower($item->nama);
-                $isNormal = $request->has($item->id.'-normal') ? 1 : 0;
-                $keterangan = $request->input($item->id.'_keterangan');
+                $isNormal = $request->has($item->id . '-normal') ? 1 : 0;
+                $keterangan = $request->input($item->id . '_keterangan');
                 if ($isNormal) {
                     $keterangan = '';
                 }
@@ -393,42 +382,52 @@ class AsesmenObstetriMaternitas extends Controller
             saveToColumn($edukasiList, 'edukasi');
             saveToColumn($kolaborasiList, 'kolaborasi');
 
-            // RESUME
-            $resumeData = [
-                'anamnesis' => $request->anamnesis_anamnesis,
-                'diagnosis' => [],
-                'tindak_lanjut_code' => null,
-                'tindak_lanjut_name' => null,
-                'tgl_kontrol_ulang' => null,
-                'unit_rujuk_internal' => null,
-                'rs_rujuk' => null,
-                'rs_rujuk_bagian' => null,
-                'konpas' => [
-                    'sistole' => [
-                        'hasil' => $request->tekanan_darah_sistole,
-                    ],
-                    'distole' => [
-                        'hasil' => $request->tekanan_darah_diastole,
-                    ],
-                    'respiration_rate' => [
-                        'hasil' => '',
-                    ],
-                    'suhu' => [
-                        'hasil' => $request->suhu,
-                    ],
-                    'nadi' => [
-                        'hasil' => '',
-                    ],
-                    'tinggi_badan' => [
-                        'hasil' => $request->antropometri_tinggi_badan,
-                    ],
-                    'berat_badan' => [
-                        'hasil' => $request->antropometr_berat_badan,
-                    ],
-                ],
+            // 2. Data vital sign untuk disimpan
+            $vitalSignData = [
+                'sistole' => $request->tekanan_darah_sistole ? (int) $request->tekanan_darah_sistole : null,
+                'diastole' => $request->tekanan_darah_diastole ? (int) $request->tekanan_darah_diastole : null,
+                'nadi' => $request->nadi ? (int) $request->nadi : null,
+                'respiration' => $request->pernafasan ? (int) $request->pernafasan : null,
+                'suhu' => $request->suhu ? (float) $request->suhu : null,
+                'tinggi_badan' => $request->antropometri_tinggi_badan ? (int) $request->antropometri_tinggi_badan : null,
+                'berat_badan' => $request->antropometr_berat_badan ? (int) $request->antropometr_berat_badan : null,
             ];
 
-            $this->createResume($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $resumeData);
+            // 4. Simpan vital sign menggunakan service
+            $this->asesmenService->store($vitalSignData, $kd_pasien, $dataMedis->no_transaksi, $dataMedis->kd_kasir);
+
+            // create resume
+            $resumeData = [
+                'anamnesis'             => $request->anamnesis_anamnesis,
+                'diagnosis'             => $allDiagnoses,
+
+                'konpas'                =>
+                [
+                    'sistole'   => [
+                        'hasil' => $vitalSignData['sistole'] ?? null
+                    ],
+                    'distole'   => [
+                        'hasil' => $vitalSignData['diastole'] ?? null
+                    ],
+                    'respiration_rate'   => [
+                        'hasil' => $vitalSignData['respiration'] ?? null
+                    ],
+                    'suhu'   => [
+                        'hasil' => $vitalSignData['suhu'] ?? null
+                    ],
+                    'nadi'   => [
+                        'hasil' => $vitalSignData['nadi'] ?? null
+                    ],
+                    'tinggi_badan'   => [
+                        'hasil' => $vitalSignData['tinggi_badan'] ?? null
+                    ],
+                    'berat_badan'   => [
+                        'hasil' => $vitalSignData['berat_badan'] ?? null
+                    ]
+                ]
+            ];
+
+            $this->baseService->updateResumeMedis($dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk, $resumeData);
 
             DB::commit();
 
@@ -480,9 +479,9 @@ class AsesmenObstetriMaternitas extends Controller
                 'itemFisik'
             ));
         } catch (ModelNotFoundException $e) {
-            return back()->with('error', 'Data tidak ditemukan. Detail: '.$e->getMessage());
+            return back()->with('error', 'Data tidak ditemukan. Detail: ' . $e->getMessage());
         } catch (\Exception $e) {
-            return back()->with('error', 'Terjadi kesalahan: '.$e->getMessage());
+            return back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
         }
     }
 
@@ -527,7 +526,7 @@ class AsesmenObstetriMaternitas extends Controller
         } catch (\Exception $e) {
             // Tangani error dan berikan pesan yang jelas
             return redirect()->back()
-                ->with('error', 'Terjadi kesalahan saat mengambil data asesmen: '.$e->getMessage());
+                ->with('error', 'Terjadi kesalahan saat mengambil data asesmen: ' . $e->getMessage());
         }
     }
 
@@ -537,6 +536,9 @@ class AsesmenObstetriMaternitas extends Controller
 
 
         try {
+            $dataMedis = $this->baseService->getDataMedis($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
+            if (empty($dataMedis)) throw new Exception("Data kunjungan tidak ditemukan");
+
             $asesmen = RmeAsesmen::findOrFail($id);
             $asesmen->kd_pasien = $request->kd_pasien;
             $asesmen->kd_unit = $request->kd_unit;
@@ -595,7 +597,7 @@ class AsesmenObstetriMaternitas extends Controller
                             return $path;
                         }
                     } catch (\Exception $e) {
-                        throw new \Exception("Gagal mengupload file {$fieldName}: ".$e->getMessage());
+                        throw new \Exception("Gagal mengupload file {$fieldName}: " . $e->getMessage());
                     }
                 }
 
@@ -674,8 +676,8 @@ class AsesmenObstetriMaternitas extends Controller
             $itemFisik = MrItemFisik::all();
             foreach ($itemFisik as $item) {
                 $itemName = strtolower($item->nama);
-                $isNormal = $request->has($item->id.'-normal') ? 1 : 0;
-                $keterangan = $request->input($item->id.'_keterangan');
+                $isNormal = $request->has($item->id . '-normal') ? 1 : 0;
+                $keterangan = $request->input($item->id . '_keterangan');
                 if ($isNormal) {
                     $keterangan = '';
                 }
@@ -803,42 +805,52 @@ class AsesmenObstetriMaternitas extends Controller
             saveToColumnUpdate($edukasiList, 'edukasi');
             saveToColumnUpdate($kolaborasiList, 'kolaborasi');
 
-            // RESUME
-            $resumeData = [
-                'anamnesis' => $request->anamnesis_anamnesis,
-                'diagnosis' => [],
-                'tindak_lanjut_code' => null,
-                'tindak_lanjut_name' => null,
-                'tgl_kontrol_ulang' => null,
-                'unit_rujuk_internal' => null,
-                'rs_rujuk' => null,
-                'rs_rujuk_bagian' => null,
-                'konpas' => [
-                    'sistole' => [
-                        'hasil' => $request->tekanan_darah_sistole,
-                    ],
-                    'distole' => [
-                        'hasil' => $request->tekanan_darah_diastole,
-                    ],
-                    'respiration_rate' => [
-                        'hasil' => '',
-                    ],
-                    'suhu' => [
-                        'hasil' => $request->suhu,
-                    ],
-                    'nadi' => [
-                        'hasil' => '',
-                    ],
-                    'tinggi_badan' => [
-                        'hasil' => $request->antropometri_tinggi_badan,
-                    ],
-                    'berat_badan' => [
-                        'hasil' => $request->antropometr_berat_badan,
-                    ],
-                ],
+            // 2. Data vital sign untuk disimpan
+            $vitalSignData = [
+                'sistole' => $request->tekanan_darah_sistole ? (int) $request->tekanan_darah_sistole : null,
+                'diastole' => $request->tekanan_darah_diastole ? (int) $request->tekanan_darah_diastole : null,
+                'nadi' => $request->nadi ? (int) $request->nadi : null,
+                'respiration' => $request->pernafasan ? (int) $request->pernafasan : null,
+                'suhu' => $request->suhu ? (float) $request->suhu : null,
+                'tinggi_badan' => $request->antropometri_tinggi_badan ? (int) $request->antropometri_tinggi_badan : null,
+                'berat_badan' => $request->antropometr_berat_badan ? (int) $request->antropometr_berat_badan : null,
             ];
 
-            $this->createResume($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $resumeData);
+            // 4. Simpan vital sign menggunakan service
+            $this->asesmenService->store($vitalSignData, $kd_pasien, $dataMedis->no_transaksi, $dataMedis->kd_kasir);
+
+            // create resume
+            $resumeData = [
+                'anamnesis'             => $request->anamnesis_anamnesis,
+                'diagnosis'             => $allDiagnoses,
+
+                'konpas'                =>
+                [
+                    'sistole'   => [
+                        'hasil' => $vitalSignData['sistole'] ?? null
+                    ],
+                    'distole'   => [
+                        'hasil' => $vitalSignData['diastole'] ?? null
+                    ],
+                    'respiration_rate'   => [
+                        'hasil' => $vitalSignData['respiration'] ?? null
+                    ],
+                    'suhu'   => [
+                        'hasil' => $vitalSignData['suhu'] ?? null
+                    ],
+                    'nadi'   => [
+                        'hasil' => $vitalSignData['nadi'] ?? null
+                    ],
+                    'tinggi_badan'   => [
+                        'hasil' => $vitalSignData['tinggi_badan'] ?? null
+                    ],
+                    'berat_badan'   => [
+                        'hasil' => $vitalSignData['berat_badan'] ?? null
+                    ]
+                ]
+            ];
+
+            $this->baseService->updateResumeMedis($dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk, $resumeData);
 
             DB::commit();
 
@@ -851,7 +863,7 @@ class AsesmenObstetriMaternitas extends Controller
         } catch (\Exception $e) {
             DB::rollBack();
 
-            return back()->with('error', 'Terjadi kesalahan: '.$e->getMessage());
+            return back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
         }
     }
 
@@ -937,68 +949,8 @@ class AsesmenObstetriMaternitas extends Controller
 
             return response()->json([
                 'status' => 'error',
-                'message' => 'Gagal generate PDF: '.$e->getMessage(),
+                'message' => 'Gagal generate PDF: ' . $e->getMessage(),
             ], 500);
-        }
-    }
-
-    public function createResume($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $data)
-    {
-        // get resume
-        $resume = RMEResume::where('kd_pasien', $kd_pasien)
-            ->where('kd_unit', $kd_unit)
-            ->whereDate('tgl_masuk', $tgl_masuk)
-            ->where('urut_masuk', $urut_masuk)
-            ->first();
-
-        $resumeDtlData = [
-            'tindak_lanjut_code' => $data['tindak_lanjut_code'],
-            'tindak_lanjut_name' => $data['tindak_lanjut_name'],
-            'tgl_kontrol_ulang' => $data['tgl_kontrol_ulang'],
-            'unit_rujuk_internal' => $data['unit_rujuk_internal'],
-            'rs_rujuk' => $data['rs_rujuk'],
-            'rs_rujuk_bagian' => $data['rs_rujuk_bagian'],
-        ];
-
-        if (empty($resume)) {
-            $resumeData = [
-                'kd_pasien' => $kd_pasien,
-                'kd_unit' => $kd_unit,
-                'tgl_masuk' => $tgl_masuk,
-                'urut_masuk' => $urut_masuk,
-                'anamnesis' => $data['anamnesis'],
-                'konpas' => $data['konpas'],
-                'diagnosis' => $data['diagnosis'],
-                'status' => 0,
-            ];
-
-            $newResume = RMEResume::create($resumeData);
-            $newResume->refresh();
-
-            // create resume detail
-            $resumeDtlData['id_resume'] = $newResume->id;
-            RmeResumeDtl::create($resumeDtlData);
-        } else {
-            $resume->anamnesis = $data['anamnesis'];
-            $resume->konpas = $data['konpas'];
-            $resume->diagnosis = $data['diagnosis'];
-            $resume->save();
-
-            // get resume dtl
-            $resumeDtl = RmeResumeDtl::where('id_resume', $resume->id)->first();
-            $resumeDtlData['id_resume'] = $resume->id;
-
-            if (empty($resumeDtl)) {
-                RmeResumeDtl::create($resumeDtlData);
-            } else {
-                $resumeDtl->tindak_lanjut_code = $data['tindak_lanjut_code'];
-                $resumeDtl->tindak_lanjut_name = $data['tindak_lanjut_name'];
-                $resumeDtl->tgl_kontrol_ulang = $data['tgl_kontrol_ulang'];
-                $resumeDtl->unit_rujuk_internal = $data['unit_rujuk_internal'];
-                $resumeDtl->rs_rujuk = $data['rs_rujuk'];
-                $resumeDtl->rs_rujuk_bagian = $data['rs_rujuk_bagian'];
-                $resumeDtl->save();
-            }
         }
     }
 }

@@ -57,6 +57,13 @@
                                     data-bs-target="#rekonsiliasi" type="button" role="tab"
                                     aria-controls="rekonsiliasi" aria-selected="false">Rekonsiliasi Obat</button>
                             </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="e-resep-obat-pulang-tab" data-bs-toggle="tab"
+                                    data-bs-target="#e-resep-obat-pulang" type="button" role="tab"
+                                    aria-controls="e-resep-obat-pulang" aria-selected="false">
+                                    E-Resep Obat Pulang
+                                </button>
+                            </li>
                         </ul>
 
                         {{-- Tab Content --}}
@@ -73,6 +80,11 @@
                             <div class="tab-pane fade" id="rekonsiliasi" role="tabpanel" aria-labelledby="rekonsiliasi-tab">
                                 {{-- TAB 3. buatlah list disini --}}
                                 @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.farmasi.tabsrekonsiliasi')
+                            </div>
+                            <div class="tab-pane fade" id="e-resep-obat-pulang" role="tabpanel"
+                                aria-labelledby="e-resep-obat-pulang-tab">
+                                {{-- TAB 4. E-Resep Obat Pulang --}}
+                                @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.farmasi.tab-eresep-pulang.resep')
                             </div>
                         </div>
                     </div>
@@ -1189,7 +1201,7 @@
                             if (query === cariObat.val().trim()) {
                                 obatList.html(
                                     '<div class="list-group-item text-danger">Terjadi kesalahan saat mencari obat</div>'
-                                    );
+                                );
                             }
                         }
                     });

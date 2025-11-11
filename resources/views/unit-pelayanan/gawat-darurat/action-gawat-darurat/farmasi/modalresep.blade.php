@@ -53,17 +53,20 @@
                                             <div class="tab-pane fade show active" id="nonracikan" role="tabpanel"
                                                 aria-labelledby="nonracikan-tab">
                                                 <div class="mb-3">
-                                                    <label for="dokterPengirim" class="form-label">Dokter Pengirim</label>
-                                                    <select class="form-select" id="dokterPengirim" name="kd_dokter" @cannot('is-admin') disabled @endcannot>
+                                                    <label for="dokterPengirim" class="form-label">Dokter
+                                                        Pengirim</label>
+                                                    <select class="form-select select2" id="dokterPengirim"
+                                                        name="kd_dokter" @cannot('is-admin') disabled @endcannot>
                                                         @foreach ($dokters as $dok)
-                                                            <option value="{{ $dok->dokter->kd_dokter }}"
-                                                                @selected($dok->dokter->kd_karyawan == auth()->user()->kd_karyawan)>
-                                                                {{ $dok->dokter->nama_lengkap }}
+                                                            <option value="{{ data_get($dok, 'dokter.kd_dokter') }}"
+                                                                @selected(data_get($dok, 'dokter.kd_karyawan') == auth()->user()->kd_karyawan)>
+                                                                {{ data_get($dok, 'dokter.nama') }}
                                                             </option>
                                                         @endforeach
                                                     </select>
                                                     @cannot('is-admin')
-                                                        <input type="hidden" name="kd_dokter" value="{{ auth()->user()->kd_karyawan }}">
+                                                        <input type="hidden" name="kd_dokter"
+                                                            value="{{ auth()->user()->kd_karyawan }}">
                                                     @endcannot
                                                 </div>
 
@@ -107,19 +110,22 @@
                                                         <div class="col-md-7">
                                                             <label for="frekuensi"
                                                                 class="form-label">Frekuensi/interval</label>
-                                                            <input type="text" class="form-control" id="frekuensi" placeholder="3 x 1 hari">
+                                                            <input type="text" class="form-control" id="frekuensi"
+                                                                placeholder="3 x 1 hari">
                                                         </div>
                                                     </div>
 
                                                     <div class="row mb-3">
                                                         <div class="col-md-6">
                                                             <label for="dosis" class="form-label">Dosis</label>
-                                                                <input type="text" class="form-control" id="dosis">
+                                                            <input type="text" class="form-control"
+                                                                id="dosis">
                                                         </div>
                                                         <div class="col md-6">
                                                             <label for="satuanObat" class="form-label">Satuan
                                                                 Obat</label>
-                                                            <input type="text" id="satuanObat" class="form-control">
+                                                            <input type="text" id="satuanObat"
+                                                                class="form-control">
                                                             <input type="text" id="hargaObat"
                                                                 class="form-control d-none" readonly></input>
                                                         </div>
@@ -349,5 +355,70 @@
             document.getElementById('tanggalOrder').value = getCurrentDate();
             document.getElementById('jamOrder').value = getCurrentTime();
         });
+    </script>
+
+    <script>
+        // Serialize daftar obat rows into obat[] inputs before submitting the form
+        (function() {
+            const resepForm = document.getElementById('resepForm');
+            const daftarBody = document.getElementById('daftarObatBody');
+            // container for generated hidden inputs
+            let obatHiddenContainer = document.getElementById('obatHiddenInputs');
+            if (!obatHiddenContainer) {
+                obatHiddenContainer = document.createElement('div');
+                obatHiddenContainer.id = 'obatHiddenInputs';
+                obatHiddenContainer.style.display = 'none';
+                resepForm.appendChild(obatHiddenContainer);
+            }
+
+            resepForm.addEventListener('submit', function(e) {
+                // clear previous generated inputs
+                obatHiddenContainer.innerHTML = '';
+
+                const rows = Array.from(daftarBody.querySelectorAll('tr'));
+                if (rows.length === 0) {
+                    // No obat rows -> let validation on server handle it, but we can warn user
+                    // Uncomment the next two lines to prevent submit when empty.
+                    // e.preventDefault();
+                    // return alert('Silakan tambahkan minimal 1 obat ke daftar sebelum order.');
+                }
+
+                rows.forEach((row, idx) => {
+                    // Prefer data attributes for values (data-id, data-satuan etc), otherwise read cell text
+                    const getCellText = (n) => (row.cells[n] ? row.cells[n].textContent.trim() : '');
+
+                    const id = row.dataset.id || (row.querySelector('.item-id') ? row.querySelector(
+                        '.item-id').value : getCellText(2));
+                    const dosis = row.dataset.dosis || getCellText(3);
+                    const frekuensi = row.dataset.frekuensi || getCellText(4);
+                    const jumlah = row.dataset.jumlah || getCellText(5);
+                    const sebelumSesudah = row.dataset.sebelum || getCellText(6);
+                    const aturanTambahan = row.dataset.ket || getCellText(7);
+                    const satuan = row.dataset.satuan || (row.querySelector('.item-satuan') ? row
+                        .querySelector('.item-satuan').value : '');
+
+                    // create hidden inputs with names matching controller expectation: obat[i][field]
+                    const fields = {
+                        id,
+                        frekuensi,
+                        jumlah,
+                        dosis,
+                        sebelumSesudahMakan: sebelumSesudah,
+                        aturanTambahan,
+                        satuan
+                    };
+
+                    Object.keys(fields).forEach((field) => {
+                        const input = document.createElement('input');
+                        input.type = 'hidden';
+                        input.name = `obat[${idx}][${field}]`;
+                        input.value = fields[field] ?? '';
+                        obatHiddenContainer.appendChild(input);
+                    });
+                });
+
+                // Let the form submit normally
+            });
+        })();
     </script>
 @endpush

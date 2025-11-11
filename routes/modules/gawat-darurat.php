@@ -186,6 +186,11 @@ Route::prefix('gawat-darurat')->group(function () {
                     Route::controller(GawatDaruratFarmasiController::class)->group(function () {
                         Route::get('/', 'index')->name('.index');
                         Route::post('/', 'store')->name('.store');
+
+                        // E-Resep Pulang
+                        Route::post('/e-resep-pulang', 'storeEResepPulang')->name('.storeEResepPulang');
+                        Route::get('/order-obat-e-resep-pulang', 'orderObatEResepPulang')->name('.order-obat-e-resep-pulang');
+
                         Route::get('/search-obat', 'searchObat')->name('.searchObat');
                         Route::post('/rekonsiliasiObat', 'rekonsiliasiObat')->name('.rekonsiliasiObat');
                         Route::delete('/rekonsiliasi-obat-delete', 'rekonsiliasiObatDelete')->name('.rekonsiliasiObatDelete');

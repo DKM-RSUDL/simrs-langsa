@@ -32,22 +32,27 @@ use App\Models\RmeMenjalar;
 use App\Models\RMEResume;
 use App\Models\RmeResumeDtl;
 use App\Services\AsesmenService;
+use App\Services\BaseService;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\Services\CheckResumeService;
+use Exception;
+
 class AsesmenKepAnakController extends Controller
 {
     protected $asesmenService;
     protected $checkResumeService;
+    private $baseService;
 
     public function __construct()
     {
         $this->middleware('can:read unit-pelayanan/rawat-inap');
         $this->asesmenService = new AsesmenService;
         $this->checkResumeService = new CheckResumeService();
+        $this->baseService = new BaseService();
     }
 
     public function index(Request $request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
@@ -90,7 +95,7 @@ class AsesmenKepAnakController extends Controller
             $dataMedis->pasien->umur = 'Tidak Diketahui';
         }
 
-        $dataMedis->waktu_masuk = Carbon::parse($dataMedis->TGL_MASUK.' '.$dataMedis->JAM_MASUK)->format('Y-m-d H:i:s');
+        $dataMedis->waktu_masuk = Carbon::parse($dataMedis->TGL_MASUK . ' ' . $dataMedis->JAM_MASUK)->format('Y-m-d H:i:s');
 
         // Get latest vital signs data for the patient
         $vitalSignsData = $this->asesmenService->getLatestVitalSignsByPatient($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
@@ -122,10 +127,14 @@ class AsesmenKepAnakController extends Controller
         DB::beginTransaction();
 
         try {
+
+            $dataMedis = $this->baseService->getDataMedis($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
+            if (empty($dataMedis)) throw new Exception('Data kunjungan tidak ditemukan !');
+
             // Ambil tanggal dan jam dari form
             $tanggal = $request->tanggal_masuk;
             $jam = $request->jam_masuk;
-            $waktu_asesmen = $tanggal.' '.$jam;
+            $waktu_asesmen = $tanggal . ' ' . $jam;
 
             // Simpan ke table RmeAsesmen
             $dataAsesmen = new RmeAsesmen;
@@ -147,16 +156,14 @@ class AsesmenKepAnakController extends Controller
                 'nadi' => $request->nadi ? (int) $request->nadi : null,
                 'respiration' => $request->nafas ? (int) $request->nafas : null,
                 'suhu' => $request->suhu ? (float) $request->suhu : null,
-                'spo2_tanpa_o2' => $request->sao2 ?? $request->saturasi_o2_tanpa ? (int) ($request->sao2 ?? $request->saturasi_o2_tanpa) : null,
-                'spo2_dengan_o2' => $request->sao2 ?? $request->saturasi_o2_dengan ? (int) ($request->sao2 ?? $request->saturasi_o2_dengan) : null,
-                'tinggi_badan' => $request->tb ?? $request->tinggi_badan ? (int) ($request->tb ?? $request->tinggi_badan) : null,
-                'berat_badan' => $request->bb ?? $request->berat_badan ? (int) ($request->bb ?? $request->berat_badan) : null,
+                'spo2_tanpa_o2' => $request->saturasi_o2_tanpa ? (int) $request->saturasi_o2_tanpa : null,
+                'spo2_dengan_o2' => $request->saturasi_o2_dengan ? (int) $request->saturasi_o2_dengan : null,
+                'tinggi_badan' => $request->tinggi_badan ? (int) $request->tinggi_badan : null,
+                'berat_badan' => $request->berat_badan ? (int) $request->berat_badan : null,
             ];
 
-            $lastTransaction = $this->asesmenService->getTransaksiData($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
-
             // Simpan vital sign menggunakan service
-            $this->asesmenService->store($vitalSignData, $kd_pasien, $lastTransaction->no_transaksi, $lastTransaction->kd_kasir);
+            $this->asesmenService->store($vitalSignData, $kd_pasien, $dataMedis->no_transaksi, $dataMedis->kd_kasir);
 
             // Simpan ke tabel RmeAsesmenKepAnak
             $asesmenKepAnak = new RmeAsesmenKepAnak;
@@ -261,8 +268,8 @@ class AsesmenKepAnakController extends Controller
             // Simpan ke table RmePemeriksaanFisik
             $itemFisik = MrItemFisik::all();
             foreach ($itemFisik as $item) {
-                $isNormal = $request->has($item->id.'-normal') ? 1 : 0;
-                $keterangan = $request->input($item->id.'_keterangan');
+                $isNormal = $request->has($item->id . '-normal') ? 1 : 0;
+                $keterangan = $request->input($item->id . '_keterangan');
                 if ($isNormal) {
                     $keterangan = '';
                 }
@@ -519,7 +526,7 @@ class AsesmenKepAnakController extends Controller
                     (int) $request->input('norton_aktivitas') +
                     (int) $request->input('norton_mobilitas') +
                     (int) $request->input('inkontinensia');
-                    
+
                 $decubitusData->decubitus_kesimpulan = $this->getRiskConclusion($totalScore);
             } else {
                 // Braden
@@ -581,26 +588,6 @@ class AsesmenKepAnakController extends Controller
             $asesmenRencana->kesimpulan = $request->kesimpulan_planing;
             $asesmenRencana->save();
 
-            // Simpan ke table RmeAsesmenKepAnakResume
-            $resumeData = [
-                'anamnesis' => $request->anamnesis,
-                'diagnosis' => [],
-                'tindak_lanjut_code' => null,
-                'tindak_lanjut_name' => null,
-                'tgl_kontrol_ulang' => null,
-                'unit_rujuk_internal' => null,
-                'rs_rujuk' => null,
-                'rs_rujuk_bagian' => null,
-                'konpas' => [
-                    'sistole' => ['hasil' => $vitalSignData['sistole']],
-                    'diastole' => ['hasil' => $vitalSignData['diastole']],
-                    'respiration_rate' => ['hasil' => $vitalSignData['respiration']],
-                    'suhu' => ['hasil' => $vitalSignData['suhu']],
-                    'nadi' => ['hasil' => $vitalSignData['nadi']],
-                    'tinggi_badan' => ['hasil' => $vitalSignData['tinggi_badan']],
-                    'berat_badan' => ['hasil' => $vitalSignData['berat_badan']],
-                ],
-            ];
 
             // Simpan ke tabel RmeAsesmenKepAnakKeperawatan
             $asesmenKepAnakKeperawatan = RmeAsesmenKepAnakKeperawatan::create([
@@ -625,13 +612,38 @@ class AsesmenKepAnakController extends Controller
                 'rencana_gangguan_integritas_kulit' => $request->rencana_gangguan_integritas_kulit ?? [],
             ]);
 
-            // Panggil ResumeService
-            $resume = $this->checkResumeService->checkAndCreateResume([
-                'kd_pasien' => $kd_pasien,
-                'kd_unit' => $kd_unit,
-                'tgl_masuk' => $tgl_masuk,
-                'urut_masuk' => $urut_masuk
-            ]);
+
+            // create resume
+            $resumeData = [
+                'anamnesis'             => $request->anamnesis,
+
+                'konpas'                =>
+                [
+                    'sistole'   => [
+                        'hasil' => $vitalSignData['sistole'] ?? null
+                    ],
+                    'distole'   => [
+                        'hasil' => $vitalSignData['diastole'] ?? null
+                    ],
+                    'respiration_rate'   => [
+                        'hasil' => $vitalSignData['respiration'] ?? null
+                    ],
+                    'suhu'   => [
+                        'hasil' => $vitalSignData['suhu'] ?? null
+                    ],
+                    'nadi'   => [
+                        'hasil' => $vitalSignData['nadi'] ?? null
+                    ],
+                    'tinggi_badan'   => [
+                        'hasil' => $vitalSignData['tinggi_badan'] ?? null
+                    ],
+                    'berat_badan'   => [
+                        'hasil' => $vitalSignData['berat_badan'] ?? null
+                    ]
+                ]
+            ];
+
+            $this->baseService->updateResumeMedis($dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk, $resumeData);
 
             DB::commit();
 
@@ -641,10 +653,10 @@ class AsesmenKepAnakController extends Controller
                 'tgl_masuk' => $tgl_masuk,
                 'urut_masuk' => $urut_masuk,
             ])->with('success', 'Data asesmen anak berhasil disimpan');
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             DB::rollBack();
 
-            return back()->with('error', 'Terjadi kesalahan: '.$e->getMessage());
+            return back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
         }
     }
 
@@ -703,7 +715,7 @@ class AsesmenKepAnakController extends Controller
                 $dataMedis->riwayat_alergi = [];
             }
 
-            $dataMedis->waktu_masuk = Carbon::parse($dataMedis->TGL_MASUK.' '.$dataMedis->JAM_MASUK)->format('Y-m-d H:i:s');
+            $dataMedis->waktu_masuk = Carbon::parse($dataMedis->TGL_MASUK . ' ' . $dataMedis->JAM_MASUK)->format('Y-m-d H:i:s');
 
             // Mengambil data tambahan yang diperlukan untuk tampilan
             $itemFisik = MrItemFisik::orderby('urut')->get();
@@ -734,9 +746,9 @@ class AsesmenKepAnakController extends Controller
                 'user'
             ));
         } catch (ModelNotFoundException $e) {
-            return back()->with('error', 'Data tidak ditemukan. Detail: '.$e->getMessage());
-        } catch (\Exception $e) {
-            return back()->with('error', 'Terjadi kesalahan: '.$e->getMessage());
+            return back()->with('error', 'Data tidak ditemukan. Detail: ' . $e->getMessage());
+        } catch (Exception $e) {
+            return back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
         }
     }
 
@@ -785,7 +797,7 @@ class AsesmenKepAnakController extends Controller
                 $dataMedis->pasien->umur = 'Tidak Diketahui';
             }
 
-            $dataMedis->waktu_masuk = Carbon::parse($dataMedis->TGL_MASUK.' '.$dataMedis->JAM_MASUK)->format('Y-m-d H:i:s');
+            $dataMedis->waktu_masuk = Carbon::parse($dataMedis->TGL_MASUK . ' ' . $dataMedis->JAM_MASUK)->format('Y-m-d H:i:s');
 
             if ($asesmen->rmeAsesmenKepAnak && $asesmen->rmeAsesmenKepAnak->gcs) {
                 $gcsData = $this->parseGCSData($asesmen->rmeAsesmenKepAnak->gcs);
@@ -843,9 +855,9 @@ class AsesmenKepAnakController extends Controller
                 'urut_masuk'
             ));
         } catch (ModelNotFoundException $e) {
-            return back()->with('error', 'Data tidak ditemukan. Detail: '.$e->getMessage());
-        } catch (\Exception $e) {
-            return back()->with('error', 'Terjadi kesalahan: '.$e->getMessage());
+            return back()->with('error', 'Data tidak ditemukan. Detail: ' . $e->getMessage());
+        } catch (Exception $e) {
+            return back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
         }
     }
 
@@ -871,10 +883,14 @@ class AsesmenKepAnakController extends Controller
         DB::beginTransaction();
 
         try {
+
+            $dataMedis = $this->baseService->getDataMedis($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
+            if (empty($dataMedis)) throw new Exception('Data kunjungan tidak ditemukan !');
+
             // Ambil tanggal dan jam dari form
             $tanggal = $request->tanggal_masuk;
             $jam = $request->jam_masuk;
-            $waktu_asesmen = $tanggal.' '.$jam;
+            $waktu_asesmen = $tanggal . ' ' . $jam;
 
             // Update RmeAsesmen
             $dataAsesmen = RmeAsesmen::findOrFail($id);
@@ -1008,8 +1024,8 @@ class AsesmenKepAnakController extends Controller
             RmeAsesmenPemeriksaanFisik::where('id_asesmen', $dataAsesmen->id)->delete();
             $itemFisik = MrItemFisik::all();
             foreach ($itemFisik as $item) {
-                $isNormal = $request->has($item->id.'-normal') ? 1 : 0;
-                $keterangan = $request->input($item->id.'_keterangan');
+                $isNormal = $request->has($item->id . '-normal') ? 1 : 0;
+                $keterangan = $request->input($item->id . '_keterangan');
                 if ($isNormal) {
                     $keterangan = '';
                 }
@@ -1372,48 +1388,53 @@ class AsesmenKepAnakController extends Controller
                 ]
             );
 
-            // RESUME
-            $resumeData = [
-                'anamnesis' => $request->anamnesis,
-                'diagnosis' => [],
-                'tindak_lanjut_code' => null,
-                'tindak_lanjut_name' => null,
-                'tgl_kontrol_ulang' => null,
-                'unit_rujuk_internal' => null,
-                'rs_rujuk' => null,
-                'rs_rujuk_bagian' => null,
-                'konpas' => [
-                    'sistole' => [
-                        'hasil' => $request->sistole,
-                    ],
-                    'distole' => [
-                        'hasil' => $request->diastole,
-                    ],
-                    'respiration_rate' => [
-                        'hasil' => '',
-                    ],
-                    'suhu' => [
-                        'hasil' => $request->suhu,
-                    ],
-                    'nadi' => [
-                        'hasil' => $request->nadi,
-                    ],
-                    'tinggi_badan' => [
-                        'hasil' => $request->tinggi_badan,
-                    ],
-                    'berat_badan' => [
-                        'hasil' => $request->berat_badan,
-                    ],
-                ],
+            // Data vital sign untuk disimpan
+            $vitalSignData = [
+                'sistole' => $request->sistole ? (int) $request->sistole : null,
+                'diastole' => $request->diastole ? (int) $request->diastole : null, // Perbaikan dari 'distole' ke 'diastole'
+                'nadi' => $request->nadi ? (int) $request->nadi : null,
+                'respiration' => $request->nafas ? (int) $request->nafas : null,
+                'suhu' => $request->suhu ? (float) $request->suhu : null,
+                'spo2_tanpa_o2' => $request->saturasi_o2_tanpa ? (int) $request->saturasi_o2_tanpa : null,
+                'spo2_dengan_o2' => $request->saturasi_o2_dengan ? (int) $request->saturasi_o2_dengan : null,
+                'tinggi_badan' => $request->tinggi_badan ? (int) $request->tinggi_badan : null,
+                'berat_badan' => $request->berat_badan ? (int) $request->berat_badan : null,
             ];
 
-            // Panggil ResumeService
-            $resume = $this->checkResumeService->checkAndCreateResume([
-                'kd_pasien' => $kd_pasien,
-                'kd_unit' => $kd_unit,
-                'tgl_masuk' => $tgl_masuk,
-                'urut_masuk' => $urut_masuk
-            ]);
+            // Simpan vital sign menggunakan service
+            $this->asesmenService->store($vitalSignData, $kd_pasien, $dataMedis->no_transaksi, $dataMedis->kd_kasir);
+
+            // create resume
+            $resumeData = [
+                'anamnesis'             => $request->anamnesis,
+
+                'konpas'                =>
+                [
+                    'sistole'   => [
+                        'hasil' => $vitalSignData['sistole'] ?? null
+                    ],
+                    'distole'   => [
+                        'hasil' => $vitalSignData['diastole'] ?? null
+                    ],
+                    'respiration_rate'   => [
+                        'hasil' => $vitalSignData['respiration'] ?? null
+                    ],
+                    'suhu'   => [
+                        'hasil' => $vitalSignData['suhu'] ?? null
+                    ],
+                    'nadi'   => [
+                        'hasil' => $vitalSignData['nadi'] ?? null
+                    ],
+                    'tinggi_badan'   => [
+                        'hasil' => $vitalSignData['tinggi_badan'] ?? null
+                    ],
+                    'berat_badan'   => [
+                        'hasil' => $vitalSignData['berat_badan'] ?? null
+                    ]
+                ]
+            ];
+
+            $this->baseService->updateResumeMedis($dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk, $resumeData);
 
             DB::commit();
 
@@ -1424,10 +1445,10 @@ class AsesmenKepAnakController extends Controller
                 'urut_masuk' => $urut_masuk,
             ])
                 ->with('success', 'Data asesmen anak berhasil diperbarui');
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             DB::rollBack();
 
-            return back()->with('error', 'Terjadi kesalahan: '.$e->getMessage());
+            return back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
         }
     }
 
@@ -1439,65 +1460,5 @@ class AsesmenKepAnakController extends Controller
             return 'Risiko Sedang';
         }
         return 'Risiko Rendah';
-    }
-
-    public function createResume($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $data)
-    {
-        // get resume
-        $resume = RMEResume::where('kd_pasien', $kd_pasien)
-            ->where('kd_unit', $kd_unit)
-            ->whereDate('tgl_masuk', $tgl_masuk)
-            ->where('urut_masuk', $urut_masuk)
-            ->first();
-
-        $resumeDtlData = [
-            'tindak_lanjut_code' => $data['tindak_lanjut_code'],
-            'tindak_lanjut_name' => $data['tindak_lanjut_name'],
-            'tgl_kontrol_ulang' => $data['tgl_kontrol_ulang'],
-            'unit_rujuk_internal' => $data['unit_rujuk_internal'],
-            'rs_rujuk' => $data['rs_rujuk'],
-            'rs_rujuk_bagian' => $data['rs_rujuk_bagian'],
-        ];
-
-        if (empty($resume)) {
-            $resumeData = [
-                'kd_pasien' => $kd_pasien,
-                'kd_unit' => $kd_unit,
-                'tgl_masuk' => $tgl_masuk,
-                'urut_masuk' => $urut_masuk,
-                'anamnesis' => $data['anamnesis'],
-                'konpas' => $data['konpas'],
-                'diagnosis' => $data['diagnosis'],
-                'status' => 0,
-            ];
-
-            $newResume = RMEResume::create($resumeData);
-            $newResume->refresh();
-
-            // create resume detail
-            $resumeDtlData['id_resume'] = $newResume->id;
-            RmeResumeDtl::create($resumeDtlData);
-        } else {
-            $resume->anamnesis = $data['anamnesis'];
-            $resume->konpas = $data['konpas'];
-            $resume->diagnosis = $data['diagnosis'];
-            $resume->save();
-
-            // get resume dtl
-            $resumeDtl = RmeResumeDtl::where('id_resume', $resume->id)->first();
-            $resumeDtlData['id_resume'] = $resume->id;
-
-            if (empty($resumeDtl)) {
-                RmeResumeDtl::create($resumeDtlData);
-            } else {
-                $resumeDtl->tindak_lanjut_code = $data['tindak_lanjut_code'];
-                $resumeDtl->tindak_lanjut_name = $data['tindak_lanjut_name'];
-                $resumeDtl->tgl_kontrol_ulang = $data['tgl_kontrol_ulang'];
-                $resumeDtl->unit_rujuk_internal = $data['unit_rujuk_internal'];
-                $resumeDtl->rs_rujuk = $data['rs_rujuk'];
-                $resumeDtl->rs_rujuk_bagian = $data['rs_rujuk_bagian'];
-                $resumeDtl->save();
-            }
-        }
     }
 }

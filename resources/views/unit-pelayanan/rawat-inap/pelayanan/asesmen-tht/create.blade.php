@@ -861,11 +861,11 @@
 
                             <div class="form-group mt-4">
                                 <label style="min-width: 200px;">Tinggi Badan</label>
-                                <input type="text" class="form-control" name="antropometri_tinggi_badan">
+                                <input type="text" class="form-control" name="antropometri_tinggi_badan" value="{{ isset($vitalSignsData) && $vitalSignsData ? $vitalSignsData->tinggi_badan : '' }}">
                             </div>
                             <div class="form-group mt-4">
                                 <label style="min-width: 200px;">Berat Badan</label>
-                                <input type="text" class="form-control" name="antropometr_berat_badan">
+                                <input type="text" class="form-control" name="antropometr_berat_badan" value="{{ isset($vitalSignsData) && $vitalSignsData ? $vitalSignsData->berat_badan : '' }}">
                             </div>
 
                             <div class="form-group">

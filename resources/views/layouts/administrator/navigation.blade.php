@@ -24,13 +24,15 @@
             </li>
 
             @php
-                $pelayananMenus = getMenus()->filter(function ($menu) {
+            $allMenus = getMenus();
+
+                $pelayananMenus = $allMenus->filter(function ($menu) {
                     return in_array($menu->name, ['Unit Pelayanan', 'unit pelayanan']);
                 });
-                $lainLainMenus = getMenus()->filter(function ($menu) {
+                $lainLainMenus = $allMenus->filter(function ($menu) {
                     return in_array($menu->name, ['Transfusi Darah', 'transfusi darah']);
                 });
-                $otherMenus = getMenus()->filter(function ($menu) {
+                $otherMenus = $allMenus->filter(function ($menu) {
                     return !in_array($menu->name, [
                         'Unit Pelayanan',
                         'unit pelayanan',
