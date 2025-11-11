@@ -1186,7 +1186,7 @@ class AsesmenKeperawatanController extends Controller
     }
 
 
-    public function generatePDF(Request $request , $kd_pasien, $tgl_masuk, $id)
+    public function generatePDF(Request $request , $kd_pasien, $tgl_masuk, $urut_masuk, $id)
     {
         try {
             // Ambil data asesmen dengan eager loading

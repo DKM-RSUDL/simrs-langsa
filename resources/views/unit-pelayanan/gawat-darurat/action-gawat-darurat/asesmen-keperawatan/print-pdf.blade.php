@@ -239,7 +239,7 @@
 
     <table style="width:100%; padding-bottom: 10px">
         <tr>
-            <td style="width:35%;">
+            <td style="width:65%;">
                 <table>
                     <tr>
                         <td>
@@ -254,10 +254,12 @@
                     </tr>
                 </table>
             </td>
-            <td class="text-center" style="font-size:12.5pt; font-weight:bold; width:40%; text-align:right">
+            <td class="text-center" style="margin-left:20px; font-size:12.5pt; font-weight:bold; width:55%; text-align:center">
                 PENGKAJIAN KEPERAWATAN GAWAT DARURAT
             </td>
-           
+             <td class="text-end" style="font-size:12.5pt; font-weight:bold; width:40%; text-align:right">
+                IGD
+            </td>
         </tr>
     </table>
     <hr>
@@ -404,7 +406,7 @@
 
         <tr>
             {{-- Pemeriksaan --}}
-            <td style="height:200px; width:33.3%; border-right:1px solid #000; padding:4px 5px; vertical-align:top;">
+            <td style="height:190px; width:33.3%; border-right:1px solid #000; padding:4px 5px; vertical-align:top;">
 
                 <div>Status airway: {{ ucfirst($airway->airway_status ?? '-') }}</div>
                 @if(($airway->airway_status ?? '') === 'lainnya')
@@ -456,7 +458,7 @@
 
         <tr>
             {{-- Pemeriksaan --}}
-            <td style="height:200px; width:33.3%; border-right:1px solid #000; padding:4px 5px; vertical-align:top;">
+            <td style="height:210px; width:33.3%; border-right:1px solid #000; padding:4px 5px; vertical-align:top;">
 
                 @if(!empty($breathing->breathing_frekuensi_nafas))
                     <div>Frekuensi napas/menit: {{ $breathing->breathing_frekuensi_nafas }}</div>
@@ -1112,7 +1114,7 @@
         III. E. Status Sosial Budaya
     </h2>
 
-    <table style="width:100%; border-collapse:collapse; font-size:8pt;">
+    <table style="width:100%; border-collapse:collapse; font-size:8pt; height: 400px;">
         <tr>
             <th style="text-align:left; width:50%; border:1px solid #000; background:#eee; padding:3px;">Aspek Sosial &
                 Ekonomi</th>
@@ -1591,7 +1593,7 @@
     </tr>
 </table>
 
-<table style="width:100%; border-collapse:collapse; font-size:9pt; margin-top:8px;">
+<table style="width:100%; border-collapse:collapse; font-size:9pt; margin-top:8px; height : 130px;">
     <tr>
         <td style="width:40%; padding:4px;">Diterima perawat ruang :</td>
         <td style="width:60%; border-bottom:1px solid #000;">&nbsp;</td>
@@ -1604,7 +1606,7 @@
     </tr>
 </table>
     <!-- Bagian penerimaan perawat ruang -->
-    <table style="width:100%; border-collapse:collapse; font-size:9pt; margin-top:60px; ">
+    <table style="width:100%; border-collapse:collapse; font-size:9pt; margin-top:60px;  ">
        
         <tr style="height: 100px;">
             <td style="padding:4px;"></td>
