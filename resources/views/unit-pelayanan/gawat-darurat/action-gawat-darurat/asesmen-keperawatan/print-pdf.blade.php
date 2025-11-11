@@ -617,19 +617,40 @@
 
         <tr>
             {{-- Kolom Pemeriksaan --}}
-            <td style="height : 240px; width:33.3%; border-right:1px solid #000; padding:4px 5px; vertical-align:top;">
-                <div>GCS : {{ json_decode($asesmenDisability->vital_sign ?? '{}')->gcs ?? '-' }}</div>
-                <div>Kesadaran : {{ $asesmenDisability->disability_kesadaran ?? '-' }}</div>
-                <div>Pupil :
-                    {{ $asesmenDisability->disability_isokor == '1' ? 'Isokor' : ($asesmenDisability->disability_isokor == '2' ? 'Anisokor' : '-') }},
-                    Respon Cahaya :
-                    {{ $asesmenDisability->disability_respon_cahaya == '1' ? 'Ya' : ($asesmenDisability->disability_respon_cahaya == '0' ? 'Tidak' : '-') }}
+            <td style="height:240px; width:33.3%; border-right:1px solid #000; padding:4px 5px; vertical-align:top;">
+                <div>GCS : 
+                    {{ !empty(json_decode($asesmenDisability->vital_sign ?? '{}')->gcs) ? json_decode($asesmenDisability->vital_sign)->gcs : '-' }}
                 </div>
-                <div>Diameter Pupil : {{ $asesmenDisability->disability_diameter_pupil ?? '-' }} mm</div>
-                <div>Motorik : {{ $asesmenDisability->disability_motorik == '1' ? 'Ya' : 'Tidak' }}</div>
-                <div>Sensorik : {{ $asesmenDisability->disability_sensorik == '1' ? 'Ya' : 'Tidak' }}</div>
-                <div>Kekuatan Otot : {{ $asesmenDisability->disability_kekuatan_otot ?? '-' }}</div>
+                <div>Kesadaran : 
+                    {{ !empty($asesmenDisability->disability_kesadaran) ? $asesmenDisability->disability_kesadaran : '-' }}
+                </div>
+                <div>Pupil :
+                    {{ !empty($asesmenDisability->disability_isokor) 
+                        ? ($asesmenDisability->disability_isokor == '1' ? 'Isokor' : ($asesmenDisability->disability_isokor == '2' ? 'Anisokor' : '-')) 
+                        : '-' }},
+                    Respon Cahaya :
+                    {{ isset($asesmenDisability->disability_respon_cahaya)
+                        ? ($asesmenDisability->disability_respon_cahaya == '1' ? 'Ya' : ($asesmenDisability->disability_respon_cahaya == '0' ? 'Tidak' : '-'))
+                        : '-' }}
+                </div>
+                <div>Diameter Pupil : 
+                    {{ !empty($asesmenDisability->disability_diameter_pupil) ? $asesmenDisability->disability_diameter_pupil . ' mm' : '-' }}
+                </div>
+                <div>Motorik : 
+                    {{ isset($asesmenDisability->disability_motorik) 
+                        ? ($asesmenDisability->disability_motorik == '1' ? 'Ya' : 'Tidak') 
+                        : '-' }}
+                </div>
+                <div>Sensorik : 
+                    {{ isset($asesmenDisability->disability_sensorik) 
+                        ? ($asesmenDisability->disability_sensorik == '1' ? 'Ya' : 'Tidak') 
+                        : '-' }}
+                </div>
+                <div>Kekuatan Otot : 
+                    {{ !empty($asesmenDisability->disability_kekuatan_otot) ? $asesmenDisability->disability_kekuatan_otot : '-' }}
+                </div>
             </td>
+
 
             {{-- Kolom Diagnosis --}}
             <td style="width:33.3%; border-right:1px solid #000; padding:4px 5px; vertical-align:top;">
@@ -690,71 +711,83 @@
                     Tindakan Keperawatan
             </td>
         </tr>
-
         <tr>
             {{-- Kolom Pemeriksaan --}}
-            <td style="height : 230px; width:33.3%; border-right:1px solid #000; padding:4px 5px; vertical-align:top;">
+            <td style="height:230px; width:33.3%; border-right:1px solid #000; padding:4px 5px; vertical-align:top;">
+
+                @php
+                    $exp = !empty($asesmen->asesmenKepUmumExposure) ?? null
+                @endphp
 
                 <div>Deformitas : 
-                    {{ optional($asesmen->asesmenKepUmumExposure)->exposure_deformitas == '1' ? 'Ya' : 'Tidak' }} 
-                    @if(!empty(optional($asesmen->asesmenKepUmumExposure)->exposure_deformitas_daerah))
-                        ({{ optional($asesmen->asesmenKepUmumExposure)->exposure_deformitas_daerah }})
+                    {{ isset($exp->exposure_deformitas) ? ($exp->exposure_deformitas == '1' ? 'Ya' : 'Tidak') : '-' }}
+                    @if(!empty($exp->exposure_deformitas_daerah))
+                        ({{ $exp->exposure_deformitas_daerah }})
                     @endif
                 </div>
+
                 <div>Kontusion : 
-                    {{ optional($asesmen->asesmenKepUmumExposure)->exposure_kontusion == '1' ? 'Ya' : 'Tidak' }} 
-                    @if(!empty(optional($asesmen->asesmenKepUmumExposure)->exposure_kontusion_daerah))
-                        ({{ optional($asesmen->asesmenKepUmumExposure)->exposure_kontusion_daerah }})
+                    {{ isset($exp->exposure_kontusion) ? ($exp->exposure_kontusion == '1' ? 'Ya' : 'Tidak') : '-' }}
+                    @if(!empty($exp->exposure_kontusion_daerah))
+                        ({{ $exp->exposure_kontusion_daerah }})
                     @endif
                 </div>
+
                 <div>Abrasi : 
-                    {{ optional($asesmen->asesmenKepUmumExposure)->exposure_abrasi == '1' ? 'Ya' : 'Tidak' }} 
-                    @if(!empty(optional($asesmen->asesmenKepUmumExposure)->exposure_abrasi_daerah))
-                        ({{ optional($asesmen->asesmenKepUmumExposure)->exposure_abrasi_daerah }})
+                    {{ isset($exp->exposure_abrasi) ? ($exp->exposure_abrasi == '1' ? 'Ya' : 'Tidak') : '-' }}
+                    @if(!empty($exp->exposure_abrasi_daerah))
+                        ({{ $exp->exposure_abrasi_daerah }})
                     @endif
                 </div>
+
                 <div>Penetrasi : 
-                    {{ optional($asesmen->asesmenKepUmumExposure)->exposure_penetrasi == '1' ? 'Ya' : 'Tidak' }} 
-                    @if(!empty(optional($asesmen->asesmenKepUmumExposure)->exposure_penetrasi_daerah))
-                        ({{ optional($asesmen->asesmenKepUmumExposure)->exposure_penetrasi_daerah }})
+                    {{ isset($exp->exposure_penetrasi) ? ($exp->exposure_penetrasi == '1' ? 'Ya' : 'Tidak') : '-' }}
+                    @if(!empty($exp->exposure_penetrasi_daerah))
+                        ({{ $exp->exposure_penetrasi_daerah }})
                     @endif
                 </div>
+
                 <div>Laserasi : 
-                    {{ optional($asesmen->asesmenKepUmumExposure)->exposure_laserasi == '1' ? 'Ya' : 'Tidak' }} 
-                    @if(!empty(optional($asesmen->asesmenKepUmumExposure)->exposure_laserasi_daerah))
-                        ({{ optional($asesmen->asesmenKepUmumExposure)->exposure_laserasi_daerah }})
+                    {{ isset($exp->exposure_laserasi) ? ($exp->exposure_laserasi == '1' ? 'Ya' : 'Tidak') : '-' }}
+                    @if(!empty($exp->exposure_laserasi_daerah))
+                        ({{ $exp->exposure_laserasi_daerah }})
                     @endif
                 </div>
+
                 <div>Edema : 
-                    {{ optional($asesmen->asesmenKepUmumExposure)->exposure_edema == '1' ? 'Ya' : 'Tidak' }} 
-                    @if(!empty(optional($asesmen->asesmenKepUmumExposure)->exposure_edema_daerah))
-                        ({{ optional($asesmen->asesmenKepUmumExposure)->exposure_edema_daerah }})
+                    {{ isset($exp->exposure_edema) ? ($exp->exposure_edema == '1' ? 'Ya' : 'Tidak') : '-' }}
+                    @if(!empty($exp->exposure_edema_daerah))
+                        ({{ $exp->exposure_edema_daerah }})
                     @endif
                 </div>
+
                 <div>Kedalaman Luka : 
-                    {{ optional($asesmen->asesmenKepUmumExposure)->exposure_kedalaman_luka ?? '-' }} cm
+                    {{ !empty($exp->exposure_kedalaman_luka) ? $exp->exposure_kedalaman_luka . ' cm' : '-' }}
                 </div>
+
                 <div>Lainnya : 
-                    {{ optional($asesmen->asesmenKepUmumExposure)->exposure_lainnya ?? '-' }}
+                    {{ !empty($exp->exposure_lainnya) ? $exp->exposure_lainnya : '-' }}
                 </div>
             </td>
 
             {{-- Kolom Diagnosis --}}
             <td style="width:33.3%; border-right:1px solid #000; padding:4px 5px; vertical-align:top;">
-        
+            
                 @php
                     $diagnosisList = [
                         'exposure_diagnosis_mobilitasi' => 'Kerusakan Mobilitas Fisik',
                         'exposure_diagosis_integritas' => 'Kerusakan Integritas Jaringan',
                     ];
+                    $hasDiagnosis = false;
                 @endphp
 
                 @foreach($diagnosisList as $key => $label)
-                    @if(!empty(optional($asesmen->asesmenKepUmumExposure)->$key))
+                    @if(!empty($exp->$key))
+                        @php $hasDiagnosis = true; @endphp
                         <div>- {{ $label }}
                             @php
                                 $typeField = $key . '_type';
-                                $type = optional($asesmen->asesmenKepUmumExposure)->$typeField ?? null;
+                                $type = $exp->$typeField ?? null;
                             @endphp
                             @if($type == '1')
                                 (Aktual)
@@ -765,15 +798,20 @@
                     @endif
                 @endforeach
 
-                @if(!empty(optional($asesmen->asesmenKepUmumExposure)->exposure_diagnosis_lainnya))
-                    <div>- {{ optional($asesmen->asesmenKepUmumExposure)->exposure_diagnosis_lainnya }}</div>
+                @if(!empty($exp->exposure_diagnosis_lainnya))
+                    @php $hasDiagnosis = true; @endphp
+                    <div>- {{ $exp->exposure_diagnosis_lainnya }}</div>
+                @endif
+
+                @if(!$hasDiagnosis)
+                    <div>-</div>
                 @endif
             </td>
 
             {{-- Kolom Tindakan --}}
             <td style="width:33.3%; padding:4px 5px; vertical-align:top;">
                 @php
-                    $tindakan = json_decode(optional($asesmen->asesmenKepUmumExposure)->exposure_tindakan ?? '[]', true);
+                    $tindakan = json_decode($exp->exposure_tindakan ?? '[]', true);
                 @endphp
                 @if(!empty($tindakan))
                     @foreach($tindakan as $item)
@@ -784,6 +822,7 @@
                 @endif
             </td>
         </tr>
+            
     </table>
 
     <h2 style="font-size:10pt;">E.  Skala Nyeri</h2>
@@ -860,7 +899,7 @@
             <td style="padding:4px 10px; text-align:center; vertical-align:middle;">:</td>
             <td style="padding:4px 10px; vertical-align:middle;">
                 @foreach ($jenisNyeriData as $id => $name)
-                    @if ($nyeri->skala_nyeri_jenis_id == $id)
+                    @if (isset($nyeri->skala_nyeri_jenis) && $nyeri->skala_nyeri_jenis_id == $id)
                         <strong>{{ $name }}</strong>
                     @endif
                 @endforeach
@@ -880,7 +919,7 @@
             <td style="padding:4px 10px; text-align:center; vertical-align:middle;">:</td>
             <td style="padding:4px 10px; vertical-align:middle;">
                 @foreach ($menjalarData as $id => $name)
-                    @if ($nyeri->skala_nyeri_menjalar_id == $id)
+                    @if (isset($nyeri->skala_nyeri_menjalar_id) && $nyeri->skala_nyeri_menjalar_id == $id)
                         <strong>{{ $name }}</strong>
                     @endif
                 @endforeach
@@ -892,7 +931,7 @@
             <td style="padding:4px 10px; text-align:center; vertical-align:middle;">:</td>
             <td style="padding:4px 10px; vertical-align:middle;">
                 @foreach ($kualitasNyeriData as $id => $name)
-                    @if ($nyeri->skala_nyeri_kualitas_id == $id)
+                    @if (isset($nyeri->skala_nyeri_kualitas_id) && $nyeri->skala_nyeri_kualitas_id == $id)
                         <strong>{{ $name }}</strong>
                     @endif
                 @endforeach
@@ -904,7 +943,7 @@
             <td style="padding:4px 10px; text-align:center; vertical-align:middle;">:</td>
             <td style="padding:4px 10px; vertical-align:middle;">
                 @foreach ($faktorPemberatData as $id => $name)
-                    @if ($nyeri->skala_nyeri_pemberat_id == $id)
+                    @if (isset($nyeri->skala_nyeri_pemberat_id) && $nyeri->skala_nyeri_pemberat_id == $id)
                         <strong>{{ $name }}</strong>
                     @endif
                 @endforeach
@@ -916,7 +955,7 @@
             <td style="padding:4px 10px; text-align:center; vertical-align:middle;">:</td>
             <td style="padding:4px 10px; vertical-align:middle;">
                 @foreach ($faktorPeringanData as $id => $name)
-                    @if ($nyeri->skala_nyeri_peringan_id == $id)
+                    @if (isset($nyeri->skala_nyeri_peringan_id) && $nyeri->skala_nyeri_peringan_id == $id)
                         <strong>{{ $name }}</strong>
                     @endif
                 @endforeach
@@ -928,7 +967,7 @@
             <td style="padding:4px 10px; text-align:center; vertical-align:middle;">:</td>
             <td style="padding:4px 10px; vertical-align:middle;">
                 @foreach ($frekuensiNyeriData as $id => $name)
-                    @if ($nyeri->skala_nyeri_frekuensi_id == $id)
+                    @if (isset($nyeri->skala_nyeri_frekuensi_id) && $nyeri->skala_nyeri_frekuensi_id == $id)
                         <strong>{{ $name }}</strong>
                     @endif
                 @endforeach
@@ -950,14 +989,14 @@
             @foreach($agamaData as $index => $agama)
                 @php
                     // cek apakah pasien punya agama yang sama
-                    $checked = $asesmenKepUmum->spiritual_agama == $index ? 'checked' : '';
+                    $checked = isset($asesmenKepUmum) && $asesmenKepUmum->spiritual_agama == $index ? 'checked' : '';
                 @endphp
                 <label style="margin-right:18px;">
                     <input type="checkbox" value="{{ $index }}" {{ $checked }}> {{ $agama }}
                 </label>
             @endforeach
             <label style="margin-right:18px;">Lainnya:
-                {{ $asesmenKepUmum->spiritual_agama_lain ?? '............' }}</label>
+                {{ isset($asesmenKepUmum) &&  $asesmenKepUmum->spiritual_agama_lain ?? '............' }}</label>
         </div>
 
         <div>
@@ -972,7 +1011,7 @@
 
             @foreach($pandanganOptions as $key => $value)
                 @php
-                    $checked = $asesmenKepUmum->spiritual_nilai == $key ? 'checked' : '';
+                    $checked = isset($asesmenKepUmum) && $asesmenKepUmum->spiritual_nilai == $key ? 'checked' : '';
                 @endphp
                 <label style="margin-right:18px;">
                     <input type="checkbox" value="{{ $key }}" {{ $checked }}> {{ $value }}
@@ -1000,7 +1039,7 @@
                     pengurusan obat sesak, status kesadaran dan atau kejang, konsumsi obat
                 </td>
                 <td style="text-align:center; font-weight:bold; vertical-align:middle;">
-                    {{ $asesmenRisikoJatuh->risiko_jatuh_umum_usia == 1 ? 'Ya' : 'Tidak' }}
+                    {{ ($asesmenRisikoJatuh != null) && $asesmenRisikoJatuh->risiko_jatuh_umum_usia == 1 ? 'Ya' : 'Tidak' }}
                 </td>
             </tr>
 
@@ -1009,7 +1048,7 @@
                     Diagnosis sesuai pasien dengan penyakit Parkinson
                 </td>
                 <td style="text-align:center; font-weight:bold; vertical-align:middle;">
-                    {{ $asesmenRisikoJatuh->risiko_jatuh_umum_diagnosis_parkinson == 1 ? 'Ya' : 'Tidak' }}
+                    {{ ($asesmenRisikoJatuh != null) && $asesmenRisikoJatuh->risiko_jatuh_umum_diagnosis_parkinson == 1 ? 'Ya' : 'Tidak' }}
                 </td>
             </tr>
 
@@ -1019,7 +1058,7 @@
                     yang akan meningkatkan risiko jatuh
                 </td>
                 <td style="text-align:center; font-weight:bold; vertical-align:middle;">
-                    {{ $asesmenRisikoJatuh->risiko_jatuh_umum_pengobatan_berisiko == 1 ? 'Ya' : 'Tidak' }}
+                    {{ ($asesmenRisikoJatuh != null) && $asesmenRisikoJatuh->risiko_jatuh_umum_pengobatan_berisiko == 1 ? 'Ya' : 'Tidak' }}
                 </td>
             </tr>
 
@@ -1029,7 +1068,7 @@
                     khusus, atau kamar jenazah
                 </td>
                 <td style="text-align:center; font-weight:bold; vertical-align:middle;">
-                    {{ $asesmenRisikoJatuh->risiko_jatuh_umum_lokasi_berisiko == 1 ? 'Ya' : 'Tidak' }}
+                    {{ ($asesmenRisikoJatuh != null) && $asesmenRisikoJatuh->risiko_jatuh_umum_lokasi_berisiko == 1 ? 'Ya' : 'Tidak' }}
                 </td>
             </tr>
         </table>
@@ -1100,67 +1139,67 @@
         <tr>
             <td style="border:1px solid #000; padding:3px;">Tingkat Penghasilan</td>
             <td style="border:1px solid #000; padding:3px;">
-                {{ $asesmenSosialEkonomi->sosial_ekonomi_tingkat_penghasilan ?? '–' }}</td>
+                {{ ($asesmenSosialEkonomi != null ) && $asesmenSosialEkonomi->sosial_ekonomi_tingkat_penghasilan ?? '–' }}</td>
         </tr>
 
         <tr>
             <td style="border:1px solid #000; padding:3px;">Status Pernikahan</td>
             <td style="border:1px solid #000; padding:3px;">
-                {{ $asesmenSosialEkonomi->sosial_ekonomi_status_pernikahan ?? '–' }}</td>
+                {{ ($asesmenSosialEkonomi != null ) && $asesmenSosialEkonomi->sosial_ekonomi_status_pernikahan ?? '–' }}</td>
         </tr>
 
         <tr>
             <td style="border:1px solid #000; padding:3px;">Status Pendidikan</td>
             <td style="border:1px solid #000; padding:3px;">
-                {{ $asesmenSosialEkonomi->sosial_ekonomi_status_pendidikan ?? '–' }}</td>
+                {{ ($asesmenSosialEkonomi != null ) && $asesmenSosialEkonomi->sosial_ekonomi_status_pendidikan ?? '–' }}</td>
         </tr>
 
         <tr>
             <td style="border:1px solid #000; padding:3px;">Tempat Tinggal</td>
             <td style="border:1px solid #000; padding:3px;">
-                {{ $asesmenSosialEkonomi->sosial_ekonomi_tempat_tinggal ?? '–' }}</td>
+                {{ ($asesmenSosialEkonomi != null ) && $asesmenSosialEkonomi->sosial_ekonomi_tempat_tinggal ?? '–' }}</td>
         </tr>
 
         <tr>
             <td style="border:1px solid #000; padding:3px;">Tinggal Dengan Keluarga</td>
             <td style="border:1px solid #000; padding:3px;">
-                {{ $asesmenSosialEkonomi->sosial_ekonomi_tinggal_dengan_keluarga ?? '–' }}</td>
+                {{ ($asesmenSosialEkonomi != null ) && $asesmenSosialEkonomi->sosial_ekonomi_tinggal_dengan_keluarga ?? '–' }}</td>
         </tr>
 
         <tr>
             <td style="border:1px solid #000; padding:3px;">Curiga Penganiayaan</td>
             <td style="border:1px solid #000; padding:3px;">
-                {{ $asesmenSosialEkonomi->sosial_ekonomi_curiga_penganiayaan ?? '–' }}</td>
+                {{ ($asesmenSosialEkonomi != null ) && $asesmenSosialEkonomi->sosial_ekonomi_curiga_penganiayaan ?? '–' }}</td>
         </tr>
 
         <tr>
             <td style="border:1px solid #000; padding:3px;">Curiga Suku</td>
             <td style="border:1px solid #000; padding:3px;">
-                {{ $asesmenSosialEkonomi->sosial_ekonomi_curiga_suku ?? '–' }}</td>
+                {{ ($asesmenSosialEkonomi != null ) && $asesmenSosialEkonomi->sosial_ekonomi_curiga_suku ?? '–' }}</td>
         </tr>
 
         <tr>
             <td style="border:1px solid #000; padding:3px;">Curiga Budaya</td>
             <td style="border:1px solid #000; padding:3px;">
-                {{ $asesmenSosialEkonomi->sosial_ekonomi_curiga_budaya ?? '–' }}</td>
+                {{ ($asesmenSosialEkonomi != null ) && $asesmenSosialEkonomi->sosial_ekonomi_curiga_budaya ?? '–' }}</td>
         </tr>
 
         <tr>
             <td style="border:1px solid #000; padding:3px;">Curiga Hubungan Keluarga</td>
             <td style="border:1px solid #000; padding:3px;">
-                {{ $asesmenSosialEkonomi->sosial_ekonomi_curiga_hubungan_keluarga ?? '–' }}</td>
+                {{ ($asesmenSosialEkonomi != null ) && $asesmenSosialEkonomi->sosial_ekonomi_curiga_hubungan_keluarga ?? '–' }}</td>
         </tr>
 
         <tr>
             <td style="border:1px solid #000; padding:3px;">Curiga Kesulitan Ekonomi</td>
             <td style="border:1px solid #000; padding:3px;">
-                {{ $asesmenSosialEkonomi->sosial_ekonomi_curiga_kesulitan ?? '–' }}</td>
+                {{ ($asesmenSosialEkonomi != null ) && $asesmenSosialEkonomi->sosial_ekonomi_curiga_kesulitan ?? '–' }}</td>
         </tr>
 
         <tr>
             <td style="border:1px solid #000; padding:3px;">Keterangan Lain</td>
             <td style="border:1px solid #000; padding:3px;">
-                {{ $asesmenSosialEkonomi->sosial_ekonomi_keterangan_lain ?? '–' }}</td>
+                {{ ($asesmenSosialEkonomi != null ) && $asesmenSosialEkonomi->sosial_ekonomi_keterangan_lain ?? '–' }}</td>
         </tr>
     </table>
 

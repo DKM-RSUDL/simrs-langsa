@@ -1186,7 +1186,7 @@ class AsesmenKeperawatanController extends Controller
     }
 
 
-    public function generatePDF($kd_pasien, $tgl_masuk, $id)
+    public function generatePDF(Request $request , $kd_pasien, $tgl_masuk, $id)
     {
         try {
             // Ambil data asesmen dengan eager loading
@@ -1202,6 +1202,7 @@ class AsesmenKeperawatanController extends Controller
                 'asesmenKepUmumSosialEkonomi',
                 'asesmenKepUmumGizi'
             ])->where('id', $id)->first();
+          
 
             // Ambil data pasien dan kunjungan
             $dataMedis = Kunjungan::with('pasien')
@@ -1246,7 +1247,10 @@ class AsesmenKeperawatanController extends Controller
                 return Pendidikan::select('kd_pendidikan', 'pendidikan')->pluck('pendidikan', 'kd_pendidikan');
             });
 
+           
+
             // dd([
+            //     'asesmen' => $asesmen,
             //     'pasien' => optional($dataMedis)->pasien ?? null,
             //     'dataMedis' => $dataMedis ?? null,
             //     'asesmenKepUmum' => optional($asesmen)->asesmenKepUmum ?? null,

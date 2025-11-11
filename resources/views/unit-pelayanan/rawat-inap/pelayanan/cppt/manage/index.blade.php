@@ -1986,5 +1986,6 @@
 
     $(document).on('click','.btn-close',function (){
         DiagnoseArrayTemp = [];
+        document.querySelectorAll('.modal-backdrop').forEach(backdrop => backdrop.remove());
     })
 </script>
