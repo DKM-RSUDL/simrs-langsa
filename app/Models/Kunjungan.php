@@ -17,7 +17,7 @@ class Kunjungan extends Model
     // protected $keyType = 'string';
     public $timestamps = false;
     protected $primaryKey  = 'kd_pasien';
-     // Kalau tipe primary key bukan int (misal string/varchar)
+    // Kalau tipe primary key bukan int (misal string/varchar)
     protected $keyType = 'string';
 
     protected $fillable = [
@@ -110,4 +110,19 @@ class Kunjungan extends Model
         return $this->belongsTo(DataTriase::class, 'triase_id', 'id');
     }
 
+    public function transaksi()
+    {
+        return $this->hasMany(Transaksi::class, 'kd_pasien', 'kd_pasien')
+            ->where('kd_unit', $this->kd_unit)
+            ->where('tgl_transaksi', $this->tgl_masuk)
+            ->where('urut_masuk', $this->urut_masuk);
+    }
+
+    public function sjpKunjungan()
+    {
+        return $this->hasOne(SjpKunjungan::class, 'kd_pasien', 'kd_pasien')
+            ->where('kd_unit', $this->kd_unit)
+            ->where('tgl_masuk', $this->tgl_masuk)
+            ->where('urut_masuk', $this->urut_masuk);
+    }
 }

@@ -121,7 +121,7 @@
             height: 200px;
             object-fit: contain;
             border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
         }
 
         .pain-value-input {
@@ -231,7 +231,7 @@
             flex: 1;
         }
 
-        .radio-item input[type="radio"]:checked + label {
+        .radio-item input[type="radio"]:checked+label {
             color: #097dd6;
             font-weight: 600;
         }
@@ -265,7 +265,7 @@
                 flex-direction: column;
                 gap: 0.25rem;
             }
-            
+
             .radio-item {
                 min-width: 100%;
             }
@@ -276,16 +276,16 @@
             .datetime-group {
                 grid-template-columns: 1fr;
             }
-            
+
             .pain-scale-selector {
                 flex-direction: column;
             }
-            
+
             .pain-scale-image img {
                 width: 100%;
                 height: 150px;
             }
-            
+
             .form-section {
                 padding: 0.5rem;
             }
@@ -300,7 +300,8 @@
         </div>
 
         <div class="col-md-9">
-            <a href="{{ route('rawat-inap.status-nyeri.skala-numerik.show', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $skalaNumerik->id]) }}" class="btn btn-outline-primary mb-3">
+            <a href="{{ route('rawat-inap.status-nyeri.skala-numerik.show', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $skalaNumerik->id]) }}"
+                class="btn btn-outline-primary mb-3">
                 <i class="ti-arrow-left"></i> Kembali
             </a>
 
@@ -316,19 +317,22 @@
                         <!-- Basic Information Section -->
                         <div class="form-section">
                             <h5 class="section-title">Informasi Dasar</h5>
-                            
+
                             <div class="form-group">
                                 <label class="form-label">Tanggal dan Jam Implementasi</label>
                                 <div class="datetime-group">
                                     <div class="datetime-item">
                                         <label>Tanggal</label>
-                                        <input type="date" class="form-control" name="tanggal_implementasi" id="tanggal_implementasi" 
-                                               value="{{ date('Y-m-d', strtotime($skalaNumerik->tanggal_implementasi)) }}" required>
+                                        <input type="date" class="form-control" name="tanggal_implementasi"
+                                            id="tanggal_implementasi"
+                                            value="{{ date('Y-m-d', strtotime($skalaNumerik->tanggal_implementasi)) }}"
+                                            required>
                                     </div>
                                     <div class="datetime-item">
                                         <label>Jam</label>
-                                        <input type="time" class="form-control" name="jam_implementasi" id="jam_implementasi" 
-                                               value="{{ date('H:i', strtotime($skalaNumerik->jam_implementasi)) }}" required>
+                                        <input type="time" class="form-control" name="jam_implementasi"
+                                            id="jam_implementasi"
+                                            value="{{ date('H:i', strtotime($skalaNumerik->jam_implementasi)) }}" required>
                                     </div>
                                 </div>
                             </div>
@@ -337,46 +341,59 @@
                         <!-- Pain Scale Selection -->
                         <div class="form-section">
                             <h5 class="section-title">Pilih Skala Nyeri</h5>
-                            
+
                             <div class="pain-scale-selector">
-                                <div class="pain-scale-option {{ $skalaNumerik->pain_scale_type == 'numerik' ? 'selected' : '' }}" data-scale="numerik">
-                                    <input type="radio" name="pain_scale_type" value="numerik" id="numerik_scale" 
-                                           {{ $skalaNumerik->pain_scale_type == 'numerik' ? 'checked' : '' }} required>
+                                <div class="pain-scale-option {{ $skalaNumerik->pain_scale_type == 'numerik' ? 'selected' : '' }}"
+                                    data-scale="numerik">
+                                    <input type="radio" name="pain_scale_type" value="numerik" id="numerik_scale"
+                                        {{ $skalaNumerik->pain_scale_type == 'numerik' ? 'checked' : '' }} required>
                                     <label for="numerik_scale">Numerik Pain Scale</label>
                                 </div>
-                                <div class="pain-scale-option {{ $skalaNumerik->pain_scale_type == 'wong_baker' ? 'selected' : '' }}" data-scale="wong_baker">
-                                    <input type="radio" name="pain_scale_type" value="wong_baker" id="wong_baker_scale" 
-                                           {{ $skalaNumerik->pain_scale_type == 'wong_baker' ? 'checked' : '' }} required>
+                                <div class="pain-scale-option {{ $skalaNumerik->pain_scale_type == 'wong_baker' ? 'selected' : '' }}"
+                                    data-scale="wong_baker">
+                                    <input type="radio" name="pain_scale_type" value="wong_baker" id="wong_baker_scale"
+                                        {{ $skalaNumerik->pain_scale_type == 'wong_baker' ? 'checked' : '' }} required>
                                     <label for="wong_baker_scale">Wong Baker Face Pain Scale</label>
                                 </div>
                             </div>
 
                             <!-- Pain Scale Images -->
-                            <div id="pain_scale_image" class="pain-scale-image" style="{{ $skalaNumerik->pain_scale_type ? 'display: block;' : 'display: none;' }}">
-                                <img id="scale_image" src="{{ $skalaNumerik->pain_scale_type == 'numerik' ? asset('assets/img/asesmen/numerik.png') : asset('assets/img/asesmen/asesmen.jpeg') }}" alt="Pain Scale">
+                            <div id="pain_scale_image" class="pain-scale-image"
+                                style="{{ $skalaNumerik->pain_scale_type ? 'display: block;' : 'display: none;' }}">
+                                <img id="scale_image"
+                                    src="{{ $skalaNumerik->pain_scale_type == 'numerik' ? asset('assets/img/asesmen/numerik.png') : asset('assets/img/asesmen/asesmen.jpeg') }}"
+                                    alt="Pain Scale">
                             </div>
 
                             <!-- Pain Value Input -->
                             <div class="form-group">
                                 <label class="form-label">Nilai Nyeri (0-10)</label>
                                 <div class="pain-value-input">
-                                    <input type="number" class="form-control" name="pain_value" id="pain_value" min="0" max="10" 
-                                           value="{{ $skalaNumerik->pain_value }}" onchange="updatePainStatus()" required>
+                                    <input type="number" class="form-control" name="pain_value" id="pain_value"
+                                        min="0" max="10" value="{{ $skalaNumerik->pain_value }}"
+                                        onchange="updatePainStatus()" required>
                                     <span>/ 10</span>
                                 </div>
                             </div>
 
                             <!-- Pain Status Display -->
-                            <div id="pain_status" class="pain-status" style="{{ $skalaNumerik->pain_value ? 'display: block;' : 'display: none;' }}">
+                            <div id="pain_status" class="pain-status"
+                                style="{{ $skalaNumerik->pain_value ? 'display: block;' : 'display: none;' }}">
                                 <div class="pain-status-value" id="pain_status_value">{{ $skalaNumerik->pain_value }}</div>
                                 <div class="pain-status-text" id="pain_status_text">
                                     @php
                                         $painValue = $skalaNumerik->pain_value;
-                                        if ($painValue == 0) echo 'Tidak Nyeri';
-                                        elseif ($painValue >= 1 && $painValue <= 3) echo 'Ringan';
-                                        elseif ($painValue >= 4 && $painValue <= 6) echo 'Sedang';
-                                        elseif ($painValue >= 7 && $painValue <= 9) echo 'Berat';
-                                        else echo 'Sangat Berat';
+                                        if ($painValue == 0) {
+                                            echo 'Tidak Nyeri';
+                                        } elseif ($painValue >= 1 && $painValue <= 3) {
+                                            echo 'Ringan';
+                                        } elseif ($painValue >= 4 && $painValue <= 6) {
+                                            echo 'Sedang';
+                                        } elseif ($painValue >= 7 && $painValue <= 9) {
+                                            echo 'Berat';
+                                        } else {
+                                            echo 'Sangat Berat';
+                                        }
                                     @endphp
                                 </div>
                             </div>
@@ -385,32 +402,39 @@
                         <!-- Pain Details Section -->
                         <div class="form-section">
                             <h5 class="section-title">Detail Nyeri</h5>
-                            
+
                             <div class="form-group">
                                 <label class="form-label">Lokasi Nyeri</label>
-                                <input type="text" class="form-control" name="lokasi_nyeri" id="lokasi_nyeri" 
-                                       value="{{ $skalaNumerik->lokasi_nyeri }}" placeholder="Contoh: Kepala, Dada, Perut..." required>
+                                <input type="text" class="form-control" name="lokasi_nyeri" id="lokasi_nyeri"
+                                    value="{{ $skalaNumerik->lokasi_nyeri }}" placeholder="Contoh: Kepala, Dada, Perut...">
                             </div>
 
                             <div class="form-group">
                                 <label class="form-label">Durasi Nyeri (dalam menit)</label>
-                                <input type="number" class="form-control" name="durasi_nyeri" id="durasi_nyeri" min="1" 
-                                       value="{{ $skalaNumerik->durasi_nyeri }}" placeholder="Contoh: 30" required>
+                                <input type="number" class="form-control" name="durasi_nyeri" id="durasi_nyeri"
+                                    min="1" value="{{ $skalaNumerik->durasi_nyeri }}" placeholder="Contoh: 30">
                             </div>
 
                             <div class="form-group">
                                 <label class="form-label">Apakah nyeri menjalar?</label>
                                 <div class="menjalar-group">
-                                    <button type="button" class="menjalar-btn {{ $skalaNumerik->menjalar == 'ya' ? 'selected' : '' }}" data-menjalar="ya">Ya</button>
-                                    <button type="button" class="menjalar-btn {{ $skalaNumerik->menjalar == 'tidak' ? 'selected' : '' }}" data-menjalar="tidak">Tidak</button>
+                                    <button type="button"
+                                        class="menjalar-btn {{ $skalaNumerik->menjalar == 'ya' ? 'selected' : '' }}"
+                                        data-menjalar="ya">Ya</button>
+                                    <button type="button"
+                                        class="menjalar-btn {{ $skalaNumerik->menjalar == 'tidak' ? 'selected' : '' }}"
+                                        data-menjalar="tidak">Tidak</button>
                                 </div>
-                                <input type="hidden" name="menjalar" id="menjalar_value" value="{{ $skalaNumerik->menjalar }}" required>
-                                
-                                <div id="menjalar_keterangan" class="menjalar-keterangan {{ $skalaNumerik->menjalar == 'ya' ? 'show' : '' }}">
+                                <input type="hidden" name="menjalar" id="menjalar_value"
+                                    value="{{ $skalaNumerik->menjalar }}">
+
+                                <div id="menjalar_keterangan"
+                                    class="menjalar-keterangan {{ $skalaNumerik->menjalar == 'ya' ? 'show' : '' }}">
                                     <label class="form-label">Ke : </label>
-                                    <input type="text" class="form-control" name="menjalar_keterangan" id="menjalar_keterangan_text" 
-                                           value="{{ $skalaNumerik->menjalar_keterangan }}" placeholder="Contoh: Kepala, Dada, Perut..." 
-                                           {{ $skalaNumerik->menjalar == 'ya' ? 'required' : '' }}>
+                                    <input type="text" class="form-control" name="menjalar_keterangan"
+                                        id="menjalar_keterangan_text" value="{{ $skalaNumerik->menjalar_keterangan }}"
+                                        placeholder="Contoh: Kepala, Dada, Perut..."
+                                        {{ $skalaNumerik->menjalar == 'ya' ? '' : '' }}>
                                 </div>
                             </div>
                         </div>
@@ -418,15 +442,16 @@
                         <!-- Pain Characteristics Section -->
                         <div class="form-section">
                             <h5 class="section-title">Karakteristik Nyeri</h5>
-                            
+
                             <!-- Kualitas Nyeri -->
                             <div class="form-group">
                                 <label class="form-label">Kualitas Nyeri</label>
                                 <div class="radio-group">
-                                    @foreach($kualitasnyeri as $item)
+                                    @foreach ($kualitasnyeri as $item)
                                         <div class="radio-item">
-                                            <input type="radio" name="kualitas_nyeri" value="{{ $item->id }}" id="kualitas_{{ $item->id }}" 
-                                                   {{ $skalaNumerik->kualitas_nyeri == $item->id ? 'checked' : '' }} required>
+                                            <input type="radio" name="kualitas_nyeri" value="{{ $item->id }}"
+                                                id="kualitas_{{ $item->id }}"
+                                                {{ $skalaNumerik->kualitas_nyeri == $item->id ? 'checked' : '' }}>
                                             <label for="kualitas_{{ $item->id }}">{{ $item->name }}</label>
                                         </div>
                                     @endforeach
@@ -437,10 +462,11 @@
                             <div class="form-group">
                                 <label class="form-label">Faktor Pemberat</label>
                                 <div class="radio-group">
-                                    @foreach($faktorpemberat as $item)
+                                    @foreach ($faktorpemberat as $item)
                                         <div class="radio-item">
-                                            <input type="radio" name="faktor_pemberat" value="{{ $item->id }}" id="pemberat_{{ $item->id }}" 
-                                                   {{ $skalaNumerik->faktor_pemberat == $item->id ? 'checked' : '' }} required>
+                                            <input type="radio" name="faktor_pemberat" value="{{ $item->id }}"
+                                                id="pemberat_{{ $item->id }}"
+                                                {{ $skalaNumerik->faktor_pemberat == $item->id ? 'checked' : '' }}>
                                             <label for="pemberat_{{ $item->id }}">{{ $item->name }}</label>
                                         </div>
                                     @endforeach
@@ -451,10 +477,11 @@
                             <div class="form-group">
                                 <label class="form-label">Faktor Peringan</label>
                                 <div class="radio-group">
-                                    @foreach($faktorperingan as $item)
+                                    @foreach ($faktorperingan as $item)
                                         <div class="radio-item">
-                                            <input type="radio" name="faktor_peringan" value="{{ $item->id }}" id="peringan_{{ $item->id }}" 
-                                                   {{ $skalaNumerik->faktor_peringan == $item->id ? 'checked' : '' }} required>
+                                            <input type="radio" name="faktor_peringan" value="{{ $item->id }}"
+                                                id="peringan_{{ $item->id }}"
+                                                {{ $skalaNumerik->faktor_peringan == $item->id ? 'checked' : '' }}>
                                             <label for="peringan_{{ $item->id }}">{{ $item->name }}</label>
                                         </div>
                                     @endforeach
@@ -465,10 +492,11 @@
                             <div class="form-group">
                                 <label class="form-label">Efek Nyeri</label>
                                 <div class="radio-group">
-                                    @foreach($efeknyeri as $item)
+                                    @foreach ($efeknyeri as $item)
                                         <div class="radio-item">
-                                            <input type="radio" name="efek_nyeri" value="{{ $item->id }}" id="efek_{{ $item->id }}" 
-                                                   {{ $skalaNumerik->efek_nyeri == $item->id ? 'checked' : '' }} required>
+                                            <input type="radio" name="efek_nyeri" value="{{ $item->id }}"
+                                                id="efek_{{ $item->id }}"
+                                                {{ $skalaNumerik->efek_nyeri == $item->id ? 'checked' : '' }}>
                                             <label for="efek_{{ $item->id }}">{{ $item->name }}</label>
                                         </div>
                                     @endforeach
@@ -479,10 +507,11 @@
                             <div class="form-group">
                                 <label class="form-label">Jenis Nyeri</label>
                                 <div class="radio-group">
-                                    @foreach($jenisnyeri as $item)
+                                    @foreach ($jenisnyeri as $item)
                                         <div class="radio-item">
-                                            <input type="radio" name="jenis_nyeri" value="{{ $item->id }}" id="jenis_{{ $item->id }}" 
-                                                   {{ $skalaNumerik->jenis_nyeri == $item->id ? 'checked' : '' }} required>
+                                            <input type="radio" name="jenis_nyeri" value="{{ $item->id }}"
+                                                id="jenis_{{ $item->id }}"
+                                                {{ $skalaNumerik->jenis_nyeri == $item->id ? 'checked' : '' }}>
                                             <label for="jenis_{{ $item->id }}">{{ $item->name }}</label>
                                         </div>
                                     @endforeach
@@ -493,10 +522,11 @@
                             <div class="form-group">
                                 <label class="form-label">Frekuensi Nyeri</label>
                                 <div class="radio-group">
-                                    @foreach($frekuensinyeri as $item)
+                                    @foreach ($frekuensinyeri as $item)
                                         <div class="radio-item">
-                                            <input type="radio" name="frekuensi_nyeri" value="{{ $item->id }}" id="frekuensi_{{ $item->id }}" 
-                                                   {{ $skalaNumerik->frekuensi_nyeri == $item->id ? 'checked' : '' }} required>
+                                            <input type="radio" name="frekuensi_nyeri" value="{{ $item->id }}"
+                                                id="frekuensi_{{ $item->id }}"
+                                                {{ $skalaNumerik->frekuensi_nyeri == $item->id ? 'checked' : '' }}>
                                             <label for="frekuensi_{{ $item->id }}">{{ $item->name }}</label>
                                         </div>
                                     @endforeach
@@ -505,19 +535,23 @@
                         </div>
 
                         <!-- Pain Intervention Protocol Section -->
-                        <div class="form-section" id="painInterventionSection" style="{{ $skalaNumerik->pain_value > 0 ? 'display: block;' : 'display: none;' }}">
+                        <div class="form-section" id="painInterventionSection"
+                            style="{{ $skalaNumerik->pain_value > 0 ? 'display: block;' : 'display: none;' }}">
                             <h5 class="section-title">Protokol Intervensi Status Nyeri</h5>
-                            
+
                             <!-- Intervensi untuk Nyeri Ringan -->
-                            <div id="painLightInterventions" style="{{ ($skalaNumerik->pain_value >= 1 && $skalaNumerik->pain_value <= 3) ? 'display: block;' : 'display: none;' }}">
+                            <div id="painLightInterventions"
+                                style="{{ $skalaNumerik->pain_value >= 1 && $skalaNumerik->pain_value <= 3 ? 'display: block;' : 'display: none;' }}">
                                 <div class="alert alert-info mb-3">
-                                    <i class="ti-info-circle"></i> <strong>Protokol Derajat Nyeri Ringan (Skor 1-3)</strong>
+                                    <i class="ti-info-circle"></i> <strong>Protokol Derajat Nyeri Ringan (Skor
+                                        1-3)</strong>
                                 </div>
-                                
+
                                 <div class="form-group">
                                     <div class="form-check mb-3">
-                                        <input class="form-check-input" type="checkbox" id="ns_kaji_ulang_2jam" name="ns_kaji_ulang_2jam" value="1" 
-                                               {{ $skalaNumerik->ns_kaji_ulang_2jam ? 'checked' : '' }}>
+                                        <input class="form-check-input" type="checkbox" id="ns_kaji_ulang_2jam"
+                                            name="ns_kaji_ulang_2jam" value="1"
+                                            {{ $skalaNumerik->ns_kaji_ulang_2jam ? 'checked' : '' }}>
                                         <label class="form-check-label" for="ns_kaji_ulang_2jam">
                                             Kaji ulang derajat nyeri setiap 2 jam, sampai nyeri teratasi (&lt;4)
                                         </label>
@@ -526,8 +560,9 @@
 
                                 <div class="form-group">
                                     <div class="form-check mb-3">
-                                        <input class="form-check-input" type="checkbox" id="ns_konsultasi_tim" name="ns_konsultasi_tim" value="1" 
-                                               {{ $skalaNumerik->ns_konsultasi_tim ? 'checked' : '' }}>
+                                        <input class="form-check-input" type="checkbox" id="ns_konsultasi_tim"
+                                            name="ns_konsultasi_tim" value="1"
+                                            {{ $skalaNumerik->ns_konsultasi_tim ? 'checked' : '' }}>
                                         <label class="form-check-label" for="ns_konsultasi_tim">
                                             Bila nyeri masih ada, konsultasikan ke Tim Tatalaksana Nyeri
                                         </label>
@@ -536,15 +571,18 @@
                             </div>
 
                             <!-- Intervensi untuk Nyeri Tinggi -->
-                            <div id="painHighInterventions" style="{{ ($skalaNumerik->pain_value >= 7 && $skalaNumerik->pain_value <= 10) ? 'display: block;' : 'display: none;' }}">
+                            <div id="painHighInterventions"
+                                style="{{ $skalaNumerik->pain_value >= 7 && $skalaNumerik->pain_value <= 10 ? 'display: block;' : 'display: none;' }}">
                                 <div class="alert alert-danger mb-3">
-                                    <i class="ti-alert-triangle"></i> <strong>Protokol Derajat Nyeri Tinggi (Skor 7-10)</strong>
+                                    <i class="ti-alert-triangle"></i> <strong>Protokol Derajat Nyeri Tinggi (Skor
+                                        7-10)</strong>
                                 </div>
-                                
+
                                 <div class="form-group">
                                     <div class="form-check mb-3">
-                                        <input class="form-check-input" type="checkbox" id="nt_semua_langkah_sedang" name="nt_semua_langkah_sedang" value="1" 
-                                               {{ $skalaNumerik->nt_semua_langkah_sedang ? 'checked' : '' }}>
+                                        <input class="form-check-input" type="checkbox" id="nt_semua_langkah_sedang"
+                                            name="nt_semua_langkah_sedang" value="1"
+                                            {{ $skalaNumerik->nt_semua_langkah_sedang ? 'checked' : '' }}>
                                         <label class="form-check-label" for="nt_semua_langkah_sedang">
                                             Lakukan seluruh langkah derajat sedang
                                         </label>
@@ -553,10 +591,12 @@
 
                                 <div class="form-group">
                                     <div class="form-check mb-3">
-                                        <input class="form-check-input" type="checkbox" id="nt_kaji_ulang_1jam" name="nt_kaji_ulang_1jam" value="1" 
-                                               {{ $skalaNumerik->nt_kaji_ulang_1jam ? 'checked' : '' }}>
+                                        <input class="form-check-input" type="checkbox" id="nt_kaji_ulang_1jam"
+                                            name="nt_kaji_ulang_1jam" value="1"
+                                            {{ $skalaNumerik->nt_kaji_ulang_1jam ? 'checked' : '' }}>
                                         <label class="form-check-label" for="nt_kaji_ulang_1jam">
-                                            Kaji ulang derajat nyeri setiap 1 jam, sampai nyeri menjadi nyeri sedang dikaji setiap 2 jam, dan bila nyeri telah teratasi setiap 8 jam
+                                            Kaji ulang derajat nyeri setiap 1 jam, sampai nyeri menjadi nyeri sedang dikaji
+                                            setiap 2 jam, dan bila nyeri telah teratasi setiap 8 jam
                                         </label>
                                     </div>
                                 </div>
@@ -580,32 +620,32 @@
         $(document).ready(function() {
             // Initialize pain status on page load
             updatePainStatus();
-            
+
             // Initialize form based on existing data
             initializeFormData();
 
             // Pain scale selection
             $('.pain-scale-option').on('click', function() {
                 const scaleType = $(this).data('scale');
-                
+
                 // Update radio button
                 $('input[name="pain_scale_type"]').prop('checked', false);
                 $(this).find('input[type="radio"]').prop('checked', true);
-                
+
                 // Update visual selection
                 $('.pain-scale-option').removeClass('selected');
                 $(this).addClass('selected');
-                
+
                 // Update image
                 if (scaleType === 'numerik') {
                     $('#scale_image').attr('src', "{{ asset('assets/img/asesmen/numerik.png') }}");
                 } else {
                     $('#scale_image').attr('src', "{{ asset('assets/img/asesmen/asesmen.jpeg') }}");
                 }
-                
+
                 // Show image
                 $('#pain_scale_image').show();
-                
+
                 // Update pain status
                 updatePainStatus();
             });
@@ -618,20 +658,20 @@
             // Menjalar selection
             $('.menjalar-btn').on('click', function() {
                 const choice = $(this).data('menjalar');
-                
+
                 // Update buttons
                 $('.menjalar-btn').removeClass('selected');
                 $(this).addClass('selected');
-                
+
                 // Update hidden input
                 $('#menjalar_value').val(choice);
-                
+
                 if (choice === 'ya') {
                     $('#menjalar_keterangan').addClass('show');
-                    $('#menjalar_keterangan_text').prop('required', true);
+                    // show keterangan input (not marking required)
                 } else {
                     $('#menjalar_keterangan').removeClass('show');
-                    $('#menjalar_keterangan_text').prop('required', false).val('');
+                    $('#menjalar_keterangan_text').val('');
                 }
             });
 
@@ -663,7 +703,7 @@
                 $('.menjalar-btn[data-menjalar="' + menjalartValue + '"]').addClass('selected');
                 if (menjalartValue === 'ya') {
                     $('#menjalar_keterangan').addClass('show');
-                    $('#menjalar_keterangan_text').prop('required', true);
+                    // input shown but not forced required
                 }
             }
 
@@ -680,22 +720,22 @@
         function updatePainStatus() {
             const painValue = parseInt($('#pain_value').val());
             const painScaleType = $('input[name="pain_scale_type"]:checked').val();
-            
+
             // Hide status if no scale type is selected
             if (!painScaleType) {
                 $('#pain_status').hide();
                 $('#painInterventionSection').hide();
                 return;
             }
-            
+
             if (isNaN(painValue) || painValue < 0 || painValue > 10 || $('#pain_value').val() === '') {
                 $('#pain_status').hide();
                 $('#painInterventionSection').hide();
                 return;
             }
-            
+
             let statusText = '';
-            
+
             if (painScaleType === 'numerik') {
                 if (painValue === 0) statusText = 'Tidak Nyeri';
                 else if (painValue >= 1 && painValue <= 3) statusText = 'Ringan';
@@ -710,11 +750,11 @@
                 else if (painValue >= 8 && painValue <= 9) statusText = 'Nyeri Berat';
                 else if (painValue === 10) statusText = 'Sangat Hebat';
             }
-            
+
             $('#pain_status_value').text(painValue);
             $('#pain_status_text').text(statusText);
             $('#pain_status').show();
-            
+
             // Show pain intervention protocol based on pain value
             showPainInterventionProtocol(painValue);
         }
@@ -726,7 +766,7 @@
             $('#painLightInterventions').hide();
             $('#painMediumInterventions').hide();
             $('#painHighInterventions').hide();
-            
+
             // Show appropriate intervention based on pain value
             if (painValue >= 1 && painValue <= 3) {
                 // Nyeri Ringan

@@ -12,34 +12,7 @@ class Transaksi extends Model
     protected $table = 'transaksi';
     public $timestamps = false;
 
-    protected $fillable = [
-        'kd_kasir',
-        'no_transaksi',
-        'kd_pasien',
-        'kd_unit',
-        'tgl_transaksi',
-        'urut_masuk',
-        'tgl_co',
-        'co_status',
-        'orderlist',
-        'app',
-        'kd_user',
-        'tag',
-        'lunas',
-        'tgl_lunas',
-        'acc_dr',
-        'jumlah_lama',
-        'dilayani',
-        'orderMng',
-        'verified',
-        'closeShift',
-        'paid',
-        'tgl_bayar_paid',
-        'tgl_dok',
-        'stats_dok',
-        'jumlah_jaminan',
-        'konsul_rwi',
-    ];
+    protected $guarded = [];
 
     public function pasien()
     {
@@ -49,5 +22,19 @@ class Transaksi extends Model
     public function unit()
     {
         return $this->belongsTo(Unit::class, 'kd_unit', 'kd_unit');
+    }
+
+    public function unitAsal()
+    {
+        return $this->hasMany(UnitAsal::class, 'no_transaksi', 'no_transaksi')
+            ->where('kd_kasir', $this->kd_kasir);
+    }
+
+    public function kunjungan()
+    {
+        return $this->belongsTo(Kunjungan::class, 'kd_pasien', 'kd_pasien')
+            ->where('kd_unit', $this->kd_unit)
+            ->where('tgl_masuk', $this->tgl_transaksi)
+            ->where('urut_masuk', $this->urut_masuk);
     }
 }
