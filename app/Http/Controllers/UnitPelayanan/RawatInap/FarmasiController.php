@@ -210,7 +210,7 @@ class FarmasiController extends Controller
             }
 
             // Generate ID_MRRESEP (sebagai string)
-            $tglMasuk = Carbon::parse($kunjungan->tgl_masuk);
+            $tglMasuk = Carbon::parse($validatedData['tgl_order']);
             $prefix = $tglMasuk->format('Ymd');
             $lastResep = MrResep::where('ID_MRRESEP', 'like', $prefix . '%')
                 ->orderBy('ID_MRRESEP', 'desc')
@@ -353,7 +353,7 @@ class FarmasiController extends Controller
             }
 
             // Generate ID_MRRESEP (sebagai string)
-            $tglMasuk = Carbon::parse($kunjungan->tgl_masuk);
+            $tglMasuk = Carbon::parse($validatedData['tgl_order']);
             $prefix = $tglMasuk->format('Ymd');
             $lastResep = MrResep::where('ID_MRRESEP', 'like', $prefix . '%')
                 ->orderBy('ID_MRRESEP', 'desc')
