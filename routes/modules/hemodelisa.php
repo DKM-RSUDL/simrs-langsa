@@ -56,6 +56,7 @@ Route::prefix('hemodialisa')->group(function () {
                                     Route::get('/create', 'create')->name('.create');
                                     Route::get('/{data}/edit', 'edit')->name('.edit');
                                     Route::get('/{data}/show', 'show')->name('.show');
+                                    Route::get('/{data}/print-pdf', 'printPDF')->name('.print-pdf');
                                     Route::post('/', 'store')->name('.store');
                                     Route::put('/{id}', 'update')->name('.update');
                                 });

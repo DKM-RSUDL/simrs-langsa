@@ -18,6 +18,7 @@ use App\Models\RMEResume;
 use App\Models\RmeResumeDtl;
 use App\Models\SatsetPrognosis;
 use App\Services\AsesmenService;
+use App\Services\BaseService;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
@@ -29,9 +30,12 @@ use Illuminate\Support\Facades\DB;
 class NeurologiController extends Controller
 {
     protected $asesmenService;
+    private $baseService;
+
     public function __construct()
     {
         $this->asesmenService = new AsesmenService();
+        $this->baseService = new BaseService();
         $this->middleware('can:read unit-pelayanan/rawat-inap');
     }
 
@@ -85,6 +89,8 @@ class NeurologiController extends Controller
         DB::beginTransaction();
 
         try {
+            $dataMedis = $this->baseService->getDataMedis($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
+            if (empty($dataMedis)) throw new Exception("Data kunjungan tidak ditemukan");
 
             $asesmen = new RmeAsesmen();
             $asesmen->kd_pasien = $request->kd_pasien;
@@ -97,7 +103,7 @@ class NeurologiController extends Controller
             $asesmen->sub_kategori = 3;
             $asesmen->save();
 
-                        // Prepare vital sign data (hanya field yang ada input)
+            // Prepare vital sign data (hanya field yang ada input)
             $vitalSignInput = [
                 'sistole'        => $request->darah_sistole,
                 'diastole'       => $request->darah_diastole,
@@ -131,21 +137,13 @@ class NeurologiController extends Controller
                 }
             }
 
-            // Get transaction data for vital sign storage
-            $lastTransaction = $this->asesmenService->getTransaksiData(
-                $kd_unit,
-                $kd_pasien,
-                $tgl_masuk,
-                $urut_masuk
-            );
-
             // Save vital signs using service (hanya field yang terisi)
             if (!empty($vitalSignData)) {
                 $this->asesmenService->store(
                     $vitalSignData,
                     $kd_pasien,
-                    $lastTransaction->no_transaksi,
-                    $lastTransaction->kd_kasir
+                    $dataMedis->no_transaksi,
+                    $dataMedis->kd_kasir
                 );
             }
 
@@ -287,6 +285,7 @@ class NeurologiController extends Controller
                     }
                 }
             }
+
             // Simpan data
             saveToColumn($rppList, 'prognosis'); // sudah terlanjut buat ke rpp jadi yang di ubah hanya name sesuai DB saja ke prognosis
             saveToColumn($observasiList, 'observasi');
@@ -305,42 +304,40 @@ class NeurologiController extends Controller
             $asesmenNeurologiDischargePlanning->rencana_tanggal_pulang = $request->rencana_tanggal_pulang;
             $asesmenNeurologiDischargePlanning->save();
 
-            // RESUME
+            $vitalSignStore = [
+                'sistole'        => (int) $request->darah_sistole ?? null,
+                'diastole'       => (int) $request->darah_diastole ?? null,
+                'nadi'           => (int)$request->nadi ?? null,
+                'respiration'    => (int) $request->respirasi ?? null,
+                'suhu'           => (float) $request->suhu ?? null,
+            ];
+
+            // create resume
             $resumeData = [
                 'anamnesis'             => $request->keluhan_utama,
-                'diagnosis'             => [],
-                'tindak_lanjut_code'    => null,
-                'tindak_lanjut_name'    => null,
-                'tgl_kontrol_ulang'     => null,
-                'unit_rujuk_internal'   => null,
-                'rs_rujuk'              => null,
-                'rs_rujuk_bagian'       => null,
-                'konpas'                => [
+                'diagnosis'             => $allDiagnoses,
+
+                'konpas'                =>
+                [
                     'sistole'   => [
-                        'hasil' => ''
+                        'hasil' => $vitalSignStore['sistole'] ?? null
                     ],
                     'distole'   => [
-                        'hasil' => ''
+                        'hasil' => $vitalSignStore['diastole'] ?? null
                     ],
                     'respiration_rate'   => [
-                        'hasil' => $request->respirasi
+                        'hasil' => $vitalSignStore['respiration'] ?? null
                     ],
                     'suhu'   => [
-                        'hasil' => $request->suhu
+                        'hasil' => $vitalSignStore['suhu'] ?? null
                     ],
                     'nadi'   => [
-                        'hasil' => $request->nadi
-                    ],
-                    'tinggi_badan'   => [
-                        'hasil' => ''
-                    ],
-                    'berat_badan'   => [
-                        'hasil' => ''
+                        'hasil' => $vitalSignStore['nadi'] ?? null
                     ]
                 ]
             ];
 
-            $this->createResume($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $resumeData);
+            $this->baseService->updateResumeMedis($dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk, $resumeData);
 
             DB::commit();
 
@@ -449,6 +446,9 @@ class NeurologiController extends Controller
         DB::beginTransaction();
 
         try {
+            $dataMedis = $this->baseService->getDataMedis($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
+            if (empty($dataMedis)) throw new Exception("Data kunjungan tidak ditemukan");
+
             $asesmen = RmeAsesmen::findOrFail($id);
             $asesmen->kd_pasien = $request->kd_pasien;
             $asesmen->kd_unit = $request->kd_unit;
@@ -619,42 +619,47 @@ class NeurologiController extends Controller
             $asesmenNeurologiDischargePlanning->rencana_tanggal_pulang = $request->rencana_tanggal_pulang;
             $asesmenNeurologiDischargePlanning->save();
 
-            // RESUME
+            $vitalSignStore = [
+                'sistole'        => (int) $request->darah_sistole ?? null,
+                'diastole'       => (int) $request->darah_diastole ?? null,
+                'nadi'           => (int)$request->nadi ?? null,
+                'respiration'    => (int) $request->respirasi ?? null,
+                'suhu'           => (float) $request->suhu ?? null,
+            ];
+
+            $this->asesmenService->store(
+                $vitalSignStore,
+                $kd_pasien,
+                $dataMedis->no_transaksi,
+                $dataMedis->kd_kasir
+            );
+
+            // create resume
             $resumeData = [
                 'anamnesis'             => $request->keluhan_utama,
-                'diagnosis'             => [],
-                'tindak_lanjut_code'    => null,
-                'tindak_lanjut_name'    => null,
-                'tgl_kontrol_ulang'     => null,
-                'unit_rujuk_internal'   => null,
-                'rs_rujuk'              => null,
-                'rs_rujuk_bagian'       => null,
-                'konpas'                => [
+                'diagnosis'             => $allDiagnoses,
+
+                'konpas'                =>
+                [
                     'sistole'   => [
-                        'hasil' => ''
+                        'hasil' => $vitalSignStore['sistole'] ?? null
                     ],
                     'distole'   => [
-                        'hasil' => ''
+                        'hasil' => $vitalSignStore['diastole'] ?? null
                     ],
                     'respiration_rate'   => [
-                        'hasil' => $request->respirasi
+                        'hasil' => $vitalSignStore['respiration'] ?? null
                     ],
                     'suhu'   => [
-                        'hasil' => $request->suhu
+                        'hasil' => $vitalSignStore['suhu'] ?? null
                     ],
                     'nadi'   => [
-                        'hasil' => $request->nadi
-                    ],
-                    'tinggi_badan'   => [
-                        'hasil' => ''
-                    ],
-                    'berat_badan'   => [
-                        'hasil' => ''
+                        'hasil' => $vitalSignStore['nadi'] ?? null
                     ]
                 ]
             ];
 
-            $this->createResume($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $resumeData);
+            $this->baseService->updateResumeMedis($dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk, $resumeData);
 
             DB::commit();
 
@@ -663,7 +668,7 @@ class NeurologiController extends Controller
                 'kd_pasien' => request()->route('kd_pasien'),
                 'tgl_masuk' => request()->route('tgl_masuk'),
                 'urut_masuk' => request()->route('urut_masuk'),
-            ])->with(['success' => 'Berhasil mengupdate asesmen THT!']);
+            ])->with(['success' => 'Berhasil mengupdate asesmen Neurologi!']);
         } catch (\Exception $e) {
             DB::rollBack();
             return back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());

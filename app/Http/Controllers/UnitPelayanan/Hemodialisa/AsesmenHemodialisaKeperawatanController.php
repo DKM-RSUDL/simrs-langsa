@@ -29,6 +29,9 @@ use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Barryvdh\DomPDF\Facade\Pdf;
+use App\Models\SjpKunjungan;
+use App\Models\RMEResume;
 
 class AsesmenHemodialisaKeperawatanController extends Controller
 {
@@ -345,20 +348,20 @@ class AsesmenHemodialisaKeperawatanController extends Controller
             // Simpan data monitoring Intra HD
             $keperawatanMonitoringIntrahd = new RmeHdAsesmenKeperawatanMonitoringIntrahd();
             $keperawatanMonitoringIntrahd->id_asesmen = $asesmen->id; // Pastikan $asesmen sudah ada
-            
+
             // Ambil data dari array terakhir
             $keperawatanMonitoringIntrahd->waktu_intra_pre_hd = $latestData['waktu'] ?? null;
             $keperawatanMonitoringIntrahd->qb_intra = $latestData['qb'] ?? null;
             $keperawatanMonitoringIntrahd->qd_intra = $latestData['qd'] ?? null;
             $keperawatanMonitoringIntrahd->uf_rate_intra = $latestData['uf_rate'] ?? null;
-            
+
             // Pecah TD menjadi sistole dan diastole
             if (!empty($latestData['td']) && strpos($latestData['td'], '/') !== false) {
                 $tdParts = explode('/', $latestData['td']);
                 $keperawatanMonitoringIntrahd->sistole_intra = trim($tdParts[0]) ?: null;
                 $keperawatanMonitoringIntrahd->diastole_intra = isset($tdParts[1]) ? trim($tdParts[1]) : null;
             }
-            
+
             $keperawatanMonitoringIntrahd->nadi_intra = $latestData['nadi'] ?? null;
             $keperawatanMonitoringIntrahd->nafas_intra = $latestData['nafas'] ?? null;
             $keperawatanMonitoringIntrahd->suhu_intra = $latestData['suhu'] ?? null;
@@ -804,7 +807,7 @@ class AsesmenHemodialisaKeperawatanController extends Controller
 
             // Cari atau buat record monitoring
             $keperawatanMonitoringIntrahd = RmeHdAsesmenKeperawatanMonitoringIntrahd::firstOrNew(['id_asesmen' => $asesmen->id]);
-            
+
             if (!$keperawatanMonitoringIntrahd) {
                 $keperawatanMonitoringIntrahd = new RmeHdAsesmenKeperawatanMonitoringIntrahd();
                 $keperawatanMonitoringIntrahd->id_asesmen = $id;
@@ -815,14 +818,14 @@ class AsesmenHemodialisaKeperawatanController extends Controller
             $keperawatanMonitoringIntrahd->qb_intra = $latestData['qb'] ?? null;
             $keperawatanMonitoringIntrahd->qd_intra = $latestData['qd'] ?? null;
             $keperawatanMonitoringIntrahd->uf_rate_intra = $latestData['uf_rate'] ?? null;
-            
+
             // Pecah TD
             if (!empty($latestData['td']) && strpos($latestData['td'], '/') !== false) {
                 $tdParts = explode('/', $latestData['td']);
                 $keperawatanMonitoringIntrahd->sistole_intra = trim($tdParts[0]) ?: null;
                 $keperawatanMonitoringIntrahd->diastole_intra = isset($tdParts[1]) ? trim($tdParts[1]) : null;
             }
-            
+
             $keperawatanMonitoringIntrahd->nadi_intra = $latestData['nadi'] ?? null;
             $keperawatanMonitoringIntrahd->nafas_intra = $latestData['nafas'] ?? null;
             $keperawatanMonitoringIntrahd->suhu_intra = $latestData['suhu'] ?? null;
@@ -922,5 +925,79 @@ class AsesmenHemodialisaKeperawatanController extends Controller
             DB::rollBack();
             return back()->with('error', $e->getMessage());
         }
+    }
+    public function printPDF($kd_pasien, $tgl_masuk, $urut_masuk, $id)
+    {
+        // 1. Ambil Data Medis (Sama seperti fungsi show)
+        $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
+            ->join('transaksi as t', function ($join) {
+                $join->on('kunjungan.kd_pasien', '=', 't.kd_pasien');
+                $join->on('kunjungan.kd_unit', '=', 't.kd_unit');
+                $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
+                $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
+            })
+            ->where('kunjungan.kd_unit', $this->kdUnitDef_)
+            ->where('kunjungan.kd_pasien', $kd_pasien)
+            ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
+            ->where('kunjungan.urut_masuk', $urut_masuk)
+            ->first();
+
+        if (!$dataMedis) {
+            abort(404, 'Data not found');
+        }
+
+        // 2. Ambil Kalkulasi Umur (Sama seperti fungsi show)
+        if ($dataMedis->pasien && $dataMedis->pasien->tgl_lahir) {
+            $dataMedis->pasien->umur = Carbon::parse($dataMedis->pasien->tgl_lahir)->age;
+        } else {
+            $dataMedis->pasien->umur = 'Tidak Diketahui';
+        }
+
+        // 3. Ambil Data Asesmen Keperawatan (Sama seperti fungsi show)
+        $asesmen = RmeHdAsesmen::with([
+            'keperawatan',
+            'keperawatanPemeriksaanFisik',
+            'pemeriksaanFisik.itemFisik', 
+            'keperawatanPempen',
+            'keperawatanStatusGizi',
+            'keperawatanRisikoJatuh',
+            'keperawatanStatusPsikososial',
+            'keperawatanMonitoringPreekripsi',
+            'keperawatanMonitoringHeparinisasi',
+            'keperawatanMonitoringTindakan',
+            'keperawatanMonitoringIntrahd',
+            'keperawatanMonitoringPosthd',
+        ])->findOrFail($id);
+
+        // 4. Ambil Data Master Fisik (Sama seperti Asesmen Medis)
+        $itemFisik = MrItemFisik::orderby('urut')->get();
+        // ... (kode untuk $itemFisik) ...
+
+
+        // 4. AMBIL DATA DOKTER & PERAWAT (Sama seperti fungsi show)
+        $dokterPelaksana = DokterKlinik::with(['dokter'])
+            ->where('kd_unit', 215)
+            ->whereRelation('dokter', 'status', 1)
+            ->get();
+
+        $perawat = HrdKaryawan::where('status_peg', 1)
+            ->where('kd_ruangan', 29)
+            ->where('kd_jenis_tenaga', 2)
+            ->where('kd_detail_jenis_tenaga', 1)
+            ->get();
+        // 7. BUAT PDF
+        $pdf = Pdf::loadView('unit-pelayanan.hemodialisa.pelayanan.asesmen.keperawatan.print', compact(
+            'dataMedis',
+            'asesmen',
+            'itemFisik',
+            'dokterPelaksana',
+            'perawat'
+        ));
+
+        // Atur ukuran kertas
+        $pdf->setPaper('a4', 'portrait');
+
+        // 8. TAMPILKAN PDF DI BROWSER
+        return $pdf->stream('asesmen-keperawatan-hd-' . $dataMedis->pasien->nama_pasien . '.pdf');
     }
 }

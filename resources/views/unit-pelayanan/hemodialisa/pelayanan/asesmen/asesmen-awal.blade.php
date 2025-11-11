@@ -139,6 +139,17 @@
                         <i class="fas fa-edit"></i>
                         Edit
                     </a>
+                    @if (isset($asesmen))
+                        <a href="{{ route('hemodialisa.pelayanan.asesmen.keperawatan.print-pdf', [
+                            'kd_pasien' => $dataMedis->kd_pasien,
+                            'tgl_masuk' => date('Y-m-d', strtotime($dataMedis->tgl_masuk)),
+                            'urut_masuk' => $dataMedis->urut_masuk,
+                            'data' => $item->id,
+                        ]) }}"
+                            target="_blank" class="btn btn-sm btn-success">
+                            <i class="bi bi-printer"></i> Cetak
+                        </a>
+                    @endif
                 @endif
             </div>
         </li>

@@ -46,9 +46,9 @@
                 <span class="badge {{ $style }}">{{ $status }}</span>
             </td>
 
-            @if ($item->status == 0)
-                {{-- Jika status Dikirim, tampilkan tombol Edit dan Hapus --}}
-                <td>
+            {{-- Jika status Dikirim, tampilkan tombol Edit dan Hapus --}}
+            <td>
+                @if ($item->status == 0)
                     <div class="d-flex gap-2 justify-content-center" role="group">
                         <button class="btn btn-sm btn-warning btn-edit-konsultasi" data-id="{{ $item->id }}"
                             title="Edit">
@@ -74,13 +74,8 @@
                             </button>
                         </form>
                     </div>
-                </td>
-            @else
-                {{-- Jika status bukan Dikirim (misalnya Diterima), tampilkan indikator bahwa aksi tidak tersedia --}}
-                <td class="text-center text-muted">
-                    <em>-</em>
-                </td>
-            @endif
+                @endif
+            </td>
         </tr>
     @endforeach
 
@@ -120,7 +115,8 @@
             </td>
             <td>
                 <x-table-action>
-                    <a href="{{ route('rawat-inap.konsultasi-spesialis.igd.print', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, encrypt($konsul->id)]) }}" class="btn btn-sm btn-success btn-print-konsultasi" target="_blank">
+                    <a href="{{ route('rawat-inap.konsultasi-spesialis.igd.print', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, encrypt($konsul->id)]) }}"
+                        class="btn btn-sm btn-success btn-print-konsultasi" target="_blank">
                         <i class="fas fa-print"></i>
                     </a>
                 </x-table-action>
