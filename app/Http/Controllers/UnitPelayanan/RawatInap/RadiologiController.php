@@ -65,7 +65,7 @@ class RadiologiController extends Controller
             // 'puasa.required'        => 'Puasa harus dipilih!',
         ];
 
-        $request->validate([
+        $validatedData = $request->validate([
             'kd_dokter'     => 'required',
             'tgl_order'     => 'required',
             'jam_order'     => 'required',
@@ -97,13 +97,15 @@ class RadiologiController extends Controller
 
 
             // get new order number
-            $tglFormat = (int) Carbon::parse($tgl_masuk)->format('Ymd');
+            $tglOrder = (int) Carbon::parse($tgl_masuk)->format('Ymd');
 
-            $lastOrder = SegalaOrder::whereBetween('kd_order', [$tglFormat . '0001', $tglFormat . '9999'])
+            $lastOrder = SegalaOrder::where('kd_order', 'like', $tglOrder . '%')
                 ->orderBy('kd_order', 'desc')
                 ->first();
 
-            $newOrderNumber = (empty($lastOrder)) ? $tglFormat . '0001' : $lastOrder->kd_order + 1;
+            $newOrderNumber = $lastOrder ? ((int)substr($lastOrder->kd_order, -4)) + 1 : 1;
+            $newOrderNumber = str_pad((string)$newOrderNumber, 4, '0', STR_PAD_LEFT);
+            $newOrderNumber = $tglOrder . $newOrderNumber;
 
             $jadwalPemeriksaan = null;
 
