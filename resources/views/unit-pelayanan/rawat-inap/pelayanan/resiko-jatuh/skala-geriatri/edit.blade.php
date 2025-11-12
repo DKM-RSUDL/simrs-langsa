@@ -1,259 +1,9 @@
 @extends('layouts.administrator.master')
 
 @push('css')
-    <link rel="stylesheet" href="{{ asset('assets/css/MedisGawatDaruratController.css') }}">
     <style>
-        .form-label {
-            font-weight: 600;
-            margin-bottom: 0.5rem;
-            color: #2c3e50;
-        }
-
-        .header-asesmen {
-            margin-top: 1rem;
-            font-size: 1.5rem;
-            font-weight: 600;
-            color: #097dd6;
-            text-align: center;
-            margin-bottom: 2rem;
-        }
-
-        .btn-outline-primary {
-            color: #097dd6;
-            border-color: #097dd6;
-        }
-
-        .btn-outline-primary:hover {
-            background-color: #097dd6;
-            color: white;
-        }
-
-        .form-section {
-            background-color: #f8f9fa;
-            border: 1px solid #dee2e6;
-            border-radius: 8px;
-            padding: 1rem;
-            margin-bottom: 1rem;
-        }
-
-        .section-title {
-            font-weight: 600;
-            color: #097dd6;
-            margin-bottom: 1.5rem;
-            font-size: 1.1rem;
-            border-bottom: 2px solid #097dd6;
-            padding-bottom: 0.5rem;
-        }
-
-        .form-group {
-            margin-bottom: 1.5rem;
-        }
-
-        .form-group label {
-            font-weight: 500;
-            color: #495057;
-            margin-bottom: 0.5rem;
-            display: block;
-        }
-
-        .form-control {
-            border-radius: 6px;
-            border: 1px solid #ced4da;
-            padding: 0.75rem;
-            font-size: 0.9rem;
-        }
-
-        .form-control:focus {
-            border-color: #097dd6;
-            box-shadow: 0 0 0 0.2rem rgba(9, 125, 214, 0.25);
-        }
-
-        .datetime-group {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1rem;
-        }
-
-        .datetime-item label {
-            font-weight: 500;
-            color: #6c757d;
-            font-size: 0.85rem;
-        }
-
-        .score-display {
-            background-color: #e3f2fd;
-            border: 2px solid #097dd6;
-            border-radius: 8px;
-            padding: 1.5rem;
-            margin-bottom: 2rem;
-            text-align: center;
-        }
-
-        .score-number {
-            font-size: 2rem;
-            font-weight: bold;
-            color: #097dd6;
-            margin-bottom: 0.5rem;
-        }
-
-        .score-category {
-            font-size: 1.2rem;
-            font-weight: 600;
-            margin-bottom: 0.5rem;
-        }
-
-        .score-category.low-risk {
-            color: #28a745;
-        }
-
-        .score-category.medium-risk {
-            color: #fd7e14;
-        }
-
-        .score-category.high-risk {
-            color: #dc3545;
-        }
-
-        .score-description {
-            font-size: 0.9rem;
-            color: #6c757d;
-        }
-
-        .radio-group {
-            background-color: white;
-            border: 1px solid #dee2e6;
-            border-radius: 6px;
-            padding: 1rem;
-            margin-bottom: 1rem;
-        }
-
-        .radio-group .form-label {
-            font-weight: 600;
-            color: #097dd6;
-            margin-bottom: 1rem;
-            font-size: 1rem;
-            border-bottom: 1px solid #e9ecef;
-            padding-bottom: 0.5rem;
-        }
-
-        .radio-options {
-            display: flex;
-            flex-direction: column;
-            gap: 0.75rem;
-        }
-
-        .radio-item {
-            display: flex;
-            align-items: flex-start;
-            background-color: #f8f9fa;
-            padding: 0.75rem;
-            border: 1px solid #dee2e6;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .radio-item:hover {
-            background-color: #e3f2fd;
-            border-color: #097dd6;
-        }
-
-        .radio-item.selected {
-            background-color: #e3f2fd;
-            border-color: #097dd6;
-            border-width: 2px;
-        }
-
-        .radio-item input[type="radio"] {
-            margin-right: 0.75rem;
-            margin-top: 0.1rem;
-            transform: scale(1.3);
-            accent-color: #097dd6;
-        }
-
-        .radio-item label {
-            margin-bottom: 0 !important;
-            cursor: pointer;
-            font-weight: 500;
-            line-height: 1.4;
-            flex: 1;
-        }
-
-        .radio-value {
-            background-color: #097dd6;
-            color: white;
-            padding: 0.25rem 0.5rem;
-            border-radius: 4px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            margin-left: 0.5rem;
-            min-width: 30px;
-            text-align: center;
-        }
-
-        .form-check {
-            padding-left: 1.5rem;
-        }
-
-        .form-check-input {
-            margin-left: -1.5rem;
-            transform: scale(1.2);
-            accent-color: #097dd6;
-        }
-
-        .form-check-label {
-            font-weight: 500;
-            color: #495057;
-            line-height: 1.4;
-            margin-bottom: 0;
-            cursor: pointer;
-        }
-
-        .form-check-input:checked+.form-check-label {
-            color: #097dd6;
-            font-weight: 600;
-        }
-
-        .alert {
-            border-radius: 8px;
-            padding: 1rem;
-            margin-bottom: 1rem;
-            border: none;
-        }
-
-        .alert-info {
-            background-color: #d1ecf1;
-            color: #0c5460;
-            border-left: 4px solid #17a2b8;
-        }
-
-        .alert-danger {
-            background-color: #f8d7da;
-            color: #721c24;
-            border-left: 4px solid #dc3545;
-        }
-
-        .ml-3 {
-            margin-left: 1rem;
-        }
-
-        .mb-2 {
-            margin-bottom: 0.5rem;
-        }
-
-        .mb-3 {
-            margin-bottom: 1rem;
-        }
-
-        /* Responsive adjustments */
-        @media (max-width: 768px) {
-            .datetime-group {
-                grid-template-columns: 1fr;
-            }
-
-            .form-section {
-                padding: 1rem;
-            }
+        .form-check.selected {
+            background-color: #cfe2ff !important;
         }
     </style>
 @endpush
@@ -280,726 +30,700 @@
 
 
 
-                    <!-- Basic Information Section -->
-                    <div class="form-section">
-                        <h5 class="section-title">Informasi Dasar</h5>
-
-                        <div class="form-group">
-                            <label class="form-label">Tanggal dan Jam Implementasi</label>
-                            <div class="datetime-group">
-                                <div class="datetime-item">
-                                    <label>Tanggal</label>
-                                    <input type="date" class="form-control" name="tanggal_implementasi"
-                                        id="tanggal_implementasi"
-                                        value="{{ date('Y-m-d', strtotime($dataSkalaGeriatri->tanggal_implementasi)) }}"
-                                        required>
-                                </div>
-                                <div class="datetime-item">
-                                    <label>Jam</label>
-                                    <input type="time" class="form-control" name="jam_implementasi" id="jam_implementasi"
-                                        value="{{ date('H:i', strtotime($dataSkalaGeriatri->jam_implementasi)) }}" required>
-                                </div>
-                            </div>
+                    {{-- Informasi Dasar --}}
+                    <div class="row mb-3">
+                        <div class="col-md-4">
+                            <label for="tanggal_implementasi" class="form-label">Tanggal</label>
+                            <input type="date" class="form-control @error('tanggal_implementasi') is-invalid @enderror"
+                                id="tanggal_implementasi" name="tanggal_implementasi"
+                                value="{{ date('Y-m-d', strtotime($dataSkalaGeriatri->tanggal_implementasi)) }}" required>
+                            @error('tanggal_implementasi')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
                         </div>
 
-                        <div class="form-group">
+                        <div class="col-md-4">
+                            <label for="jam_implementasi" class="form-label">Jam</label>
+                            <input type="time" class="form-control @error('jam_implementasi') is-invalid @enderror"
+                                id="jam_implementasi" name="jam_implementasi"
+                                value="{{ date('H:i', strtotime($dataSkalaGeriatri->jam_implementasi)) }}" required>
+                            @error('jam_implementasi')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        <div class="col-md-4">
                             <label for="shift" class="form-label">Shift</label>
-                            <select class="form-control" id="shift" name="shift" required>
+                            <select class="form-control @error('shift') is-invalid @enderror" id="shift" name="shift"
+                                required>
                                 <option value="">Pilih Shift</option>
-                                <option value="pagi" {{ $dataSkalaGeriatri->shift == 'pagi' ? 'selected' : '' }}>
-                                    Pagi
+                                <option value="PG" {{ $dataSkalaGeriatri->shift == 'PG' ? 'selected' : '' }}>Pagi (PG)
                                 </option>
-                                <option value="siang" {{ $dataSkalaGeriatri->shift == 'siang' ? 'selected' : '' }}>
-                                    Siang</option>
-                                <option value="malam" {{ $dataSkalaGeriatri->shift == 'malam' ? 'selected' : '' }}>
-                                    Malam</option>
+                                <option value="SI" {{ $dataSkalaGeriatri->shift == 'SI' ? 'selected' : '' }}>Siang (SI)
+                                </option>
+                                <option value="ML" {{ $dataSkalaGeriatri->shift == 'ML' ? 'selected' : '' }}>Malam (ML)
+                                </option>
                             </select>
+                            @error('shift')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                            <div id="duplicate-warning" class="alert alert-warning mt-2" style="display: none;">
+                                <i class="bi bi-exclamation-triangle"></i> Data dengan tanggal dan shift ini sudah ada!
+                            </div>
                         </div>
                     </div>
 
-                    <!-- Assessment Criteria Section -->
-                    <div class="form-section">
-                        <h5 class="section-title">Kriteria Penilaian Skala Geriatri</h5>
+                    <hr class="my-4">
 
-                        <!-- 1. Riwayat Jatuh -->
-                        <div class="form-group">
-                            <div class="radio-group">
-                                <div class="form-label">1. Riwayat Jatuh</div>
-
-                                <!-- Pertanyaan 1a -->
-                                <div
-                                    style="margin-bottom: 1rem; padding: 0.5rem; background-color: #f8f9fa; border-radius: 4px;">
-                                    <div style="font-weight: 500; margin-bottom: 0.5rem;">Apakah pasien datang
-                                        kerumah
-                                        sakit karena jatuh?</div>
-                                    <div class="radio-options">
-                                        <label
-                                            class="radio-item {{ $dataSkalaGeriatri->riwayat_jatuh_1a == 6 ? 'selected' : '' }}"
-                                            for="riwayat_jatuh_1a_ya">
-                                            <input type="radio" id="riwayat_jatuh_1a_ya" name="riwayat_jatuh_1a"
-                                                value="6"
-                                                {{ $dataSkalaGeriatri->riwayat_jatuh_1a == 6 ? 'checked' : '' }}
-                                                class="assessment-field" data-field="riwayat_jatuh_1a">
-                                            <span>Ya</span>
-                                            <span class="radio-value">6</span>
-                                        </label>
-                                        <label
-                                            class="radio-item {{ $dataSkalaGeriatri->riwayat_jatuh_1a == 0 ? 'selected' : '' }}"
-                                            for="riwayat_jatuh_1a_tidak">
-                                            <input type="radio" id="riwayat_jatuh_1a_tidak" name="riwayat_jatuh_1a"
-                                                value="0"
-                                                {{ $dataSkalaGeriatri->riwayat_jatuh_1a == 0 ? 'checked' : '' }}
-                                                class="assessment-field" data-field="riwayat_jatuh_1a">
-                                            <span>Tidak</span>
-                                            <span class="radio-value">0</span>
-                                        </label>
-                                    </div>
-                                </div>
-
-                                <!-- Pertanyaan 1b -->
-                                <div
-                                    style="margin-bottom: 1rem; padding: 0.5rem; background-color: #f8f9fa; border-radius: 4px;">
-                                    <div style="font-weight: 500; margin-bottom: 0.5rem;">Jika tidak, apakah pasien
-                                        mengalami jatuh dalam 2 bulan terakhir ini?</div>
-                                    <div class="radio-options">
-                                        <label
-                                            class="radio-item {{ $dataSkalaGeriatri->riwayat_jatuh_1b == 6 ? 'selected' : '' }}"
-                                            for="riwayat_jatuh_1b_ya">
-                                            <input type="radio" id="riwayat_jatuh_1b_ya" name="riwayat_jatuh_1b"
-                                                value="6"
-                                                {{ $dataSkalaGeriatri->riwayat_jatuh_1b == 6 ? 'checked' : '' }}
-                                                class="assessment-field" data-field="riwayat_jatuh_1b">
-                                            <span>Ya</span>
-                                            <span class="radio-value">6</span>
-                                        </label>
-                                        <label
-                                            class="radio-item {{ $dataSkalaGeriatri->riwayat_jatuh_1b == 0 ? 'selected' : '' }}"
-                                            for="riwayat_jatuh_1b_tidak">
-                                            <input type="radio" id="riwayat_jatuh_1b_tidak" name="riwayat_jatuh_1b"
-                                                value="0"
-                                                {{ $dataSkalaGeriatri->riwayat_jatuh_1b == 0 ? 'checked' : '' }}
-                                                class="assessment-field" data-field="riwayat_jatuh_1b">
-                                            <span>Tidak</span>
-                                            <span class="radio-value">0</span>
-                                        </label>
-                                    </div>
-                                </div>
-                                <!-- Keterangan -->
-                                <div
-                                    style="margin-top: 1rem; padding: 0.75rem; background-color: #e3f2fd; border-left: 4px solid #097dd6; border-radius: 4px;">
-                                    <div style="font-weight: 400; color: #000000be; margin-bottom: 0.5rem;">Salah
-                                        Satu
-                                        jawaban Ya = 6</div>
-                                </div>
+                    {{-- Checkbox Enable Penilaian --}}
+                    <div class="mb-4">
+                        <label for="enableGeriatri" class="form-check bg-light p-3 rounded mb-2">
+                            <input class="form-check-input" type="checkbox" id="enableGeriatri">
+                            <div class="form-check-label">
+                                Ceklis jika akan membuat penilaian resiko jatuh baru
                             </div>
-                        </div>
-
-                        <!-- 2. Status Mental -->
-                        <div class="form-group">
-                            <div class="radio-group">
-                                <div class="form-label">2. Status Mental</div>
-
-                                <!-- Pertanyaan 2a -->
-                                <div
-                                    style="margin-bottom: 1rem; padding: 0.5rem; background-color: #f8f9fa; border-radius: 4px;">
-                                    <div style="font-weight: 500; margin-bottom: 0.5rem;">Apakah pasien delirium?
-                                        (Tidak
-                                        dapat membuat keputusan, pola pikir tidak terorganisir, gangguan daya ingat)
-                                    </div>
-                                    <div class="radio-options">
-                                        <label
-                                            class="radio-item {{ $dataSkalaGeriatri->status_mental_2a == 14 ? 'selected' : '' }}"
-                                            for="status_mental_2a_ya">
-                                            <input type="radio" id="status_mental_2a_ya" name="status_mental_2a"
-                                                value="14"
-                                                {{ $dataSkalaGeriatri->status_mental_2a == 14 ? 'checked' : '' }}
-                                                class="assessment-field" data-field="status_mental_2a">
-                                            <span>Ya</span>
-                                            <span class="radio-value">14</span>
-                                        </label>
-                                        <label
-                                            class="radio-item {{ $dataSkalaGeriatri->status_mental_2a == 0 ? 'selected' : '' }}"
-                                            for="status_mental_2a_tidak">
-                                            <input type="radio" id="status_mental_2a_tidak" name="status_mental_2a"
-                                                value="0"
-                                                {{ $dataSkalaGeriatri->status_mental_2a == 0 ? 'checked' : '' }}
-                                                class="assessment-field" data-field="status_mental_2a">
-                                            <span>Tidak</span>
-                                            <span class="radio-value">0</span>
-                                        </label>
-                                    </div>
-                                </div>
-
-                                <!-- Pertanyaan 2b -->
-                                <div
-                                    style="margin-bottom: 1rem; padding: 0.5rem; background-color: #f8f9fa; border-radius: 4px;">
-                                    <div style="font-weight: 500; margin-bottom: 0.5rem;">Apakah pasien
-                                        disorientasi?
-                                        (salah menyebutkan waktu, tempat atau orang)</div>
-                                    <div class="radio-options">
-                                        <label
-                                            class="radio-item {{ $dataSkalaGeriatri->status_mental_2b == 14 ? 'selected' : '' }}"
-                                            for="status_mental_2b_ya">
-                                            <input type="radio" id="status_mental_2b_ya" name="status_mental_2b"
-                                                value="14"
-                                                {{ $dataSkalaGeriatri->status_mental_2b == 14 ? 'checked' : '' }}
-                                                class="assessment-field" data-field="status_mental_2b">
-                                            <span>Ya</span>
-                                            <span class="radio-value">14</span>
-                                        </label>
-                                        <label
-                                            class="radio-item {{ $dataSkalaGeriatri->status_mental_2b == 0 ? 'selected' : '' }}"
-                                            for="status_mental_2b_tidak">
-                                            <input type="radio" id="status_mental_2b_tidak" name="status_mental_2b"
-                                                value="0"
-                                                {{ $dataSkalaGeriatri->status_mental_2b == 0 ? 'checked' : '' }}
-                                                class="assessment-field" data-field="status_mental_2b">
-                                            <span>Tidak</span>
-                                            <span class="radio-value">0</span>
-                                        </label>
-                                    </div>
-                                </div>
-
-                                <!-- Pertanyaan 2c -->
-                                <div
-                                    style="margin-bottom: 1rem; padding: 0.5rem; background-color: #f8f9fa; border-radius: 4px;">
-                                    <div style="font-weight: 500; margin-bottom: 0.5rem;">Apakah pasien mengalami
-                                        agitasi? (ketakutan, gelisah, tidak cemas)</div>
-                                    <div class="radio-options">
-                                        <label
-                                            class="radio-item {{ $dataSkalaGeriatri->status_mental_2c == 14 ? 'selected' : '' }}"
-                                            for="status_mental_2c_ya">
-                                            <input type="radio" id="status_mental_2c_ya" name="status_mental_2c"
-                                                value="14"
-                                                {{ $dataSkalaGeriatri->status_mental_2c == 14 ? 'checked' : '' }}
-                                                class="assessment-field" data-field="status_mental_2c">
-                                            <span>Ya</span>
-                                            <span class="radio-value">14</span>
-                                        </label>
-                                        <label
-                                            class="radio-item {{ $dataSkalaGeriatri->status_mental_2c == 0 ? 'selected' : '' }}"
-                                            for="status_mental_2c_tidak">
-                                            <input type="radio" id="status_mental_2c_tidak" name="status_mental_2c"
-                                                value="0"
-                                                {{ $dataSkalaGeriatri->status_mental_2c == 0 ? 'checked' : '' }}
-                                                class="assessment-field" data-field="status_mental_2c">
-                                            <span>Tidak</span>
-                                            <span class="radio-value">0</span>
-                                        </label>
-                                    </div>
-                                </div>
-                                <!-- Keterangan -->
-                                <div
-                                    style="margin-top: 1rem; padding: 0.75rem; background-color: #e3f2fd; border-left: 4px solid #097dd6; border-radius: 4px;">
-                                    <div style="font-weight: 400; color: #000000be; margin-bottom: 0.5rem;">Salah
-                                        Satu
-                                        jawaban Ya = 14</div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- 3. Penglihatan -->
-                        <div class="form-group">
-                            <div class="radio-group">
-                                <div class="form-label">3. Penglihatan</div>
-
-                                <!-- Pertanyaan 3a -->
-                                <div
-                                    style="margin-bottom: 1rem; padding: 0.5rem; background-color: #f8f9fa; border-radius: 4px;">
-                                    <div style="font-weight: 500; margin-bottom: 0.5rem;">Apakah pasien memakai
-                                        kacamata?</div>
-                                    <div class="radio-options">
-                                        <label
-                                            class="radio-item {{ $dataSkalaGeriatri->penglihatan_3a == 1 ? 'selected' : '' }}"
-                                            for="penglihatan_3a_ya">
-                                            <input type="radio" id="penglihatan_3a_ya" name="penglihatan_3a"
-                                                value="1"
-                                                {{ $dataSkalaGeriatri->penglihatan_3a == 1 ? 'checked' : '' }}
-                                                class="assessment-field" data-field="penglihatan_3a">
-                                            <span>Ya</span>
-                                            <span class="radio-value">1</span>
-                                        </label>
-                                        <label
-                                            class="radio-item {{ $dataSkalaGeriatri->penglihatan_3a == 0 ? 'selected' : '' }}"
-                                            for="penglihatan_3a_tidak">
-                                            <input type="radio" id="penglihatan_3a_tidak" name="penglihatan_3a"
-                                                value="0"
-                                                {{ $dataSkalaGeriatri->penglihatan_3a == 0 ? 'checked' : '' }}
-                                                class="assessment-field" data-field="penglihatan_3a">
-                                            <span>Tidak</span>
-                                            <span class="radio-value">0</span>
-                                        </label>
-                                    </div>
-                                </div>
-
-                                <!-- Pertanyaan 3b -->
-                                <div
-                                    style="margin-bottom: 1rem; padding: 0.5rem; background-color: #f8f9fa; border-radius: 4px;">
-                                    <div style="font-weight: 500; margin-bottom: 0.5rem;">Apakah pasien mengeluh
-                                        adanya penglihatan buram?</div>
-                                    <div class="radio-options">
-                                        <label
-                                            class="radio-item {{ $dataSkalaGeriatri->penglihatan_3b == 1 ? 'selected' : '' }}"
-                                            for="penglihatan_3b_ya">
-                                            <input type="radio" id="penglihatan_3b_ya" name="penglihatan_3b"
-                                                value="1"
-                                                {{ $dataSkalaGeriatri->penglihatan_3b == 1 ? 'checked' : '' }}
-                                                class="assessment-field" data-field="penglihatan_3b">
-                                            <span>Ya</span>
-                                            <span class="radio-value">1</span>
-                                        </label>
-                                        <label
-                                            class="radio-item {{ $dataSkalaGeriatri->penglihatan_3b == 0 ? 'selected' : '' }}"
-                                            for="penglihatan_3b_tidak">
-                                            <input type="radio" id="penglihatan_3b_tidak" name="penglihatan_3b"
-                                                value="0"
-                                                {{ $dataSkalaGeriatri->penglihatan_3b == 0 ? 'checked' : '' }}
-                                                class="assessment-field" data-field="penglihatan_3b">
-                                            <span>Tidak</span>
-                                            <span class="radio-value">0</span>
-                                        </label>
-                                    </div>
-                                </div>
-
-                                <!-- Pertanyaan 3c -->
-                                <div
-                                    style="margin-bottom: 1rem; padding: 0.5rem; background-color: #f8f9fa; border-radius: 4px;">
-                                    <div style="font-weight: 500; margin-bottom: 0.5rem;">Apakah pasien mempunyai
-                                        Glaukoma/ Katarak/ degenerasi makula?</div>
-                                    <div class="radio-options">
-                                        <label
-                                            class="radio-item {{ $dataSkalaGeriatri->penglihatan_3c == 1 ? 'selected' : '' }}"
-                                            for="penglihatan_3c_ya">
-                                            <input type="radio" id="penglihatan_3c_ya" name="penglihatan_3c"
-                                                value="1"
-                                                {{ $dataSkalaGeriatri->penglihatan_3c == 1 ? 'checked' : '' }}
-                                                class="assessment-field" data-field="penglihatan_3c">
-                                            <span>Ya</span>
-                                            <span class="radio-value">1</span>
-                                        </label>
-                                        <label
-                                            class="radio-item {{ $dataSkalaGeriatri->penglihatan_3c == 0 ? 'selected' : '' }}"
-                                            for="penglihatan_3c_tidak">
-                                            <input type="radio" id="penglihatan_3c_tidak" name="penglihatan_3c"
-                                                value="0"
-                                                {{ $dataSkalaGeriatri->penglihatan_3c == 0 ? 'checked' : '' }}
-                                                class="assessment-field" data-field="penglihatan_3c">
-                                            <span>Tidak</span>
-                                            <span class="radio-value">0</span>
-                                        </label>
-                                    </div>
-                                </div>
-                                <!-- Keterangan -->
-                                <div
-                                    style="margin-top: 1rem; padding: 0.75rem; background-color: #e3f2fd; border-left: 4px solid #097dd6; border-radius: 4px;">
-                                    <div style="font-weight: 400; color: #000000be; margin-bottom: 0.5rem;">Salah
-                                        Satu
-                                        jawaban Ya = 1</div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- 4. Kebiasaan Berkemih -->
-                        <div class="form-group">
-                            <div class="radio-group">
-                                <div class="form-label">4. Kebiasaan Berkemih</div>
-
-                                <!-- Pertanyaan 4a -->
-                                <div
-                                    style="margin-bottom: 1rem; padding: 0.5rem; background-color: #f8f9fa; border-radius: 4px;">
-                                    <div style="font-weight: 500; margin-bottom: 0.5rem;">Apakah terdapat perubahan
-                                        perilaku berkemih? (frekuensi, urgensi, inkontinensia, nokturia)</div>
-                                    <div class="radio-options">
-                                        <label
-                                            class="radio-item {{ $dataSkalaGeriatri->kebiasaan_berkemih_4a == 2 ? 'selected' : '' }}"
-                                            for="kebiasaan_berkemih_4a_ya">
-                                            <input type="radio" id="kebiasaan_berkemih_4a_ya"
-                                                name="kebiasaan_berkemih_4a" value="2"
-                                                {{ $dataSkalaGeriatri->kebiasaan_berkemih_4a == 2 ? 'checked' : '' }}
-                                                class="assessment-field" data-field="kebiasaan_berkemih_4a">
-                                            <span>Ya</span>
-                                            <span class="radio-value">2</span>
-                                        </label>
-                                        <label
-                                            class="radio-item {{ $dataSkalaGeriatri->kebiasaan_berkemih_4a == 0 ? 'selected' : '' }}"
-                                            for="kebiasaan_berkemih_4a_tidak">
-                                            <input type="radio" id="kebiasaan_berkemih_4a_tidak"
-                                                name="kebiasaan_berkemih_4a" value="0"
-                                                {{ $dataSkalaGeriatri->kebiasaan_berkemih_4a == 0 ? 'checked' : '' }}
-                                                class="assessment-field" data-field="kebiasaan_berkemih_4a">
-                                            <span>Tidak</span>
-                                            <span class="radio-value">0</span>
-                                        </label>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- 5. Transfer-->
-                        <div class="form-group">
-                            <div class="radio-group">
-                                <div class="form-label">5. Transfer (dari tempat tidur ke kursi dan kembali lagi ke
-                                    tempat tidur)</div>
-
-                                <div class="radio-options">
-                                    <label class="radio-item {{ $dataSkalaGeriatri->transfer == 0 ? 'selected' : '' }}"
-                                        for="transfer_5a">
-                                        <input type="radio" id="transfer_5a" name="transfer" value="0"
-                                            {{ $dataSkalaGeriatri->transfer == 0 ? 'checked' : '' }}
-                                            class="assessment-field" data-field="transfer">
-                                        <span>Mandiri (boleh memakai alat bantu jalan)</span>
-                                        <span class="radio-value">0</span>
-                                    </label>
-                                    <label class="radio-item {{ $dataSkalaGeriatri->transfer == 1 ? 'selected' : '' }}"
-                                        for="transfer_5b">
-                                        <input type="radio" id="transfer_5b" name="transfer" value="1"
-                                            {{ $dataSkalaGeriatri->transfer == 1 ? 'checked' : '' }}
-                                            class="assessment-field" data-field="transfer">
-                                        <span>Memerlukan sedikit bantuan (1 orang) / dalam pengawasan</span>
-                                        <span class="radio-value">1</span>
-                                    </label>
-                                    <label class="radio-item {{ $dataSkalaGeriatri->transfer == 2 ? 'selected' : '' }}"
-                                        for="transfer_5c">
-                                        <input type="radio" id="transfer_5c" name="transfer" value="2"
-                                            {{ $dataSkalaGeriatri->transfer == 2 ? 'checked' : '' }}
-                                            class="assessment-field" data-field="transfer">
-                                        <span>Memerlukan bantuan yang nyata (2 orang)</span>
-                                        <span class="radio-value">2</span>
-                                    </label>
-                                    <label class="radio-item {{ $dataSkalaGeriatri->transfer == 3 ? 'selected' : '' }}"
-                                        for="transfer_5d">
-                                        <input type="radio" id="transfer_5d" name="transfer" value="3"
-                                            {{ $dataSkalaGeriatri->transfer == 3 ? 'checked' : '' }}
-                                            class="assessment-field" data-field="transfer">
-                                        <span>Tidak dapat duduk dengan seimbang, perlu bantuan total</span>
-                                        <span class="radio-value">3</span>
-                                    </label>
-                                </div>
-
-                                <!-- Keterangan Jumlah Nilai Transfer -->
-                                <div
-                                    style="margin-top: 1rem; padding: 0.75rem; background-color: #e3f2fd; border-left: 4px solid #097dd6; border-radius: 4px;">
-                                    <div style="font-weight: 600; color: #097dd6; margin-bottom: 0.5rem;">Jumlah
-                                        nilai
-                                        transfer dan mobilitas:</div>
-                                    <div style="font-size: 0.9rem; color: #495057;">
-                                        <div>• Jika nilai total 0 s/d 3 maka skor = 0.</div>
-                                        <div>• Jika nilai total 4 s/d 6, maka skor = 7</div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- 6. Mobilitas -->
-                        <div class="form-group">
-                            <div class="radio-group">
-                                <div class="form-label">6. Mobilitas</div>
-
-                                <div class="radio-options">
-                                    <label class="radio-item {{ $dataSkalaGeriatri->mobilitas == 0 ? 'selected' : '' }}"
-                                        for="mobilitas_6a">
-                                        <input type="radio" id="mobilitas_6a" name="mobilitas" value="0"
-                                            {{ $dataSkalaGeriatri->mobilitas == 0 ? 'checked' : '' }}
-                                            class="assessment-field" data-field="mobilitas">
-                                        <span>Mandiri (boleh menggunakan alat bantu jalan)</span>
-                                        <span class="radio-value">0</span>
-                                    </label>
-                                    <label class="radio-item {{ $dataSkalaGeriatri->mobilitas == 1 ? 'selected' : '' }}"
-                                        for="mobilitas_6b">
-                                        <input type="radio" id="mobilitas_6b" name="mobilitas" value="1"
-                                            {{ $dataSkalaGeriatri->mobilitas == 1 ? 'checked' : '' }}
-                                            class="assessment-field" data-field="mobilitas">
-                                        <span>Berjalan dengan bantuan 1 orang (verbal / fisik) menggunakan kursi
-                                            roda</span>
-                                        <span class="radio-value">1</span>
-                                    </label>
-                                    <label class="radio-item {{ $dataSkalaGeriatri->mobilitas == 2 ? 'selected' : '' }}"
-                                        for="mobilitas_6c">
-                                        <input type="radio" id="mobilitas_6c" name="mobilitas" value="2"
-                                            {{ $dataSkalaGeriatri->mobilitas == 2 ? 'checked' : '' }}
-                                            class="assessment-field" data-field="mobilitas">
-                                        <span>Menggunakan kursi roda</span>
-                                        <span class="radio-value">2</span>
-                                    </label>
-                                    <label class="radio-item {{ $dataSkalaGeriatri->mobilitas == 3 ? 'selected' : '' }}"
-                                        for="mobilitas_6d">
-                                        <input type="radio" id="mobilitas_6d" name="mobilitas" value="3"
-                                            {{ $dataSkalaGeriatri->mobilitas == 3 ? 'checked' : '' }}
-                                            class="assessment-field" data-field="mobilitas">
-                                        <span>Imobilisasi</span>
-                                        <span class="radio-value">3</span>
-                                    </label>
-                                </div>
-                                <!-- Keterangan -->
-                                <div
-                                    style="margin-top: 1rem; padding: 0.75rem; background-color: #e3f2fd; border-left: 4px solid #097dd6; border-radius: 4px;">
-                                    <div style="font-weight: 600; color: #097dd6; margin-bottom: 0.5rem;">Jumlah
-                                        nilai
-                                        transfer dan mobilitas:</div>
-                                    <div style="font-size: 0.9rem; color: #495057;">
-                                        <div>• Jika nilai total 0 s/d 3 maka skor = 0.</div>
-                                        <div>• Jika nilai total 4 s/d 6, maka skor = 7</div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
+                        </label>
                     </div>
 
-                    <!-- Score Display Section -->
-                    <div class="score-display" id="scoreDisplay">
-                        <div class="score-number" id="totalScore">{{ $dataSkalaGeriatri->total_skor }}</div>
-                        <div class="score-category" id="riskCategory">{{ $dataSkalaGeriatri->kategori_risiko }}
+                    {{-- Hidden inputs untuk data penilaian existing --}}
+                    <input type="hidden" name="use_existing_assessment" id="use_existing_assessment" value="1">
+                    <input type="hidden" name="existing_riwayat_jatuh_1a"
+                        value="{{ $dataSkalaGeriatri->riwayat_jatuh_1a }}">
+                    <input type="hidden" name="existing_riwayat_jatuh_1b"
+                        value="{{ $dataSkalaGeriatri->riwayat_jatuh_1b }}">
+                    <input type="hidden" name="existing_status_mental_2a"
+                        value="{{ $dataSkalaGeriatri->status_mental_2a }}">
+                    <input type="hidden" name="existing_status_mental_2b"
+                        value="{{ $dataSkalaGeriatri->status_mental_2b }}">
+                    <input type="hidden" name="existing_status_mental_2c"
+                        value="{{ $dataSkalaGeriatri->status_mental_2c }}">
+                    <input type="hidden" name="existing_penglihatan_3a" value="{{ $dataSkalaGeriatri->penglihatan_3a }}">
+                    <input type="hidden" name="existing_penglihatan_3b" value="{{ $dataSkalaGeriatri->penglihatan_3b }}">
+                    <input type="hidden" name="existing_penglihatan_3c" value="{{ $dataSkalaGeriatri->penglihatan_3c }}">
+                    <input type="hidden" name="existing_kebiasaan_berkemih_4a"
+                        value="{{ $dataSkalaGeriatri->kebiasaan_berkemih_4a }}">
+                    <input type="hidden" name="existing_transfer" value="{{ $dataSkalaGeriatri->transfer }}">
+                    <input type="hidden" name="existing_mobilitas" value="{{ $dataSkalaGeriatri->mobilitas }}">
+                    <input type="hidden" name="existing_total_skor" value="{{ $dataSkalaGeriatri->total_skor }}">
+                    <input type="hidden" name="existing_kategori_risiko"
+                        value="{{ $dataSkalaGeriatri->kategori_risiko }}">
+
+                    {{-- Penilaian Resiko Jatuh --}}
+                    <div id="penilaianSection" class="mb-4" style="display: none;">
+                        <h5 class="mb-3">Penilaian Resiko Jatuh (Skala Geriatri)</h5>
+
+                        {{-- 1. Riwayat Jatuh --}}
+                        <div class="mb-4">
+                            <label class="fw-bold d-block mb-2">1. Riwayat Jatuh:</label>
+
+                            <div class="mb-3">
+                                <label class="form-label fw-medium">a. Apakah pasien datang kerumah sakit karena
+                                    jatuh?</label>
+                                <label for="riwayat_jatuh_1a_tidak" class="form-check bg-light p-3 rounded mb-2"
+                                    data-group="riwayat_jatuh_1a">
+                                    <div class="form-check-label d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <input class="form-check-input" type="radio" name="riwayat_jatuh_1a"
+                                                id="riwayat_jatuh_1a_tidak" value="0"
+                                                {{ $dataSkalaGeriatri->riwayat_jatuh_1a == 0 ? 'checked' : '' }}>
+                                            <span>Tidak</span>
+                                        </div>
+                                        <span class="badge bg-primary">Skor: 0</span>
+                                    </div>
+                                </label>
+                                <label for="riwayat_jatuh_1a_ya" class="form-check bg-light p-3 rounded"
+                                    data-group="riwayat_jatuh_1a">
+                                    <div class="form-check-label d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <input class="form-check-input" type="radio" name="riwayat_jatuh_1a"
+                                                id="riwayat_jatuh_1a_ya" value="6"
+                                                {{ $dataSkalaGeriatri->riwayat_jatuh_1a == 6 ? 'checked' : '' }}>
+                                            <span>Ya</span>
+                                        </div>
+                                        <span class="badge bg-primary">Skor: 6</span>
+                                    </div>
+                                </label>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label fw-medium">b. Jika tidak, apakah pasien mengalami jatuh dalam 2
+                                    bulan
+                                    terakhir ini?</label>
+                                <label for="riwayat_jatuh_1b_tidak" class="form-check bg-light p-3 rounded mb-2"
+                                    data-group="riwayat_jatuh_1b">
+                                    <div class="form-check-label d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <input class="form-check-input" type="radio" name="riwayat_jatuh_1b"
+                                                id="riwayat_jatuh_1b_tidak" value="0"
+                                                {{ $dataSkalaGeriatri->riwayat_jatuh_1b == 0 ? 'checked' : '' }}>
+                                            <span>Tidak</span>
+                                        </div>
+                                        <span class="badge bg-primary">Skor: 0</span>
+                                    </div>
+                                </label>
+                                <label for="riwayat_jatuh_1b_ya" class="form-check bg-light p-3 rounded"
+                                    data-group="riwayat_jatuh_1b">
+                                    <div class="form-check-label d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <input class="form-check-input" type="radio" name="riwayat_jatuh_1b"
+                                                id="riwayat_jatuh_1b_ya" value="6"
+                                                {{ $dataSkalaGeriatri->riwayat_jatuh_1b == 6 ? 'checked' : '' }}>
+                                            <span>Ya</span>
+                                        </div>
+                                        <span class="badge bg-primary">Skor: 6</span>
+                                    </div>
+                                </label>
+                            </div>
                         </div>
-                        <div class="score-description" id="riskDescription">Kategori risiko saat ini</div>
+
+                        {{-- 2. Status Mental --}}
+                        <div class="mb-4">
+                            <label class="fw-bold d-block mb-2">2. Status Mental:</label>
+
+                            <div class="mb-3">
+                                <label class="form-label fw-medium">a. Apakah pasien delirium? (Tidak dapat membuat
+                                    keputusan, pola
+                                    pikir tidak terorganisir, gangguan daya ingat)</label>
+                                <label for="status_mental_2a_tidak" class="form-check bg-light p-3 rounded mb-2"
+                                    data-group="status_mental_2a">
+                                    <div class="form-check-label d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <input class="form-check-input" type="radio" name="status_mental_2a"
+                                                id="status_mental_2a_tidak" value="0"
+                                                {{ $dataSkalaGeriatri->status_mental_2a == 0 ? 'checked' : '' }}>
+                                            <span>Tidak</span>
+                                        </div>
+                                        <span class="badge bg-primary">Skor: 0</span>
+                                    </div>
+                                </label>
+                                <label for="status_mental_2a_ya" class="form-check bg-light p-3 rounded"
+                                    data-group="status_mental_2a">
+                                    <div class="form-check-label d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <input class="form-check-input" type="radio" name="status_mental_2a"
+                                                id="status_mental_2a_ya" value="14"
+                                                {{ $dataSkalaGeriatri->status_mental_2a == 14 ? 'checked' : '' }}>
+                                            <span>Ya</span>
+                                        </div>
+                                        <span class="badge bg-primary">Skor: 14</span>
+                                    </div>
+                                </label>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label fw-medium">b. Apakah pasien disorientasi? (salah menyebutkan
+                                    waktu, tempat
+                                    atau orang)</label>
+                                <label for="status_mental_2b_tidak" class="form-check bg-light p-3 rounded mb-2"
+                                    data-group="status_mental_2b">
+                                    <div class="form-check-label d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <input class="form-check-input" type="radio" name="status_mental_2b"
+                                                id="status_mental_2b_tidak" value="0"
+                                                {{ $dataSkalaGeriatri->status_mental_2b == 0 ? 'checked' : '' }}>
+                                            <span>Tidak</span>
+                                        </div>
+                                        <span class="badge bg-primary">Skor: 0</span>
+                                    </div>
+                                </label>
+                                <label for="status_mental_2b_ya" class="form-check bg-light p-3 rounded"
+                                    data-group="status_mental_2b">
+                                    <div class="form-check-label d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <input class="form-check-input" type="radio" name="status_mental_2b"
+                                                id="status_mental_2b_ya" value="14"
+                                                {{ $dataSkalaGeriatri->status_mental_2b == 14 ? 'checked' : '' }}>
+                                            <span>Ya</span>
+                                        </div>
+                                        <span class="badge bg-primary">Skor: 14</span>
+                                    </div>
+                                </label>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label fw-medium">c. Apakah pasien mengalami agitasi? (ketakutan,
+                                    gelisah, tidak
+                                    cemas)</label>
+                                <label for="status_mental_2c_tidak" class="form-check bg-light p-3 rounded mb-2"
+                                    data-group="status_mental_2c">
+                                    <div class="form-check-label d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <input class="form-check-input" type="radio" name="status_mental_2c"
+                                                id="status_mental_2c_tidak" value="0"
+                                                {{ $dataSkalaGeriatri->status_mental_2c == 0 ? 'checked' : '' }}>
+                                            <span>Tidak</span>
+                                        </div>
+                                        <span class="badge bg-primary">Skor: 0</span>
+                                    </div>
+                                </label>
+                                <label for="status_mental_2c_ya" class="form-check bg-light p-3 rounded"
+                                    data-group="status_mental_2c">
+                                    <div class="form-check-label d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <input class="form-check-input" type="radio" name="status_mental_2c"
+                                                id="status_mental_2c_ya" value="14"
+                                                {{ $dataSkalaGeriatri->status_mental_2c == 14 ? 'checked' : '' }}>
+                                            <span>Ya</span>
+                                        </div>
+                                        <span class="badge bg-primary">Skor: 14</span>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+
+                        {{-- 3. Penglihatan --}}
+                        <div class="mb-4">
+                            <label class="fw-bold d-block mb-2">3. Penglihatan:</label>
+
+                            <div class="mb-3">
+                                <label class="form-label fw-medium">a. Apakah pasien memakai kacamata?</label>
+                                <label for="penglihatan_3a_tidak" class="form-check bg-light p-3 rounded mb-2"
+                                    data-group="penglihatan_3a">
+                                    <div class="form-check-label d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <input class="form-check-input" type="radio" name="penglihatan_3a"
+                                                id="penglihatan_3a_tidak" value="0"
+                                                {{ $dataSkalaGeriatri->penglihatan_3a == 0 ? 'checked' : '' }}>
+                                            <span>Tidak</span>
+                                        </div>
+                                        <span class="badge bg-primary">Skor: 0</span>
+                                    </div>
+                                </label>
+                                <label for="penglihatan_3a_ya" class="form-check bg-light p-3 rounded"
+                                    data-group="penglihatan_3a">
+                                    <div class="form-check-label d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <input class="form-check-input" type="radio" name="penglihatan_3a"
+                                                id="penglihatan_3a_ya" value="1"
+                                                {{ $dataSkalaGeriatri->penglihatan_3a == 1 ? 'checked' : '' }}>
+                                            <span>Ya</span>
+                                        </div>
+                                        <span class="badge bg-primary">Skor: 1</span>
+                                    </div>
+                                </label>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label fw-medium">b. Apakah pasien mengeluh adanya penglihatan
+                                    buram?</label>
+                                <label for="penglihatan_3b_tidak" class="form-check bg-light p-3 rounded mb-2"
+                                    data-group="penglihatan_3b">
+                                    <div class="form-check-label d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <input class="form-check-input" type="radio" name="penglihatan_3b"
+                                                id="penglihatan_3b_tidak" value="0"
+                                                {{ $dataSkalaGeriatri->penglihatan_3b == 0 ? 'checked' : '' }}>
+                                            <span>Tidak</span>
+                                        </div>
+                                        <span class="badge bg-primary">Skor: 0</span>
+                                    </div>
+                                </label>
+                                <label for="penglihatan_3b_ya" class="form-check bg-light p-3 rounded"
+                                    data-group="penglihatan_3b">
+                                    <div class="form-check-label d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <input class="form-check-input" type="radio" name="penglihatan_3b"
+                                                id="penglihatan_3b_ya" value="1"
+                                                {{ $dataSkalaGeriatri->penglihatan_3b == 1 ? 'checked' : '' }}>
+                                            <span>Ya</span>
+                                        </div>
+                                        <span class="badge bg-primary">Skor: 1</span>
+                                    </div>
+                                </label>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label fw-medium">c. Apakah pasien mempunyai Glaukoma/Katarak/degenerasi
+                                    makula?</label>
+                                <label for="penglihatan_3c_tidak" class="form-check bg-light p-3 rounded mb-2"
+                                    data-group="penglihatan_3c">
+                                    <div class="form-check-label d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <input class="form-check-input" type="radio" name="penglihatan_3c"
+                                                id="penglihatan_3c_tidak" value="0"
+                                                {{ $dataSkalaGeriatri->penglihatan_3c == 0 ? 'checked' : '' }}>
+                                            <span>Tidak</span>
+                                        </div>
+                                        <span class="badge bg-primary">Skor: 0</span>
+                                    </div>
+                                </label>
+                                <label for="penglihatan_3c_ya" class="form-check bg-light p-3 rounded"
+                                    data-group="penglihatan_3c">
+                                    <div class="form-check-label d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <input class="form-check-input" type="radio" name="penglihatan_3c"
+                                                id="penglihatan_3c_ya" value="1"
+                                                {{ $dataSkalaGeriatri->penglihatan_3c == 1 ? 'checked' : '' }}>
+                                            <span>Ya</span>
+                                        </div>
+                                        <span class="badge bg-primary">Skor: 1</span>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+
+                        {{-- 4. Kebiasaan Berkemih --}}
+                        <div class="mb-4">
+                            <label class="fw-bold d-block mb-2">4. Kebiasaan Berkemih:</label>
+
+                            <div class="mb-3">
+                                <label class="form-label fw-medium">Apakah terdapat perubahan perilaku berkemih?
+                                    (frekuensi,
+                                    urgensi, inkontinensia, nokturia)</label>
+                                <label for="kebiasaan_berkemih_4a_tidak" class="form-check bg-light p-3 rounded mb-2"
+                                    data-group="kebiasaan_berkemih_4a">
+                                    <div class="form-check-label d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <input class="form-check-input" type="radio" name="kebiasaan_berkemih_4a"
+                                                id="kebiasaan_berkemih_4a_tidak" value="0"
+                                                {{ $dataSkalaGeriatri->kebiasaan_berkemih_4a == 0 ? 'checked' : '' }}>
+                                            <span>Tidak</span>
+                                        </div>
+                                        <span class="badge bg-primary">Skor: 0</span>
+                                    </div>
+                                </label>
+                                <label for="kebiasaan_berkemih_4a_ya" class="form-check bg-light p-3 rounded"
+                                    data-group="kebiasaan_berkemih_4a">
+                                    <div class="form-check-label d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <input class="form-check-input" type="radio" name="kebiasaan_berkemih_4a"
+                                                id="kebiasaan_berkemih_4a_ya" value="2"
+                                                {{ $dataSkalaGeriatri->kebiasaan_berkemih_4a == 2 ? 'checked' : '' }}>
+                                            <span>Ya</span>
+                                        </div>
+                                        <span class="badge bg-primary">Skor: 2</span>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+
+                        {{-- 5. Transfer --}}
+                        <div class="mb-4">
+                            <label class="fw-bold d-block mb-2">5. Transfer (dari tempat tidur ke kursi dan kembali lagi ke
+                                tempat tidur):</label>
+                            <div class="mb-3">
+                                <label for="transfer_0" class="form-check bg-light p-3 rounded mb-2"
+                                    data-group="transfer">
+                                    <div class="form-check-label d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <input class="form-check-input" type="radio" name="transfer"
+                                                id="transfer_0" value="0"
+                                                {{ $dataSkalaGeriatri->transfer == 0 ? 'checked' : '' }}>
+                                            <span>Mandiri (boleh memakai alat bantu jalan)</span>
+                                        </div>
+                                        <span class="badge bg-primary">Skor: 0</span>
+                                    </div>
+                                </label>
+                                <label for="transfer_1" class="form-check bg-light p-3 rounded mb-2"
+                                    data-group="transfer">
+                                    <div class="form-check-label d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <input class="form-check-input" type="radio" name="transfer"
+                                                id="transfer_1" value="1"
+                                                {{ $dataSkalaGeriatri->transfer == 1 ? 'checked' : '' }}>
+                                            <span>Memerlukan sedikit bantuan (1 orang) / dalam pengawasan</span>
+                                        </div>
+                                        <span class="badge bg-primary">Skor: 1</span>
+                                    </div>
+                                </label>
+                                <label for="transfer_2" class="form-check bg-light p-3 rounded mb-2"
+                                    data-group="transfer">
+                                    <div class="form-check-label d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <input class="form-check-input" type="radio" name="transfer"
+                                                id="transfer_2" value="2"
+                                                {{ $dataSkalaGeriatri->transfer == 2 ? 'checked' : '' }}>
+                                            <span>Memerlukan bantuan yang nyata (2 orang)</span>
+                                        </div>
+                                        <span class="badge bg-primary">Skor: 2</span>
+                                    </div>
+                                </label>
+                                <label for="transfer_3" class="form-check bg-light p-3 rounded" data-group="transfer">
+                                    <div class="form-check-label d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <input class="form-check-input" type="radio" name="transfer"
+                                                id="transfer_3" value="3"
+                                                {{ $dataSkalaGeriatri->transfer == 3 ? 'checked' : '' }}>
+                                            <span>Tidak dapat duduk dengan seimbang, perlu bantuan total</span>
+                                        </div>
+                                        <span class="badge bg-primary">Skor: 3</span>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+
+                        {{-- 6. Mobilitas --}}
+                        <div class="mb-4">
+                            <label class="fw-bold d-block mb-2">6. Mobilitas:</label>
+                            <div class="mb-3">
+                                <label for="mobilitas_0" class="form-check bg-light p-3 rounded mb-2"
+                                    data-group="mobilitas">
+                                    <div class="form-check-label d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <input class="form-check-input" type="radio" name="mobilitas"
+                                                id="mobilitas_0" value="0"
+                                                {{ $dataSkalaGeriatri->mobilitas == 0 ? 'checked' : '' }}>
+                                            <span>Mandiri (boleh menggunakan alat bantu jalan)</span>
+                                        </div>
+                                        <span class="badge bg-primary">Skor: 0</span>
+                                    </div>
+                                </label>
+                                <label for="mobilitas_1" class="form-check bg-light p-3 rounded mb-2"
+                                    data-group="mobilitas">
+                                    <div class="form-check-label d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <input class="form-check-input" type="radio" name="mobilitas"
+                                                id="mobilitas_1" value="1"
+                                                {{ $dataSkalaGeriatri->mobilitas == 1 ? 'checked' : '' }}>
+                                            <span>Berjalan dengan bantuan 1 orang (verbal / fisik)</span>
+                                        </div>
+                                        <span class="badge bg-primary">Skor: 1</span>
+                                    </div>
+                                </label>
+                                <label for="mobilitas_2" class="form-check bg-light p-3 rounded mb-2"
+                                    data-group="mobilitas">
+                                    <div class="form-check-label d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <input class="form-check-input" type="radio" name="mobilitas"
+                                                id="mobilitas_2" value="2"
+                                                {{ $dataSkalaGeriatri->mobilitas == 2 ? 'checked' : '' }}>
+                                            <span>Menggunakan kursi roda</span>
+                                        </div>
+                                        <span class="badge bg-primary">Skor: 2</span>
+                                    </div>
+                                </label>
+                                <label for="mobilitas_3" class="form-check bg-light p-3 rounded" data-group="mobilitas">
+                                    <div class="form-check-label d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <input class="form-check-input" type="radio" name="mobilitas"
+                                                id="mobilitas_3" value="3"
+                                                {{ $dataSkalaGeriatri->mobilitas == 3 ? 'checked' : '' }}>
+                                            <span>Imobilisasi</span>
+                                        </div>
+                                        <span class="badge bg-primary">Skor: 3</span>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
                     </div>
 
-                    <!-- Intervention Section -->
-                    <div class="form-section" id="interventionSection">
-                        <h5 class="section-title">Intervensi Pencegahan Jatuh</h5>
+                    <hr class="my-4">
 
-                        <!-- Intervensi untuk Risiko Rendah -->
-                        <div id="lowRiskInterventions"
-                            style="{{ $dataSkalaGeriatri->kategori_risiko == 'Risiko Rendah' ? 'display: block;' : 'display: none;' }}">
-                            <div class="alert alert-info mb-3">
-                                <i class="ti-info-circle"></i> <strong>Intervensi Jatuh Risiko Rendah /
-                                    Standar</strong>
-                            </div>
-
-                            <div class="form-group">
-                                <div class="form-check mb-3">
-                                    <input class="form-check-input" type="checkbox" id="rr_observasi_ambulasi"
-                                        name="rr_observasi_ambulasi" value="1"
-                                        {{ $dataSkalaGeriatri->rr_observasi_ambulasi ? 'checked' : '' }}>
-                                    <label class="form-check-label" for="rr_observasi_ambulasi">
-                                        Tingkatkan observasi bantuan yang sesuai saat ambulasi
-                                    </label>
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <label class="form-label">Orientasikan pasien terhadap lingkungan dan rutinitas
-                                    RS:</label>
-                                <div class="ml-3">
-                                    <div class="form-check mb-2">
-                                        <input class="form-check-input" type="checkbox" id="rr_orientasi_kamar_mandi"
-                                            name="rr_orientasi_kamar_mandi" value="1"
-                                            {{ $dataSkalaGeriatri->rr_orientasi_kamar_mandi ? 'checked' : '' }}>
-                                        <label class="form-check-label" for="rr_orientasi_kamar_mandi">
-                                            Tunjukkan lokasi kamar mandi
-                                        </label>
-                                    </div>
-                                    <div class="form-check mb-2">
-                                        <input class="form-check-input" type="checkbox" id="rr_orientasi_bertahap"
-                                            name="rr_orientasi_bertahap" value="1"
-                                            {{ $dataSkalaGeriatri->rr_orientasi_bertahap ? 'checked' : '' }}>
-                                        <label class="form-check-label" for="rr_orientasi_bertahap">
-                                            Jika pasien linglung, orientasi dilaksanakan bertahap
-                                        </label>
-                                    </div>
-                                    <div class="form-check mb-2">
-                                        <input class="form-check-input" type="checkbox" id="rr_tempatkan_bel"
-                                            name="rr_tempatkan_bel" value="1"
-                                            {{ $dataSkalaGeriatri->rr_tempatkan_bel ? 'checked' : '' }}>
-                                        <label class="form-check-label" for="rr_tempatkan_bel">
-                                            Tempatkan bel ditempat yang mudah dicapai
-                                        </label>
-                                    </div>
-                                    <div class="form-check mb-2">
-                                        <input class="form-check-input" type="checkbox" id="rr_instruksi_bantuan"
-                                            name="rr_instruksi_bantuan" value="1"
-                                            {{ $dataSkalaGeriatri->rr_instruksi_bantuan ? 'checked' : '' }}>
-                                        <label class="form-check-label" for="rr_instruksi_bantuan">
-                                            Instruksikan meminta bantuan perawat sebelum turun dari tempat tidur
-                                        </label>
+                    <!-- Hasil Penilaian -->
+                    <div id="hasilSection" class="mb-4">
+                        <h5 class="mb-3">Hasil Penilaian</h5>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <div class="card border-primary">
+                                    <div class="card-body text-center">
+                                        <label class="fw-bold d-block mb-2">Skor Total</label>
+                                        <p id="geriatri_skorTotal" class="form-control-plaintext fs-2 fw-bold">
+                                            {{ $dataSkalaGeriatri->total_skor }}</p>
                                     </div>
                                 </div>
                             </div>
-
-                            <div class="form-group">
-                                <div class="form-check mb-3">
-                                    <input class="form-check-input" type="checkbox" id="rr_pagar_pengaman"
-                                        name="rr_pagar_pengaman" value="1"
-                                        {{ $dataSkalaGeriatri->rr_pagar_pengaman ? 'checked' : '' }}>
-                                    <label class="form-check-label" for="rr_pagar_pengaman">
-                                        Pagar pengaman tempat tidur dinaikkan
-                                    </label>
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <div class="form-check mb-3">
-                                    <input class="form-check-input" type="checkbox" id="rr_tempat_tidur_rendah"
-                                        name="rr_tempat_tidur_rendah" value="1"
-                                        {{ $dataSkalaGeriatri->rr_tempat_tidur_rendah ? 'checked' : '' }}>
-                                    <label class="form-check-label" for="rr_tempat_tidur_rendah">
-                                        Tempat tidur dalam posisi rendah dan terkunci
-                                    </label>
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <div class="form-check mb-3">
-                                    <input class="form-check-input" type="checkbox" id="rr_edukasi_perilaku"
-                                        name="rr_edukasi_perilaku" value="1"
-                                        {{ $dataSkalaGeriatri->rr_edukasi_perilaku ? 'checked' : '' }}>
-                                    <label class="form-check-label" for="rr_edukasi_perilaku">
-                                        Edukasi perilaku yang lebih aman saat jatuh atau transfer
-                                    </label>
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <div class="form-check mb-3">
-                                    <input class="form-check-input" type="checkbox" id="rr_monitor_berkala"
-                                        name="rr_monitor_berkala" value="1"
-                                        {{ $dataSkalaGeriatri->rr_monitor_berkala ? 'checked' : '' }}>
-                                    <label class="form-check-label" for="rr_monitor_berkala">
-                                        Monitor kebutuhan pasien secara berkala (minimalnya tiap 2 jam)
-                                    </label>
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <div class="form-check mb-3">
-                                    <input class="form-check-input" type="checkbox" id="rr_anjuran_kaus_kaki"
-                                        name="rr_anjuran_kaus_kaki" value="1"
-                                        {{ $dataSkalaGeriatri->rr_anjuran_kaus_kaki ? 'checked' : '' }}>
-                                    <label class="form-check-label" for="rr_anjuran_kaus_kaki">
-                                        Anjurkan pasien tidak menggunakan kaus kaki atau sepatu yang licin
-                                    </label>
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <div class="form-check mb-3">
-                                    <input class="form-check-input" type="checkbox" id="rr_lantai_antislip"
-                                        name="rr_lantai_antislip" value="1"
-                                        {{ $dataSkalaGeriatri->rr_lantai_antislip ? 'checked' : '' }}>
-                                    <label class="form-check-label" for="rr_lantai_antislip">
-                                        Lantai kamar mandi dengan karpet antislip, tidak licin
-                                    </label>
+                            <div class="col-md-6">
+                                <div class="card border-primary">
+                                    <div class="card-body text-center">
+                                        <label class="fw-bold d-block mb-2">Kategori Risiko</label>
+                                        <p id="geriatri_kategoriResiko" class="form-control-plaintext fs-2 fw-bold">
+                                            {{ $dataSkalaGeriatri->kategori_risiko }}</p>
+                                    </div>
                                 </div>
                             </div>
                         </div>
+                        <input type="hidden" name="total_skor" id="geriatri_skorTotalInput"
+                            value="{{ $dataSkalaGeriatri->total_skor }}">
+                        <input type="hidden" name="kategori_risiko" id="geriatri_kategoriResikoInput"
+                            value="{{ $dataSkalaGeriatri->kategori_risiko }}">
+                    </div>
 
-                        <!-- Intervensi untuk Risiko Sedang -->
-                        <div id="mediumRiskInterventions"
-                            style="{{ $dataSkalaGeriatri->kategori_risiko == 'Risiko Sedang' ? 'display: block;' : 'display: none;' }}">
-                            <div class="alert"
-                                style="background-color: #fff3cd; color: #856404; border-left: 4px solid #fd7e14;">
-                                <i class="ti-alert-triangle"></i> <strong>Intervensi Jatuh Risiko Sedang</strong>
-                            </div>
+                    <!-- Intervensi RR -->
+                    <div id="geriatri_intervensiRR"
+                        style="{{ $dataSkalaGeriatri->kategori_risiko == 'Risiko Rendah' ? 'display: block;' : 'display: none;' }}">
+                        <h5 class="mb-3">INTERVENSI PENCEGAHAN JATUH - RESIKO RENDAH (RR)</h5>
 
-                            <div class="form-group">
-                                <div class="form-check mb-3">
-                                    <input class="form-check-input" type="checkbox" id="rs_semua_intervensi_rendah"
-                                        name="rs_semua_intervensi_rendah" value="1"
-                                        {{ $dataSkalaGeriatri->rs_semua_intervensi_rendah ? 'checked' : '' }}>
-                                    <label class="form-check-label" for="rs_semua_intervensi_rendah">
-                                        Lakukan SEMUA intervensi jatuh risiko rendah / standar
-                                    </label>
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <div class="form-check mb-3">
-                                    <input class="form-check-input" type="checkbox" id="rs_gelang_kuning"
-                                        name="rs_gelang_kuning" value="1"
-                                        {{ $dataSkalaGeriatri->rs_gelang_kuning ? 'checked' : '' }}>
-                                    <label class="form-check-label" for="rs_gelang_kuning">
-                                        Pakailah gelang risiko jatuh berwarna kuning
-                                    </label>
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <div class="form-check mb-3">
-                                    <input class="form-check-input" type="checkbox" id="rs_pasang_gambar"
-                                        name="rs_pasang_gambar" value="1"
-                                        {{ $dataSkalaGeriatri->rs_pasang_gambar ? 'checked' : '' }}>
-                                    <label class="form-check-label" for="rs_pasang_gambar">
-                                        Pasang gambar risiko jatuh diatas tempat tidur pasien dan pada pintu kamar
-                                        pasien
-                                    </label>
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <div class="form-check mb-3">
-                                    <input class="form-check-input" type="checkbox" id="rs_tanda_daftar_nama"
-                                        name="rs_tanda_daftar_nama" value="1"
-                                        {{ $dataSkalaGeriatri->rs_tanda_daftar_nama ? 'checked' : '' }}>
-                                    <label class="form-check-label" for="rs_tanda_daftar_nama">
-                                        Tempatkan tanda resiko pasien jatuh pada daftar nama pasien (warna kuning)
-                                    </label>
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <div class="form-check mb-3">
-                                    <input class="form-check-input" type="checkbox" id="rs_pertimbangkan_obat"
-                                        name="rs_pertimbangkan_obat" value="1"
-                                        {{ $dataSkalaGeriatri->rs_pertimbangkan_obat ? 'checked' : '' }}>
-                                    <label class="form-check-label" for="rs_pertimbangkan_obat">
-                                        Pertimbangkan riwayat obat-obatan dan suplemen untuk mengevaluasi pengobatan
-                                    </label>
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <div class="form-check mb-3">
-                                    <input class="form-check-input" type="checkbox" id="rs_alat_bantu_jalan"
-                                        name="rs_alat_bantu_jalan" value="1"
-                                        {{ $dataSkalaGeriatri->rs_alat_bantu_jalan ? 'checked' : '' }}>
-                                    <label class="form-check-label" for="rs_alat_bantu_jalan">
-                                        Gunakan alat bantu jalan (walker, handrail)
-                                    </label>
-                                </div>
-                            </div>
+                        <div class="alert alert-success">
+                            <strong>INFORMASI:</strong> Beri tanda cek (√) pada tindakan yang dilakukan
                         </div>
 
-                        <!-- Intervensi untuk Risiko Tinggi -->
-                        <div id="highRiskInterventions"
-                            style="{{ $dataSkalaGeriatri->kategori_risiko == 'Risiko Tinggi' ? 'display: block;' : 'display: none;' }}">
-                            <div class="alert alert-danger mb-3">
-                                <i class="ti-alert-triangle"></i> <strong>Intervensi Jatuh Risiko Tinggi</strong>
-                            </div>
+                        <label class="fw-bold d-block mb-3 text-success">Pilih Intervensi yang Akan Dilakukan:</label>
 
-                            <div class="form-group">
-                                <div class="form-check mb-3">
-                                    <input class="form-check-input" type="checkbox"
-                                        id="rt_semua_intervensi_rendah_sedang" name="rt_semua_intervensi_rendah_sedang"
-                                        value="1"
-                                        {{ $dataSkalaGeriatri->rt_semua_intervensi_rendah_sedang ? 'checked' : '' }}>
-                                    <label class="form-check-label" for="rt_semua_intervensi_rendah_sedang">
-                                        Lakukan SEMUA intervensi jatuh risiko rendah / standar dan risiko sedang
-                                    </label>
-                                </div>
+                        <label for="rr_observasi_ambulasi" class="form-check bg-light p-3 rounded mb-2">
+                            <input class="form-check-input" type="checkbox" name="rr_observasi_ambulasi"
+                                id="rr_observasi_ambulasi" value="1"
+                                {{ $dataSkalaGeriatri->rr_observasi_ambulasi ? 'checked' : '' }}>
+                            <div class="form-check-label">
+                                Tingkatkan observasi bantuan yang sesuai saat ambulasi
                             </div>
+                        </label>
 
-                            <div class="form-group">
-                                <div class="form-check mb-3">
-                                    <input class="form-check-input" type="checkbox" id="rt_jangan_tinggalkan"
-                                        name="rt_jangan_tinggalkan" value="1"
-                                        {{ $dataSkalaGeriatri->rt_jangan_tinggalkan ? 'checked' : '' }}>
-                                    <label class="form-check-label" for="rt_jangan_tinggalkan">
-                                        Jangan tinggalkan pasien saat di ruangan diagnostic atau tindakan
-                                    </label>
-                                </div>
+                        <label for="rr_orientasi_kamar_mandi" class="form-check bg-light p-3 rounded mb-2">
+                            <input class="form-check-input" type="checkbox" name="rr_orientasi_kamar_mandi"
+                                id="rr_orientasi_kamar_mandi" value="1"
+                                {{ $dataSkalaGeriatri->rr_orientasi_kamar_mandi ? 'checked' : '' }}>
+                            <div class="form-check-label">
+                                2. Orientasikan pasien terhadap lingkungan (kamar mandi, tombol panggil perawat)
                             </div>
+                        </label>
 
-                            <div class="form-group">
-                                <div class="form-check mb-3">
-                                    <input class="form-check-input" type="checkbox" id="rt_dekat_nurse_station"
-                                        name="rt_dekat_nurse_station" value="1"
-                                        {{ $dataSkalaGeriatri->rt_dekat_nurse_station ? 'checked' : '' }}>
-                                    <label class="form-check-label" for="rt_dekat_nurse_station">
-                                        Penempatan pasien dekat nurse station untuk memudahkan observasi (24-48 jam)
-                                    </label>
-                                </div>
+                        <label for="rr_pagar_pengaman" class="form-check bg-light p-3 rounded mb-2">
+                            <input class="form-check-input" type="checkbox" name="rr_pagar_pengaman"
+                                id="rr_pagar_pengaman" value="1"
+                                {{ $dataSkalaGeriatri->rr_pagar_pengaman ? 'checked' : '' }}>
+                            <div class="form-check-label">
+                                3. Pagar pengaman tempat tidur dinaikkan
                             </div>
+                        </label>
+
+                        <label for="rr_tempat_tidur_rendah" class="form-check bg-light p-3 rounded mb-2">
+                            <input class="form-check-input" type="checkbox" name="rr_tempat_tidur_rendah"
+                                id="rr_tempat_tidur_rendah" value="1"
+                                {{ $dataSkalaGeriatri->rr_tempat_tidur_rendah ? 'checked' : '' }}>
+                            <div class="form-check-label">
+                                4. Tempat tidur dalam posisi rendah terkunci
+                            </div>
+                        </label>
+
+                        <label for="rr_edukasi_perilaku" class="form-check bg-light p-3 rounded mb-2">
+                            <input class="form-check-input" type="checkbox" name="rr_edukasi_perilaku"
+                                id="rr_edukasi_perilaku" value="1"
+                                {{ $dataSkalaGeriatri->rr_edukasi_perilaku ? 'checked' : '' }}>
+                            <div class="form-check-label">
+                                5. Edukasi perilaku yang lebih aman saat jatuh atau transfer
+                            </div>
+                        </label>
+
+                        <label for="rr_monitor_berkala" class="form-check bg-light p-3 rounded mb-2">
+                            <input class="form-check-input" type="checkbox" name="rr_monitor_berkala"
+                                id="rr_monitor_berkala" value="1"
+                                {{ $dataSkalaGeriatri->rr_monitor_berkala ? 'checked' : '' }}>
+                            <div class="form-check-label">
+                                6. Monitor kebutuhan pasien secara berkala (minimalnya tiap 2 jam)
+                            </div>
+                        </label>
+
+                        <label for="rr_anjuran_kaus_kaki" class="form-check bg-light p-3 rounded mb-2">
+                            <input class="form-check-input" type="checkbox" name="rr_anjuran_kaus_kaki"
+                                id="rr_anjuran_kaus_kaki" value="1"
+                                {{ $dataSkalaGeriatri->rr_anjuran_kaus_kaki ? 'checked' : '' }}>
+                            <div class="form-check-label">
+                                7. Anjurkan pasien tidak menggunakan kaus kaki atau sepatu yang licin
+                            </div>
+                        </label>
+
+                        <label for="rr_lantai_antislip" class="form-check bg-light p-3 rounded mb-2">
+                            <input class="form-check-input" type="checkbox" name="rr_lantai_antislip"
+                                id="rr_lantai_antislip" value="1"
+                                {{ $dataSkalaGeriatri->rr_lantai_antislip ? 'checked' : '' }}>
+                            <div class="form-check-label">
+                                8. Lantai kamar mandi dengan karpet antislip, tidak licin
+                            </div>
+                        </label>
+
+                    </div> {{-- Intervensi RS --}}
+                    <div id="geriatri_intervensiRS"
+                        style="{{ $dataSkalaGeriatri->kategori_risiko == 'Risiko Sedang' ? 'display: block;' : 'display: none;' }}">
+                        <h5 class="mb-3">INTERVENSI PENCEGAHAN JATUH - RESIKO SEDANG (RS)</h5>
+
+                        <div class="alert alert-warning">
+                            <strong>PERHATIAN:</strong> Beri tanda cek (√) pada tindakan yang dilakukan
                         </div>
+
+                        <label class="fw-bold d-block mb-3 text-warning">Pilih Intervensi yang Akan Dilakukan:</label>
+
+                        <label for="rs_semua_intervensi_rendah" class="form-check bg-light p-3 rounded mb-2">
+                            <input class="form-check-input" type="checkbox" name="rs_semua_intervensi_rendah"
+                                id="rs_semua_intervensi_rendah" value="1"
+                                {{ $dataSkalaGeriatri->rs_semua_intervensi_rendah ? 'checked' : '' }}>
+                            <div class="form-check-label">
+                                1. Lakukan SEMUA intervensi jatuh resiko rendah / standar
+                            </div>
+                        </label>
+
+                        <label for="rs_gelang_kuning" class="form-check bg-light p-3 rounded mb-2">
+                            <input class="form-check-input" type="checkbox" name="rs_gelang_kuning"
+                                id="rs_gelang_kuning" value="1"
+                                {{ $dataSkalaGeriatri->rs_gelang_kuning ? 'checked' : '' }}>
+                            <div class="form-check-label">
+                                2. Pakailah gelang risiko jatuh berwarna kuning
+                            </div>
+                        </label>
+
+                        <label for="rs_pasang_gambar" class="form-check bg-light p-3 rounded mb-2">
+                            <input class="form-check-input" type="checkbox" name="rs_pasang_gambar"
+                                id="rs_pasang_gambar" value="1"
+                                {{ $dataSkalaGeriatri->rs_pasang_gambar ? 'checked' : '' }}>
+                            <div class="form-check-label">
+                                3. Pasang gambar risiko jatuh diatas tempat tidur pasien dan pada pintu kamar pasien
+                            </div>
+                        </label>
+
+                        <label for="rs_tanda_daftar_nama" class="form-check bg-light p-3 rounded mb-2">
+                            <input class="form-check-input" type="checkbox" name="rs_tanda_daftar_nama"
+                                id="rs_tanda_daftar_nama" value="1"
+                                {{ $dataSkalaGeriatri->rs_tanda_daftar_nama ? 'checked' : '' }}>
+                            <div class="form-check-label">
+                                4. Tempatkan tanda resiko pasien jatuh pada daftar nama pasien (warna kuning)
+                            </div>
+                        </label>
+
+                        <label for="rs_pertimbangkan_obat" class="form-check bg-light p-3 rounded mb-2">
+                            <input class="form-check-input" type="checkbox" name="rs_pertimbangkan_obat"
+                                id="rs_pertimbangkan_obat" value="1"
+                                {{ $dataSkalaGeriatri->rs_pertimbangkan_obat ? 'checked' : '' }}>
+                            <div class="form-check-label">
+                                5. Pertimbangkan riwayat obat-obatan dan suplemen untuk mengevaluasi pengobatan
+                            </div>
+                        </label>
+
+                        <label for="rs_alat_bantu_jalan" class="form-check bg-light p-3 rounded mb-2">
+                            <input class="form-check-input" type="checkbox" name="rs_alat_bantu_jalan"
+                                id="rs_alat_bantu_jalan" value="1"
+                                {{ $dataSkalaGeriatri->rs_alat_bantu_jalan ? 'checked' : '' }}>
+                            <div class="form-check-label">
+                                6. Gunakan alat bantu jalan (walker, handrail)
+                            </div>
+                        </label>
+                    </div>
+
+                    {{-- Intervensi RT --}}
+                    <div id="geriatri_intervensiRT"
+                        style="{{ $dataSkalaGeriatri->kategori_risiko == 'Risiko Tinggi' ? 'display: block;' : 'display: none;' }}">
+                        <h5 class="mb-3">INTERVENSI PENCEGAHAN JATUH - RESIKO TINGGI (RT)</h5>
+
+                        <div class="alert alert-danger">
+                            <strong>PERHATIAN:</strong> Beri tanda cek (√) pada tindakan yang dilakukan
+                        </div>
+
+                        <label class="fw-bold d-block mb-3 text-danger">Pilih Intervensi yang Akan Dilakukan:</label>
+
+                        <label for="rt_semua_intervensi_rendah_sedang" class="form-check bg-light p-3 rounded mb-2">
+                            <input class="form-check-input" type="checkbox" name="rt_semua_intervensi_rendah_sedang"
+                                id="rt_semua_intervensi_rendah_sedang" value="1"
+                                {{ $dataSkalaGeriatri->rt_semua_intervensi_rendah_sedang ? 'checked' : '' }}>
+                            <div class="form-check-label">
+                                1. Lakukan SEMUA intervensi jatuh resiko rendah / standar dan resiko sedang
+                            </div>
+                        </label>
+
+                        <label for="rt_jangan_tinggalkan" class="form-check bg-light p-3 rounded mb-2">
+                            <input class="form-check-input" type="checkbox" name="rt_jangan_tinggalkan"
+                                id="rt_jangan_tinggalkan" value="1"
+                                {{ $dataSkalaGeriatri->rt_jangan_tinggalkan ? 'checked' : '' }}>
+                            <div class="form-check-label">
+                                2. Jangan tinggalkan pasien saat di ruangan diagnostic atau tindakan
+                            </div>
+                        </label>
+
+                        <label for="rt_dekat_nurse_station" class="form-check bg-light p-3 rounded mb-2">
+                            <input class="form-check-input" type="checkbox" name="rt_dekat_nurse_station"
+                                id="rt_dekat_nurse_station" value="1"
+                                {{ $dataSkalaGeriatri->rt_dekat_nurse_station ? 'checked' : '' }}>
+                            <div class="form-check-label">
+                                3. Penempatan pasien dekat nurse station untuk memudahkan observasi (24-48 jam)
+                            </div>
+                        </label>
                     </div>
 
                     <div class="text-end">
@@ -1016,18 +740,50 @@
         $(document).ready(function() {
             let lastChecked = {}; // Untuk menyimpan radio button yang terakhir diklik
 
+            // Event listener untuk checkbox enable penilaian
+            $('#enableGeriatri').on('change', function() {
+                if ($(this).is(':checked')) {
+                    $('#penilaianSection, #hasilSection').show();
+                    $('#use_existing_assessment').val('0');
+                } else {
+                    $('#penilaianSection').hide();
+                    $('#hasilSection').show();
+                    $('#use_existing_assessment').val('1');
+
+                    // Reset semua radio button
+                    $('input[type="radio"]').prop('checked', false);
+                    // Reset visual state
+                    $('.radio-item').removeClass('selected');
+                    lastChecked = {};
+
+                    // Gunakan data existing untuk hasil
+                    const existingSkor = $('input[name="existing_total_skor"]').val();
+                    const existingKategori = $('input[name="existing_kategori_risiko"]').val();
+
+                    if (existingSkor && existingKategori) {
+                        $('#geriatri_skorTotal').text(existingSkor);
+                        $('#geriatri_kategoriResiko').text(existingKategori);
+                        $('#geriatri_skorTotalInput').val(existingSkor);
+                        $('#geriatri_kategoriResikoInput').val(existingKategori);
+                        tampilkanIntervensi(existingKategori);
+                    } else {
+                        calculateScore();
+                    }
+                }
+            });
+
             // Set initial state - populate lastChecked dengan data yang sudah ada
-            $('.assessment-field:checked').each(function() {
+            $('input[type="radio"]:checked').each(function() {
                 lastChecked[this.name] = this;
-                $(this).closest('.radio-item').addClass('selected');
+                $(this).closest('.form-check').addClass('selected');
             });
 
             // Calculate initial score
             calculateScore();
 
             // Initialize checkbox styling for pre-checked items
-            $('.form-check-input:checked').each(function() {
-                $(this).next('.form-check-label').addClass('text-primary');
+            $('.form-check-input[type="checkbox"]:checked').each(function() {
+                $(this).closest('.form-check').addClass('selected');
             });
 
             // Function to calculate total score
@@ -1048,7 +804,7 @@
 
                 // Ambil nilai dari setiap field yang terisi
                 categories.forEach(function(category) {
-                    const checkedInput = $('input[name="' + category + '"]:checked');
+                    const checkedInput = $('input[type="radio"][name="' + category + '"]:checked');
                     if (checkedInput.length > 0) {
                         categoryScores[category] = parseInt(checkedInput.val());
                         filledCount++;
@@ -1125,41 +881,58 @@
 
             // Function to update score display
             function updateScoreDisplay(score, filledCount, totalFields) {
-                $('#totalScore').text(score);
-                $('#scoreDisplay').show();
+                $('#geriatri_skorTotal').text(score);
+                $('#geriatri_skorTotalInput').val(score);
 
-                $('#interventionSection').hide();
-                $('#lowRiskInterventions').hide();
-                $('#mediumRiskInterventions').hide();
-                $('#highRiskInterventions').hide();
+                $('#geriatri_intervensiRR').hide();
+                $('#geriatri_intervensiRS').hide();
+                $('#geriatri_intervensiRT').hide();
+
+                let kategoriRisiko = '';
 
                 if (filledCount < totalFields) {
-                    $('#riskCategory').text('Skor Sementara').removeClass('low-risk medium-risk high-risk');
-                    $('#riskDescription').text(
-                        `Skor saat ini: ${score} (${filledCount}/${totalFields} kriteria terisi)`);
+                    kategoriRisiko = 'Skor Sementara';
+                    $('#geriatri_kategoriResiko').text(kategoriRisiko);
                 } else {
                     if (score >= 0 && score <= 5) {
-                        $('#riskCategory').text('Risiko Rendah').removeClass('medium-risk high-risk').addClass(
-                            'low-risk');
-                        $('#riskDescription').text('Skor 0-5: Pasien memiliki risiko jatuh rendah');
-                        $('#interventionSection').show();
-                        $('#lowRiskInterventions').show();
+                        kategoriRisiko = 'Risiko Rendah';
+                        $('#geriatri_kategoriResiko').text(kategoriRisiko).removeClass('text-warning text-danger')
+                            .addClass('text-success');
+                        $('#geriatri_intervensiRR').show();
                     } else if (score >= 6 && score <= 16) {
-                        $('#riskCategory').text('Risiko Sedang').removeClass('low-risk high-risk').addClass(
-                            'medium-risk');
-                        $('#riskDescription').text('Skor 6-16: Pasien memiliki risiko jatuh sedang');
-                        $('#interventionSection').show();
-                        $('#mediumRiskInterventions').show();
+                        kategoriRisiko = 'Risiko Sedang';
+                        $('#geriatri_kategoriResiko').text(kategoriRisiko).removeClass('text-success text-danger')
+                            .addClass('text-warning');
+                        $('#geriatri_intervensiRS').show();
                     } else if (score >= 17 && score <= 30) {
-                        $('#riskCategory').text('Risiko Tinggi').removeClass('low-risk medium-risk').addClass(
-                            'high-risk');
-                        $('#riskDescription').text('Skor 17-30: Pasien memiliki risiko jatuh tinggi');
-                        $('#interventionSection').show();
-                        $('#highRiskInterventions').show();
+                        kategoriRisiko = 'Risiko Tinggi';
+                        $('#geriatri_kategoriResiko').text(kategoriRisiko).removeClass('text-success text-warning')
+                            .addClass('text-danger');
+                        $('#geriatri_intervensiRT').show();
                     } else {
-                        $('#riskCategory').text('Skor Tidak Valid').removeClass('low-risk medium-risk high-risk');
-                        $('#riskDescription').text('Skor di luar rentang yang valid');
+                        kategoriRisiko = 'Skor Tidak Valid';
+                        $('#geriatri_kategoriResiko').text(kategoriRisiko).removeClass(
+                            'text-success text-warning text-danger');
                     }
+                }
+
+                $('#geriatri_kategoriResikoInput').val(kategoriRisiko);
+            }
+
+            // Function untuk menampilkan intervensi berdasarkan kategori risiko
+            function tampilkanIntervensi(kategori) {
+                // Sembunyikan semua intervensi terlebih dahulu
+                $('#geriatri_intervensiRR').hide();
+                $('#geriatri_intervensiRS').hide();
+                $('#geriatri_intervensiRT').hide();
+
+                // Tampilkan intervensi sesuai kategori
+                if (kategori === 'Risiko Rendah') {
+                    $('#geriatri_intervensiRR').show();
+                } else if (kategori === 'Risiko Sedang') {
+                    $('#geriatri_intervensiRS').show();
+                } else if (kategori === 'Risiko Tinggi') {
+                    $('#geriatri_intervensiRT').show();
                 }
             }
 
@@ -1219,7 +992,7 @@
 
             // ======= HANYA INI YANG PERLU UNTUK RADIO BUTTON =======
             // Event handler untuk fitur uncheck pada radio button
-            $('.assessment-field').on('click', function() {
+            $('input[type="radio"]').on('click', function() {
                 const groupName = this.name;
 
                 // Jika radio yang sama diklik lagi, uncheck
@@ -1231,9 +1004,9 @@
                 }
 
                 // Update visual selected state
-                $('.radio-item').removeClass('selected');
-                $('.assessment-field:checked').each(function() {
-                    $(this).closest('.radio-item').addClass('selected');
+                $('.form-check').removeClass('selected');
+                $('input[type="radio"]:checked').each(function() {
+                    $(this).closest('.form-check').addClass('selected');
                 });
 
                 // Calculate score
@@ -1241,12 +1014,12 @@
             });
             // ======= AKHIR RADIO BUTTON HANDLER =======
 
-            // Event listener untuk checkbox styling
-            $('.form-check-input').on('change', function() {
+            // Event listener untuk checkbox intervention styling
+            $('.form-check-input[type="checkbox"]').on('change', function() {
                 if ($(this).is(':checked')) {
-                    $(this).next('.form-check-label').addClass('text-primary');
+                    $(this).closest('.form-check').addClass('selected');
                 } else {
-                    $(this).next('.form-check-label').removeClass('text-primary');
+                    $(this).closest('.form-check').removeClass('selected');
                 }
             });
 

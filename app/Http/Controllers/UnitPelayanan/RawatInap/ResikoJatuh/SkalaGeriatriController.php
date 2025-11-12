@@ -116,8 +116,18 @@ class SkalaGeriatriController extends Controller
             abort(404, 'Data not found');
         }
 
+        // Ambil data penilaian terakhir yang valid untuk menentukan apakah penilaian perlu ditampilkan
+        $lastAssessment = RmeSkalaGeriatri::where('kd_pasien', $kd_pasien)
+            ->where('kd_unit', $kd_unit)
+            ->where('tgl_masuk', $tgl_masuk)
+            ->where('urut_masuk', $urut_masuk)
+            ->orderBy('tanggal_implementasi', 'desc')
+            ->orderBy('jam_implementasi', 'desc')
+            ->first();
+
         return view('unit-pelayanan.rawat-inap.pelayanan.resiko-jatuh.skala-geriatri.create', compact(
             'dataMedis',
+            'lastAssessment'
         ));
     }
 
@@ -139,56 +149,84 @@ class SkalaGeriatriController extends Controller
                     ->withInput();
             }
 
-            // Kalkulasi skor khusus untuk Geriatri
-            $riwayatJatuhScore = 0;
-            $riwayat1a = (int)$request->riwayat_jatuh_1a;
-            $riwayat1b = (int)$request->riwayat_jatuh_1b;
-            if ($riwayat1a === 6 || $riwayat1b === 6) {
-                $riwayatJatuhScore = 6;
+            // Variabel untuk menyimpan data assessment
+            $riwayat1a = 0;
+            $riwayat1b = 0;
+            $mental2a = 0;
+            $mental2b = 0;
+            $mental2c = 0;
+            $penglihatan3a = 0;
+            $penglihatan3b = 0;
+            $penglihatan3c = 0;
+            $kebiasaanBerkemihScore = 0;
+            $transferValue = 0;
+            $mobilitasValue = 0;
+            $totalSkor = 0;
+            $kategoriRisiko = '';
+
+            // Cek apakah menggunakan assessment existing atau membuat baru
+            if ($request->use_existing_assessment == '1') {
+                // Gunakan data dari hidden input (existing)
+                $riwayat1a = (int)$request->existing_riwayat_jatuh_1a;
+                $riwayat1b = (int)$request->existing_riwayat_jatuh_1b;
+                $mental2a = (int)$request->existing_status_mental_2a;
+                $mental2b = (int)$request->existing_status_mental_2b;
+                $mental2c = (int)$request->existing_status_mental_2c;
+                $penglihatan3a = (int)$request->existing_penglihatan_3a;
+                $penglihatan3b = (int)$request->existing_penglihatan_3b;
+                $penglihatan3c = (int)$request->existing_penglihatan_3c;
+                $kebiasaanBerkemihScore = (int)$request->existing_kebiasaan_berkemih_4a;
+                $transferValue = (int)$request->existing_transfer;
+                $mobilitasValue = (int)$request->existing_mobilitas;
+                $totalSkor = (int)$request->existing_total_skor;
+                $kategoriRisiko = $request->existing_kategori_risiko;
             } else {
+                // Gunakan data dari form penilaian baru
+                $riwayat1a = (int)$request->riwayat_jatuh_1a;
+                $riwayat1b = (int)$request->riwayat_jatuh_1b;
+                $mental2a = (int)$request->status_mental_2a;
+                $mental2b = (int)$request->status_mental_2b;
+                $mental2c = (int)$request->status_mental_2c;
+                $penglihatan3a = (int)$request->penglihatan_3a;
+                $penglihatan3b = (int)$request->penglihatan_3b;
+                $penglihatan3c = (int)$request->penglihatan_3c;
+                $kebiasaanBerkemihScore = (int)$request->kebiasaan_berkemih_4a;
+                $transferValue = (int)$request->transfer;
+                $mobilitasValue = (int)$request->mobilitas;
+
+                // Kalkulasi skor khusus untuk Geriatri
                 $riwayatJatuhScore = 0;
-            }
+                if ($riwayat1a === 6 || $riwayat1b === 6) {
+                    $riwayatJatuhScore = 6;
+                }
 
-            $statusMentalScore = 0;
-            $mental2a = (int)$request->status_mental_2a;
-            $mental2b = (int)$request->status_mental_2b;
-            $mental2c = (int)$request->status_mental_2c;
-            if ($mental2a === 14 || $mental2b === 14 || $mental2c === 14) {
-                $statusMentalScore = 14;
-            } else {
                 $statusMentalScore = 0;
-            }
+                if ($mental2a === 14 || $mental2b === 14 || $mental2c === 14) {
+                    $statusMentalScore = 14;
+                }
 
-            $penglihatanScore = 0;
-            $penglihatan3a = (int)$request->penglihatan_3a;
-            $penglihatan3b = (int)$request->penglihatan_3b;
-            $penglihatan3c = (int)$request->penglihatan_3c;
-            if ($penglihatan3a === 1 || $penglihatan3b === 1 || $penglihatan3c === 1) {
-                $penglihatanScore = 1;
-            } else {
                 $penglihatanScore = 0;
-            }
+                if ($penglihatan3a === 1 || $penglihatan3b === 1 || $penglihatan3c === 1) {
+                    $penglihatanScore = 1;
+                }
 
-            $kebiasaanBerkemihScore = (int)$request->kebiasaan_berkemih_4a;
+                // Transfer + Mobilitas logic
+                $totalTransferMobilitas = $transferValue + $mobilitasValue;
+                $transferMobilitasScore = ($totalTransferMobilitas >= 0 && $totalTransferMobilitas <= 3) ? 0 : 7;
 
-            // Transfer + Mobilitas logic
-            $transferValue = (int)$request->transfer;
-            $mobilitasValue = (int)$request->mobilitas;
-            $totalTransferMobilitas = $transferValue + $mobilitasValue;
-            $transferMobilitasScore = ($totalTransferMobilitas >= 0 && $totalTransferMobilitas <= 3) ? 0 : 7;
+                // Hitung total skor
+                $totalSkor = $riwayatJatuhScore + $statusMentalScore + $penglihatanScore + $kebiasaanBerkemihScore + $transferMobilitasScore;
 
-            // Hitung total skor
-            $totalSkor = $riwayatJatuhScore + $statusMentalScore + $penglihatanScore + $kebiasaanBerkemihScore + $transferMobilitasScore;
-
-            // Tentukan kategori risiko
-            if ($totalSkor >= 0 && $totalSkor <= 5) {
-                $kategoriRisiko = 'Risiko Rendah';
-            } elseif ($totalSkor >= 6 && $totalSkor <= 16) {
-                $kategoriRisiko = 'Risiko Sedang';
-            } elseif ($totalSkor >= 17 && $totalSkor <= 30) {
-                $kategoriRisiko = 'Risiko Tinggi';
-            } else {
-                $kategoriRisiko = 'Skor Tidak Valid';
+                // Tentukan kategori risiko
+                if ($totalSkor >= 0 && $totalSkor <= 5) {
+                    $kategoriRisiko = 'Risiko Rendah';
+                } elseif ($totalSkor >= 6 && $totalSkor <= 16) {
+                    $kategoriRisiko = 'Risiko Sedang';
+                } elseif ($totalSkor >= 17 && $totalSkor <= 30) {
+                    $kategoriRisiko = 'Risiko Tinggi';
+                } else {
+                    $kategoriRisiko = 'Skor Tidak Valid';
+                }
             }
 
             // Simpan data assessment
@@ -216,7 +254,25 @@ class SkalaGeriatriController extends Controller
             $dataGeriatri->transfer = $transferValue;
             $dataGeriatri->mobilitas = $mobilitasValue;
 
-            // Skor hasil kalkulasi
+            // Skor hasil kalkulasi (hitung ulang untuk konsistensi)
+            $riwayatJatuhScore = 0;
+            if ($riwayat1a === 6 || $riwayat1b === 6) {
+                $riwayatJatuhScore = 6;
+            }
+
+            $statusMentalScore = 0;
+            if ($mental2a === 14 || $mental2b === 14 || $mental2c === 14) {
+                $statusMentalScore = 14;
+            }
+
+            $penglihatanScore = 0;
+            if ($penglihatan3a === 1 || $penglihatan3b === 1 || $penglihatan3c === 1) {
+                $penglihatanScore = 1;
+            }
+
+            $totalTransferMobilitas = $transferValue + $mobilitasValue;
+            $transferMobilitasScore = ($totalTransferMobilitas >= 0 && $totalTransferMobilitas <= 3) ? 0 : 7;
+
             $dataGeriatri->skor_riwayat_jatuh = $riwayatJatuhScore;
             $dataGeriatri->skor_status_mental = $statusMentalScore;
             $dataGeriatri->skor_penglihatan = $penglihatanScore;
@@ -342,10 +398,39 @@ class SkalaGeriatriController extends Controller
                     ->withInput();
             }
 
-            // Kalkulasi skor khusus untuk Geriatri
+            // Cek apakah menggunakan penilaian existing atau membuat penilaian baru
+            $useExistingAssessment = $request->use_existing_assessment == '1';
+
+            if ($useExistingAssessment) {
+                // Gunakan data existing dari hidden inputs (tidak membuat penilaian baru)
+                $riwayat1a = (int)$request->existing_riwayat_jatuh_1a;
+                $riwayat1b = (int)$request->existing_riwayat_jatuh_1b;
+                $mental2a = (int)$request->existing_status_mental_2a;
+                $mental2b = (int)$request->existing_status_mental_2b;
+                $mental2c = (int)$request->existing_status_mental_2c;
+                $penglihatan3a = (int)$request->existing_penglihatan_3a;
+                $penglihatan3b = (int)$request->existing_penglihatan_3b;
+                $penglihatan3c = (int)$request->existing_penglihatan_3c;
+                $kebiasaanBerkemihScore = (int)$request->existing_kebiasaan_berkemih_4a;
+                $transferValue = (int)$request->existing_transfer;
+                $mobilitasValue = (int)$request->existing_mobilitas;
+            } else {
+                // Gunakan data dari form input (membuat penilaian baru)
+                $riwayat1a = (int)$request->riwayat_jatuh_1a;
+                $riwayat1b = (int)$request->riwayat_jatuh_1b;
+                $mental2a = (int)$request->status_mental_2a;
+                $mental2b = (int)$request->status_mental_2b;
+                $mental2c = (int)$request->status_mental_2c;
+                $penglihatan3a = (int)$request->penglihatan_3a;
+                $penglihatan3b = (int)$request->penglihatan_3b;
+                $penglihatan3c = (int)$request->penglihatan_3c;
+                $kebiasaanBerkemihScore = (int)$request->kebiasaan_berkemih_4a;
+                $transferValue = (int)$request->transfer;
+                $mobilitasValue = (int)$request->mobilitas;
+            }
+
+            // Kalkulasi skor khusus untuk Geriatri (tetap perlu kalkulasi ulang untuk konsistensi)
             $riwayatJatuhScore = 0;
-            $riwayat1a = (int)$request->riwayat_jatuh_1a;
-            $riwayat1b = (int)$request->riwayat_jatuh_1b;
             if ($riwayat1a === 6 || $riwayat1b === 6) {
                 $riwayatJatuhScore = 6;
             } else {
@@ -353,9 +438,6 @@ class SkalaGeriatriController extends Controller
             }
 
             $statusMentalScore = 0;
-            $mental2a = (int)$request->status_mental_2a;
-            $mental2b = (int)$request->status_mental_2b;
-            $mental2c = (int)$request->status_mental_2c;
             if ($mental2a === 14 || $mental2b === 14 || $mental2c === 14) {
                 $statusMentalScore = 14;
             } else {
@@ -363,20 +445,13 @@ class SkalaGeriatriController extends Controller
             }
 
             $penglihatanScore = 0;
-            $penglihatan3a = (int)$request->penglihatan_3a;
-            $penglihatan3b = (int)$request->penglihatan_3b;
-            $penglihatan3c = (int)$request->penglihatan_3c;
             if ($penglihatan3a === 1 || $penglihatan3b === 1 || $penglihatan3c === 1) {
                 $penglihatanScore = 1;
             } else {
                 $penglihatanScore = 0;
             }
 
-            $kebiasaanBerkemihScore = (int)$request->kebiasaan_berkemih_4a;
-
             // Transfer + Mobilitas logic
-            $transferValue = (int)$request->transfer;
-            $mobilitasValue = (int)$request->mobilitas;
             $totalTransferMobilitas = $transferValue + $mobilitasValue;
             $transferMobilitasScore = ($totalTransferMobilitas >= 0 && $totalTransferMobilitas <= 3) ? 0 : 7;
 
@@ -560,5 +635,4 @@ class SkalaGeriatriController extends Controller
             return back()->with('error', 'Gagal menghapus data: ' . $e->getMessage());
         }
     }
-
 }

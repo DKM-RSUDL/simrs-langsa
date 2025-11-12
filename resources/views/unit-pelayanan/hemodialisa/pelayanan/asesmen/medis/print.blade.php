@@ -117,6 +117,8 @@
 
         .section {
             margin-top: 15px;
+            page-break-inside: avoid;
+            /* Tambahkan ini agar section tidak terpotong */
         }
 
         .section-title {
@@ -152,10 +154,8 @@
             color: #000;
         }
 
-        /* Pemeriksaan fisik (spasi antar baris) */
         .fisik-table {
             width: 100%;
-            /* <-- TAMBAHKAN INI */
         }
 
         .fisik-table td {
@@ -163,6 +163,24 @@
             padding: 2px 4px;
         }
 
+        .obs-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 8pt;
+            margin-top: 5px;
+        }
+
+        .obs-table th,
+        .obs-table td {
+            border: 1px solid #999;
+            padding: 4px;
+        }
+
+        .obs-table th {
+            background-color: #f2f2f2;
+        }
+
+        /* --- PERBAIKAN TTD --- */
         .signature-block {
             margin-top: 40px;
             width: 100%;
@@ -170,16 +188,18 @@
             page-break-inside: avoid;
         }
 
-        .sig-left {
-            float: left;
-            width: 45%;
-            text-align: center;
+        .sig-table {
+            width: 100%;
+            margin-top: 40px;
+            page-break-inside: avoid;
         }
 
-        .sig-right {
-            float: right;
-            width: 45%;
+        .sig-table td {
+            width: 33%;
             text-align: center;
+            vertical-align: top;
+            border: none;
+            padding: 0;
         }
 
         .sig-name {
@@ -300,7 +320,36 @@
             <tr>
                 <td>AVPU</td>
                 <td>:</td>
-                <td>{{ $fisik->avpu ?? '-' }}</td>
+                <td>
+                    @switch($fisik->avpu)
+                        @case('0')
+                            Sadar Baik/Alert: 0
+                        @break
+
+                        @case('1')
+                            Berespon dengan kata-kata/Voice: 1
+                        @break
+
+                        @case('2')
+                            Hanya berespons jika dirangsang nyeri/Pain: 2
+                        @break
+
+                        @case('3')
+                            Pasien tidak sadar/Unresponsive: 3
+                        @break
+
+                        @case('4')
+                            Gelisah atau bingung: 4
+                        @break
+
+                        @case('5')
+                            Acute Confusional States: 5
+                        @break
+
+                        @default
+                            {{ $fisik->avpu ?? '-' }}
+                    @endswitch
+                </td>
             </tr>
             <tr>
                 <td>Tinggi Badan</td>
@@ -317,55 +366,107 @@
                 <td>:</td>
                 <td>{{ $fisik->imt ?? '-' }}</td>
             </tr>
+            <tr>
+                <td>Luas Permukaan Tubuh (LPT)</td>
+                <td>:</td>
+                <td>{{ $fisik->lpt ?? '-' }}</td>
+            </tr>
         </table>
     </div>
-    <div class="section">
-        <div class="section-title">3. PEMERIKSAAN FISIK (STATUS GENERALIS)</div>
 
+    <div class="section">
         @php
-            $pemeriksaanFisikItems = $asesmen->pemeriksaanFisik ?? collect();
-            $totalItems = $pemeriksaanFisikItems->count();
-            // Hitung jumlah baris yang diperlukan untuk kolom kiri
+            // 1. Dapatkan MASTER LIST (pastikan dikirim dari controller)
+            $masterItemList = ($itemFisik ?? collect())->values();
+
+            // 2. Dapatkan data YANG DISIMPAN untuk asesmen ini
+            //    Nama relasi "pemFisik" sudah benar (sesuai kode show Anda)
+            $savedItems = $asesmen->pemFisik ?? collect();
+
+            // 3. Hitung jumlah baris berdasarkan MASTER LIST
+            $totalItems = $masterItemList->count();
             $rows = ceil($totalItems / 2);
         @endphp
 
-        <table class="fisik-table">
+        <table class="fisik-table" style="width: 100%;">
+            <tr>
+                <td colspan="5" style="font-weight: bold; background-color: #f9f9f9;">Pemeriksaan Fisik</td>
+            </tr>
+
             @for ($i = 0; $i < $rows; $i++)
                 <tr>
-                    @if (isset($pemeriksaanFisikItems[$i]))
-                        @php $itemKiri = $pemeriksaanFisikItems[$i]; @endphp
-                        <td class="w-20">{{ $itemKiri->itemFisik->nama ?? '-' }}</td>
-                        <td class="w-25">:
-                            {{ (int) $itemKiri->is_normal === 1 ? 'Normal' : $itemKiri->keterangan ?? '-' }}</td>
+                    @php
+                        // --- Item Kolom Kiri ---
+                        $itemKiri = $masterItemList->get($i);
+                        $savedKiri = $itemKiri ? $savedItems->firstWhere('id_item_fisik', $itemKiri->id) : null;
+                    @endphp
+
+                    @if ($itemKiri)
+                        <td class="w-20" style="width: 20%;">{{ $itemKiri->nama ?? '-' }}</td>
+                        <td class="w-25" style="width: 25%;">:
+                            @if ($savedKiri)
+                                {{ (int) $savedKiri->is_normal === 1 ? 'Normal' : $savedKiri->keterangan ?? '-' }}
+                            @else
+                                -
+                            @endif
+                        </td>
                     @else
-                        <td class="w-20"></td>
-                        <td class="w-25"></td>
+                        <td class="w-20" style="width: 20%;"></td>
+                        <td class="w-25" style="width: 25%;"></td>
                     @endif
 
-                    <td class="w-10"></td>
+                    <td class="w-10" style="width: 10%;"></td>
 
-                    @php $kananIndex = $i + $rows; @endphp
-                    @if (isset($pemeriksaanFisikItems[$kananIndex]))
-                        @php $itemKanan = $pemeriksaanFisikItems[$kananIndex]; @endphp
-                        <td class="w-20">{{ $itemKanan->itemFisik->nama ?? '-' }}</td>
-                        <td class="w-25">:
-                            {{ (int) $itemKanan->is_normal === 1 ? 'Normal' : $itemKanan->keterangan ?? '-' }}</td>
+                    @php
+                        // --- Item Kolom Kanan ---
+                        $kananIndex = $i + $rows;
+                        $itemKanan = $masterItemList->get($kananIndex);
+                        $savedKanan = $itemKanan ? $savedItems->firstWhere('id_item_fisik', $itemKanan->id) : null;
+                    @endphp
+
+                    @if ($itemKanan)
+                        <td class="w-20" style="width: 20%;">{{ $itemKanan->nama ?? '-' }}</td>
+                        <td class="w-25" style="width: 25%;">:
+                            @if ($savedKanan)
+                                {{ (int) $savedKanan->is_normal === 1 ? 'Normal' : $savedKanan->keterangan ?? '-' }}
+                            @else
+                                -
+                            @endif
+                        </td>
                     @else
-                        <td class="w-20"></td>
-                        <td class="w-25"></td>
+                        <td class="w-20" style="width: 20%;"></td>
+                        <td class="w-25" style="width: 25%;"></td>
                     @endif
                 </tr>
             @endfor
         </table>
     </div>
+
+    <div class="section">
+        <div class="section-title">3. STATUS NYERI</div>
+        <table class="data-table" style="width: 100%; border-collapse: collapse;">
+            <tr>
+                <td style="width: 50%; vertical-align: top; border-right: 1px solid #ccc; padding: 5px;">
+                    <b>Jenis Skala Nyeri:</b> Scale NRS, VAS, VRS
+                    <br>
+                    <b>Nilai Skala Nyeri:</b> {{ $fisik->skala_nyeri ?? '-' }}
+                    <br><br>
+                    <img src="{{ public_path('assets/img/asesmen/numerik.png') }}" alt="Numeric Scale"
+                        style="width: 100%;">
+                </td>
+                <td style="width: 50%; vertical-align: top; padding: 5px;">
+                    <b>Wong Baker Faces Scale:</b>
+                    <br><br>
+                    <img src="{{ public_path('assets/img/asesmen/asesmen.jpeg') }}" alt="Wong Baker Scale"
+                        style="width: 100%;">
+                </td>
+            </tr>
+        </table>
+    </div>
+
     <div class="section">
         <div class="section-title">4. RIWAYAT KESEHATAN & TERAPI</div>
         <table class="data-table">
-            <tr>
-                <td>Status Nyeri (Skala 0-10)</td>
-                <td>:</td>
-                <td>{{ $fisik->skala_nyeri ?? '-' }}</td>
-            </tr>
             <tr>
                 <td>Riwayat Penyakit Sekarang</td>
                 <td>:</td>
@@ -397,135 +498,292 @@
                 <td>:</td>
                 <td>{{ $fisik->efek_samping ?? '-' }}</td>
             </tr>
-            <tr>
-                <td>Terapi Obat dan Injeksi</td>
-                <td>:</td>
-                <td>
-                    @if ($fisik && $fisik->terapi_obat)
-                        @foreach ($fisik->terapi_obat as $obat_json)
-                            @php $obat = json_decode($obat_json); @endphp
-                            - {{ $obat->nama_obat ?? '' }} (Dosis: {{ $obat->dosis ?? '' }}, Waktu:
-                            {{ $obat->waktu ?? '' }}) <br>
+        </table>
+        <div class="section">
+            <div class="section-title">5. Terapi Obat dan Injeksi</div>
+            <table class="obs-table">
+                <thead>
+                    <tr>
+                        <th>Nama Obat</th>
+                        <th>Dosis</th>
+                        <th>Waktu Penggunaan</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @php
+                        // Ambil data obat dari relasi $fisik
+                        $terapiObat = $fisik->terapi_obat ?? [];
+                    @endphp
+
+                    @if (is_array($terapiObat) && count($terapiObat) > 0)
+                        @foreach ($terapiObat as $obat_json)
+                            @php $obat = json_decode($obat_json, true); @endphp
+                            <tr>
+                                <td>{{ $obat['nama_obat'] ?? '-' }}</td>
+                                <td>{{ $obat['dosis'] ?? '-' }}</td>
+                                <td>{{ $obat['waktu'] ?? '-' }}</td>
+                            </tr>
                         @endforeach
                     @else
-                        -
+                        <tr>
+                            <td colspan="3" style="text-align: center;">- Tidak ada data -</td>
+                        </tr>
                     @endif
-                </td>
-            </tr>
-        </table>
-    </div>
+                </tbody>
+            </table>
 
-    <div class="section">
-        <div class="section-title">5. HASIL PEMERIKSAAN PENUNJANG</div>
-        <table class="data-table">
-            <tr>
-                <td>HB / HbsAg / Anti HCV / Anti HIV</td>
-                <td>:</td>
-                <td>{{ $penunjang->hb ?? '-' }} / {{ $penunjang->hbsag ?? '-' }} / {{ $penunjang->hcv ?? '-' }} /
-                    {{ $penunjang->hiv ?? '-' }}</td>
+            </td>
             </tr>
-            <tr>
-                <td>Ureum / Creatinin / Asam Urat</td>
-                <td>:</td>
-                <td>{{ $penunjang->ureum ?? '-' }} / {{ $penunjang->creatinin ?? '-' }} /
-                    {{ $penunjang->asam_urat ?? '-' }}</td>
-            </tr>
-            <tr>
-                <td>Natrium / Kalium / Calcium</td>
-                <td>:</td>
-                <td>{{ $penunjang->natrium ?? '-' }} / {{ $penunjang->kalium ?? '-' }} /
-                    {{ $penunjang->calcium ?? '-' }}</td>
-            </tr>
-            <tr>
-                <td>Gula Darah / Gol. Darah</td>
-                <td>:</td>
-                <td>{{ $penunjang->gula_darah ?? '-' }} / {{ $penunjang->gol_darah ?? '-' }}</td>
-            </tr>
-            <tr>
-                <td>EKG / Rongent / USG</td>
-                <td>:</td>
-                <td>{{ $penunjang->ekg ?? '-' }} / {{ $penunjang->rongent ?? '-' }} / {{ $penunjang->usg ?? '-' }}
-                </td>
-            </tr>
-        </table>
-    </div>
-
-    <div class="section">
-        <div class="section-title">6. DESKRIPSI HEMODIALISIS</div>
-        <table class="data-table">
-            <tr>
-                <td>Jenis Hemodialisis</td>
-                <td>:</td>
-                <td>{{ $deskripsi->jenis_hd ?? '-' }}</td>
-            </tr>
-            <tr>
-                <td>Lama HD / Akses Vaskular</td>
-                <td>:</td>
-                <td>{{ $deskripsi->lama_hd ?? '-' }} jam / {{ $deskripsi->akses_vaskular ?? '-' }}</td>
-            </tr>
-            <tr>
-                <td>Kec. Darah (QB) / Kec. Dialisat (QD)</td>
-                <td>:</td>
-                <td>{{ $deskripsi->qb ?? '-' }} ml/menit / {{ $deskripsi->qd ?? '-' }} ml/menit</td>
-            </tr>
-            <tr>
-                <td>UF Goal</td>
-                <td>:</td>
-                <td>{{ $deskripsi->uf_goal ?? '-' }} ml</td>
-            </tr>
-            <tr>
-                <td>Heparinisasi Dosis Awal</td>
-                <td>:</td>
-                <td>{{ $deskripsi->dosis_awal ?? '-' }} IU</td>
-            </tr>
-        </table>
-    </div>
-
-    <div class="section">
-        <div class="section-title">7. DIAGNOSIS & EVALUASI</div>
-        <table class="data-table">
-            <tr>
-                <td>Diagnosis Banding</td>
-                <td>:</td>
-                <td>
-                    @if (count($diag_banding) > 0)
-                        @foreach ($diag_banding as $diag)
-                            - {{ $diag }}<br>
-                        @endforeach
-                    @else
-                        -
-                    @endif
-                </td>
-            </tr>
-            <tr>
-                <td>Diagnosis Kerja</td>
-                <td>:</td>
-                <td>
-                    @if (count($diag_kerja) > 0)
-                        @foreach ($diag_kerja as $diag)
-                            - {{ $diag }}<br>
-                        @endforeach
-                    @else
-                        -
-                    @endif
-                </td>
-            </tr>
-            <tr>
-                <td>Evaluasi Medis</td>
-                <td>:</td>
-                <td>{!! nl2br(e($evaluasi->evaluasi_medis ?? '-')) !!}</td>
-            </tr>
-        </table>
-    </div>
-
-    <div class="signature-block">
-        <div class="sig-right">
-            Dokter DPJP
-            <div class="sig-name">
-                ({{ $evaluasi->dokterDpjp->nama_lengkap ?? '..............................' }})
-            </div>
+            </table>
         </div>
-    </div>
+
+        <div class="section">
+            <div class="section-title">6. HASIL PEMERIKSAAN PENUNJANG</div>
+            <table class="data-table">
+                <tr>
+                    <td>HB / HbsAg / Anti HCV / Anti HIV</td>
+                    <td>:</td>
+                    <td>{{ $penunjang->hb ?? '-' }} / {{ $penunjang->hbsag ?? '-' }} / {{ $penunjang->hcv ?? '-' }} /
+                        {{ $penunjang->hiv ?? '-' }}</td>
+                </tr>
+                <tr>
+                    <!-- PERBAIKAN: Menambahkan Phospor -->
+                    <td>Ureum / Creatinin / Asam Urat / Phospor</td>
+                    <td>:</td>
+                    <td>{{ $penunjang->ureum ?? '-' }} / {{ $penunjang->creatinin ?? '-' }} /
+                        {{ $penunjang->asam_urat ?? '-' }} / {{ $penunjang->phospor ?? '-' }}</td>
+                </tr>
+                <tr>
+                    <td>Natrium / Kalium / Calcium</td>
+                    <td>:</td>
+                    <td>{{ $penunjang->natrium ?? '-' }} / {{ $penunjang->kalium ?? '-' }} /
+                        {{ $penunjang->calcium ?? '-' }}</td>
+                </tr>
+                <tr>
+                    <td>Gula Darah / Gol. Darah</td>
+                    <td>:</td>
+                    <td>{{ $penunjang->gula_darah ?? '-' }} / {{ $penunjang->gol_darah ?? '-' }}</td>
+                </tr>
+                <!-- PERBAIKAN: Menambahkan Fe Serum & TIBC -->
+                <tr>
+                    <td>Fe Serum / TIBC</td>
+                    <td>:</td>
+                    <td>{{ $penunjang->fe_serum ?? '-' }} / {{ $penunjang->tibc ?? '-' }}</td>
+                </tr>
+                <tr>
+                    <td>EKG / Rongent / USG</td>
+                    <td>:</td>
+                    <td>{{ $penunjang->ekg ?? '-' }} / {{ $penunjang->rongent ?? '-' }} /
+                        {{ $penunjang->usg ?? '-' }}
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="section">
+            <div class="section-title">7. DESKRIPSI HEMODIALISIS</div>
+            <table class="data-table">
+                <tr>
+                    <td>Jenis Hemodialisis</td>
+                    <td>:</td>
+                    <td>
+                        <!-- PERBAIKAN: Menambahkan logika untuk menampilkan teks -->
+                        @if ($deskripsi->jenis_hd == 1)
+                            Akut
+                        @elseif ($deskripsi->jenis_hd == 2)
+                            Kronik
+                        @elseif ($deskripsi->jenis_hd == 3)
+                            Pra Operasi
+                        @else
+                            -
+                        @endif
+                    </td>
+                </tr>
+                <!-- PERBAIKAN: Menambahkan Bila Rutin -->
+                <tr>
+                    <td>Bila Rutin (x/minggu)</td>
+                    <td>:</td>
+                    <td>{{ $deskripsi->rutin ?? '-' }}</td>
+                </tr>
+                <!-- PERBAIKAN: Menambahkan Jenis Dialisat -->
+                <tr>
+                    <td>Jenis Dialisat</td>
+                    <td>:</td>
+                    <td>
+                        @if ($deskripsi->jenis_dialisat == 1)
+                            Asetat
+                        @elseif ($deskripsi->jenis_dialisat == 2)
+                            Bicabornat
+                        @else
+                            -
+                        @endif
+                    </td>
+                </tr>
+                <!-- PERBAIKAN: Menambahkan Suhu Dialisat -->
+                <tr>
+                    <td>Suhu Dialisat</td>
+                    <td>:</td>
+                    <td>{{ $deskripsi->suhu_dialisat ?? '-' }} °C</td>
+                </tr>
+                <tr>
+                    <td>Akses Vaskular</td>
+                    <td>:</td>
+                    <td>
+                        <!-- PERBAIKAN: Menambahkan logika untuk menampilkan teks -->
+                        @if ($deskripsi->akses_vaskular == 1)
+                            Cimino
+                        @elseif ($deskripsi->akses_vaskular == 2)
+                            Femoral
+                        @elseif ($deskripsi->akses_vaskular == 3)
+                            CDL Jugularis
+                        @elseif ($deskripsi->akses_vaskular == 4)
+                            CDL Subclavia
+                        @else
+                            -
+                        @endif
+                    </td>
+                </tr>
+                <tr>
+                    <td>Lama HD</td>
+                    <td>:</td>
+                    <td>{{ $deskripsi->lama_hd ?? '-' }} jam
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="5" style="font-weight: bold; background-color: #f9f9f9;">Parameter Mesin</td>
+                </tr>
+                <tr>
+                    <td>Kec. Darah (QB) / Kec. Dialisat (QD)</td>
+                    <td>:</td>
+                    <td>{{ $deskripsi->qb ?? '-' }} ml/menit / {{ $deskripsi->qd ?? '-' }} ml/menit</td>
+                </tr>
+                <tr>
+                    <td>UF Goal</td>
+                    <td>:</td>
+                    <td>{{ $deskripsi->uf_goal ?? '-' }} ml</td>
+                </tr>
+                <tr>
+                    <td colspan="5" style="font-weight: bold; background-color: #f9f9f9;">Heparinisasi </td>
+                </tr>
+                <tr>
+                    <td>Dosis Awal</td>
+                    <td>:</td>
+                    <td>{{ $deskripsi->dosis_awal ?? '-' }} IU</td>
+                </tr>
+                <!-- PERBAIKAN: Menambahkan Heparinisasi Maintenance -->
+                <tr>
+                    <td>Maintenance (Kontinyu / Intermiten)</td>
+                    <td>:</td>
+                    <td>{{ $deskripsi->m_kontinyu ?? '-' }} IU / {{ $deskripsi->m_intermiten ?? '-' }} IU</td>
+                </tr>
+                <!-- PERBAIKAN: Menambahkan Tanpa Heparin / LMWH -->
+                <tr>
+                    <td>Tanpa Heparin / LMWH</td>
+                    <td>:</td>
+                    <td>{{ $deskripsi->tanpa_heparin ?? '-' }} / {{ $deskripsi->lmwh ?? '-' }} IU</td>
+                </tr>
+                <<tr>
+                    <td colspan="5" style="font-weight: bold; background-color: #f9f9f9;">Program Profiling </td>
+                    </tr>
+                    <tr>
+                        <td>Ultrafiltrasi</td>
+                        <td>:</td>
+                        <td>
+                            {{ $deskripsi->ultrafiltrasi_mode ?? '-' }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Natrium Mode</td>
+                        <td>:</td>
+                        <td>
+                            {{ $deskripsi->natrium_mode ?? '-' }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Bicarbonat Mode</td>
+                        <td>:</td>
+                        <td>
+                            {{ $deskripsi->bicabornat_mode ?? '-' }}
+                        </td>
+                    </tr>
+            </table>
+        </div>
+
+        <div class="section">
+            <div class="section-title">8. DIAGNOSIS</div>
+            <table class="data-table">
+                <tr>
+                    <td>Diagnosis Banding</td>
+                    <td>:</td>
+                    <td>
+                        @if (is_array($diag_banding) && count($diag_banding) > 0)
+                            @foreach ($diag_banding as $diag)
+                                - {{ $diag }}<br>
+                            @endforeach
+                        @else
+                            -
+                        @endif
+                    </td>
+                </tr>
+                <tr>
+                    <td>Diagnosis Kerja</td>
+                    <td>:</td>
+                    <td>
+                        @if (is_array($diag_kerja) && count($diag_kerja) > 0)
+                            @foreach ($diag_kerja as $diag)
+                                - {{ $diag }}<br>
+                            @endforeach
+                        @else
+                            -
+                        @endif
+                    </td>
+                </tr>
+            </table>
+            <div class="section">
+                <div class="section-title">9. EVALUASI</div>
+                <table class="data-table">
+                    <tr>
+                        <td>Evaluasi Medis</td>
+                        <td>:</td>
+                        <td>{!! nl2br(e($evaluasi->evaluasi_medis ?? '-')) !!}</td>
+                    </tr>
+                </table>
+            </div>
+
+            <!-- PERBAIKAN: Mengganti TTD menjadi 3 Kolom -->
+            <div class="signature-block">
+                <table class="sig-table">
+                    <tr>
+                        <td>
+                            Perawat
+                            <div class="sig-name">
+                                <!-- Mengambil nama dari relasi 'perawatPelaksana' -->
+                                @if ($evaluasi && $evaluasi->perawatPelaksana)
+                                    {{ $evaluasi->perawatPelaksana->gelar_depan ?? '' }}
+                                    {{ $evaluasi->perawatPelaksana->nama ?? '....................' }}
+                                    {{ $evaluasi->perawatPelaksana->gelar_belakang ?? '' }}
+                                @else
+                                    (..............................)
+                                @endif
+                            </div>
+                        </td>
+                        <td>
+                            Dokter Pelaksana
+                            <div class="sig-name">
+                                <!-- Mengambil nama dari relasi 'dokterPelaksana' -->
+                                ({{ $evaluasi->dokterPelaksana->nama_lengkap ?? '..............................' }})
+                            </div>
+                        </td>
+                        <td>
+                            Dokter DPJP
+                            <div class="sig-name">
+                                <!-- Mengambil nama dari relasi 'dokterDpjp' -->
+                                ({{ $evaluasi->dokterDpjp->nama_lengkap ?? '..............................' }})
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </div>
 
 </body>
 

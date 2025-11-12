@@ -29,7 +29,7 @@
 
                     <!-- Tanggal dan Jam Masuk -->
                     <div class="row mb-3">
-                        <label class="col-sm-3 col-form-label">Tanggal dan Jam Masuk:</label>
+                        <label class="col-sm-3 col-form-label">Tanggal dan Jam Pengisian:</label>
                         <div class="col-sm-9">
                             <div class="row">
                                 <div class="col-md-6">
@@ -54,7 +54,7 @@
                                 <option value="Somnolen">Somnolen</option>
                                 <option value="Sopor">Sopor</option>
                                 <option value="Coma">Coma</option>
-                            </select> 
+                            </select>
                         </div>
 
                     </div>
@@ -1532,7 +1532,7 @@
                         </div>
                     </div>
 
-                   
+
 
                     <div class="form-group mb-3">
                         <label class="form-label">GCS</label>
