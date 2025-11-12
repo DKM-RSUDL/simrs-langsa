@@ -455,7 +455,7 @@ class NeurologiController extends Controller
             $asesmen->tgl_masuk = $request->tgl_masuk;
             $asesmen->urut_masuk = $request->urut_masuk;
             $asesmen->user_id = Auth::id();
-            $asesmen->waktu_asesmen = date('Y-m-d H:i:s');
+            // $asesmen->waktu_asesmen = date('Y-m-d H:i:s');
             $asesmen->kategori = 1;
             $asesmen->sub_kategori = 3;
             $asesmen->save();

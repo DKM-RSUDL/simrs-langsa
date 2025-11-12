@@ -113,13 +113,17 @@ class AsesmenKepThtController extends Controller
             $dataMedis = $this->baseService->getDataMedis($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
             if (empty($dataMedis)) throw new Exception("Data kunjungan tidak ditemukan");
 
+            // Ambil tanggal dan jam dari form
+            $formatDate = date('Y-m-d', strtotime($request->tgl_masuk));
+            $formatTime = date('H:i:s', strtotime($request->jam_masuk));
+
             $asesmenTht = new RmeAsesmen();
-            $asesmenTht->kd_pasien = $request->kd_pasien;
-            $asesmenTht->kd_unit = $request->kd_unit;
-            $asesmenTht->tgl_masuk = $request->tgl_masuk;
-            $asesmenTht->urut_masuk = $request->urut_masuk;
+            $asesmenTht->kd_pasien = $dataMedis->kd_pasien;
+            $asesmenTht->kd_unit = $dataMedis->kd_unit;
+            $asesmenTht->tgl_masuk = $dataMedis->tgl_masuk;
+            $asesmenTht->urut_masuk = $dataMedis->urut_masuk;
             $asesmenTht->user_id = Auth::id();
-            $asesmenTht->waktu_asesmen = date('Y-m-d H:i:s');
+            $asesmenTht->waktu_asesmen = "$formatDate $formatTime";
             $asesmenTht->kategori = 1;
             $asesmenTht->sub_kategori = 5;
             $asesmenTht->save();
@@ -620,13 +624,17 @@ class AsesmenKepThtController extends Controller
             $dataMedis = $this->baseService->getDataMedis($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
             if (empty($dataMedis)) throw new Exception("Data kunjungan tidak ditemukan");
 
+            // Ambil tanggal dan jam dari form
+            $formatDate = date('Y-m-d', strtotime($request->tgl_masuk));
+            $formatTime = date('H:i:s', strtotime($request->jam_masuk));
+
             $asesmenTht = RmeAsesmen::findOrFail($id);
-            $asesmenTht->kd_pasien = $kd_pasien;
-            $asesmenTht->kd_unit = $kd_unit;
-            $asesmenTht->tgl_masuk = $tgl_masuk;
-            $asesmenTht->urut_masuk = $urut_masuk;
+            $asesmenTht->kd_pasien = $dataMedis->kd_pasien;
+            $asesmenTht->kd_unit = $dataMedis->kd_unit;
+            $asesmenTht->tgl_masuk = $dataMedis->tgl_masuk;
+            $asesmenTht->urut_masuk = $dataMedis->urut_masuk;
             $asesmenTht->user_id = Auth::id();
-            $asesmenTht->waktu_asesmen = date('Y-m-d H:i:s');
+            $asesmenTht->waktu_asesmen = "$formatDate $formatTime";
             $asesmenTht->kategori = 1;
             $asesmenTht->sub_kategori = 5;
             $asesmenTht->save();

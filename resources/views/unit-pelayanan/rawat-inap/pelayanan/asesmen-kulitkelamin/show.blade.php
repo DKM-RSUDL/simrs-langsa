@@ -21,7 +21,7 @@
 
                     <div class="row mb-3">
                         <div class="col-md-6">
-                            <label class="form-label fw-bold">Tanggal Dan Jam Masuk</label>
+                            <label class="form-label fw-bold">Tanggal Dan Jam Pengisian</label>
                             <p>{{ Carbon\Carbon::parse($asesmenKulitKelamin->waktu_masuk)->format('d/m/Y H:i') }}
                             </p>
                         </div>

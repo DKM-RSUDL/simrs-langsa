@@ -37,7 +37,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="mb-3">
-                                        <label class="form-label fw-bold">Tanggal Dan Jam Masuk:</label>
+                                        <label class="form-label fw-bold">Tanggal Dan Jam Pengisian:</label>
                                         <p class="form-control-plaintext border-bottom">
                                             {{ $asesmen->rmeAsesmenGinekologik->tanggal ? date('d M Y', strtotime($asesmen->rmeAsesmenGinekologik->tanggal)) : '-' }}
                                             {{ $asesmen->rmeAsesmenGinekologik->jam_masuk ? date('H:i', strtotime($asesmen->rmeAsesmenGinekologik->jam_masuk)) : '-' }}

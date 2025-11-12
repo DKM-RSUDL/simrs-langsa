@@ -11,30 +11,30 @@
 
         <div class="col-md-9">
             <x-content-card>
-            <x-button-previous />
+                <x-button-previous />
                 @include('components.page-header', [
                     'title' => 'Asesmen Pengkajian Awal Medis',
                     'description' => 'Isikan Asesmen awal dalam 24 jam sejak pasien masuk ke unit pelayanan',
                 ])
 
 
-            <form method="POST" enctype="multipart/form-data"
-                action="{{ route('rawat-inap.asesmen.medis.pengkajian-awal-medis.update', [
-                    'kd_unit' => request()->route('kd_unit'),
-                    'kd_pasien' => request()->route('kd_pasien'),
-                    'tgl_masuk' => request()->route('tgl_masuk'),
-                    'urut_masuk' => request()->route('urut_masuk'),
-                    'id' => $asesmen->id,
-                ]) }}">
-                @csrf
-                @if (isset($asesmen))
-                    @method('PUT')
-                @endif
+                <form method="POST" enctype="multipart/form-data"
+                    action="{{ route('rawat-inap.asesmen.medis.pengkajian-awal-medis.update', [
+                        'kd_unit' => request()->route('kd_unit'),
+                        'kd_pasien' => request()->route('kd_pasien'),
+                        'tgl_masuk' => request()->route('tgl_masuk'),
+                        'urut_masuk' => request()->route('urut_masuk'),
+                        'id' => $asesmen->id,
+                    ]) }}">
+                    @csrf
+                    @if (isset($asesmen))
+                        @method('PUT')
+                    @endif
 
-                <input type="hidden" name="kd_pasien" value="{{ $dataMedis->kd_pasien }}">
-                <input type="hidden" name="kd_unit" value="{{ $dataMedis->kd_unit }}">
-                <input type="hidden" name="tgl_masuk" value="{{ $dataMedis->tgl_masuk }}">
-                <input type="hidden" name="urut_masuk" value="{{ $dataMedis->urut_masuk }}">
+                    <input type="hidden" name="kd_pasien" value="{{ $dataMedis->kd_pasien }}">
+                    <input type="hidden" name="kd_unit" value="{{ $dataMedis->kd_unit }}">
+                    <input type="hidden" name="tgl_masuk" value="{{ $dataMedis->tgl_masuk }}">
+                    <input type="hidden" name="urut_masuk" value="{{ $dataMedis->urut_masuk }}">
 
                     <!-- FORM ASESMEN -->
                     <div class="px-3">
@@ -42,7 +42,7 @@
                             <h5 class="section-title">1. Data masuk</h5>
 
                             <div class="form-group">
-                                <label style="min-width: 200px;">Tanggal Dan Jam Masuk</label>
+                                <label style="min-width: 200px;">Tanggal Dan Jam Pengisian</label>
                                 <div class="d-flex gap-3" style="width: 100%;">
                                     <input type="date" class="form-control" name="tanggal"
                                         value="{{ $asesmen->asesmenMedisRanap->tanggal ? \Carbon\Carbon::parse($asesmen->asesmenMedisRanap->tanggal)->format('Y-m-d') : date('Y-m-d') }}"
@@ -123,8 +123,8 @@
                             <h5 class="section-title">4. Alergi</h5>
 
                             @if (!($readonly ?? false))
-                                <button type="button" class="btn btn-sm btn-outline-secondary mb-3"
-                                    id="openAlergiModal" data-bs-toggle="modal" data-bs-target="#alergiModal">
+                                <button type="button" class="btn btn-sm btn-outline-secondary mb-3" id="openAlergiModal"
+                                    data-bs-toggle="modal" data-bs-target="#alergiModal">
                                     <i class="ti-plus"></i> Tambah Alergi
                                 </button>
                             @endif
@@ -163,15 +163,27 @@
                             <h5 class="section-title">5. Status present</h5>
                             <div class="form-group">
                                 <label for="tingkat_kesadaran" style="min-width: 200px;">Tingkat Kesadaran</label>
-                                <select class="form-select" name="tingkat_kesadaran" id="tingkat_kesadaran"{{ $readonly ?? false ? 'readonly' : '' }}>
-                                    <option value="" {{ empty($asesmen->asesmenMedisRanap->tingkat_kesadaran) ? 'selected' : '' }}>
-                                    Pilih tingkat kesadaran
+                                <select class="form-select" name="tingkat_kesadaran"
+                                    id="tingkat_kesadaran"{{ $readonly ?? false ? 'readonly' : '' }}>
+                                    <option value=""
+                                        {{ empty($asesmen->asesmenMedisRanap->tingkat_kesadaran) ? 'selected' : '' }}>
+                                        Pilih tingkat kesadaran
                                     </option>
-                                    <option value="1" {{ $asesmen->asesmenMedisRanap->tingkat_kesadaran == 1 ? 'selected' : '' }}>Compos Mentis</option>
-                                    <option value="2" {{ $asesmen->asesmenMedisRanap->tingkat_kesadaran == 2 ? 'selected' : '' }}>Apatis</option>
-                                    <option value="3" {{ $asesmen->asesmenMedisRanap->tingkat_kesadaran == 3 ? 'selected' : '' }}>Somnolen</option>
-                                    <option value="4" {{ $asesmen->asesmenMedisRanap->tingkat_kesadaran == 4 ? 'selected' : '' }}>Sopor</option>
-                                    <option value="5" {{ $asesmen->asesmenMedisRanap->tingkat_kesadaran == 5 ? 'selected' : '' }}>Koma</option>
+                                    <option value="1"
+                                        {{ $asesmen->asesmenMedisRanap->tingkat_kesadaran == 1 ? 'selected' : '' }}>Compos
+                                        Mentis</option>
+                                    <option value="2"
+                                        {{ $asesmen->asesmenMedisRanap->tingkat_kesadaran == 2 ? 'selected' : '' }}>Apatis
+                                    </option>
+                                    <option value="3"
+                                        {{ $asesmen->asesmenMedisRanap->tingkat_kesadaran == 3 ? 'selected' : '' }}>
+                                        Somnolen</option>
+                                    <option value="4"
+                                        {{ $asesmen->asesmenMedisRanap->tingkat_kesadaran == 4 ? 'selected' : '' }}>Sopor
+                                    </option>
+                                    <option value="5"
+                                        {{ $asesmen->asesmenMedisRanap->tingkat_kesadaran == 5 ? 'selected' : '' }}>Koma
+                                    </option>
                                 </select>
                             </div>
 
@@ -180,8 +192,7 @@
                                 <div class="d-flex gap-3" style="width: 100%;">
                                     <div class="flex-grow-1">
                                         <label class="form-label">Sistole</label>
-                                        <input type="number" class="form-control" name="sistole"
-                                            placeholder="Sistole"
+                                        <input type="number" class="form-control" name="sistole" placeholder="Sistole"
                                             value="{{ old('sistole', isset($asesmen->asesmenMedisRanap) ? $asesmen->asesmenMedisRanap->sistole : '') }}"
                                             {{ $readonly ?? false ? 'readonly' : '' }}>
                                     </div>
@@ -273,8 +284,7 @@
                                                     <td>
                                                         <div class="row">
                                                             <div class="col-md-2">
-                                                                <label
-                                                                    class="fw-semibold">{{ $item['label'] }}</label>
+                                                                <label class="fw-semibold">{{ $item['label'] }}</label>
                                                             </div>
                                                             <div class="col-md-10">
                                                                 @if ($readonly ?? false)
@@ -291,20 +301,16 @@
                                                                 @else
                                                                     <div class="d-flex align-items-center gap-3">
                                                                         <div class="form-check">
-                                                                            <input class="form-check-input"
-                                                                                type="radio"
-                                                                                name="{{ $fieldName }}"
-                                                                                value="1"
+                                                                            <input class="form-check-input" type="radio"
+                                                                                name="{{ $fieldName }}" value="1"
                                                                                 id="{{ $fieldName }}_normal"
                                                                                 {{ $currentValue == 1 ? 'checked' : '' }}>
                                                                             <label class="form-check-label"
                                                                                 for="{{ $fieldName }}_normal">Normal</label>
                                                                         </div>
                                                                         <div class="form-check">
-                                                                            <input class="form-check-input"
-                                                                                type="radio"
-                                                                                name="{{ $fieldName }}"
-                                                                                value="0"
+                                                                            <input class="form-check-input" type="radio"
+                                                                                name="{{ $fieldName }}" value="0"
                                                                                 id="{{ $fieldName }}_tidak_normal"
                                                                                 {{ $currentValue == 0 ? 'checked' : '' }}>
                                                                             <label class="form-check-label"
@@ -755,8 +761,7 @@
                             @if (!($readonly ?? false))
                                 <!-- Tombol Reset (Opsional) -->
                                 <div class="mt-3">
-                                    <button type="button" class="btn btn-secondary"
-                                        onclick="resetDischargePlanning()">
+                                    <button type="button" class="btn btn-secondary" onclick="resetDischargePlanning()">
                                         Reset Discharge Planning
                                     </button>
                                 </div>
@@ -772,9 +777,9 @@
                             </button>
                         </div>
                     @endif
-            </form>
+                </form>
         </div>
-    </x-content-card>
+        </x-content-card>
     </div>
 @endsection
 
@@ -808,12 +813,12 @@
                             <br><small class="text-muted">${obat.keterangan}</small>
                         </td>
                         ${!isReadonly ? `
-                                    <td>
-                                        <button type="button" class="btn btn-sm btn-outline-danger" onclick="removeObat(this)">
-                                            <i class="fas fa-trash"></i>
-                                        </button>
-                                    </td>
-                                    ` : ''}
+                                        <td>
+                                            <button type="button" class="btn btn-sm btn-outline-danger" onclick="removeObat(this)">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </td>
+                                        ` : ''}
                     </tr>
                 `).join('');
                     }
@@ -864,12 +869,12 @@
                                 </span>
                             </td>
                             ${!isReadonly ? `
-                                        <td>
-                                            <button type="button" class="btn btn-sm btn-outline-danger" onclick="removeAlergi(this, ${index})">
-                                                <i class="fas fa-trash"></i>
-                                            </button>
-                                        </td>
-                                        ` : ''}
+                                            <td>
+                                                <button type="button" class="btn btn-sm btn-outline-danger" onclick="removeAlergi(this, ${index})">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            </td>
+                                            ` : ''}
                         </tr>
                     `;
                         }).join('');
@@ -907,10 +912,10 @@
                     <div class="diagnosis-item mb-2 p-2 border rounded">
                         <span class="fw-medium">${diagnosis}</span>
                         ${!isReadonly ? `
-                                    <button type="button" class="btn btn-sm btn-outline-danger ms-2" onclick="removeDiagnosis(this, '${inputId}')">
-                                        <i class="fas fa-times"></i>
-                                    </button>
-                                    ` : ''}
+                                        <button type="button" class="btn btn-sm btn-outline-danger ms-2" onclick="removeDiagnosis(this, '${inputId}')">
+                                            <i class="fas fa-times"></i>
+                                        </button>
+                                        ` : ''}
                     </div>
                 `).join('');
                     }

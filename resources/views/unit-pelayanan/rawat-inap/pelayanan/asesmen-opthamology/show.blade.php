@@ -30,7 +30,7 @@
                                             </div>
 
                                             <div class="mb-3">
-                                                <label class="form-label fw-bold">Tanggal Dan Jam Masuk :</label>
+                                                <label class="form-label fw-bold">Tanggal Dan Jam Pengisian :</label>
                                                 <p class="form-control-plaintext border-bottom">
                                                     {{ date('d M Y H:i', strtotime($asesmen->waktu_asesmen)) }}
                                                 </p>
