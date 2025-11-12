@@ -32,7 +32,7 @@
                                     <h5 class="section-title">1. Data masuk</h5>
 
                                     <div class="form-group">
-                                        <label style="min-width: 200px;">Tanggal Dan Jam Masuk</label>
+                                        <label style="min-width: 200px;">Tanggal Dan Jam Pengisian</label>
                                         <div class="d-flex gap-3" style="width: 100%;">
                                             <input type="date" class="form-control" name="tanggal_masuk"
                                                 value="{{ date('Y-m-d') }}">
@@ -2048,7 +2048,7 @@
                                             Pilih skala aktivitas harian terlebih dahulu
                                         </div>
                                     </div>
-                                    
+
                                     <!-- Hidden fields - HANYA yang ada di database -->
                                     <input type="hidden" id="adl_makan" name="adl_makan" value="">
                                     <input type="hidden" id="adl_berjalan" name="adl_berjalan" value="">
@@ -2214,7 +2214,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    
+
                                     <!-- Hidden field untuk menyimpan kesimpulan -->
                                     <input type="hidden" name="kesimpulan_planing" id="kesimpulan_planing" value="">
                                 </div>

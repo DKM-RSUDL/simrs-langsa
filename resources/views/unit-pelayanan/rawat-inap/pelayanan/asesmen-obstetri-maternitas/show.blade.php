@@ -47,7 +47,7 @@
                                         </div>
 
                                         <div class="mb-3">
-                                            <label class="form-label fw-bold">Tanggal Dan Jam Masuk :</label>
+                                            <label class="form-label fw-bold">Tanggal Dan Jam Pengisian :</label>
                                             <p class="form-control-plaintext border-bottom">
                                                 {{ date('d M Y H:i', strtotime($asesmen->asesmenObstetri->tgl_masuk)) }}
                                             </p>
@@ -401,7 +401,7 @@
                                                 @else
                                                     {{ $asesmen->rmeAsesmenObstetriPemeriksaanFisik->serviks_pembukaan ?? '-' }}
                                                 @endif
-                                                
+
                                                 Pukul
                                                 {{ $asesmen->rmeAsesmenObstetriPemeriksaanFisik->serviks_jam_pembukaan ?? '-' }}
 

@@ -14,7 +14,7 @@
                 @include('components.page-header', [
                     'title' => 'Edit Asesmen Awal dan Ulang Pasien Terminal dan Keluarganya',
                     'description' => 'Isikan Asesmen Keperawatan dalam 24 jam sejak pasien masuk ke unit pelayanan',
-                ])  
+                ])
 
                 <form method="POST" action="{{ route('rawat-inap.asesmen.keperawatan.terminal.update', [
                     'kd_unit' => $dataMedis->kd_unit,
@@ -30,17 +30,17 @@
                         <!-- Data Masuk -->
                         <div class="form-section">
                             <h5 class="section-title">
-                                Data Masuk
+                                Data Pengisian
                             </h5>
 
                             <div class="row">
                                 <div class="col-md-6">
-                                    <label class="form-label required-field">Tanggal Masuk</label>
+                                    <label class="form-label required-field">Tanggal</label>
                                     <input type="date" class="form-control" name="tanggal" id="tanggal_masuk"
                                         value="{{ $asesmen->rmeAsesmenTerminal->tanggal ?? date('Y-m-d') }}" required>
                                 </div>
                                 <div class="col-md-6">
-                                    <label class="form-label required-field">Jam Masuk</label>
+                                    <label class="form-label required-field">Jam</label>
                                     <input type="time" class="form-control" name="jam_masuk" id="jam_masuk"
                                         value="{{ $asesmen->rmeAsesmenTerminal->jam_masuk_formatted ?? date('H:i') }}" required>
                                 </div>

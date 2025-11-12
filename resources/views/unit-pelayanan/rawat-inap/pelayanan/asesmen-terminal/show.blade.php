@@ -19,13 +19,13 @@
                     @include('components.page-header', [
                         'title' => 'Edit Asesmen Awal dan Ulang Pasien Terminal dan Keluarganya',
                         'description' => 'Isikan Asesmen Keperawatan dalam 24 jam sejak pasien masuk ke unit pelayanan',
-                    ])  
+                    ])
                 <form>
                     <div class="px-3 mt-0">
                         <!-- Data Masuk -->
                         <div class="section-separator form-section">
                             <h5 class="section-title">
-                                Data Masuk
+                                Data Pengisian
                             </h5>
 
                             <div class="row">
@@ -34,11 +34,11 @@
                                     <input type="text" class="form-control" value="{{ $asesmen->user->name ?? '-' }}" disabled readonly>
                                 </div>
                                 <div class="col-md-4">
-                                    <label class="form-label">Tanggal Masuk</label>
+                                    <label class="form-label">Tanggal</label>
                                     <input type="date" class="form-control" value="{{ $asesmen->rmeAsesmenTerminal->tanggal ?? '' }}" disabled readonly>
                                 </div>
                                 <div class="col-md-4">
-                                    <label class="form-label">Jam Masuk</label>
+                                    <label class="form-label">Jam</label>
                                     <input type="time" class="form-control" value="{{ $asesmen->rmeAsesmenTerminal->jam_masuk ? date('H:i', strtotime($asesmen->rmeAsesmenTerminal->jam_masuk)) : '-' }}" disabled readonly>
                                 </div>
                             </div>

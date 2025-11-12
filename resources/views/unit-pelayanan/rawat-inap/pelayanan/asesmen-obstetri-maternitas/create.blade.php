@@ -36,7 +36,7 @@
                                 <h5 class="section-title">1. Data Masuk</h5>
 
                                 <div class="form-group row">
-                                    <label class="col-sm-3 col-form-label">Tanggal dan Jam Masuk</label>
+                                    <label class="col-sm-3 col-form-label">Tanggal dan Jam Pengisian</label>
                                     <div class="col-sm-8 d-flex gap-3">
                                         <input type="date" class="form-control" name="tgl_masuk"
                                             value="{{ date('Y-m-d') }}">

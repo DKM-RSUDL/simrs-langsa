@@ -124,14 +124,18 @@ class AsesmenParuController extends Controller
             //     'gambar_radiologi_paru' => 'nullable|mimes:pdf,jpg,jpeg,png|max:2048',
             // ]);
 
+            // Ambil tanggal dan jam dari form
+            $formatDate = date('Y-m-d', strtotime($request->tanggal));
+            $formatTime = date('H:i:s', strtotime($request->jam_masuk));
+
             // 1. Buat record RmeAsesmen
             $asesmen = new RmeAsesmen;
-            $asesmen->kd_pasien = $request->kd_pasien;
-            $asesmen->kd_unit = $request->kd_unit;
-            $asesmen->tgl_masuk = $request->tgl_masuk;
-            $asesmen->urut_masuk = $request->urut_masuk;
+            $asesmen->kd_pasien = $dataMedis->kd_pasien;
+            $asesmen->kd_unit = $dataMedis->kd_unit;
+            $asesmen->tgl_masuk = $dataMedis->tgl_masuk;
+            $asesmen->urut_masuk = $dataMedis->urut_masuk;
             $asesmen->user_id = Auth::id();
-            $asesmen->waktu_asesmen = date('Y-m-d H:i:s');
+            $asesmen->waktu_asesmen = "$formatDate $formatTime";
             $asesmen->kategori = 1;
             $asesmen->sub_kategori = 8;
             $asesmen->save();
@@ -448,7 +452,7 @@ class AsesmenParuController extends Controller
 
             $KebiasaanData = $this->getKebiasaan($idAsesmen);
 
-           
+
 
 
             return view('unit-pelayanan.rawat-inap.pelayanan.asesmen-paru.show', compact(
@@ -551,14 +555,18 @@ class AsesmenParuController extends Controller
                 }
             }
 
+            // Ambil tanggal dan jam dari form
+            $formatDate = date('Y-m-d', strtotime($request->tanggal));
+            $formatTime = date('H:i:s', strtotime($request->jam_masuk));
+
             // 1. Buat record RmeAsesmen
             $asesmen = RmeAsesmen::findOrFail($id);
-            $asesmen->kd_pasien = $request->kd_pasien;
-            $asesmen->kd_unit = $request->kd_unit;
-            $asesmen->tgl_masuk = $request->tgl_masuk;
-            $asesmen->urut_masuk = $request->urut_masuk;
+            $asesmen->kd_pasien = $dataMedis->kd_pasien;
+            $asesmen->kd_unit = $dataMedis->kd_unit;
+            $asesmen->tgl_masuk = $dataMedis->tgl_masuk;
+            $asesmen->urut_masuk = $dataMedis->urut_masuk;
             $asesmen->user_id = Auth::id();
-            $asesmen->waktu_asesmen = $request->tanggal . ' ' . $request->jam_masuk;
+            $asesmen->waktu_asesmen = "$formatDate $formatTime";
             $asesmen->kategori = 1;
             $asesmen->sub_kategori = 8;
             $asesmen->save();
@@ -970,7 +978,7 @@ class AsesmenParuController extends Controller
                 $isMerokok = $kebiasaanPasien->merokok == 'ya'? true : false;
                 $isObat = $kebiasaanPasien->obat == 'ya'? true : false;
 
-            
+
                 // Format ulang data untuk KebiasaanData
                 $KebiasaanData['alkohol'] = [
                     'status' => $isAlkohol ? 'ya' : 'tidak',
