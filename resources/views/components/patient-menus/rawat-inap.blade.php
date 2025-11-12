@@ -130,9 +130,6 @@
     {{-- Menu Direct (tanpa submenu) --}}
     <div class="accordion-item">
         <div class="list-group list-group-flush">
-            <a href="{{ $pelayananUrl }}/asuhan-keperawatan" class="list-group-item list-group-item-action">
-                <i class="bi bi-heart-pulse me-2"></i> Asuhan Keperawatan
-            </a>
             <a href="{{ $pelayananUrl }}/orientasi-pasien-baru" class="list-group-item list-group-item-action">
                 <i class="bi bi-info-circle me-2"></i> Orientasi Pasien Baru
             </a>
