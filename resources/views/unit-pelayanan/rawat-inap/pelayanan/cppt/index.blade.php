@@ -168,7 +168,7 @@
                                                 <div>
                                                     <p class="mb-0 fw-semibold text-dark">Catatan Perkembangan Pasien Terintegrasi</p>
                                                     <small class="text-muted">
-                                                        <strong>{{ $value['nama_penanggung'] }}</strong> ({{ $value['nama_unit'] }})
+                                                        <strong>{{ $value['nama_penanggung'] }}</strong> 
                                                     </small>
                                                 </div>
                                             </div>
