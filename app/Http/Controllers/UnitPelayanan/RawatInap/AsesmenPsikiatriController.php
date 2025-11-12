@@ -23,7 +23,9 @@ use App\Models\RmeResumeDtl;
 use App\Models\SatsetPrognosis;
 use App\Models\Unit;
 use App\Services\AsesmenService;
+use App\Services\BaseService;
 use Carbon\Carbon;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -31,10 +33,14 @@ use Illuminate\Support\Facades\DB;
 class AsesmenPsikiatriController extends Controller
 {
     protected $asesmenService;
+    private $baseService;
+
     public function __construct()
     {
         $this->asesmenService = new AsesmenService();
+        $this->baseService = new BaseService();
     }
+
     public function index(Request $request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
     {
         $user = auth()->user();
@@ -115,6 +121,9 @@ class AsesmenPsikiatriController extends Controller
         DB::beginTransaction();
 
         try {
+            $dataMedis = $this->baseService->getDataMedis($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
+            if (empty($dataMedis)) throw new Exception("Data kunjungan tidak ditemukan");
+
             $tanggal = $request->tanggal_masuk;
             $jam = $request->jam_masuk;
             $waktu_asesmen = $tanggal . ' ' . $jam;
@@ -131,30 +140,6 @@ class AsesmenPsikiatriController extends Controller
             $dataAsesmen->anamnesis = $request->anamnesis;
             $dataAsesmen->skala_nyeri = $request->skala_nyeri;
             $dataAsesmen->save();
-
-            $vitalSignData = [
-                'sistole'      => $request->tekanan_darah_sistole ? (int)$request->tekanan_darah_sistole : null,
-                'diastole'     => $request->tekanan_darah_diastole ? (int)$request->tekanan_darah_diastole : null,
-                'nadi'         => $request->nadi ? (int)$request->nadi : null,
-                'respiration'  => $request->respirasi ? (int)$request->respirasi : null,
-                'suhu'         => $request->suhu ? (float)$request->suhu : null,
-                'tinggi_badan' => $request->tinggi_badan ? (int)$request->tinggi_badan : null,
-                'berat_badan'  => $request->berat_badan ? (int)$request->berat_badan : null,
-            ];
-
-            $lastTransaction = $this->asesmenService->getTransaksiData(
-                $kd_unit,
-                $kd_pasien,
-                $tgl_masuk,
-                $urut_masuk
-            );
-
-            $this->asesmenService->store(
-                $vitalSignData,
-                $kd_pasien,
-                $lastTransaction->no_transaksi,
-                $lastTransaction->kd_kasir
-            );
 
             $asesmenPsikiatri = new RmeAsesmenPsikiatri();
             $asesmenPsikiatri->id_asesmen = $dataAsesmen->id;
@@ -244,44 +229,55 @@ class AsesmenPsikiatriController extends Controller
                 }
             }
 
+            $vitalSignData = [
+                'sistole'      => $request->tekanan_darah_sistole ? (int)$request->tekanan_darah_sistole : null,
+                'diastole'     => $request->tekanan_darah_diastole ? (int)$request->tekanan_darah_diastole : null,
+                'nadi'         => $request->nadi ? (int)$request->nadi : null,
+                'respiration'  => $request->respirasi ? (int)$request->respirasi : null,
+                'suhu'         => $request->suhu ? (float)$request->suhu : null,
+                'tinggi_badan' => $request->tinggi_badan ? (int)$request->tinggi_badan : null,
+                'berat_badan'  => $request->berat_badan ? (int)$request->berat_badan : null,
+            ];
 
+            $this->asesmenService->store(
+                $vitalSignData,
+                $kd_pasien,
+                $dataMedis->no_transaksi,
+                $dataMedis->kd_kasir
+            );
 
-            // RESUME
+            // create resume
             $resumeData = [
                 'anamnesis'             => $request->anamnesis,
-                'diagnosis'             => [],
-                'tindak_lanjut_code'    => null,
-                'tindak_lanjut_name'    => null,
-                'tgl_kontrol_ulang'     => null,
-                'unit_rujuk_internal'   => null,
-                'rs_rujuk'              => null,
-                'rs_rujuk_bagian'       => null,
-                'konpas'                => [
+                'diagnosis'             => $allDiagnoses,
+
+                'konpas'                =>
+                [
                     'sistole'   => [
-                        'hasil' => $request->tekanan_darah_sistole
+                        'hasil' => $vitalSignData['sistole'] ?? null
                     ],
                     'distole'   => [
-                        'hasil' => $request->tekanan_darah_diastole
+                        'hasil' => $vitalSignData['diastole'] ?? null
                     ],
                     'respiration_rate'   => [
-                        'hasil' => $request->respirasi
+                        'hasil' => $vitalSignData['respiration'] ?? null
                     ],
                     'suhu'   => [
-                        'hasil' => $request->suhu
+                        'hasil' => $vitalSignData['suhu'] ?? null
                     ],
                     'nadi'   => [
-                        'hasil' => $request->nadi
+                        'hasil' => $vitalSignData['nadi'] ?? null
                     ],
                     'tinggi_badan'   => [
-                        'hasil' => $request->tinggi_badan
+                        'hasil' => $vitalSignData['tinggi_badan'] ?? null
                     ],
                     'berat_badan'   => [
-                        'hasil' => $request->berat_badan
+                        'hasil' => $vitalSignData['berat_badan'] ?? null
                     ]
                 ]
             ];
 
-            $this->createResume($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $resumeData);
+            $this->baseService->updateResumeMedis($dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk, $resumeData);
 
             DB::commit();
 
@@ -451,6 +447,9 @@ class AsesmenPsikiatriController extends Controller
         DB::beginTransaction();
 
         try {
+            $dataMedis = $this->baseService->getDataMedis($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
+            if (empty($dataMedis)) throw new Exception("Data kunjungan tidak ditemukan");
+
             $tanggal = $request->tanggal_masuk;
             $jam = $request->jam_masuk;
             $waktu_asesmen = $tanggal . ' ' . $jam;
@@ -461,7 +460,7 @@ class AsesmenPsikiatriController extends Controller
                 ->where('kd_unit', $kd_unit)
                 ->whereDate('tgl_masuk', $tgl_masuk)
                 ->where('urut_masuk', $urut_masuk)
-                ->where('kategori', 2)
+                ->where('kategori', 1)
                 ->where('sub_kategori', 11)
                 ->first();
 
@@ -569,42 +568,55 @@ class AsesmenPsikiatriController extends Controller
                 }
             }
 
-            // Update RESUME
+            $vitalSignData = [
+                'sistole'      => $request->tekanan_darah_sistole ? (int)$request->tekanan_darah_sistole : null,
+                'diastole'     => $request->tekanan_darah_diastole ? (int)$request->tekanan_darah_diastole : null,
+                'nadi'         => $request->nadi ? (int)$request->nadi : null,
+                'respiration'  => $request->respirasi ? (int)$request->respirasi : null,
+                'suhu'         => $request->suhu ? (float)$request->suhu : null,
+                'tinggi_badan' => $request->tinggi_badan ? (int)$request->tinggi_badan : null,
+                'berat_badan'  => $request->berat_badan ? (int)$request->berat_badan : null,
+            ];
+
+            $this->asesmenService->store(
+                $vitalSignData,
+                $kd_pasien,
+                $dataMedis->no_transaksi,
+                $dataMedis->kd_kasir
+            );
+
+            // create resume
             $resumeData = [
                 'anamnesis'             => $request->anamnesis,
-                'diagnosis'             => [],
-                'tindak_lanjut_code'    => null,
-                'tindak_lanjut_name'    => null,
-                'tgl_kontrol_ulang'     => null,
-                'unit_rujuk_internal'   => null,
-                'rs_rujuk'              => null,
-                'rs_rujuk_bagian'       => null,
-                'konpas'                => [
+                'diagnosis'             => $allDiagnoses,
+
+                'konpas'                =>
+                [
                     'sistole'   => [
-                        'hasil' => $request->tekanan_darah_sistole
+                        'hasil' => $vitalSignData['sistole'] ?? null
                     ],
                     'distole'   => [
-                        'hasil' => $request->tekanan_darah_diastole
+                        'hasil' => $vitalSignData['diastole'] ?? null
                     ],
                     'respiration_rate'   => [
-                        'hasil' => ''
+                        'hasil' => $vitalSignData['respiration'] ?? null
                     ],
                     'suhu'   => [
-                        'hasil' => $request->suhu
+                        'hasil' => $vitalSignData['suhu'] ?? null
                     ],
                     'nadi'   => [
-                        'hasil' => $request->nadi
+                        'hasil' => $vitalSignData['nadi'] ?? null
                     ],
                     'tinggi_badan'   => [
-                        'hasil' => $request->tinggi_badan
+                        'hasil' => $vitalSignData['tinggi_badan'] ?? null
                     ],
                     'berat_badan'   => [
-                        'hasil' => $request->berat_badan
+                        'hasil' => $vitalSignData['berat_badan'] ?? null
                     ]
                 ]
             ];
 
-            $this->createResume($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $resumeData);
+            $this->baseService->updateResumeMedis($dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk, $resumeData);
 
             DB::commit();
 

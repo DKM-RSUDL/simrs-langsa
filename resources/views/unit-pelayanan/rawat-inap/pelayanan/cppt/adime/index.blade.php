@@ -423,9 +423,7 @@
 
                         <!-- Submit -->
                         <div class="text-end mt-4">
-                            <button type="submit" class="btn btn-primary px-4">
-                                <i class="bi bi-save me-2"></i>Simpan
-                            </button>
+                           <x-button-submit />
                         </div>
                     </form>
                 </div>

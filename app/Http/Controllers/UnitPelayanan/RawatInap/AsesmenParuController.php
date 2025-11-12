@@ -448,6 +448,8 @@ class AsesmenParuController extends Controller
 
             $KebiasaanData = $this->getKebiasaan($idAsesmen);
 
+           
+
 
             return view('unit-pelayanan.rawat-inap.pelayanan.asesmen-paru.show', compact(
                 'asesmen',
@@ -957,29 +959,30 @@ class AsesmenParuController extends Controller
         // Ambil data dari database jika idAsesmen ada
         if (! empty($idAsesmen)) {
 
-            $kebiasaanPasien = RmeAsesmenParu::select('alkohol_jenis', 'merokok_data', 'obat_data')
+            $kebiasaanPasien = RmeAsesmenParu::select('alkohol','merokok','obat','alkohol_jenis', 'merokok_data', 'obat_data')
                 ->where('id_asesmen', $idAsesmen->id ?? null)
                 ->orderBy('id', 'desc')
                 ->first();
 
             if ($kebiasaanPasien) {
                 // Dekode JSON jika disimpan sebagai JSON
-                $alkoholData = $kebiasaanPasien->alkohol_jenis ?? null;
-                $merokokData = $kebiasaanPasien->merokok_data ?? null;
-                $obatData = $kebiasaanPasien->obat_data ?? null;
+                $isAlkohol = $kebiasaanPasien->alkohol == 'ya'? true : false;
+                $isMerokok = $kebiasaanPasien->merokok == 'ya'? true : false;
+                $isObat = $kebiasaanPasien->obat == 'ya'? true : false;
 
+            
                 // Format ulang data untuk KebiasaanData
                 $KebiasaanData['alkohol'] = [
-                    'status' => $alkoholData ? 'ya' : 'tidak',
-                    'jenis' => $alkoholData,
+                    'status' => $isAlkohol ? 'ya' : 'tidak',
+                    'jenis' => $kebiasaanPasien->alkohol_jenis,
                 ];
                 $KebiasaanData['merokok'] = [
-                    'status' => $merokokData ? 'ya' : 'tidak',
-                    'detail' => $merokokData,
+                    'status' => $isMerokok ? 'ya' : 'tidak',
+                    'detail' => $kebiasaanPasien->merokok_data,
                 ];
                 $KebiasaanData['obat'] = [
-                    'status' => $obatData ? 'ya' : 'tidak',
-                    'detail' => $obatData,
+                    'status' => $isObat ? 'ya' : 'tidak',
+                    'detail' => $kebiasaanPasien->obat_data,
                 ];
             }
         }

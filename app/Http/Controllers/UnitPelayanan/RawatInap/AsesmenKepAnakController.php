@@ -132,18 +132,17 @@ class AsesmenKepAnakController extends Controller
             if (empty($dataMedis)) throw new Exception('Data kunjungan tidak ditemukan !');
 
             // Ambil tanggal dan jam dari form
-            $tanggal = $request->tanggal_masuk;
-            $jam = $request->jam_masuk;
-            $waktu_asesmen = $tanggal . ' ' . $jam;
+            $formatDate = date('Y-m-d', strtotime($request->tanggal_masuk));
+            $formatTime = date('H:i:s', strtotime($request->jam_masuk));
 
             // Simpan ke table RmeAsesmen
             $dataAsesmen = new RmeAsesmen;
-            $dataAsesmen->kd_pasien = $kd_pasien;
-            $dataAsesmen->kd_unit = $kd_unit;
-            $dataAsesmen->tgl_masuk = $tgl_masuk;
-            $dataAsesmen->urut_masuk = $urut_masuk;
+            $dataAsesmen->kd_pasien = $dataMedis->kd_pasien;
+            $dataAsesmen->kd_unit = $dataMedis->kd_unit;
+            $dataAsesmen->tgl_masuk = $dataMedis->tgl_masuk;
+            $dataAsesmen->urut_masuk = $dataMedis->urut_masuk;
             $dataAsesmen->user_id = Auth::id();
-            $dataAsesmen->waktu_asesmen = $waktu_asesmen;
+            $dataAsesmen->waktu_asesmen = "$formatDate $formatTime";
             $dataAsesmen->kategori = 2;
             $dataAsesmen->sub_kategori = 7;
             $dataAsesmen->anamnesis = $request->anamnesis;
@@ -888,18 +887,17 @@ class AsesmenKepAnakController extends Controller
             if (empty($dataMedis)) throw new Exception('Data kunjungan tidak ditemukan !');
 
             // Ambil tanggal dan jam dari form
-            $tanggal = $request->tanggal_masuk;
-            $jam = $request->jam_masuk;
-            $waktu_asesmen = $tanggal . ' ' . $jam;
+            $formatDate = date('Y-m-d', strtotime($request->tanggal_masuk));
+            $formatTime = date('H:i:s', strtotime($request->jam_masuk));
 
             // Update RmeAsesmen
             $dataAsesmen = RmeAsesmen::findOrFail($id);
-            $dataAsesmen->kd_pasien = $kd_pasien;
-            $dataAsesmen->kd_unit = $kd_unit;
-            $dataAsesmen->tgl_masuk = $tgl_masuk;
-            $dataAsesmen->urut_masuk = $urut_masuk;
+            $dataAsesmen->kd_pasien = $dataMedis->kd_pasien;
+            $dataAsesmen->kd_unit = $dataMedis->kd_unit;
+            $dataAsesmen->tgl_masuk = $dataMedis->tgl_masuk;
+            $dataAsesmen->urut_masuk = $dataMedis->urut_masuk;
             $dataAsesmen->user_id = Auth::id();
-            $dataAsesmen->waktu_asesmen = $waktu_asesmen;
+            $dataAsesmen->waktu_asesmen = "$formatDate $formatTime";
             $dataAsesmen->kategori = 2;
             $dataAsesmen->sub_kategori = 7;
             $dataAsesmen->anamnesis = $request->anamnesis;

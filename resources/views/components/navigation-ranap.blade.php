@@ -254,6 +254,16 @@
             ]),
         ],
         [
+            'icon' => 'verified_badge.png',
+            'label' => 'Implementasi Askep',
+            'link' => route('rawat-inap.asuhan-keperawatan.index', [
+                $dataMedis->kd_unit,
+                $dataMedis->kd_pasien,
+                $tglMasukData,
+                $dataMedis->urut_masuk,
+            ]),
+        ],
+        [
             'icon' => 'cv.png',
             'label' => 'Resume',
             'link' => route('rawat-inap.rawat-inap-resume.index', [

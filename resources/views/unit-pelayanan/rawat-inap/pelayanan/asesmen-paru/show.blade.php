@@ -148,7 +148,7 @@
                     </div>
 
                     <!-- 4. Kebiasaan -->
-
+                  
                     <div class="section-separator" id="kebiasaan">
                         <h5 class="section-title">4. Kebiasaan</h5>
                         @include('unit-pelayanan.rawat-inap.pelayanan.asesmen-paru.KebiasaanForm.index', [

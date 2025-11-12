@@ -534,6 +534,7 @@ class AsesmenMedisController extends Controller
         } else {
             $dataMedis->pasien->umur = 'Tidak Diketahui';
         }
+        $itemFisik = MrItemFisik::orderby('urut')->get();
 
         // 2. Ambil Data Asesmen dengan SEMUA relasinya
         // (Kita pakai $id dari URL untuk mencari asesmen yang spesifik)
@@ -575,7 +576,8 @@ class AsesmenMedisController extends Controller
             'dataMedis',
             'asesmen',
             'resume',
-            'sjp'
+            'sjp',
+            'itemFisik'
         ));
 
         // Atur ukuran kertas
