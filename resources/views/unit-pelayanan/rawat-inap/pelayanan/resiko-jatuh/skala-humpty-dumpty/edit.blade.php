@@ -655,7 +655,7 @@
             let lastChecked = {}; // Untuk menyimpan radio button yang terakhir diklik
 
             // Set initial state - populate lastChecked dengan data yang sudah ada
-            $('.assessment-field:checked').each(function() {
+            $('input[type="radio"]:checked').each(function() {
                 lastChecked[this.name] = this;
                 $(this).closest('label.form-check').addClass('selected');
             });
@@ -775,32 +775,33 @@
             }
 
             // Event listener untuk radio button dengan fitur uncheck
-            $('.assessment-field').on('click', function(e) {
-                const groupName = $(this).attr('name');
+            $('input[type="radio"][name="usia"], input[type="radio"][name="jenis_kelamin"], input[type="radio"][name="diagnosis"], input[type="radio"][name="gangguan_kognitif"], input[type="radio"][name="faktor_lingkungan"], input[type="radio"][name="pembedahan_sedasi"], input[type="radio"][name="penggunaan_medikamentosa"]')
+                .on('click', function(e) {
+                    const groupName = $(this).attr('name');
 
-                // Jika radio button yang sama diklik lagi, uncheck
-                if (lastChecked[groupName] === this && $(this).is(':checked')) {
-                    $(this).prop('checked', false);
-                    lastChecked[groupName] = null;
+                    // Jika radio button yang sama diklik lagi, uncheck
+                    if (lastChecked[groupName] === this && $(this).is(':checked')) {
+                        $(this).prop('checked', false);
+                        lastChecked[groupName] = null;
 
-                    // Remove selected state dari radio button ini
-                    $(this).closest('label.form-check').removeClass('selected');
+                        // Remove selected state dari radio button ini
+                        $(this).closest('label.form-check').removeClass('selected');
+
+                        hitungSkorDanKategori();
+                        return;
+                    }
+
+                    // Simpan radio button yang diklik sebagai yang terakhir
+                    lastChecked[groupName] = this;
+
+                    // Update visual selected state hanya untuk grup ini
+                    $(`input[name="${groupName}"]`).each(function() {
+                        $(this).closest('label.form-check').removeClass('selected');
+                    });
+                    $(this).closest('label.form-check').addClass('selected');
 
                     hitungSkorDanKategori();
-                    return false;
-                }
-
-                // Simpan radio button yang diklik sebagai yang terakhir
-                lastChecked[groupName] = this;
-
-                // Update visual selected state hanya untuk grup ini
-                $(`input[name="${groupName}"]`).each(function() {
-                    $(this).closest('label.form-check').removeClass('selected');
                 });
-                $(this).closest('label.form-check').addClass('selected');
-
-                hitungSkorDanKategori();
-            });
 
             // Event listener untuk checkbox enable penilaian
             $('#enableResikoJatuh').on('change', function() {
@@ -896,7 +897,7 @@
             });
 
             // Set initial visual state berdasarkan data yang sudah ada
-            $('.assessment-field:checked').each(function() {
+            $('input[type="radio"]:checked').each(function() {
                 $(this).closest('label.form-check').addClass('selected');
                 lastChecked[$(this).attr('name')] = this;
             });
