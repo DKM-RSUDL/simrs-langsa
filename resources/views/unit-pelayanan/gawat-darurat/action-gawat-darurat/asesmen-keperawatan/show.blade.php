@@ -45,12 +45,14 @@
                                 <!-- Kolom untuk tombol print -->
                                 <div class="col-md-7">
                                     <div class="d-flex justify-content-end align-items-start h-100">
-                                        <a href="{{ route("asesmen-keperawatan.print-pdf",[
+                                        <a href="{{ route('asesmen-keperawatan.print-pdf-keperawatan', [
                                             'kd_pasien' => $dataMedis->kd_pasien,
+                                            'urut_masuk' => $dataMedis->urut_masuk,
                                             'tgl_masuk' => \Carbon\Carbon::parse($dataMedis->tgl_masuk)->format('Y-m-d'),
-                                            'id' => $asesmen->id
-                                        ]) }}" class="btn btn-primary"
-                                            target="_blank">
+                                            'id' => $asesmen->id,
+                                        ]) }}" 
+                                        class="btn btn-primary" 
+                                        target="_blank">
                                             <i class="fas fa-print me-2"></i>Print Asesmen
                                         </a>
                                     </div>

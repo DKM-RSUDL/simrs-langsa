@@ -483,7 +483,7 @@
 
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">Simpan</button>
+                    <x-button-submit />
                 </div>
             </form>
         </div>
@@ -992,7 +992,9 @@
 
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">Simpan</button>
+                   <div class="text-end">
+                            <x-button-submit />
+                   </div>
                 </div>
             </form>
         </div>
