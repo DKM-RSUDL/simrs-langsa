@@ -173,7 +173,8 @@
     aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
-            <form action="{{ route('tindakan.update', [$dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk]) }}"
+            <form
+                action="{{ route('tindakan.update', [$dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk]) }}"
                 method="post" enctype="multipart/form-data" id="editTindakanForm">
                 @csrf
                 @method('put')
@@ -393,7 +394,7 @@
                         <div class="card">
                             <div class="card-body">
                                 <p class="text-primary fw-bold">Laporan Hasil Tindakan :</p>
-                                <p id="laporan"></p>
+                                <p class="multiline" id="laporan"></p>
                             </div>
                         </div>
                     </div>
@@ -404,7 +405,7 @@
                         <div class="card">
                             <div class="card-body">
                                 <p class="text-primary fw-bold">Kesimpulan :</p>
-                                <p id="kesimpulan"></p>
+                                <p class="multiline" id="kesimpulan"></p>
                             </div>
                         </div>
                     </div>
