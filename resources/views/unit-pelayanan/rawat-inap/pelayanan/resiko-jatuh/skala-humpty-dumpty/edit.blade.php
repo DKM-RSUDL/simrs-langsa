@@ -40,9 +40,10 @@
                                     required>
                             </div>
                             <div class="col-md-4">
-                                <label for="jam_implementasi" class="form-label">Jam Implementasi</label>
-                                <input type="time" class="form-control" name="jam_implementasi" id="jam_implementasi"
-                                    value="{{ date('H:i', strtotime($dataHumptyDumpty->jam_implementasi)) }}" required>
+                                <label class="form-label">Hari ke<span class="text-danger">*</span></label>
+                                <input type="number" class="form-control" id="hari_ke" name="hari_ke"
+                                    value="{{ old('hari_ke', $dataHumptyDumpty->hari_ke) }}" min="1"
+                                    placeholder="Masukkan hari ke..." required>
                             </div>
                             <div class="col-md-4">
                                 <label for="shift" class="form-label">Shift</label>
@@ -424,48 +425,20 @@
                                 </div>
                             </label>
 
-                            <div class="mb-3">
-                                <label class="fw-bold d-block mb-2">2. Orientasikan pasien terhadap lingkungan dan
-                                    rutinitas RS</label>
-                                <div class="ms-3">
-                                    <label for="orientasi_kamar_mandi" class="form-check bg-light p-3 rounded mb-2">
-                                        <div class="form-check-label d-flex align-items-center">
-                                            <input class="form-check-input me-2" type="checkbox"
-                                                id="orientasi_kamar_mandi" name="orientasi_kamar_mandi" value="1"
-                                                {{ $dataHumptyDumpty->orientasi_kamar_mandi ? 'checked' : '' }}>
-                                            <span>Tunjukkan lokasi kamar mandi</span>
-                                        </div>
-                                    </label>
-
-                                    <label for="orientasi_bertahap" class="form-check bg-light p-3 rounded mb-2">
-                                        <div class="form-check-label d-flex align-items-center">
-                                            <input class="form-check-input me-2" type="checkbox" id="orientasi_bertahap"
-                                                name="orientasi_bertahap" value="1"
-                                                {{ $dataHumptyDumpty->orientasi_bertahap ? 'checked' : '' }}>
-                                            <span>Jika pasien linglung, orientasi dilaksanakan bertahap</span>
-                                        </div>
-                                    </label>
-
-                                    <label for="tempatkan_bel" class="form-check bg-light p-3 rounded mb-2">
-                                        <div class="form-check-label d-flex align-items-center">
-                                            <input class="form-check-input me-2" type="checkbox" id="tempatkan_bel"
-                                                name="tempatkan_bel" value="1"
-                                                {{ $dataHumptyDumpty->tempatkan_bel ? 'checked' : '' }}>
-                                            <span>Tempatkan bel ditempat yang mudah dicapai</span>
-                                        </div>
-                                    </label>
-
-                                    <label for="instruksi_bantuan" class="form-check bg-light p-3 rounded mb-2">
-                                        <div class="form-check-label d-flex align-items-center">
-                                            <input class="form-check-input me-2" type="checkbox" id="instruksi_bantuan"
-                                                name="instruksi_bantuan" value="1"
-                                                {{ $dataHumptyDumpty->instruksi_bantuan ? 'checked' : '' }}>
-                                            <span>Instruksikan meminta bantuan perawat sebelum turun dari tempat
-                                                tidur</span>
-                                        </div>
-                                    </label>
+                            <label for="orientasi_rs" class="form-check bg-light p-3 rounded mb-2">
+                                <input class="form-check-input" type="checkbox" id="orientasi_rs" name="orientasi_rs"
+                                    value="1"
+                                    {{ $dataHumptyDumpty->orientasi_kamar_mandi || $dataHumptyDumpty->orientasi_bertahap || $dataHumptyDumpty->tempatkan_bel || $dataHumptyDumpty->instruksi_bantuan ? 'checked' : '' }}>
+                                <div class="form-check-label">
+                                    <strong>2. Orientasikan pasien terhadap lingkungan dan rutinitas RS</strong>
+                                    <ul class="mb-0 mt-2" style="list-style-type: none;">
+                                        <li>Tunjukkan lokasi kamar mandi</li>
+                                        <li>Jika pasien linglung, orientasi dilaksanakan bertahap</li>
+                                        <li>Tempatkan bel ditempat yang mudah dicapai</li>
+                                        <li>Instruksikan meminta bantuan perawat sebelum turun dari tempat tidur</li>
+                                    </ul>
                                 </div>
-                            </div>
+                            </label>
 
                             <label for="pagar_pengaman" class="form-check bg-light p-3 rounded mb-2">
                                 <div class="form-check-label d-flex align-items-center">
@@ -528,7 +501,7 @@
 
                         <!-- Intervensi untuk Risiko Tinggi -->
                         <div id="highRiskInterventions"
-                            style="{{ $dataHumptyDumpty->kategori_risiko == 'Risiko Tinggi' ? 'display: block;' : 'display: none;' }}">
+                            style="{{ $dataHumptyDumpty->kategori_risiko == 'Risiko Tinggi' ? 'display: block;' : 'display: none;' }}" class="mt-5">
                             <div class="alert alert-danger mb-3">
                                 <i class="ti-alert-triangle"></i> <strong>Intervensi untuk Risiko Tinggi</strong>
                             </div>
@@ -716,6 +689,7 @@
                 if (kategori === 'Risiko Rendah') {
                     $('#lowRiskInterventions').show();
                 } else if (kategori === 'Risiko Tinggi') {
+                    $('#lowRiskInterventions').show();
                     $('#highRiskInterventions').show();
                 }
             }
@@ -845,8 +819,8 @@
                         name: 'Tanggal Implementasi'
                     },
                     {
-                        element: $('#jam_implementasi'),
-                        name: 'Jam Implementasi'
+                        element: $('#hari_ke'),
+                        name: 'Hari ke'
                     },
                     {
                         element: $('#shift'),

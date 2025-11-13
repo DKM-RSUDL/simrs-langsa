@@ -36,9 +36,9 @@
                                     value="{{ old('tanggal_implementasi', now()->format('Y-m-d')) }}" required>
                             </div>
                             <div class="col-md-4">
-                                <label class="form-label">Jam<span class="text-danger">*</span></label>
-                                <input type="time" class="form-control" name="jam_implementasi" id="jam_implementasi"
-                                    value="{{ old('jam_implementasi', now()->format('H:i')) }}" required>
+                                <label class="form-label">Hari ke<span class="text-danger">*</span></label>
+                                <input type="number" class="form-control" id="hari_ke" name="hari_ke"
+                                    value="{{ old('hari_ke') }}" min="1" placeholder="Masukkan hari ke..." required>
                             </div>
                             <div class="col-md-4">
                                 <label for="shift" class="form-label">Shift</label>
@@ -400,7 +400,7 @@
                                     value="1">
                                 <div class="form-check-label">
                                     <strong>2. Orientasikan pasien terhadap lingkungan dan rutinitas RS</strong>
-                                    <ul class="mb-0 mt-2">
+                                    <ul class="mb-0 mt-2" style="list-style-type: none;">
                                         <li>Tunjukkan lokasi kamar mandi</li>
                                         <li>Jika pasien linglung, orientasi dilaksanakan bertahap</li>
                                         <li>Tempatkan bel ditempat yang mudah dicapai</li>
@@ -460,7 +460,7 @@
                         </div>
 
                         <!-- Intervensi untuk Risiko Tinggi -->
-                        <div id="highRiskInterventions" style="display: none;">
+                        <div id="highRiskInterventions" style="display: none;" class="mt-5">
                             <h5 class="mb-3">INTERVENSI PENCEGAHAN JATUH - RESIKO TINGGI</h5>
 
                             <div class="alert alert-danger">
@@ -630,8 +630,11 @@
                 $('#lowRiskInterventions, #highRiskInterventions').hide();
 
                 if (kategori === 'Risiko Rendah') {
+                    // hanya rendah
                     $('#lowRiskInterventions').show();
                 } else if (kategori === 'Risiko Tinggi') {
+                    // kumulatif: tampilkan rendah + tinggi
+                    $('#lowRiskInterventions').show();
                     $('#highRiskInterventions').show();
                 }
             }
@@ -776,7 +779,6 @@
             const currentTime = now.toTimeString().split(' ')[0].substring(0, 5);
 
             $('#tanggal_implementasi').val(currentDate);
-            $('#jam_implementasi').val(currentTime);
         });
     </script>
 @endpush
