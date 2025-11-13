@@ -33,7 +33,7 @@
                             <div class="tab-pane fade show active" id="resep" role="tabpanel" aria-labelledby="resep-tab">
                                 {{-- TAB 1. buatlah list disini --}}
                                 <div class="table-responsive">
-                                    <table class="table table-bordered table-sm table-hover"
+                                    <table class="table table-bordered table-sm "
                                         id="rawatDaruratKonsultasiTable">
                                         <thead class="table-primary">
                                             <tr>

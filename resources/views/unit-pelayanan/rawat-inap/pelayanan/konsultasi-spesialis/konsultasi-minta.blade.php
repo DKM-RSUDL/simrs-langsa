@@ -17,11 +17,19 @@
             </td>
             <td>{{ $item->dokterPengirim->nama }}<br></td>
             {{-- <td>{{ $item->spesialis->konsul }}</td> --}}
-            <td>
+            {{-- <td>
                 <p class="m-0">{!!  $item->konsul  !!}</p>
             </td>
             <td>
                 <p class="m-0">{!!  $item->catatan  !!}</p>
+            </td> --}}
+
+           
+            <td>
+                <p class="m-0">{!! nl2br(e($item->catatan)) !!}</p>
+            </td>
+              <td>
+                <p class="m-0">{!! nl2br(e($item->konsul)) !!}</p>
             </td>
             <td>
                 <p class="m-0">{{ $item->respon_konsul }}</p>
