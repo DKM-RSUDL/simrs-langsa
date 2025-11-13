@@ -8,15 +8,20 @@
     'isTerima' => $isTerima,
     'firstFrame' => true,
 ])
+
+
     @foreach ($dataKonsul as $item)
         <tr>
             <td>{{ $item->tanggal_konsul }}<br><small
                     class="text-muted">{{ date('H:i', strtotime($item->jam_konsul)) }}</small>
             </td>
             <td>{{ $item->dokterPengirim->nama }}<br></td>
-            <td>{{ $item->spesialis->spesialisasi }}</td>
+            {{-- <td>{{ $item->spesialis->konsul }}</td> --}}
             <td>
-                <p class="m-0">{{ $item->catatan }}</p>
+                <p class="m-0">{!!  $item->konsul  !!}</p>
+            </td>
+            <td>
+                <p class="m-0">{!!  $item->catatan  !!}</p>
             </td>
             <td>
                 <p class="m-0">{{ $item->respon_konsul }}</p>

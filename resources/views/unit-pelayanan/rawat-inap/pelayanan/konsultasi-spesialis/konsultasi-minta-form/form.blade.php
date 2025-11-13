@@ -1,4 +1,14 @@
 @extends('layouts.administrator.master')
+
+@push('css')
+   <style>
+    /* Sembunyikan toolbar Trix */
+    trix-toolbar {
+        display: none;
+    }
+
+</style>
+@endpush
 @section('content')
     <div class="row">
         <div class="col-md-3">
@@ -154,40 +164,25 @@
                         {{-- Kolom kanan --}}
                         <div class="col-md-7">
                             <strong class="fw-bold">Catatan Klinik / Diagnosis</strong>
-                            <textarea 
-                                class="form-control @error('catatan') is-invalid @enderror" 
-                                name="catatan" 
-                                id="catatan" 
-                                rows="3" 
-                                {{ !empty($readonly) ? 'disabled' : '' }}
-                                required
-                            >{{ old('catatan', $Data->catatan ?? '') }}</textarea>
-                            @error('catatan') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                            <input id="catatan" type="hidden" name="catatan" value="{{ old('catatan', $Data->catatan ?? '') }}">
+                            <trix-editor input="catatan" {{ !empty($readonly) ? 'disabled' : '' }}></trix-editor>
+                            @error('catatan') <div class="invalid-feedback d-block">{{ $message }}</div> @enderror
 
                             <div class="mt-3">
                                 <strong class="fw-bold">Konsul yang Diminta</strong>
-                                <textarea 
-                                    class="form-control @error('konsul') is-invalid @enderror" 
-                                    name="konsul" 
-                                    id="konsul" 
-                                    rows="5" 
-                                    {{ !empty($readonly) ? 'disabled' : '' }}
-                                    required
-                                >{{ old('konsul', $Data->konsul ?? '') }}</textarea>
-                                @error('konsul') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                                <input id="konsul" type="hidden" name="konsul" value="{{ old('konsul', $Data->konsul ?? '') }}">
+                                <trix-editor input="konsul" {{ !empty($readonly) ? 'disabled' : '' }}></trix-editor>
+                                @error('konsul') <div class="invalid-feedback d-block">{{ $message }}</div> @enderror
                             </div>
+
                             <input type="hidden" name="category" value="{{ !empty($readonly) ? 'terima' : 'minta' }}">
+
                             @if(!empty($readonly))
                                 <div class="mt-3">
                                     <strong class="fw-bold">Jawaban</strong>
-                                    <textarea 
-                                        class="form-control @error('respon_konsul') is-invalid @enderror" 
-                                        name="respon_konsul" 
-                                        id="respon_konsul" 
-                                        rows="5" 
-                                        required
-                                    >{{ old('respon_konsul', $Data->respon_konsul ?? '') }}</textarea>
-                                    @error('respon_konsul') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                                    <input id="respon_konsul" type="hidden" name="respon_konsul" value="{{ old('respon_konsul', $Data->respon_konsul ?? '') }}">
+                                    <trix-editor input="respon_konsul"></trix-editor>
+                                    @error('respon_konsul') <div class="invalid-feedback d-block">{{ $message }}</div> @enderror
                                 </div>
                             @endif
                         </div>
@@ -259,5 +254,6 @@ $(document).ready(() => {
         }, 1200); // delay 1,2 detik sebelum kirim request
     });
 });
+
 </script>
 @endpush

@@ -38,8 +38,8 @@
                                         <thead class="table-primary">
                                             <tr>
                                                 <th width="10%">Tanggal</th>
-                                                <th width="20%">Dari PPA</th>
-                                                <th width="15%">Konsulen</th>
+                                                <th width="20%">Konsulen</th>
+                                                <th width="15%">Diagnosis</th>
                                                 <th width="20%">Konsul yang diminta</th>
                                                 <th width="20%">Jawaban</th>
                                                 <th width="13%">Status Konsul</th>
