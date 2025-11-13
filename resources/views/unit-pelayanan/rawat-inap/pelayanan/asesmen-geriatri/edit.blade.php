@@ -33,7 +33,7 @@
                             <h5 class="section-title">1. Data masuk</h5>
 
                             <div class="form-group">
-                                <label style="min-width: 200px;">Tanggal Dan Jam Masuk</label>
+                                <label style="min-width: 200px;">Tanggal Dan Jam Pengisian</label>
                                 <div class="d-flex gap-3" style="width: 100%;">
                                     @php
                                         $waktuMasuk = $asesmenGeriatri->waktu_masuk
@@ -742,7 +742,7 @@
                     </div>
                 </div>
             </form>
-            </x-content-card>                        
+            </x-content-card>
         </div>
     </div>
 @endsection

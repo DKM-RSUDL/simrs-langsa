@@ -128,13 +128,17 @@ class AsesmenPsikiatriController extends Controller
             $jam = $request->jam_masuk;
             $waktu_asesmen = $tanggal . ' ' . $jam;
 
+            // Ambil tanggal dan jam dari form
+            $formatDate = date('Y-m-d', strtotime($request->tanggal_masuk));
+            $formatTime = date('H:i:s', strtotime($request->jam_masuk));
+
             $dataAsesmen = new RmeAsesmen();
-            $dataAsesmen->kd_pasien = $kd_pasien;
-            $dataAsesmen->kd_unit = $kd_unit;
-            $dataAsesmen->tgl_masuk = $tgl_masuk;
-            $dataAsesmen->urut_masuk = $urut_masuk;
+            $dataAsesmen->kd_pasien = $dataMedis->kd_pasien;
+            $dataAsesmen->kd_unit = $dataMedis->kd_unit;
+            $dataAsesmen->tgl_masuk = $dataMedis->tgl_masuk;
+            $dataAsesmen->urut_masuk = $dataMedis->urut_masuk;
             $dataAsesmen->user_id = Auth::id();
-            $dataAsesmen->waktu_asesmen = $waktu_asesmen;
+            $dataAsesmen->waktu_asesmen = "$formatDate $formatTime";
             $dataAsesmen->kategori = 1;
             $dataAsesmen->sub_kategori = 11; // Asesmen Psikiatri
             $dataAsesmen->anamnesis = $request->anamnesis;
@@ -454,12 +458,16 @@ class AsesmenPsikiatriController extends Controller
             $jam = $request->jam_masuk;
             $waktu_asesmen = $tanggal . ' ' . $jam;
 
+            // Ambil tanggal dan jam dari form
+            $formatDate = date('Y-m-d', strtotime($request->tanggal_masuk));
+            $formatTime = date('H:i:s', strtotime($request->jam_masuk));
+
             // Update data asesmen utama
             $dataAsesmen = RmeAsesmen::where('id', $id)
-                ->where('kd_pasien', $kd_pasien)
-                ->where('kd_unit', $kd_unit)
-                ->whereDate('tgl_masuk', $tgl_masuk)
-                ->where('urut_masuk', $urut_masuk)
+                ->where('kd_pasien', $dataMedis->kd_pasien)
+                ->where('kd_unit', $dataMedis->kd_unit)
+                ->whereDate('tgl_masuk', $dataMedis->tgl_masuk)
+                ->where('urut_masuk', $dataMedis->urut_masuk)
                 ->where('kategori', 1)
                 ->where('sub_kategori', 11)
                 ->first();
@@ -469,7 +477,7 @@ class AsesmenPsikiatriController extends Controller
             }
 
             $dataAsesmen->user_id = Auth::id();
-            $dataAsesmen->waktu_asesmen = $waktu_asesmen;
+            $dataAsesmen->waktu_asesmen = "$formatDate $formatTime";
             $dataAsesmen->anamnesis = $request->anamnesis;
             $dataAsesmen->skala_nyeri = $request->skala_nyeri;
             $dataAsesmen->save();
