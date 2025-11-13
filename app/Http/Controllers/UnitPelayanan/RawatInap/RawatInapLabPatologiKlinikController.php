@@ -266,6 +266,38 @@ class RawatInapLabPatologiKlinikController extends Controller
         return view('unit-pelayanan.rawat-inap.pelayanan.labor.createpk', compact('kd_pasien', 'tgl_masuk'));
     }
 
+    function generateNoOrder($tglMasuk)
+    {
+        // Pastikan $tglMasuk berupa Carbon atau tanggal yang valid
+        $tanggal = Carbon::parse($tglMasuk)->format('Y-m-d');
+
+        // Ambil data terakhir berdasarkan tanggal masuk
+        $lastOrder = SegalaOrder::whereDate('tgl_masuk', $tanggal)
+            ->orderByDesc('kd_order')
+            ->first();
+
+        // Format dasar tanggal: yyyyMMdd
+        $prefix = Carbon::parse($tglMasuk)->format('Ymd');
+
+        if (!$lastOrder) {
+            // Jika belum ada data untuk tanggal tersebut
+            $noOrder = $prefix . '0001';
+        } else {
+            // Ambil KD_ORDER terakhir
+            $lastKdOrder = $lastOrder->kd_order;
+
+            // Jika prefix berbeda dengan tanggal saat ini, reset ke 0001
+            if (substr($lastKdOrder, 0, 8) !== $prefix) {
+                $noOrder = $prefix . '0001';
+            } else {
+                // Tambah 1 dari KD_ORDER terakhir
+                $noOrder = str_pad($lastKdOrder + 1, 12, '0', STR_PAD_LEFT);
+            }
+        }
+
+        return $noOrder;
+    }
+
     public function store(Request $request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
     {
         $validatedData = $request->validate([
@@ -301,6 +333,11 @@ class RawatInapLabPatologiKlinikController extends Controller
         DB::beginTransaction();
 
         try {
+            $dataMedis = $this->baseService->getDataMedis($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
+
+            if (empty($dataMedis)) {
+                throw new Exception('Data medis tidak ditemukan.');
+            }
 
             $validatedData['kategori'] = $validatedData['kategori'] ?? 'LB';
 
@@ -328,15 +365,13 @@ class RawatInapLabPatologiKlinikController extends Controller
                 }
             }
 
-            $tglOrder = (int) Carbon::parse($tgl_masuk)->format('Ymd');
+            // $tglOrder = (int) Carbon::parse($tgl_masuk)->format('Ymd');
 
-            $lastOrder = SegalaOrder::where('kd_order', 'like', $tglOrder . '%')
-                ->orderBy('kd_order', 'desc')
-                ->first();
+            // $lastOrder = SegalaOrder::where('KD_ORDER', 'like', "$tglOrder%")
+            //     ->orderBy('kd_order', 'desc')
+            //     ->first();
 
-            $newOrderNumber = $lastOrder ? ((int)substr($lastOrder->kd_order, -4)) + 1 : 1;
-            $newOrderNumber = str_pad((string)$newOrderNumber, 4, '0', STR_PAD_LEFT);
-            $newOrderNumber = $tglOrder . $newOrderNumber;
+            $newOrderNumber = $this->generateNoOrder($tgl_masuk);
 
             $segalaOrder = SegalaOrder::create([
                 'kd_order' => $newOrderNumber,
@@ -369,13 +404,9 @@ class RawatInapLabPatologiKlinikController extends Controller
                 ]);
             }
 
-            // Panggil ResumeService
-            $resume = $this->checkResumeService->checkAndCreateResume([
-                'kd_pasien' => $validatedData['kd_pasien'],
-                'kd_unit' => $validatedData['kd_unit'],
-                'tgl_masuk' => $validatedData['tgl_masuk'],
-                'urut_masuk' => $validatedData['urut_masuk']
-            ]);
+            // create resume
+            $resumeData = [];
+            $this->baseService->updateResumeMedis($dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk, $resumeData);
 
             DB::commit();
 
@@ -426,6 +457,7 @@ class RawatInapLabPatologiKlinikController extends Controller
         DB::beginTransaction();
 
         try {
+            $dataMedis = $this->baseService->getDataMedis($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
 
             $segalaOrder = SegalaOrder::where('kd_unit', $kd_unit)
                 ->where('kd_pasien', $kd_pasien)
@@ -489,13 +521,9 @@ class RawatInapLabPatologiKlinikController extends Controller
                 ]);
             }
 
-            // Panggil ResumeService
-            $resume = $this->checkResumeService->checkAndCreateResume([
-                'kd_pasien' => $validatedData['kd_pasien'],
-                'kd_unit' => $validatedData['kd_unit'],
-                'tgl_masuk' => $validatedData['tgl_masuk'],
-                'urut_masuk' => $validatedData['urut_masuk']
-            ]);
+            // create resume
+            $resumeData = [];
+            $this->baseService->updateResumeMedis($dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk, $resumeData);
 
             DB::commit();
 

@@ -54,6 +54,38 @@ class RadiologiController extends Controller
         }
     }
 
+    function generateNoOrder($tglMasuk)
+    {
+        // Pastikan $tglMasuk berupa Carbon atau tanggal yang valid
+        $tanggal = Carbon::parse($tglMasuk)->format('Y-m-d');
+
+        // Ambil data terakhir berdasarkan tanggal masuk
+        $lastOrder = SegalaOrder::whereDate('tgl_masuk', $tanggal)
+            ->orderByDesc('kd_order')
+            ->first();
+
+        // Format dasar tanggal: yyyyMMdd
+        $prefix = Carbon::parse($tglMasuk)->format('Ymd');
+
+        if (!$lastOrder) {
+            // Jika belum ada data untuk tanggal tersebut
+            $noOrder = $prefix . '0001';
+        } else {
+            // Ambil KD_ORDER terakhir
+            $lastKdOrder = $lastOrder->kd_order;
+
+            // Jika prefix berbeda dengan tanggal saat ini, reset ke 0001
+            if (substr($lastKdOrder, 0, 8) !== $prefix) {
+                $noOrder = $prefix . '0001';
+            } else {
+                // Tambah 1 dari KD_ORDER terakhir
+                $noOrder = str_pad($lastKdOrder + 1, 12, '0', STR_PAD_LEFT);
+            }
+        }
+
+        return $noOrder;
+    }
+
     public function store($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, Request $request)
     {
 
@@ -81,31 +113,11 @@ class RadiologiController extends Controller
         try {
 
             // get kunjungan data
-            $kunjungan = Kunjungan::with(['pasien', 'dokter', 'customer'])
-                ->join('transaksi as t', function ($join) {
-                    $join->on('kunjungan.kd_pasien', '=', 't.kd_pasien');
-                    $join->on('kunjungan.kd_unit', '=', 't.kd_unit');
-                    $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
-                    $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
-                })
-                ->where('kunjungan.kd_unit', $kd_unit)
-                ->where('kunjungan.kd_pasien', $kd_pasien)
-                ->where('kunjungan.urut_masuk', $urut_masuk)
-                ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
-                ->where('kunjungan.urut_masuk', $request->urut_masuk)
-                ->first();
+            $kunjungan = $this->baseService->getDataMedis($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
 
 
             // get new order number
-            $tglOrder = (int) Carbon::parse($tgl_masuk)->format('Ymd');
-
-            $lastOrder = SegalaOrder::where('kd_order', 'like', $tglOrder . '%')
-                ->orderBy('kd_order', 'desc')
-                ->first();
-
-            $newOrderNumber = $lastOrder ? ((int)substr($lastOrder->kd_order, -4)) + 1 : 1;
-            $newOrderNumber = str_pad((string)$newOrderNumber, 4, '0', STR_PAD_LEFT);
-            $newOrderNumber = $tglOrder . $newOrderNumber;
+            $newOrderNumber = $this->generateNoOrder($tgl_masuk);
 
             $jadwalPemeriksaan = null;
 
@@ -152,7 +164,9 @@ class RadiologiController extends Controller
                 $noUrut++;
             }
 
-            $this->createResume($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
+            // create resume
+            $resumeData = [];
+            $this->baseService->updateResumeMedis($kunjungan->kd_unit, $kunjungan->kd_pasien, $kunjungan->tgl_masuk, $kunjungan->urut_masuk, $resumeData);
 
             DB::commit();
             return back()->with('success', 'Order berhasil');
@@ -228,18 +242,7 @@ class RadiologiController extends Controller
         try {
 
             // get kunjungan data
-            $kunjungan = Kunjungan::with(['pasien', 'dokter', 'customer'])
-                ->join('transaksi as t', function ($join) {
-                    $join->on('kunjungan.kd_pasien', '=', 't.kd_pasien');
-                    $join->on('kunjungan.kd_unit', '=', 't.kd_unit');
-                    $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
-                    $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
-                })
-                ->where('kunjungan.kd_unit', $kd_unit)
-                ->where('kunjungan.kd_pasien', $kd_pasien)
-                ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
-                ->where('kunjungan.urut_masuk', $urut_masuk)
-                ->first();
+            $kunjungan = $this->baseService->getDataMedis($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
 
 
             // update order
@@ -276,7 +279,9 @@ class RadiologiController extends Controller
                 $noUrut++;
             }
 
-            $this->createResume($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
+            // create resume
+            $resumeData = [];
+            $this->baseService->updateResumeMedis($kunjungan->kd_unit, $kunjungan->kd_pasien, $kunjungan->tgl_masuk, $kunjungan->urut_masuk, $resumeData);
 
             DB::commit();
             return back()->with('success', 'Order berhasil di ubah');
@@ -314,44 +319,6 @@ class RadiologiController extends Controller
         }
     }
 
-
-    public function createResume($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
-    {
-        // get resume
-        $resume = RMEResume::where('kd_pasien', $kd_pasien)
-            ->where('kd_unit', $kd_unit)
-            ->whereDate('tgl_masuk', $tgl_masuk)
-            ->where('urut_masuk', $urut_masuk)
-            ->first();
-
-        if (empty($resume)) {
-            $resumeData = [
-                'kd_pasien'     => $kd_pasien,
-                'kd_unit'       => $kd_unit,
-                'tgl_masuk'     => $tgl_masuk,
-                'urut_masuk'    => $urut_masuk,
-                'status'        => 0
-            ];
-
-            $newResume = RMEResume::create($resumeData);
-            $newResume->refresh();
-
-            // create resume detail
-            $resumeDtlData = [
-                'id_resume'     => $newResume->id
-            ];
-
-            RmeResumeDtl::create($resumeDtlData);
-        } else {
-            // get resume dtl
-            $resumeDtl = RmeResumeDtl::where('id_resume', $resume->id)->first();
-            $resumeDtlData = [
-                'id_resume'     => $resume->id
-            ];
-
-            if (empty($resumeDtl)) RmeResumeDtl::create($resumeDtlData);
-        }
-    }
 
     private function orderTabs($kd_unit, $dataMedis, $radiologiIGD, $request)
     {

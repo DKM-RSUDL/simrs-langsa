@@ -83,42 +83,6 @@ class InformedConsentController extends Controller
             // store data
             InformedConsent::create($data);
 
-            // RESUME
-            $resumeData = [
-                'anamnesis'             => '',
-                'diagnosis'             => [],
-                'tindak_lanjut_code'    => null,
-                'tindak_lanjut_name'    => null,
-                'tgl_kontrol_ulang'     => null,
-                'unit_rujuk_internal'   => null,
-                'rs_rujuk'              => null,
-                'rs_rujuk_bagian'       => null,
-                'konpas'                => [
-                    'sistole'   => [
-                        'hasil' => ''
-                    ],
-                    'distole'   => [
-                        'hasil' => ''
-                    ],
-                    'respiration_rate'   => [
-                        'hasil' => ''
-                    ],
-                    'suhu'   => [
-                        'hasil' => ''
-                    ],
-                    'nadi'   => [
-                        'hasil' => ''
-                    ],
-                    'tinggi_badan'   => [
-                        'hasil' => ''
-                    ],
-                    'berat_badan'   => [
-                        'hasil' => ''
-                    ]
-                ]
-            ];
-
-            $this->createResume($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $resumeData);
 
             DB::commit();
             return back()->with('success', 'Informed Consent berhasil ditambah!');
@@ -169,65 +133,6 @@ class InformedConsentController extends Controller
         }
     }
 
-    public function createResume($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $data)
-    {
-        // get resume
-        $resume = RMEResume::where('kd_pasien', $kd_pasien)
-            ->where('kd_unit', $kd_unit)
-            ->whereDate('tgl_masuk', $tgl_masuk)
-            ->where('urut_masuk', $urut_masuk)
-            ->first();
-
-        $resumeDtlData = [
-            'tindak_lanjut_code'    => $data['tindak_lanjut_code'],
-            'tindak_lanjut_name'    => $data['tindak_lanjut_name'],
-            'tgl_kontrol_ulang'     => $data['tgl_kontrol_ulang'],
-            'unit_rujuk_internal'   => $data['unit_rujuk_internal'],
-            'rs_rujuk'              => $data['rs_rujuk'],
-            'rs_rujuk_bagian'       => $data['rs_rujuk_bagian'],
-        ];
-
-        if (empty($resume)) {
-            $resumeData = [
-                'kd_pasien'     => $kd_pasien,
-                'kd_unit'       => $kd_unit,
-                'tgl_masuk'     => $tgl_masuk,
-                'urut_masuk'    => $urut_masuk,
-                'anamnesis'     => $data['anamnesis'],
-                'konpas'        => $data['konpas'],
-                'diagnosis'     => $data['diagnosis'],
-                'status'        => 0
-            ];
-
-            $newResume = RMEResume::create($resumeData);
-            $newResume->refresh();
-
-            // create resume detail
-            $resumeDtlData['id_resume'] = $newResume->id;
-            RmeResumeDtl::create($resumeDtlData);
-        } else {
-            $resume->anamnesis = $data['anamnesis'];
-            $resume->konpas = $data['konpas'];
-            $resume->diagnosis = $data['diagnosis'];
-            $resume->save();
-
-            // get resume dtl
-            $resumeDtl = RmeResumeDtl::where('id_resume', $resume->id)->first();
-            $resumeDtlData['id_resume'] = $resume->id;
-
-            if (empty($resumeDtl)) {
-                RmeResumeDtl::create($resumeDtlData);
-            } else {
-                $resumeDtl->tindak_lanjut_code  = $data['tindak_lanjut_code'];
-                $resumeDtl->tindak_lanjut_name  = $data['tindak_lanjut_name'];
-                $resumeDtl->tgl_kontrol_ulang   = $data['tgl_kontrol_ulang'];
-                $resumeDtl->unit_rujuk_internal = $data['unit_rujuk_internal'];
-                $resumeDtl->rs_rujuk            = $data['rs_rujuk'];
-                $resumeDtl->rs_rujuk_bagian     = $data['rs_rujuk_bagian'];
-                $resumeDtl->save();
-            }
-        }
-    }
 
      public function print($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $id)
     {

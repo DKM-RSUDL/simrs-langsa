@@ -13,6 +13,7 @@ use App\Models\SegalaOrder;
 use App\Models\SegalaOrderDet;
 use App\Models\Transaksi;
 use App\Models\UnitAsal;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -232,6 +233,38 @@ class LabPatologiKlinikController extends Controller
         return view('unit-pelayanan.rawat-jalan.pelayanan.labor.createpk', compact('kd_pasien', 'tgl_masuk'));
     }
 
+    function generateNoOrder($tglMasuk)
+    {
+        // Pastikan $tglMasuk berupa Carbon atau tanggal yang valid
+        $tanggal = Carbon::parse($tglMasuk)->format('Y-m-d');
+
+        // Ambil data terakhir berdasarkan tanggal masuk
+        $lastOrder = SegalaOrder::whereDate('tgl_masuk', $tanggal)
+            ->orderByDesc('kd_order')
+            ->first();
+
+        // Format dasar tanggal: yyyyMMdd
+        $prefix = Carbon::parse($tglMasuk)->format('Ymd');
+
+        if (!$lastOrder) {
+            // Jika belum ada data untuk tanggal tersebut
+            $noOrder = $prefix . '0001';
+        } else {
+            // Ambil KD_ORDER terakhir
+            $lastKdOrder = $lastOrder->kd_order;
+
+            // Jika prefix berbeda dengan tanggal saat ini, reset ke 0001
+            if (substr($lastKdOrder, 0, 8) !== $prefix) {
+                $noOrder = $prefix . '0001';
+            } else {
+                // Tambah 1 dari KD_ORDER terakhir
+                $noOrder = str_pad($lastKdOrder + 1, 12, '0', STR_PAD_LEFT);
+            }
+        }
+
+        return $noOrder;
+    }
+
     public function store(Request $request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
     {
         $validatedData = $request->validate([
@@ -264,87 +297,89 @@ class LabPatologiKlinikController extends Controller
             'kd_dokter' => 'required|string|max:3',
         ]);
 
-        $validatedData['kategori'] = $validatedData['kategori'] ?? 'LB';
+        DB::beginTransaction();
 
-        if (empty($validatedData['no_transaksi'])) {
-            $existingTransaction = Transaksi::where('kd_pasien', $validatedData['kd_pasien'])
-                ->orderBy('tgl_transaksi', 'desc')
-                ->first();
+        try {
 
-            if ($existingTransaction) {
-                $validatedData['no_transaksi'] = $existingTransaction->no_transaksi;
-            } else {
-                $validatedData['no_transaksi'] = Transaksi::generateNoTransaksi($validatedData['kd_pasien']);
+            $validatedData['kategori'] = $validatedData['kategori'] ?? 'LB';
+
+            if (empty($validatedData['no_transaksi'])) {
+                $existingTransaction = Transaksi::where('kd_pasien', $validatedData['kd_pasien'])
+                    ->orderBy('tgl_transaksi', 'desc')
+                    ->first();
+
+                if ($existingTransaction) {
+                    $validatedData['no_transaksi'] = $existingTransaction->no_transaksi;
+                } else {
+                    $validatedData['no_transaksi'] = Transaksi::generateNoTransaksi($validatedData['kd_pasien']);
+                }
             }
-        }
-        if (empty($validatedData['kd_kasir'])) {
-            $existingTransaction = Transaksi::where('kd_pasien', $validatedData['kd_pasien'])
-                ->whereNotNull('kd_kasir')
-                ->orderBy('tgl_transaksi', 'desc')
-                ->first();
+            if (empty($validatedData['kd_kasir'])) {
+                $existingTransaction = Transaksi::where('kd_pasien', $validatedData['kd_pasien'])
+                    ->whereNotNull('kd_kasir')
+                    ->orderBy('tgl_transaksi', 'desc')
+                    ->first();
 
-            if ($existingTransaction) {
-                $validatedData['kd_kasir'] = $existingTransaction->kd_kasir;
-            } else {
-                $validatedData['kd_kasir'] = Transaksi::generateNoTransaksi($validatedData['kd_pasien']);
+                if ($existingTransaction) {
+                    $validatedData['kd_kasir'] = $existingTransaction->kd_kasir;
+                } else {
+                    $validatedData['kd_kasir'] = Transaksi::generateNoTransaksi($validatedData['kd_pasien']);
+                }
             }
-        }
 
-        $tglOrder = (int) Carbon::parse($tgl_masuk)->format('Ymd');
+            $newOrderNumber = $this->generateNoOrder($tgl_masuk);
 
-        $lastOrder = SegalaOrder::where('kd_order', 'like', $tglOrder . '%')
-            ->orderBy('kd_order', 'desc')
-            ->first();
-
-        $newOrderNumber = $lastOrder ? ((int)substr($lastOrder->kd_order, -4)) + 1 : 1;
-        $newOrderNumber = str_pad((string)$newOrderNumber, 4, '0', STR_PAD_LEFT);
-        $newOrderNumber = $tglOrder . $newOrderNumber;
-
-        $segalaOrder = SegalaOrder::create([
-            'kd_order' => $newOrderNumber,
-            'kd_pasien' => $validatedData['kd_pasien'],
-            'kd_unit' => $validatedData['kd_unit'],
-            'tgl_masuk' => $validatedData['tgl_masuk'],
-            'urut_masuk' => $validatedData['urut_masuk'],
-            'kd_dokter' => $validatedData['kd_dokter'],
-            'tgl_order' => $validatedData['tgl_order'],
-            'cyto' => $validatedData['cyto'],
-            'puasa' => $validatedData['puasa'],
-            'jadwal_pemeriksaan' => $validatedData['jadwal_pemeriksaan'] ?? null,
-            'diagnosis' => $validatedData['diagnosis'] ?? null,
-            'dilayani' => 0,
-            'kategori' => $validatedData['kategori'],
-            'no_transaksi' => $validatedData['no_transaksi'],
-            'kd_kasir' => $validatedData['kd_kasir'] ?? null,
-            'status_order' => 1,
-            'transaksi_penunjang' => $validatedData['transaksi_penunjang'] ?? null,
-        ]);
-
-        foreach ($validatedData['kd_produk'] as $index => $kd_produk) {
-            $segalaOrderDet = SegalaOrderDet::create([
+            $segalaOrder = SegalaOrder::create([
                 'kd_order' => $newOrderNumber,
-                'urut' => $validatedData['urut'][$index],
-                'kd_produk' => $kd_produk,
-                'jumlah' => 1,
-                'status' => 0,
-                'kd_dokter' => 381,
+                'kd_pasien' => $validatedData['kd_pasien'],
+                'kd_unit' => $validatedData['kd_unit'],
+                'tgl_masuk' => $validatedData['tgl_masuk'],
+                'urut_masuk' => $validatedData['urut_masuk'],
+                'kd_dokter' => $validatedData['kd_dokter'],
+                'tgl_order' => $validatedData['tgl_order'],
+                'cyto' => $validatedData['cyto'],
+                'puasa' => $validatedData['puasa'],
+                'jadwal_pemeriksaan' => $validatedData['jadwal_pemeriksaan'] ?? null,
+                'diagnosis' => $validatedData['diagnosis'] ?? null,
+                'dilayani' => 0,
+                'kategori' => $validatedData['kategori'],
+                'no_transaksi' => $validatedData['no_transaksi'],
+                'kd_kasir' => $validatedData['kd_kasir'] ?? null,
+                'status_order' => 1,
+                'transaksi_penunjang' => $validatedData['transaksi_penunjang'] ?? null,
             ]);
+
+            foreach ($validatedData['kd_produk'] as $index => $kd_produk) {
+                $segalaOrderDet = SegalaOrderDet::create([
+                    'kd_order' => $newOrderNumber,
+                    'urut' => $validatedData['urut'][$index],
+                    'kd_produk' => $kd_produk,
+                    'jumlah' => 1,
+                    'status' => 0,
+                    'kd_dokter' => 381,
+                ]);
+            }
+
+            // Buat atau dapatkan resume
+            $resume = $this->checkAndCreateResume([
+                'kd_pasien' => $validatedData['kd_pasien'],
+                'kd_unit' => $validatedData['kd_unit'],
+                'tgl_masuk' => $validatedData['tgl_masuk'],
+                'urut_masuk' => $validatedData['urut_masuk']
+            ]);
+
+            return redirect()->route('rawat-jalan.lab-patologi-klinik.index', [
+                'kd_unit' => $validatedData['kd_unit'],
+                'kd_pasien' => $validatedData['kd_pasien'],
+                'tgl_masuk' => $validatedData['tgl_masuk'],
+                'urut_masuk' => $validatedData['urut_masuk']
+            ])->with(['success' => 'created successfully']);
+
+            DB::commit();
+        } catch (Exception $e) {
+            DB::rollBack();
+            return back()->with('error', $e->getMessage());
         }
-
-        // Buat atau dapatkan resume
-        $resume = $this->checkAndCreateResume([
-            'kd_pasien' => $validatedData['kd_pasien'],
-            'kd_unit' => $validatedData['kd_unit'],
-            'tgl_masuk' => $validatedData['tgl_masuk'],
-            'urut_masuk' => $validatedData['urut_masuk']
-        ]);
-
-        return redirect()->route('rawat-jalan.lab-patologi-klinik.index', [
-            'kd_unit' => $validatedData['kd_unit'],
-            'kd_pasien' => $validatedData['kd_pasien'],
-            'tgl_masuk' => $validatedData['tgl_masuk'],
-            'urut_masuk' => $validatedData['urut_masuk']
-        ])->with(['success' => 'created successfully']);
     }
 
 

@@ -225,6 +225,38 @@ class RadiologiController extends Controller
         ));
     }
 
+    function generateNoOrder($tglMasuk)
+    {
+        // Pastikan $tglMasuk berupa Carbon atau tanggal yang valid
+        $tanggal = Carbon::parse($tglMasuk)->format('Y-m-d');
+
+        // Ambil data terakhir berdasarkan tanggal masuk
+        $lastOrder = SegalaOrder::whereDate('tgl_masuk', $tanggal)
+            ->orderByDesc('kd_order')
+            ->first();
+
+        // Format dasar tanggal: yyyyMMdd
+        $prefix = Carbon::parse($tglMasuk)->format('Ymd');
+
+        if (!$lastOrder) {
+            // Jika belum ada data untuk tanggal tersebut
+            $noOrder = $prefix . '0001';
+        } else {
+            // Ambil KD_ORDER terakhir
+            $lastKdOrder = $lastOrder->kd_order;
+
+            // Jika prefix berbeda dengan tanggal saat ini, reset ke 0001
+            if (substr($lastKdOrder, 0, 8) !== $prefix) {
+                $noOrder = $prefix . '0001';
+            } else {
+                // Tambah 1 dari KD_ORDER terakhir
+                $noOrder = str_pad($lastKdOrder + 1, 12, '0', STR_PAD_LEFT);
+            }
+        }
+
+        return $noOrder;
+    }
+
     public function store($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, Request $request)
     {
 
@@ -244,82 +276,82 @@ class RadiologiController extends Controller
             // 'puasa'         => 'required',
         ], $valMessage);
 
-        // check produk
-        if (empty($request->kd_produk)) return back()->with('error', 'Produk harus di pilih minimal 1!');
+        DB::beginTransaction();
 
-        // get kunjungan data
-        $kunjungan = Kunjungan::with(['pasien', 'dokter', 'customer'])
-            ->join('transaksi as t', function ($join) {
-                $join->on('kunjungan.kd_pasien', '=', 't.kd_pasien');
-                $join->on('kunjungan.kd_unit', '=', 't.kd_unit');
-                $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
-                $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
-            })
-            ->where('kunjungan.kd_unit', $kd_unit)
-            ->where('kunjungan.kd_pasien', $kd_pasien)
-            ->where('kunjungan.urut_masuk', $urut_masuk)
-            ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
-            ->where('kunjungan.urut_masuk', $request->urut_masuk)
-            ->first();
+        try {
+            // check produk
+            if (empty($request->kd_produk)) throw new Exception('Produk harus di pilih minimal 1!');
+
+            // get kunjungan data
+            $kunjungan = Kunjungan::with(['pasien', 'dokter', 'customer'])
+                ->join('transaksi as t', function ($join) {
+                    $join->on('kunjungan.kd_pasien', '=', 't.kd_pasien');
+                    $join->on('kunjungan.kd_unit', '=', 't.kd_unit');
+                    $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
+                    $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
+                })
+                ->where('kunjungan.kd_unit', $kd_unit)
+                ->where('kunjungan.kd_pasien', $kd_pasien)
+                ->where('kunjungan.urut_masuk', $urut_masuk)
+                ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
+                ->where('kunjungan.urut_masuk', $request->urut_masuk)
+                ->first();
 
 
-        // get new order number
-        $tglOrder = (int) Carbon::parse($tgl_masuk)->format('Ymd');
+            // get new order number
+            $newOrderNumber = $this->generateNoOrder($tgl_masuk);
 
-        $lastOrder = SegalaOrder::where('kd_order', 'like', $tglOrder . '%')
-            ->orderBy('kd_order', 'desc')
-            ->first();
+            $jadwalPemeriksaan = null;
+            if (!empty($request->tgl_pemeriksaan) && !empty($request->jam_pemeriksaan)) $jadwalPemeriksaan = "$request->tgl_pemeriksaan $request->jam_pemeriksaan";
 
-        $newOrderNumber = $lastOrder ? ((int)substr($lastOrder->kd_order, -4)) + 1 : 1;
-        $newOrderNumber = str_pad((string)$newOrderNumber, 4, '0', STR_PAD_LEFT);
-        $newOrderNumber = $tglOrder . $newOrderNumber;
-
-        $jadwalPemeriksaan = null;
-        if (!empty($request->tgl_pemeriksaan) && !empty($request->jam_pemeriksaan)) $jadwalPemeriksaan = "$request->tgl_pemeriksaan $request->jam_pemeriksaan";
-
-        // store segala order
-        $segalaOrderData = [
-            'kd_pasien'             => $kunjungan->kd_pasien,
-            'kd_unit'               => $kunjungan->kd_unit,
-            'tgl_masuk'             => $kunjungan->tgl_masuk,
-            'urut_masuk'            => $kunjungan->urut_masuk,
-            'kd_dokter'             => $request->kd_dokter,
-            'tgl_order'             => "$request->tgl_order $request->jam_order",
-            'dilayani'              => 0,
-            'kategori'              => 'RD',
-            'kd_order'              => (int) $newOrderNumber,
-            'no_transaksi'          => $kunjungan->no_transaksi,
-            'kd_kasir'              => $kunjungan->kd_kasir,
-            'status_order'          => 1,
-            'transaksi_penunjang'   => null,
-            'cyto'                  => $request->cyto,
-            'puasa'                 => 0,
-            'jadwal_pemeriksaan'    => $jadwalPemeriksaan,
-            'diagnosis'             => $request->diagnosis
-        ];
-
-        SegalaOrder::create($segalaOrderData);
-
-        // store segala order detail
-        $noUrut = 1;
-        $kdProduk = $request->kd_produk;
-
-        foreach ($kdProduk as $prd) {
-            $detailData = [
-                'kd_order'      => $newOrderNumber,
-                'urut'          => $noUrut,
-                'kd_produk'     => $prd,
-                'jumlah'        => 1,
-                'status'        => 0,
-                'kd_dokter'     => 466
+            // store segala order
+            $segalaOrderData = [
+                'kd_pasien'             => $kunjungan->kd_pasien,
+                'kd_unit'               => $kunjungan->kd_unit,
+                'tgl_masuk'             => $kunjungan->tgl_masuk,
+                'urut_masuk'            => $kunjungan->urut_masuk,
+                'kd_dokter'             => $request->kd_dokter,
+                'tgl_order'             => "$request->tgl_order $request->jam_order",
+                'dilayani'              => 0,
+                'kategori'              => 'RD',
+                'kd_order'              => (int) $newOrderNumber,
+                'no_transaksi'          => $kunjungan->no_transaksi,
+                'kd_kasir'              => $kunjungan->kd_kasir,
+                'status_order'          => 1,
+                'transaksi_penunjang'   => null,
+                'cyto'                  => $request->cyto,
+                'puasa'                 => 0,
+                'jadwal_pemeriksaan'    => $jadwalPemeriksaan,
+                'diagnosis'             => $request->diagnosis
             ];
 
-            SegalaOrderDet::create($detailData);
-            $noUrut++;
-        }
+            SegalaOrder::create($segalaOrderData);
 
-        $this->createResume($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
-        return back()->with('success', 'Order berhasil');
+            // store segala order detail
+            $noUrut = 1;
+            $kdProduk = $request->kd_produk;
+
+            foreach ($kdProduk as $prd) {
+                $detailData = [
+                    'kd_order'      => $newOrderNumber,
+                    'urut'          => $noUrut,
+                    'kd_produk'     => $prd,
+                    'jumlah'        => 1,
+                    'status'        => 0,
+                    'kd_dokter'     => 466
+                ];
+
+                SegalaOrderDet::create($detailData);
+                $noUrut++;
+            }
+
+            $this->createResume($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
+            DB::commit();
+            return back()->with('success', 'Order berhasil');
+        } catch (Exception $e) {
+            DB::rollBack();
+            return back()->with('error', $e->getMessage());
+        }
     }
 
     public function getRadDetailAjax(Request $request)
