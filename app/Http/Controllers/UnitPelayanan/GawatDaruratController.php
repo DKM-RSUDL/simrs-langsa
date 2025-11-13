@@ -257,6 +257,9 @@ class GawatDaruratController extends Controller
 
             // Ambil data dari request
             $dokter_triase = $request->dokter_triase;
+            $dokter_yang_melayani = $request->dokter_yang_melayani;
+          
+           
             $tgl_masuk = $request->tgl_masuk;
             $jam_masuk = $request->jam_masuk;
             $nama_pasien = $request->nama_pasien;
@@ -396,7 +399,7 @@ class GawatDaruratController extends Controller
                 'cara_penerimaan' => 99,
                 'kd_rujukan' => 0,
                 'no_surat' => '',
-                'kd_dokter' => $dokter_triase,
+                'kd_dokter' => $dokter_yang_melayani,
                 'baru' => 1,
                 'kd_customer' => '0000000001',
                 'shift' => 0,
@@ -447,7 +450,7 @@ class GawatDaruratController extends Controller
                 'ispay' => 0,
                 'co_status' => 0,
                 'urut_masuk' => $urut_masuk,
-                'kd_user' => $dokter_triase,
+                'kd_user' => $dokter_yang_melayani,
                 'lunas' => 0,
             ];
 
@@ -482,7 +485,7 @@ class GawatDaruratController extends Controller
                 'kd_unit' => 3,
                 'kd_unit_tr' => 3,
                 'tgl_berlaku' => '2019-07-01',
-                'kd_user' => $dokter_triase,
+                'kd_user' => $dokter_yang_melayani,
                 'shift' => 0,
                 'harga' => 15000,
                 'qty' => 1,
@@ -533,7 +536,7 @@ class GawatDaruratController extends Controller
                 'no_sjp' => '',
                 'penjamin_laka' => 0,
                 'katarak' => 0,
-                'dpjp' => $dokter_triase,
+                'dpjp' => $dokter_yang_melayani,
                 'cob' => 0,
             ];
 
