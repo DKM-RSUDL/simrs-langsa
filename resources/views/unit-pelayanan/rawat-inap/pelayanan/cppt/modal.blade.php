@@ -71,7 +71,7 @@
                             <!-- S (SUBJECTIVE) - Skala Nyeri (Hanya untuk Non-Dokter Spesialis) -->
                             @if(!$isDokterSpesialis)
                                 <div class="mt-4">
-                                    <h6 class="fw-bold text-primary mb-3 border-bottom pb-2">S (SUBJECTIVE) - Skala Nyeri
+                                    <h6 class="fw-bold text-primary mb-3 border-bottom pb-2">O (OBJECTIVE) - Skala Nyeri
                                     </h6>
                                     <div class="row g-3">
                                         <div class="col-md-4">
@@ -104,7 +104,7 @@
                             <!-- S (SUBJECTIVE) - Detail Nyeri -->
                             @if(!$isDokterSpesialis)
                                 <div class="mt-4">
-                                    <h6 class="fw-bold text-primary mb-3 border-bottom pb-2">S (SUBJECTIVE) - Detail Nyeri
+                                    <h6 class="fw-bold text-primary mb-3 border-bottom pb-2">O (OBJECTIVE) - Detail Nyeri
                                     </h6>
 
                                     <!-- Lokasi dan Durasi -->
@@ -547,7 +547,7 @@
                             @if(!$isDokterSpesialis)
                                 {{-- S (SUBJECTIVE) - Skala Nyeri --}}
                                 <div class="mb-4">
-                                    <h6 class="fw-bold text-primary mb-3 border-bottom pb-2">S (SUBJECTIVE) - Skala Nyeri
+                                    <h6 class="fw-bold text-primary mb-3 border-bottom pb-2">O (OBJECTIVE) - Skala Nyeri
                                     </h6>
                                     <div class="row g-3">
                                         <div class="col-md-4">
@@ -578,7 +578,7 @@
                             @endif
                             @if(!$isDokterSpesialis)
                                 <div class="mt-4">
-                                    <h6 class="fw-bold text-primary mb-3 border-bottom pb-2">S (SUBJECTIVE) - Detail Nyeri
+                                    <h6 class="fw-bold text-primary mb-3 border-bottom pb-2">O (OBJECTIVE) - Detail Nyeri
                                     </h6>
 
                                     <!-- Lokasi dan Durasi -->
