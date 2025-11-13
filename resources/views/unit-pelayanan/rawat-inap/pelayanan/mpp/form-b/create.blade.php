@@ -549,6 +549,12 @@
                                                 <label class="criteria-label" for="t6">Pasien Pulang Sembuh</label>
                                             </div>
                                             <div class="criteria-item">
+                                                <input type="checkbox" name="terminasi[]" value="pulang_perbaikan"
+                                                    class="criteria-checkbox terminasi-checkbox" id="t6">
+                                                <label class="criteria-label" for="t6">Pasien Pulang
+                                                    Perbaikan</label>
+                                            </div>
+                                            <div class="criteria-item">
                                                 <input type="checkbox" name="terminasi[]" value="rujuk"
                                                     class="criteria-checkbox terminasi-checkbox" id="t7">
                                                 <label class="criteria-label" for="t7">Rujuk</label>

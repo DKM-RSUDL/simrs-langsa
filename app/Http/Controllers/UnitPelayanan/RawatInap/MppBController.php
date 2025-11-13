@@ -250,6 +250,7 @@ class MppBController extends Controller
             'konflik_komplain',
             'keuangan',
             'pulang_sembuh',
+            'pulang_perbaikan',
             'rujuk',
             'meninggal'
         ];
@@ -421,6 +422,7 @@ class MppBController extends Controller
             'konflik_komplain',
             'keuangan',
             'pulang_sembuh',
+            'pulang_perbaikan',
             'rujuk',
             'meninggal'
         ];

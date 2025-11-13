@@ -8,6 +8,7 @@ use App\Models\RmeHdTindakanKhusus;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class HDTindakanKhususController extends Controller
 {
@@ -123,7 +124,7 @@ class HDTindakanKhususController extends Controller
             return redirect()
                 ->route('hemodialisa.pelayanan.tindakan-khusus.index', [$kd_pasien, $tgl_masuk, $urut_masuk])
                 ->with('success', 'Data tindakan khusus berhasil disimpan.');
-                
+
         } catch (\Exception $e) {
             DB::rollback();
             return redirect()
@@ -262,5 +263,35 @@ class HDTindakanKhususController extends Controller
         }
 
         return $dataMedis;
+    }
+    /**
+     * Tampilkan PDF Tindakan Khusus Pasien
+     */
+    public function printPDF($kd_pasien, $tgl_masuk, $urut_masuk, $id)
+    {
+        // 1. Ambil Data Medis (helper)
+        $dataMedis = $this->getDataMedis($kd_pasien, $tgl_masuk, $urut_masuk);
+
+        // 2. Ambil Data Tindakan Khusus (dari fungsi show)
+        //    Eager load 'userCreate' dan 'userCreate.karyawan' untuk TTD
+        $tindakanKhusus = RmeHdTindakanKhusus::with('userCreate.karyawan')
+            ->where('id', $id)
+            // ->byPasien($kd_pasien, $tgl_masuk, $urut_masuk) // Anda bisa pakai scope jika ada
+            ->where('kd_pasien', $kd_pasien)
+            ->whereDate('tgl_masuk', $tgl_masuk)
+            ->where('urut_masuk', $urut_masuk)
+            ->firstOrFail();
+
+        // 3. Buat PDF
+        $pdf = Pdf::loadView('unit-pelayanan.hemodialisa.pelayanan.tindakan-khusus.print', compact(
+            'dataMedis',
+            'tindakanKhusus'
+        ));
+
+        // Atur ukuran kertas
+        $pdf->setPaper('a4', 'portrait');
+
+        // 4. Tampilkan PDF di browser
+        return $pdf->stream('tindakan-khusus-hd-' . $dataMedis->pasien->nama . '.pdf');
     }
 }

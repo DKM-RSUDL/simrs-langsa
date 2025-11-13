@@ -327,9 +327,11 @@
                 <td style="width: 35%;">{{ $dpjpUtama ? $dpjpUtama->nama : '-' }}</td>
                 <td style="width: 15%;"><strong>Dokter Tambahan:</strong></td>
                 <td style="width: 35%;">
-                    @if($dokterTambahan && count($dokterTambahan) > 0)
-                        @foreach($dokterTambahan as $index => $dokter)
-                            {{ $index + 1 }}. {{ $dokter->nama }}@if(!$loop->last)<br>@endif
+                    @if ($dokterTambahan && count($dokterTambahan) > 0)
+                        @foreach ($dokterTambahan as $index => $dokter)
+                            {{ $index + 1 }}. {{ $dokter->nama }}@if (!$loop->last)
+                                <br>
+                            @endif
                         @endforeach
                     @else
                         -
@@ -382,7 +384,9 @@
                 </td>
                 <td>
                     <strong>2. Monitoring Pelayanan/Asuhan Pasien Seluruh PPA</strong>
-                    <br><small style="font-style: italic;">(Perkembangan, Kolaborasi, Verifikasi respon terhadap intervensi yang diberikan, revisi rencana asuhan termasuk preferensi perubahan, transisi pelayanan dan kendala pelayanan)</small>
+                    <br><small style="font-style: italic;">(Perkembangan, Kolaborasi, Verifikasi respon terhadap
+                        intervensi yang diberikan, revisi rencana asuhan termasuk preferensi perubahan, transisi
+                        pelayanan dan kendala pelayanan)</small>
                     <div class="text-content">
                         {{ $mppData->monitoring_pelayanan ?? '-' }}
                     </div>
@@ -415,8 +419,8 @@
                         <span class="criteria-label">Second Opinion</span>
                     </div>
                     <div class="criteria-item">
-                        <input type="checkbox" class="criteria-checkbox"
-                            {{ $mppData->rawat_bersama ? 'checked' : '' }} disabled>
+                        <input type="checkbox" class="criteria-checkbox" {{ $mppData->rawat_bersama ? 'checked' : '' }}
+                            disabled>
                         <span class="criteria-label">Rawat Bersama/Alih Rawat</span>
                     </div>
                     <div class="criteria-item">
@@ -425,8 +429,8 @@
                         <span class="criteria-label">Komunikasi/Edukasi</span>
                     </div>
                     <div class="criteria-item">
-                        <input type="checkbox" class="criteria-checkbox"
-                            {{ $mppData->rujukan ? 'checked' : '' }} disabled>
+                        <input type="checkbox" class="criteria-checkbox" {{ $mppData->rujukan ? 'checked' : '' }}
+                            disabled>
                         <span class="criteria-label">Rujukan</span>
                     </div>
                 </td>
@@ -448,29 +452,34 @@
                     <strong>4. Advokasi Pelayanan Pasien</strong>
                     <br><br>
                     <div class="criteria-item">
-                        <input type="checkbox" class="criteria-checkbox"
-                            {{ $mppData->diskusi_ppa ? 'checked' : '' }} disabled>
+                        <input type="checkbox" class="criteria-checkbox" {{ $mppData->diskusi_ppa ? 'checked' : '' }}
+                            disabled>
                         <span class="criteria-label">Diskusi dengan PPA staf lain tentang kebutuhan pasien</span>
                     </div>
                     <div class="criteria-item">
                         <input type="checkbox" class="criteria-checkbox"
                             {{ $mppData->fasilitasi_akses ? 'checked' : '' }} disabled>
-                        <span class="criteria-label">Memfasilitasi akses ke pelayanan sesuai kebutuhan pasien berkoordinasi dengan PPA dan pemangku kepentingan</span>
+                        <span class="criteria-label">Memfasilitasi akses ke pelayanan sesuai kebutuhan pasien
+                            berkoordinasi dengan PPA dan pemangku kepentingan</span>
                     </div>
                     <div class="criteria-item">
                         <input type="checkbox" class="criteria-checkbox"
                             {{ $mppData->kemandirian_keputusan ? 'checked' : '' }} disabled>
-                        <span class="criteria-label">Meningkatkan kemandirian untuk menentukan pilihan/pengambilan keputusan</span>
+                        <span class="criteria-label">Meningkatkan kemandirian untuk menentukan pilihan/pengambilan
+                            keputusan</span>
                     </div>
                     <div class="criteria-item">
                         <input type="checkbox" class="criteria-checkbox"
                             {{ $mppData->pencegahan_disparitas ? 'checked' : '' }} disabled>
-                        <span class="criteria-label">Mengenali, mencegah, menghindari disparitas untuk mengakses mutu dan hasil pelayanan terkait dengan ras, etnik, agama, gender, budaya, status pernikahan, usia, politik, disabilitas fisik mental-kognitif</span>
+                        <span class="criteria-label">Mengenali, mencegah, menghindari disparitas untuk mengakses mutu
+                            dan hasil pelayanan terkait dengan ras, etnik, agama, gender, budaya, status pernikahan,
+                            usia, politik, disabilitas fisik mental-kognitif</span>
                     </div>
                     <div class="criteria-item">
                         <input type="checkbox" class="criteria-checkbox"
                             {{ $mppData->pemenuhan_kebutuhan ? 'checked' : '' }} disabled>
-                        <span class="criteria-label">Pemenuhan kebutuhan pelayanan yang berkembang/bertambah karena perubahan kondisi</span>
+                        <span class="criteria-label">Pemenuhan kebutuhan pelayanan yang berkembang/bertambah karena
+                            perubahan kondisi</span>
                     </div>
                 </td>
             </tr>
@@ -522,7 +531,8 @@
                         </div>
                     </td>
                     <td>
-                        <strong>6. Terminasi Manajemen Pelayanan Pasien, Catatan kepuasan pasien/keluarga dengan MPP</strong>
+                        <strong>6. Terminasi Manajemen Pelayanan Pasien, Catatan kepuasan pasien/keluarga dengan
+                            MPP</strong>
                         <br><br>
                         <div style="display: flex; flex-wrap: wrap; gap: 15px;">
                             <div style="flex: 1; min-width: 45%;">
@@ -560,6 +570,11 @@
                                 </div>
                                 <div class="criteria-item">
                                     <input type="checkbox" class="criteria-checkbox"
+                                        {{ $mppData->pulang_perbaikan ? 'checked' : '' }} disabled>
+                                    <span class="criteria-label">Pasien Pulang Perbaikan</span>
+                                </div>
+                                <div class="criteria-item">
+                                    <input type="checkbox" class="criteria-checkbox"
                                         {{ $mppData->rujuk ? 'checked' : '' }} disabled>
                                     <span class="criteria-label">Rujuk</span>
                                 </div>
@@ -591,10 +606,10 @@
                     <td>{{ $dpjpUtama ? $dpjpUtama->nama : '-' }}</td>
                     <td style="height: 40px;"></td>
                 </tr>
-                
+
                 <!-- Dokter Tambahan -->
-                @if($dokterTambahan && count($dokterTambahan) > 0)
-                    @foreach($dokterTambahan as $index => $dokter)
+                @if ($dokterTambahan && count($dokterTambahan) > 0)
+                    @foreach ($dokterTambahan as $index => $dokter)
                         <tr>
                             <td>{{ $index == 0 ? 'Dokter Tambahan' : '' }}</td>
                             <td>{{ $dokter->nama }}</td>
@@ -608,10 +623,10 @@
                         <td style="height: 40px;"></td>
                     </tr>
                 @endif
-                
+
                 <!-- Petugas Terkait -->
-                @if($petugasTerkait && count($petugasTerkait) > 0)
-                    @foreach($petugasTerkait as $index => $petugas)
+                @if ($petugasTerkait && count($petugasTerkait) > 0)
+                    @foreach ($petugasTerkait as $index => $petugas)
                         <tr>
                             <td>{{ $index == 0 ? 'Petugas Terkait' : '' }}</td>
                             <td>{{ trim("$petugas->gelar_depan $petugas->nama $petugas->gelar_belakang") }}</td>
