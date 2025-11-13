@@ -28,9 +28,12 @@
                                     value="{{ old('tanggal', date('Y-m-d')) }}" required>
                             </div>
                             <div class="col-md-4">
-                                <label class="form-label">Hari ke <span class="text-danger">*</span></label>
-                                <input type="number" class="form-control" name="hari_ke" value="{{ old('hari_ke') }}"
-                                    min="1" placeholder="Masukkan hari ke..." required>
+                                <label for="jam" class="form-label">Jam</label>
+                                <input type="time" class="form-control @error('jam') is-invalid @enderror" id="jam"
+                                    name="jam" value="{{ old('jam') }}" required>
+                                @error('jam')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
                             </div>
                             <div class="col-md-4">
                                 <label class="form-label">Shift <span class="text-danger">*</span></label>
@@ -752,5 +755,13 @@
                 }
             }
         });
+
+        // Set tanggal dan jam otomatis
+        const now = new Date();
+        const currentDate = now.toISOString().split('T')[0];
+        const currentTime = now.toTimeString().split(' ')[0].substring(0, 5);
+
+        $('#tanggal').val(currentDate);
+        $('#jam').val(currentTime);
     </script>
 @endpush

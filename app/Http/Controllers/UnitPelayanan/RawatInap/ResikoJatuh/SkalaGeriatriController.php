@@ -133,6 +133,13 @@ class SkalaGeriatriController extends Controller
 
     public function store(Request $request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
     {
+        // Validasi input
+        $request->validate([
+            'tanggal_implementasi' => 'required|date',
+            'jam_implementasi' => 'required',
+            'shift' => 'required|in:PG,SI,ML'
+        ]);
+
         DB::beginTransaction();
 
         try {
@@ -283,37 +290,29 @@ class SkalaGeriatriController extends Controller
             $dataGeriatri->total_skor = $totalSkor;
             $dataGeriatri->kategori_risiko = $kategoriRisiko;
 
-            // Data intervensi untuk risiko rendah
-            if ($kategoriRisiko == 'Risiko Rendah') {
-                $dataGeriatri->rr_observasi_ambulasi = $request->has('rr_observasi_ambulasi') ? 1 : 0;
-                $dataGeriatri->rr_orientasi_kamar_mandi = $request->has('rr_orientasi_kamar_mandi') ? 1 : 0;
-                $dataGeriatri->rr_orientasi_bertahap = $request->has('rr_orientasi_bertahap') ? 1 : 0;
-                $dataGeriatri->rr_tempatkan_bel = $request->has('rr_tempatkan_bel') ? 1 : 0;
-                $dataGeriatri->rr_instruksi_bantuan = $request->has('rr_instruksi_bantuan') ? 1 : 0;
-                $dataGeriatri->rr_pagar_pengaman = $request->has('rr_pagar_pengaman') ? 1 : 0;
-                $dataGeriatri->rr_tempat_tidur_rendah = $request->has('rr_tempat_tidur_rendah') ? 1 : 0;
-                $dataGeriatri->rr_edukasi_perilaku = $request->has('rr_edukasi_perilaku') ? 1 : 0;
-                $dataGeriatri->rr_monitor_berkala = $request->has('rr_monitor_berkala') ? 1 : 0;
-                $dataGeriatri->rr_anjuran_kaus_kaki = $request->has('rr_anjuran_kaus_kaki') ? 1 : 0;
-                $dataGeriatri->rr_lantai_antislip = $request->has('rr_lantai_antislip') ? 1 : 0;
-            }
+            // Simpan semua intervensi yang dikirim (tanpa filter kategori)
+            $dataGeriatri->rr_observasi_ambulasi = $request->has('rr_observasi_ambulasi') ? 1 : 0;
+            $dataGeriatri->rr_orientasi_kamar_mandi = $request->has('rr_orientasi_kamar_mandi') ? 1 : 0;
+            $dataGeriatri->rr_orientasi_bertahap = $request->has('rr_orientasi_bertahap') ? 1 : 0;
+            $dataGeriatri->rr_tempatkan_bel = $request->has('rr_tempatkan_bel') ? 1 : 0;
+            $dataGeriatri->rr_instruksi_bantuan = $request->has('rr_instruksi_bantuan') ? 1 : 0;
+            $dataGeriatri->rr_pagar_pengaman = $request->has('rr_pagar_pengaman') ? 1 : 0;
+            $dataGeriatri->rr_tempat_tidur_rendah = $request->has('rr_tempat_tidur_rendah') ? 1 : 0;
+            $dataGeriatri->rr_edukasi_perilaku = $request->has('rr_edukasi_perilaku') ? 1 : 0;
+            $dataGeriatri->rr_monitor_berkala = $request->has('rr_monitor_berkala') ? 1 : 0;
+            $dataGeriatri->rr_anjuran_kaus_kaki = $request->has('rr_anjuran_kaus_kaki') ? 1 : 0;
+            $dataGeriatri->rr_lantai_antislip = $request->has('rr_lantai_antislip') ? 1 : 0;
 
-            // Data intervensi untuk risiko sedang
-            if ($kategoriRisiko == 'Risiko Sedang') {
-                $dataGeriatri->rs_semua_intervensi_rendah = $request->has('rs_semua_intervensi_rendah') ? 1 : 0;
-                $dataGeriatri->rs_gelang_kuning = $request->has('rs_gelang_kuning') ? 1 : 0;
-                $dataGeriatri->rs_pasang_gambar = $request->has('rs_pasang_gambar') ? 1 : 0;
-                $dataGeriatri->rs_tanda_daftar_nama = $request->has('rs_tanda_daftar_nama') ? 1 : 0;
-                $dataGeriatri->rs_pertimbangkan_obat = $request->has('rs_pertimbangkan_obat') ? 1 : 0;
-                $dataGeriatri->rs_alat_bantu_jalan = $request->has('rs_alat_bantu_jalan') ? 1 : 0;
-            }
+            $dataGeriatri->rs_semua_intervensi_rendah = $request->has('rs_semua_intervensi_rendah') ? 1 : 0;
+            $dataGeriatri->rs_gelang_kuning = $request->has('rs_gelang_kuning') ? 1 : 0;
+            $dataGeriatri->rs_pasang_gambar = $request->has('rs_pasang_gambar') ? 1 : 0;
+            $dataGeriatri->rs_tanda_daftar_nama = $request->has('rs_tanda_daftar_nama') ? 1 : 0;
+            $dataGeriatri->rs_pertimbangkan_obat = $request->has('rs_pertimbangkan_obat') ? 1 : 0;
+            $dataGeriatri->rs_alat_bantu_jalan = $request->has('rs_alat_bantu_jalan') ? 1 : 0;
 
-            // Data intervensi untuk risiko tinggi
-            if ($kategoriRisiko == 'Risiko Tinggi') {
-                $dataGeriatri->rt_semua_intervensi_rendah_sedang = $request->has('rt_semua_intervensi_rendah_sedang') ? 1 : 0;
-                $dataGeriatri->rt_jangan_tinggalkan = $request->has('rt_jangan_tinggalkan') ? 1 : 0;
-                $dataGeriatri->rt_dekat_nurse_station = $request->has('rt_dekat_nurse_station') ? 1 : 0;
-            }
+            $dataGeriatri->rt_semua_intervensi_rendah_sedang = $request->has('rt_semua_intervensi_rendah_sedang') ? 1 : 0;
+            $dataGeriatri->rt_jangan_tinggalkan = $request->has('rt_jangan_tinggalkan') ? 1 : 0;
+            $dataGeriatri->rt_dekat_nurse_station = $request->has('rt_dekat_nurse_station') ? 1 : 0;
 
             $dataGeriatri->user_created = Auth::id();
 
@@ -357,7 +356,7 @@ class SkalaGeriatriController extends Controller
             ->first();
 
         if (!$dataSkalaGeriatri) {
-            abort(404, 'Data Humpty Dumpty tidak ditemukan');
+            abort(404, 'Data Geriatri tidak ditemukan');
         }
 
         return view('unit-pelayanan.rawat-inap.pelayanan.resiko-jatuh.skala-geriatri.edit', compact(
@@ -368,6 +367,12 @@ class SkalaGeriatriController extends Controller
 
     public function update(Request $request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $id)
     {
+        $request->validate([
+            'tanggal_implementasi' => 'required|date',
+            'jam_implementasi' => 'required',
+            'shift' => 'required|in:PG,SI,ML'
+        ]);
+
         DB::beginTransaction();
 
         try {
@@ -498,7 +503,7 @@ class SkalaGeriatriController extends Controller
             $dataGeriatri->total_skor = $totalSkor;
             $dataGeriatri->kategori_risiko = $kategoriRisiko;
 
-            // Reset semua intervensi ke 0 terlebih dahulu
+            // Reset semua intervensi ke 0 terlebih dahulu (keamanan)
             $dataGeriatri->rr_observasi_ambulasi = 0;
             $dataGeriatri->rr_orientasi_kamar_mandi = 0;
             $dataGeriatri->rr_orientasi_bertahap = 0;
@@ -520,31 +525,29 @@ class SkalaGeriatriController extends Controller
             $dataGeriatri->rt_jangan_tinggalkan = 0;
             $dataGeriatri->rt_dekat_nurse_station = 0;
 
-            // Update data intervensi berdasarkan kategori risiko
-            if ($kategoriRisiko == 'Risiko Rendah') {
-                $dataGeriatri->rr_observasi_ambulasi = $request->has('rr_observasi_ambulasi') ? 1 : 0;
-                $dataGeriatri->rr_orientasi_kamar_mandi = $request->has('rr_orientasi_kamar_mandi') ? 1 : 0;
-                $dataGeriatri->rr_orientasi_bertahap = $request->has('rr_orientasi_bertahap') ? 1 : 0;
-                $dataGeriatri->rr_tempatkan_bel = $request->has('rr_tempatkan_bel') ? 1 : 0;
-                $dataGeriatri->rr_instruksi_bantuan = $request->has('rr_instruksi_bantuan') ? 1 : 0;
-                $dataGeriatri->rr_pagar_pengaman = $request->has('rr_pagar_pengaman') ? 1 : 0;
-                $dataGeriatri->rr_tempat_tidur_rendah = $request->has('rr_tempat_tidur_rendah') ? 1 : 0;
-                $dataGeriatri->rr_edukasi_perilaku = $request->has('rr_edukasi_perilaku') ? 1 : 0;
-                $dataGeriatri->rr_monitor_berkala = $request->has('rr_monitor_berkala') ? 1 : 0;
-                $dataGeriatri->rr_anjuran_kaus_kaki = $request->has('rr_anjuran_kaus_kaki') ? 1 : 0;
-                $dataGeriatri->rr_lantai_antislip = $request->has('rr_lantai_antislip') ? 1 : 0;
-            } elseif ($kategoriRisiko == 'Risiko Sedang') {
-                $dataGeriatri->rs_semua_intervensi_rendah = $request->has('rs_semua_intervensi_rendah') ? 1 : 0;
-                $dataGeriatri->rs_gelang_kuning = $request->has('rs_gelang_kuning') ? 1 : 0;
-                $dataGeriatri->rs_pasang_gambar = $request->has('rs_pasang_gambar') ? 1 : 0;
-                $dataGeriatri->rs_tanda_daftar_nama = $request->has('rs_tanda_daftar_nama') ? 1 : 0;
-                $dataGeriatri->rs_pertimbangkan_obat = $request->has('rs_pertimbangkan_obat') ? 1 : 0;
-                $dataGeriatri->rs_alat_bantu_jalan = $request->has('rs_alat_bantu_jalan') ? 1 : 0;
-            } elseif ($kategoriRisiko == 'Risiko Tinggi') {
-                $dataGeriatri->rt_semua_intervensi_rendah_sedang = $request->has('rt_semua_intervensi_rendah_sedang') ? 1 : 0;
-                $dataGeriatri->rt_jangan_tinggalkan = $request->has('rt_jangan_tinggalkan') ? 1 : 0;
-                $dataGeriatri->rt_dekat_nurse_station = $request->has('rt_dekat_nurse_station') ? 1 : 0;
-            }
+            // Simpan semua intervensi yang dikirim (tanpa filter kategori)
+            $dataGeriatri->rr_observasi_ambulasi = $request->has('rr_observasi_ambulasi') ? 1 : 0;
+            $dataGeriatri->rr_orientasi_kamar_mandi = $request->has('rr_orientasi_kamar_mandi') ? 1 : 0;
+            $dataGeriatri->rr_orientasi_bertahap = $request->has('rr_orientasi_bertahap') ? 1 : 0;
+            $dataGeriatri->rr_tempatkan_bel = $request->has('rr_tempatkan_bel') ? 1 : 0;
+            $dataGeriatri->rr_instruksi_bantuan = $request->has('rr_instruksi_bantuan') ? 1 : 0;
+            $dataGeriatri->rr_pagar_pengaman = $request->has('rr_pagar_pengaman') ? 1 : 0;
+            $dataGeriatri->rr_tempat_tidur_rendah = $request->has('rr_tempat_tidur_rendah') ? 1 : 0;
+            $dataGeriatri->rr_edukasi_perilaku = $request->has('rr_edukasi_perilaku') ? 1 : 0;
+            $dataGeriatri->rr_monitor_berkala = $request->has('rr_monitor_berkala') ? 1 : 0;
+            $dataGeriatri->rr_anjuran_kaus_kaki = $request->has('rr_anjuran_kaus_kaki') ? 1 : 0;
+            $dataGeriatri->rr_lantai_antislip = $request->has('rr_lantai_antislip') ? 1 : 0;
+
+            $dataGeriatri->rs_semua_intervensi_rendah = $request->has('rs_semua_intervensi_rendah') ? 1 : 0;
+            $dataGeriatri->rs_gelang_kuning = $request->has('rs_gelang_kuning') ? 1 : 0;
+            $dataGeriatri->rs_pasang_gambar = $request->has('rs_pasang_gambar') ? 1 : 0;
+            $dataGeriatri->rs_tanda_daftar_nama = $request->has('rs_tanda_daftar_nama') ? 1 : 0;
+            $dataGeriatri->rs_pertimbangkan_obat = $request->has('rs_pertimbangkan_obat') ? 1 : 0;
+            $dataGeriatri->rs_alat_bantu_jalan = $request->has('rs_alat_bantu_jalan') ? 1 : 0;
+
+            $dataGeriatri->rt_semua_intervensi_rendah_sedang = $request->has('rt_semua_intervensi_rendah_sedang') ? 1 : 0;
+            $dataGeriatri->rt_jangan_tinggalkan = $request->has('rt_jangan_tinggalkan') ? 1 : 0;
+            $dataGeriatri->rt_dekat_nurse_station = $request->has('rt_dekat_nurse_station') ? 1 : 0;
 
             // Update user yang mengupdate dan timestamp
             $dataGeriatri->user_updated = Auth::id();

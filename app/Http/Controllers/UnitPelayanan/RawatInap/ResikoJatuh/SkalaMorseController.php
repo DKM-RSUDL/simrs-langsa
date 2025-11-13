@@ -124,7 +124,7 @@ class SkalaMorseController extends Controller
         // Validasi input
         $request->validate([
             'tanggal' => 'required|date',
-            'hari_ke' => 'required|integer|min:1',
+            'jam' => 'required',
             'shift' => 'required|in:PG,SI,ML'
         ]);
 
@@ -151,7 +151,7 @@ class SkalaMorseController extends Controller
                 'urut_masuk' => $urut_masuk,
                 'user_create' => Auth::id(),
                 'tanggal' => $request->tanggal,
-                'jam' => now()->format('H:i:s'),
+                'jam' => $request->jam,
                 'hari_ke' => $request->hari_ke,
                 'shift' => $request->shift,
             ];
@@ -269,7 +269,7 @@ class SkalaMorseController extends Controller
         // Validasi input
         $request->validate([
             'tanggal' => 'required|date',
-            'hari_ke' => 'required|integer|min:1',
+            'jam' => 'required',
             'shift' => 'required|in:PG,SI,ML',
         ]);
 
@@ -299,7 +299,7 @@ class SkalaMorseController extends Controller
             $data = [
                 'user_edit' => Auth::id(),
                 'tanggal' => $request->tanggal,
-                'hari_ke' => $request->hari_ke,
+                'jam' => $request->jam,
                 'shift' => $request->shift,
             ];
 
