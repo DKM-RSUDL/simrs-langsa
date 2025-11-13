@@ -222,6 +222,23 @@
                                             @endforeach
                                         </select>
                                     </div>
+                                    <div class="form-group mt-3">
+                                        <label for="#dokter_yang_melayani">
+                                            <p class="text-primary m-0 p-0">
+                                                <strong>Dokter Yang Melayani</strong>
+                                            </p>
+                                        </label>
+                                        <select name="dokter_yang_melayani" id="dokter_yang_melayani"
+                                            class="form-select w-100 select2 @error('dokter_yang_melayani') is-invalid @enderror"
+                                            required>
+                                            <option value="">--Pilih Dokter--</option>
+                                            @foreach ($dokter as $dok)
+                                                <option value="{{ $dok->dokter->kd_dokter }}" >
+                                                    {{ $dok->dokter->nama_lengkap }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
 
                                     <div class="form-group mt-3">
                                         <label for="">
