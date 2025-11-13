@@ -237,159 +237,81 @@
 
 <body>
 
-    <table style="width:100%; padding-bottom: 10px">
-        <tr>
-            <td style="width:65%;">
-                <table>
-                    <tr>
-                        <td>
-                            <img width="50px" src="data:image/png;base64,{{ base64_encode(file_get_contents(public_path('assets/img/Logo-RSUD-Langsa-1.png'))) }}">
-                        </td>
-                        <td style="padding-left:6px; line-height:1.1;">
-                            <div style="font-size:10.5pt; color:#4CAF50; font-weight:bold;">RSUD KOTA LANGSA</div>
-                            <div class="tiny">Jl. Jend. A. Yani. No. 1. Kota Langsa</div>
-                            <div class="tiny">Telp. 0641-22051, email: rsulangsa@gmail.com</div>
-                            <div class="tiny">www.rsud.langsakota.go.id</div>
-                        </td>
-                    </tr>
-                </table>
-            </td>
-            <td class="text-center" style="margin-left:20px; font-size:12.5pt; font-weight:bold; width:55%; text-align:center">
-                PENGKAJIAN KEPERAWATAN GAWAT DARURAT
-            </td>
-             <td class="text-end" style="font-size:12.5pt; font-weight:bold; width:40%; text-align:right">
-                IGD
-            </td>
-        </tr>
-    </table>
-    <hr>
+    <!-- HEADER -->
+<table style="width:100%; border-collapse:collapse;">
+    <tr>
+        <!-- Logo + Info Rumah Sakit -->
+        <td style="width:35%; vertical-align:top;">
+            <table style="border-collapse:collapse;">
+                <tr>
+                    <td style="width:60px;">
+                        <img width="60" 
+                            src="data:image/png;base64,{{ base64_encode(file_get_contents(public_path('assets/img/Logo-RSUD-Langsa-1.png'))) }}">
+                    </td>
+                    <td style="padding-left:5px; line-height:1.2;">
+                        <div style="font-size:10pt; font-weight:bold;">RSUD Langsa</div>
+                        <div style="font-size:8pt;">Jl. Jend. A. Yani No. 1 Kota Langsa</div>
+                        <div style="font-size:8pt;">Telp. 0641-22051, email: rsulangsa@gmail.com</div>
+                        <div style="font-size:8pt;">www.rsud.langsakota.go.id</div>
+                    </td>
+                </tr>
+            </table>
+        </td>
 
-    <!-- I. IDENTITAS PASIEN -->
-    <div style="font-size:11pt; font-weight:bold; text-decoration:underline; 0;">I. IDENTITAS PASIEN</div>
-   @php
-    // Pastikan $pasien adalah object
+        <!-- Judul Tengah -->
+        <td style="width:45%; text-align:center; vertical-align:middle;">
+            <div style="font-size:11pt; font-weight:bold;">PENGKAJIAN KEPERAWATAN </div>
+            <div style="font-size:11pt; font-weight:bold;">GAWAT DARURAT</div>
+        </td>
+
+        <!-- IGD di kanan -->
+        <td style="width:20%; text-align:right; vertical-align:top;">
+            <div style="font-size:16pt; font-weight:bold;">IGD</div>
+        </td>
+    </tr>
+</table>
+<hr style="border:1px solid #000; margin-top:4px;">
+
+<!-- IDENTITAS PASIEN -->
+@php
     $p = $pasien;
-
-
-    // Tanggal lahir
     $tglLahir = \Carbon\Carbon::parse($p->tgl_lahir);
-    $tglLahirFormatted = $tglLahir->format('d-m-Y');
     $usia = $tglLahir->age;
-
-    // Format RM: 0-31-76-37 → 0317637 → 7 digit
-    $rmRaw = str_replace('-', '', $p->kd_pasien); // "0317637"
-    $rmDigits = str_pad($rmRaw, 7, '0', STR_PAD_LEFT);
-    $rm1 = substr($rmDigits, 0, 1);
-    $rm2 = substr($rmDigits, 1, 1);
-    $rm3 = substr($rmDigits, 2, 1);
-    $rm4 = substr($rmDigits, 3, 2);
-    $rm5 = substr($rmDigits, 5, 2);
-
-    // Tanggal & jam datang hari ini
-    $today = \Carbon\Carbon::now('Asia/Jakarta');
-    $tglDatang = $today->format('d-m-Y');
-    $jamDatang = $today->format('H:i');
+    $tglLahirFormatted = $tglLahir->format('d/m/Y');
 @endphp
-
-<table style="font-size:8pt; width:100%; border-collapse:collapse; line-height:1.2;">
+<div style="font-size:11.5pt; font-weight:bold; underline; 0 5px;">I.
+        IDENTITAS PASIEN
+    </div>
+<table style="width:100%; font-size:9pt; line-height:1.4; border-collapse:collapse; margin-top:4px;">
     <tr>
-        <td style="width:50%;">
-            Nama pasien 
-            <input type="text" style="width:130px;" value="{{ $p->nama ?? '' }}">
-            JK: 
-            <input type="checkbox" {{ ($p->jenis_kelamin ?? '') == '1' ? 'checked' : '' }}> Lk 
-            <input type="checkbox" {{ ($p->jenis_kelamin ?? '') == '0' ? 'checked' : '' }}> Pr
-            <span style="color:#006400; font-weight:bold; margin-left:5px;">RM</span>
-            <input type="text" class="rm-box" style="width:10px;" value="{{ $rm1 }}">
-            <input type="text" class="rm-box" style="width:10px;" value="{{ $rm2 }}">
-            <input type="text" class="rm-box" style="width:10px;" value="{{ $rm3 }}">
-            <input type="text" class="rm-box" style="width:10px;" value="{{ $rm4 }}">
-            <input type="text" class="rm-box" style="width:10px;" value="{{ $rm5 }}">
-        </td>
-        <td>
-            Tgl lahir 
-            <input type="text" class="input-date" style="width:20px;" value="{{ $tglLahir->format('d') }}"> -
-            <input type="text" class="input-date" style="width:20px;" value="{{ $tglLahir->format('m') }}"> -
-            <input type="text" class="input-date" style="width:30px;" value="{{ $tglLahir->format('Y') }}">
-            Usia: <input type="text" style="width:30px;" value="{{ $usia }}">
-        </td>
+        <td style="width:25%;">No. RM</td>
+        <td style="width:2%;">:</td>
+        <td>{{ $p->kd_pasien ?? '-' }}</td>
     </tr>
-
     <tr>
-        <td colspan="2">
-            Pekerjaan 
-            <input type="text" style="width:250px;" value="{{ $p->jns_peserta ?? '' }}">
-        </td>
+        <td>Nama</td>
+        <td>:</td>
+        <td>{{ $p->nama ?? '-' }}</td>
     </tr>
-
     <tr>
-        <td colspan="2">
-            Alamat 
-            <input type="text" style="width:350px;" value="{{ $p->alamat ?? '' }}">
-        </td>
+        <td>Jenis Kelamin</td>
+        <td>:</td>
+        <td>{{ ($p->jenis_kelamin ?? '') == '1' ? 'Laki-laki' : 'Perempuan' }}</td>
     </tr>
-
     <tr>
-        <td colspan="2">
-            Jaminan:
-            <input type="checkbox" {{ ($p->kd_asuransi ?? '') == '1' ? 'checked' : '' }}> JKN/BPJS
-            <input type="checkbox"> JR
-            <input type="checkbox" {{ ($p->kd_asuransi ?? '') == '0' ? 'checked' : '' }}> Umum
-            <input type="checkbox" 
-                {{ !in_array(($p->kd_asuransi ?? ''), ['0', '1']) ? 'checked' : '' }}> Lainnya 
-        </td>
-    </tr>
-
-    <tr>
-        <td colspan="2">
-            Datang tgl 
-            <input type="text" class="input-date" style="width:20px;" value="{{ $today->format('d') }}"> -
-            <input type="text" class="input-date" style="width:20px;" value="{{ $today->format('m') }}"> -
-            <input type="text" class="input-date" style="width:30px;" value="{{ $today->format('Y') }}">
-            Pukul: <input type="text" style="width:35px;" value="{{ $jamDatang }}"> WIB
-        </td>
-    </tr>
-
-    <tr>
-        <td colspan="2">
-            Kendaraan:
-            <input type="checkbox"> Ambulance
-            <input type="checkbox" > Pribadi
-            <input type="checkbox"> Lainnya
-        </td>
-    </tr>
-
-    <tr>
-        <td colspan="2">
-            Kunjungan:
-            <input type="checkbox"> Datang sendiri
-            <input type="checkbox"> Rujukan <input type="text" style="width:90px;">
-            <input type="checkbox"> Diantar
-        </td>
-    </tr>
-
-    <tr>
-        <td colspan="2">
-            Diantar oleh: <input type="text" style="width:120px;">
-            Usia: <input type="text" style="width:25px;"> Th
-            Alamat: <input type="text" style="width:180px;">
-        </td>
-    </tr>
-
-    <tr>
-        <td colspan="2">
-            Status: 
-            <input type="text" value="Keluarga/polisi/lainnya*"
-                style="width:180px; background:#f9f9f9; font-size:7.8pt;">
-        </td>
+        <td>Tanggal Lahir</td>
+        <td>:</td>
+        <td>{{ $tglLahirFormatted }}</td>
     </tr>
 </table>
 
 
 
+
     <!-- II. ABCD -->
-    <div style="font-size:11.5pt; font-weight:bold; underline; 0 5px;">II.
-        AIRWAY-BREATHING-CIRCULATION-DISABILITY</div>
+    <div style="font-size:11.5pt; font-weight:bold; underline; 0 5px; margin-top : 5px;">II.
+        A. AIRWAY-BREATHING-CIRCULATION-DISABILITY
+    </div>
 
     <!-- A. AIRWAY -->
     @php
@@ -406,7 +328,7 @@
 
         <tr>
             {{-- Pemeriksaan --}}
-            <td style="height:190px; width:33.3%; border-right:1px solid #000; padding:4px 5px; vertical-align:top;">
+            <td style="height:250px; width:33.3%; border-right:1px solid #000; padding:4px 5px; vertical-align:top;">
 
                 <div>Status airway: {{ ucfirst($airway->airway_status ?? '-') }}</div>
                 @if(($airway->airway_status ?? '') === 'lainnya')
@@ -458,7 +380,7 @@
 
         <tr>
             {{-- Pemeriksaan --}}
-            <td style="height:210px; width:33.3%; border-right:1px solid #000; padding:4px 5px; vertical-align:top;">
+            <td style="height:250px; width:33.3%; border-right:1px solid #000; padding:4px 5px; vertical-align:top;">
 
                 @if(!empty($breathing->breathing_frekuensi_nafas))
                     <div>Frekuensi napas/menit: {{ $breathing->breathing_frekuensi_nafas }}</div>
@@ -538,7 +460,7 @@
 
         <tr>
             {{-- Pemeriksaan --}}
-            <td style="height:210px; width:33.3%; border-right:1px solid #000; padding:4px 5px; vertical-align:top;">
+            <td style="height:220px; width:33.3%; border-right:1px solid #000; padding:4px 5px; vertical-align:top;">
 
                 <div>Nadi: {{ $circulation->circulation_nadi_irama ?? '-' }}/{{ $circulation->circulation_nadi_kekuatan ?? '-' }}</div>
                 <div>Tekanan darah (mmHg): {{ $circulation->circulation_sistole ?? '-' }}/{{ $circulation->circulation_diastole ?? '-' }}</div>
@@ -627,26 +549,26 @@
                     {{ !empty($asesmenDisability->disability_kesadaran) ? $asesmenDisability->disability_kesadaran : '-' }}
                 </div>
                 <div>Pupil :
-                    {{ !empty($asesmenDisability->disability_isokor) 
-                        ? ($asesmenDisability->disability_isokor == '1' ? 'Isokor' : ($asesmenDisability->disability_isokor == '2' ? 'Anisokor' : '-')) 
-                        : '-' }},
+                    {{ !empty($asesmenDisability->disability_isokor)
+    ? ($asesmenDisability->disability_isokor == '1' ? 'Isokor' : ($asesmenDisability->disability_isokor == '2' ? 'Anisokor' : '-'))
+    : '-' }},
                     Respon Cahaya :
                     {{ isset($asesmenDisability->disability_respon_cahaya)
-                        ? ($asesmenDisability->disability_respon_cahaya == '1' ? 'Ya' : ($asesmenDisability->disability_respon_cahaya == '0' ? 'Tidak' : '-'))
-                        : '-' }}
+    ? ($asesmenDisability->disability_respon_cahaya == '1' ? 'Ya' : ($asesmenDisability->disability_respon_cahaya == '0' ? 'Tidak' : '-'))
+    : '-' }}
                 </div>
                 <div>Diameter Pupil : 
                     {{ !empty($asesmenDisability->disability_diameter_pupil) ? $asesmenDisability->disability_diameter_pupil . ' mm' : '-' }}
                 </div>
                 <div>Motorik : 
-                    {{ isset($asesmenDisability->disability_motorik) 
-                        ? ($asesmenDisability->disability_motorik == '1' ? 'Ya' : 'Tidak') 
-                        : '-' }}
+                    {{ isset($asesmenDisability->disability_motorik)
+    ? ($asesmenDisability->disability_motorik == '1' ? 'Ya' : 'Tidak')
+    : '-' }}
                 </div>
                 <div>Sensorik : 
-                    {{ isset($asesmenDisability->disability_sensorik) 
-                        ? ($asesmenDisability->disability_sensorik == '1' ? 'Ya' : 'Tidak') 
-                        : '-' }}
+                    {{ isset($asesmenDisability->disability_sensorik)
+    ? ($asesmenDisability->disability_sensorik == '1' ? 'Ya' : 'Tidak')
+    : '-' }}
                 </div>
                 <div>Kekuatan Otot : 
                     {{ !empty($asesmenDisability->disability_kekuatan_otot) ? $asesmenDisability->disability_kekuatan_otot : '-' }}
@@ -702,130 +624,130 @@
         </tr>
     </table>
     <table style="border:1px solid #000; font-size:8.8pt; margin-top:6px; border-collapse:collapse; width:100%;">
-        <tr>
-             <td style="background:#ddd; padding:2px; border-bottom:1px solid #000; font-size:8pt; text-align:center; font-weight:bold;">
-                    E. Exposure
-            </td>
-            <td style="background:#ddd; padding:2px; border-bottom:1px solid #000; font-size:8pt; text-align:center; font-weight:bold;">
-                    Masalah/Diagnosis Keperawatan
-            </td>
-            <td style="background:#ddd; padding:2px; border-bottom:1px solid #000; font-size:8pt; text-align:center; font-weight:bold;">
-                    Tindakan Keperawatan
-            </td>
-        </tr>
-        <tr>
-            {{-- Kolom Pemeriksaan --}}
-            <td style="height:230px; width:33.3%; border-right:1px solid #000; padding:4px 5px; vertical-align:top;">
+    <tr>
+        <td style="background:#ddd; padding:2px; border-bottom:1px solid #000; font-size:8pt; text-align:center; font-weight:bold;">
+            E. Exposure
+        </td>
+        <td style="background:#ddd; padding:2px; border-bottom:1px solid #000; font-size:8pt; text-align:center; font-weight:bold;">
+            Masalah/Diagnosis Keperawatan
+        </td>
+        <td style="background:#ddd; padding:2px; border-bottom:1px solid #000; font-size:8pt; text-align:center; font-weight:bold;">
+            Tindakan Keperawatan
+        </td>
+    </tr>
+    <tr>
+        {{-- Kolom Pemeriksaan --}}
+        <td style="height:230px; width:33.3%; border-right:1px solid #000; padding:4px 5px; vertical-align:top;">
 
-                @php
-                    $exp = !empty($asesmen->asesmenKepUmumExposure) ?? null
-                @endphp
+            @php
+                $exp = !empty($asesmenExposure) ? (object) $asesmenExposure : null;
+           
+            @endphp
 
-                <div>Deformitas : 
-                    {{ isset($exp->exposure_deformitas) ? ($exp->exposure_deformitas == '1' ? 'Ya' : 'Tidak') : '-' }}
-                    @if(!empty($exp->exposure_deformitas_daerah))
-                        ({{ $exp->exposure_deformitas_daerah }})
-                    @endif
-                </div>
+            <div>Deformitas :
+                {{ isset($exp->exposure_deformitas) ? ($exp->exposure_deformitas == '1' ? 'Ya' : 'Tidak') : '-' }}
+                @if(!empty($exp->exposure_deformitas_daerah))
+                    ({{ $exp->exposure_deformitas_daerah }})
+                @endif
+            </div>
 
-                <div>Kontusion : 
-                    {{ isset($exp->exposure_kontusion) ? ($exp->exposure_kontusion == '1' ? 'Ya' : 'Tidak') : '-' }}
-                    @if(!empty($exp->exposure_kontusion_daerah))
-                        ({{ $exp->exposure_kontusion_daerah }})
-                    @endif
-                </div>
+            <div>Kontusion :
+                {{ isset($exp->exposure_kontusion) ? ($exp->exposure_kontusion == '1' ? 'Ya' : 'Tidak') : '-' }}
+                @if(!empty($exp->exposure_kontusion_daerah))
+                    ({{ $exp->exposure_kontusion_daerah }})
+                @endif
+            </div>
 
-                <div>Abrasi : 
-                    {{ isset($exp->exposure_abrasi) ? ($exp->exposure_abrasi == '1' ? 'Ya' : 'Tidak') : '-' }}
-                    @if(!empty($exp->exposure_abrasi_daerah))
-                        ({{ $exp->exposure_abrasi_daerah }})
-                    @endif
-                </div>
+            <div>Abrasi :
+                {{ isset($exp->exposure_abrasi) ? ($exp->exposure_abrasi == '1' ? 'Ya' : 'Tidak') : '-' }}
+                @if(!empty($exp->exposure_abrasi_daerah))
+                    ({{ $exp->exposure_abrasi_daerah }})
+                @endif
+            </div>
 
-                <div>Penetrasi : 
-                    {{ isset($exp->exposure_penetrasi) ? ($exp->exposure_penetrasi == '1' ? 'Ya' : 'Tidak') : '-' }}
-                    @if(!empty($exp->exposure_penetrasi_daerah))
-                        ({{ $exp->exposure_penetrasi_daerah }})
-                    @endif
-                </div>
+            <div>Penetrasi :
+                {{ isset($exp->exposure_penetrasi) ? ($exp->exposure_penetrasi == '1' ? 'Ya' : 'Tidak') : '-' }}
+                @if(!empty($exp->exposure_penetrasi_daerah))
+                    ({{ $exp->exposure_penetrasi_daerah }})
+                @endif
+            </div>
 
-                <div>Laserasi : 
-                    {{ isset($exp->exposure_laserasi) ? ($exp->exposure_laserasi == '1' ? 'Ya' : 'Tidak') : '-' }}
-                    @if(!empty($exp->exposure_laserasi_daerah))
-                        ({{ $exp->exposure_laserasi_daerah }})
-                    @endif
-                </div>
+            <div>Laserasi :
+                {{ isset($exp->exposure_laserasi) ? ($exp->exposure_laserasi == '1' ? 'Ya' : 'Tidak') : '-' }}
+                @if(!empty($exp->exposure_laserasi_daerah))
+                    ({{ $exp->exposure_laserasi_daerah }})
+                @endif
+            </div>
 
-                <div>Edema : 
-                    {{ isset($exp->exposure_edema) ? ($exp->exposure_edema == '1' ? 'Ya' : 'Tidak') : '-' }}
-                    @if(!empty($exp->exposure_edema_daerah))
-                        ({{ $exp->exposure_edema_daerah }})
-                    @endif
-                </div>
+            <div>Edema :
+                {{ isset($exp->exposure_edema) ? ($exp->exposure_edema == '1' ? 'Ya' : 'Tidak') : '-' }}
+                @if(!empty($exp->exposure_edema_daerah))
+                    ({{ $exp->exposure_edema_daerah }})
+                @endif
+            </div>
 
-                <div>Kedalaman Luka : 
-                    {{ !empty($exp->exposure_kedalaman_luka) ? $exp->exposure_kedalaman_luka . ' cm' : '-' }}
-                </div>
+            <div>Kedalaman Luka :
+                {{ !empty($exp->exposure_kedalaman_luka) ? $exp->exposure_kedalaman_luka . ' cm' : '-' }}
+            </div>
 
-                <div>Lainnya : 
-                    {{ !empty($exp->exposure_lainnya) ? $exp->exposure_lainnya : '-' }}
-                </div>
-            </td>
+            <div>Lainnya :
+                {{ !empty($exp->exposure_lainnya) ? $exp->exposure_lainnya : '-' }}
+            </div>
+        </td>
 
-            {{-- Kolom Diagnosis --}}
-            <td style="width:33.3%; border-right:1px solid #000; padding:4px 5px; vertical-align:top;">
-            
-                @php
-                    $diagnosisList = [
-                        'exposure_diagnosis_mobilitasi' => 'Kerusakan Mobilitas Fisik',
-                        'exposure_diagosis_integritas' => 'Kerusakan Integritas Jaringan',
-                    ];
-                    $hasDiagnosis = false;
-                @endphp
+        {{-- Kolom Diagnosis --}}
+        <td style="width:33.3%; border-right:1px solid #000; padding:4px 5px; vertical-align:top;">
+            @php
+                $diagnosisList = [
+                    'exposure_diagnosis_mobilitasi' => 'Kerusakan Mobilitas Fisik',
+                    'exposure_diagosis_integritas' => 'Kerusakan Integritas Jaringan',
+                ];
+                $hasDiagnosis = false;
+            @endphp
 
-                @foreach($diagnosisList as $key => $label)
-                    @if(!empty($exp->$key))
-                        @php $hasDiagnosis = true; @endphp
-                        <div>- {{ $label }}
-                            @php
-                                $typeField = $key . '_type';
-                                $type = $exp->$typeField ?? null;
-                            @endphp
-                            @if($type == '1')
-                                (Aktual)
-                            @elseif($type == '2')
-                                (Risiko)
-                            @endif
-                        </div>
-                    @endif
-                @endforeach
-
-                @if(!empty($exp->exposure_diagnosis_lainnya))
+            @foreach($diagnosisList as $key => $label)
+                @if(!empty($exp->$key))
                     @php $hasDiagnosis = true; @endphp
-                    <div>- {{ $exp->exposure_diagnosis_lainnya }}</div>
+                    <div>- {{ $label }}
+                        @php
+                            $typeField = $key . '_type';
+                            $type = $exp->$typeField ?? $exp->$key;
+                        @endphp
+                        @if($type == '1')
+                            (Aktual)
+                        @elseif($type == '2')
+                            (Risiko)
+                        @endif
+                    </div>
                 @endif
+            @endforeach
 
-                @if(!$hasDiagnosis)
-                    <div>-</div>
-                @endif
-            </td>
+            @if(!empty($exp->exposure_diagnosis_lainnya))
+                @php $hasDiagnosis = true; @endphp
+                <div>- {{ $exp->exposure_diagnosis_lainnya }}</div>
+            @endif
 
-            {{-- Kolom Tindakan --}}
-            <td style="width:33.3%; padding:4px 5px; vertical-align:top;">
-                @php
-                    $tindakan = json_decode($exp->exposure_tindakan ?? '[]', true);
-                @endphp
-                @if(!empty($tindakan))
-                    @foreach($tindakan as $item)
-                        <div>- {{ ucwords(strtolower($item)) }}</div>
-                    @endforeach
-                @else
-                    <div>-</div>
-                @endif
-            </td>
-        </tr>
-            
-    </table>
+            @if(!$hasDiagnosis)
+                <div>-</div>
+            @endif
+        </td>
+
+        {{-- Kolom Tindakan --}}
+        <td style="width:33.3%; padding:4px 5px; vertical-align:top;">
+            @php
+                $tindakan = json_decode($exp->exposure_tindakan ?? '[]', true);
+            @endphp
+
+            @if(!empty($tindakan))
+                @foreach($tindakan as $item)
+                    <div>- {{ ucwords(strtolower($item)) }}</div>
+                @endforeach
+            @else
+                <div>-</div>
+            @endif
+        </td>
+    </tr>
+</table>
 
     <h2 style="font-size:10pt;">E.  Skala Nyeri</h2>
     <table style="border:1px solid #000; border-collapse:collapse; width:100%; font-size:8pt;">
@@ -998,7 +920,7 @@
                 </label>
             @endforeach
             <label style="margin-right:18px;">Lainnya:
-                {{ isset($asesmenKepUmum) &&  $asesmenKepUmum->spiritual_agama_lain ?? '............' }}</label>
+                {{ isset($asesmenKepUmum) && $asesmenKepUmum->spiritual_agama_lain ?? '............' }}</label>
         </div>
 
         <div>
@@ -1024,7 +946,7 @@
     </div>
 
     <h2>
-        III. C. Resiko Jatuh
+        III. C. Risiko Jatuh
     </h2>
 
     <div>
@@ -1080,130 +1002,108 @@
     <h2>
         III. D. Status Psikologis
     </h2>
+    <div style="font-size:9pt; width:100%;">
+    <table style="width:100%;">
+        <tr>
+            <td style="width:25%; vertical-align:top; padding:3px;">
+                <strong>Status Psikologis :</strong>
+            </td>
+            <td style="width:25%; vertical-align:top; padding:3px;">
+                {{ $asesmenKepUmum->psikologis_kondisi ?? '–' }}
+            </td>
+            <td style="width:35%; vertical-align:top; padding:3px;">
+                <strong>Potensi menyakiti diri sendiri/orang lain :</strong>
+            </td>
+            <td style="width:15%; vertical-align:top; padding:3px; text-align:left;">
+                {{ $asesmenKepUmum->psikologis_potensi_menyakiti ?'Ya' : '–' }}
+            </td>
+        </tr>
+    </table>
 
-    <div>
-        <table style="">
-            <tr>
-                <td rowspan="3">
-                    Status Psikologis :
-                </td>
-                <td>
-                    <label style="margin-right:18px; ">{{ $asesmenKepUmum->psikologis_kondisi }}</label>
-                    {{-- <label style="margin-right:18px; "><input type="checkbox" value="2"> Marah </label>
-                    <label style="margin-right:18px; "><input type="checkbox" value="3"> Cemas </label>
-                    <label style="margin-right:18px; "><input type="checkbox" value="4"> Gelisah </label>
-                    <label style="margin-right:18px; "><input type="checkbox" value="5">Lainnya</label> --}}
-                </td>
-            </tr>
-            <tr>
-                {{-- <td>
-                    <label style="margin-right:18px; "><input type="checkbox" value="1"> Sedih </label>
-                    <label style="margin-right:18px; "><input type="checkbox" value="2"> Takut </label>
-                    <label style="margin-right:18px; "><input type="checkbox" value="3"> Depresi </label>
-                    <label style="margin-right:18px; "><input type="checkbox" value="4"> Cenderung Bunuh
-                        Diri ke <span></span> </label>
-
-                </td> --}}
-            </tr>
-        </table>
-        <label for="">Permasalahan yang di konsultasikan</label><input
-            style="margin-top:10px; border-bottom : 1px solid black" type="text">
-
+    <div style="margin-top:10px;">
+        <label>Psikologi Lainya : </label>
+        <label for="">{{ $asesmenKepUmum->psikologis_lainnya ?? '-' }}</label>
     </div>
+</div>
+
     <h2>
         III. E. Status Sosial Budaya
     </h2>
 
-    <table style="width:100%; border-collapse:collapse; font-size:8pt; height: 400px;">
-        <tr>
-            <th style="text-align:left; width:50%; border:1px solid #000; background:#eee; padding:3px;">Aspek Sosial &
-                Ekonomi</th>
-            <th style="text-align:left; border:1px solid #000; background:#eee; padding:3px;">Keterangan</th>
-        </tr>
+    @php
+    $pekerjaan = match ($asesmenSosialEkonomi->sosial_ekonomi_pekerjaan ?? null) {
+        '1' => 'Tidak bekerja',
+        '2' => 'PNS/TNI/POLRI',
+        '3' => 'Pegawai Swasta',
+        '4' => 'Wiraswasta',
+        '5' => 'Pelajar/Mahasiswa',
+        '6' => 'Lainnya',
+        default => '–'
+    };
 
-        @php
-            $pekerjaan = match ($asesmenSosialEkonomi->sosial_ekonomi_pekerjaan) {
-                '1' => 'Tidak bekerja',
-                '2' => 'PNS/TNI/POLRI',
-                '3' => 'Pegawai Swasta',
-                '4' => 'Wiraswasta',
-                '5' => 'Pelajar/Mahasiswa',
-                '6' => 'Lainnya',
-                default => null
-            };
-        @endphp
 
-        <tr>
-            <td style="border:1px solid #000; padding:3px;">Pekerjaan</td>
-            <td style="border:1px solid #000; padding:3px;">{{ $pekerjaan ?? '–' }}</td>
-        </tr>
 
-        <tr>
-            <td style="border:1px solid #000; padding:3px;">Tingkat Penghasilan</td>
-            <td style="border:1px solid #000; padding:3px;">
-                {{ ($asesmenSosialEkonomi != null ) && $asesmenSosialEkonomi->sosial_ekonomi_tingkat_penghasilan ?? '–' }}</td>
-        </tr>
+    $tingkatPenghasilan = $asesmenSosialEkonomi->sosial_ekonomi_tingkat_penghasilan ?? '–';
 
-        <tr>
-            <td style="border:1px solid #000; padding:3px;">Status Pernikahan</td>
-            <td style="border:1px solid #000; padding:3px;">
-                {{ ($asesmenSosialEkonomi != null ) && $asesmenSosialEkonomi->sosial_ekonomi_status_pernikahan ?? '–' }}</td>
-        </tr>
+    $statusPernikahan = match ($asesmenSosialEkonomi->sosial_ekonomi_status_pernikahan ?? null) {
+        '0' => 'Belum Kawin',
+        '1' => 'Kawin',
+        '2' => 'Janda',
+        '3' => 'Duda',
+        default => '–'
+    };
 
-        <tr>
-            <td style="border:1px solid #000; padding:3px;">Status Pendidikan</td>
-            <td style="border:1px solid #000; padding:3px;">
-                {{ ($asesmenSosialEkonomi != null ) && $asesmenSosialEkonomi->sosial_ekonomi_status_pendidikan ?? '–' }}</td>
-        </tr>
+    $statusPendidikan = $pendidikanData[$asesmenSosialEkonomi->sosial_ekonomi_status_pendidikan];
 
-        <tr>
-            <td style="border:1px solid #000; padding:3px;">Tempat Tinggal</td>
-            <td style="border:1px solid #000; padding:3px;">
-                {{ ($asesmenSosialEkonomi != null ) && $asesmenSosialEkonomi->sosial_ekonomi_tempat_tinggal ?? '–' }}</td>
-        </tr>
+ 
+    
+    
+    $tempatTinggal = $asesmenSosialEkonomi->sosial_ekonomi_tempat_tinggal ?? '–';
+    $tinggalDenganKeluarga = $asesmenSosialEkonomi->sosial_ekonomi_tinggal_dengan_keluarga ?? '–';
 
-        <tr>
-            <td style="border:1px solid #000; padding:3px;">Tinggal Dengan Keluarga</td>
-            <td style="border:1px solid #000; padding:3px;">
-                {{ ($asesmenSosialEkonomi != null ) && $asesmenSosialEkonomi->sosial_ekonomi_tinggal_dengan_keluarga ?? '–' }}</td>
-        </tr>
+    $curigaPenganiayaan = match ($asesmenSosialEkonomi->sosial_ekonomi_curiga_penganiayaan ?? null) {
+        '1' => 'Ada',
+        '0' => 'Tidak Ada',
+        default => '–'
+    };
 
-        <tr>
-            <td style="border:1px solid #000; padding:3px;">Curiga Penganiayaan</td>
-            <td style="border:1px solid #000; padding:3px;">
-                {{ ($asesmenSosialEkonomi != null ) && $asesmenSosialEkonomi->sosial_ekonomi_curiga_penganiayaan ?? '–' }}</td>
-        </tr>
+    $curigaHubunganKeluarga = match ($asesmenSosialEkonomi->sosial_ekonomi_curiga_hubungan_keluarga ?? null) {
+        '1' => 'Baik',
+        '0' => 'Tidak Baik',
+        default => '–'
+    };
 
-        <tr>
-            <td style="border:1px solid #000; padding:3px;">Curiga Suku</td>
-            <td style="border:1px solid #000; padding:3px;">
-                {{ ($asesmenSosialEkonomi != null ) && $asesmenSosialEkonomi->sosial_ekonomi_curiga_suku ?? '–' }}</td>
-        </tr>
+    $curigaKesulitan = match ($asesmenSosialEkonomi->sosial_ekonomi_curiga_kesulitan ?? null) {
+        '1' => 'Ya',
+        '0' => 'Tidak',
+        default => '–'
+    };
 
-        <tr>
-            <td style="border:1px solid #000; padding:3px;">Curiga Budaya</td>
-            <td style="border:1px solid #000; padding:3px;">
-                {{ ($asesmenSosialEkonomi != null ) && $asesmenSosialEkonomi->sosial_ekonomi_curiga_budaya ?? '–' }}</td>
-        </tr>
+    $curigaSuku = $asesmenSosialEkonomi->sosial_ekonomi_curiga_suku ?? '–';
+    $curigaBudaya = $asesmenSosialEkonomi->sosial_ekonomi_curiga_budaya ?? '–';
+    $keteranganLain = $asesmenSosialEkonomi->sosial_ekonomi_keterangan_lain ?? '–';
+@endphp
 
-        <tr>
-            <td style="border:1px solid #000; padding:3px;">Curiga Hubungan Keluarga</td>
-            <td style="border:1px solid #000; padding:3px;">
-                {{ ($asesmenSosialEkonomi != null ) && $asesmenSosialEkonomi->sosial_ekonomi_curiga_hubungan_keluarga ?? '–' }}</td>
-        </tr>
 
-        <tr>
-            <td style="border:1px solid #000; padding:3px;">Curiga Kesulitan Ekonomi</td>
-            <td style="border:1px solid #000; padding:3px;">
-                {{ ($asesmenSosialEkonomi != null ) && $asesmenSosialEkonomi->sosial_ekonomi_curiga_kesulitan ?? '–' }}</td>
-        </tr>
+    <table style="width:100%; border-collapse:collapse; font-size:8pt;">
+    <tr>
+        <th style="border:1px solid #000; background:#eee; padding:3px;">Aspek Sosial & Ekonomi</th>
+        <th style="border:1px solid #000; background:#eee; padding:3px;">Keterangan</th>
+    </tr>
+    <tr><td style="border:1px solid #000; padding:3px;">Pekerjaan</td><td style="border:1px solid #000; padding:3px;">{{ $pekerjaan }}</td></tr>
+    <tr><td style="border:1px solid #000; padding:3px;">Tingkat Penghasilan</td><td style="border:1px solid #000; padding:3px;">{{ $tingkatPenghasilan }}</td></tr>
+    <tr><td style="border:1px solid #000; padding:3px;">Status Pernikahan</td><td style="border:1px solid #000; padding:3px;">{{ $statusPernikahan }}</td></tr>
+    <tr><td style="border:1px solid #000; padding:3px;">Status Pendidikan</td><td style="border:1px solid #000; padding:3px;">{{ $statusPendidikan }}</td></tr>
+    <tr><td style="border:1px solid #000; padding:3px;">Tempat Tinggal</td><td style="border:1px solid #000; padding:3px;">{{ $tempatTinggal }}</td></tr>
+    <tr><td style="border:1px solid #000; padding:3px;">Tinggal Dengan Keluarga</td><td style="border:1px solid #000; padding:3px;">{{ $tinggalDenganKeluarga }}</td></tr>
+    <tr><td style="border:1px solid #000; padding:3px;">Curiga Penganiayaan</td><td style="border:1px solid #000; padding:3px;">{{ $curigaPenganiayaan }}</td></tr>
+    <tr><td style="border:1px solid #000; padding:3px;">Hubungan Dengan Keluarga</td><td style="border:1px solid #000; padding:3px;">{{ $curigaHubunganKeluarga }}</td></tr>
+    <tr><td style="border:1px solid #000; padding:3px;">Kesulitan Ekonomi</td><td style="border:1px solid #000; padding:3px;">{{ $curigaKesulitan }}</td></tr>
+    <tr><td style="border:1px solid #000; padding:3px;">Suku</td><td style="border:1px solid #000; padding:3px;">{{ $curigaSuku }}</td></tr>
+    <tr><td style="border:1px solid #000; padding:3px;">Budaya</td><td style="border:1px solid #000; padding:3px;">{{ $curigaBudaya }}</td></tr>
+    <tr><td style="border:1px solid #000; padding:3px;">Keterangan Lain</td><td style="border:1px solid #000; padding:3px;">{{ $keteranganLain }}</td></tr>
+</table>
 
-        <tr>
-            <td style="border:1px solid #000; padding:3px;">Keterangan Lain</td>
-            <td style="border:1px solid #000; padding:3px;">
-                {{ ($asesmenSosialEkonomi != null ) && $asesmenSosialEkonomi->sosial_ekonomi_keterangan_lain ?? '–' }}</td>
-        </tr>
-    </table>
 
 
     <!-- JUDUL -->
@@ -1347,7 +1247,7 @@
 
     <!-- CATATAN -->
     @if($totalSkor >= 2 || $gizi->gizi_mst_diagnosis_khusus == '1')
-        <div style="font-style:italic;color:#c00;font-weight:bold;font-size:13.5px;">
+        <div style="font-style:italic;color:#c00;font-weight:bold;font-size:13.5px; height : 30px;">
             (Bila skor > 2 dan atau pasien dengan diagnosis/ kondisi khusus dilaporkan ke dokter pemeriksa)
         </div>
     @endif
@@ -1364,7 +1264,7 @@
         III.G. STATUS FUNGSIONAL
     </h2>
     @php       
-                        $statusFungsionalOptions = [
+                                $statusFungsionalOptions = [
             'Mandiri',
             'Ketergantungan Ringan',
             'Ketergantungan Sedang',

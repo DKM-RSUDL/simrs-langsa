@@ -1361,7 +1361,7 @@
                                             handle: '.drag-handle',
                                             ghostClass: 'bg-primary',
                                             onEnd: () => {
-                                                $diagnoseList.find('.diag-item-wrap').each(function(idx) {
+                                                $diagnoseList.finaaaad('.diag-item-wrap').each(function(idx) {
                                                     $(this).find('.order-input').val(idx);
                                                     $(this).find('.btnListDiagnose').attr('data-id', idx);
                                                 });
@@ -1434,8 +1434,10 @@
 
         const name = $(this).data('name'); // ✅ ambil nama dari data-id
 
+        console.log(name)
+
         console.log('DiagnoseArray sebelum hapus:', DiagnoseArray);
-        const index = DiagnoseArray.findIndex((item) => item === name);
+        const index = DiagnoseArray.findIndex((item) => item == name);
 
         if (index !== -1) {
             DiagnoseArray.splice(index, 1); // ✅ hapus elemen berdasarkan index

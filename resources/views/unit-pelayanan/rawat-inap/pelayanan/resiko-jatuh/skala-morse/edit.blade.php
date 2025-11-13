@@ -709,16 +709,30 @@
                 tampilkanIntervensi(kategori);
             }
 
-            // Fungsi untuk menampilkan intervensi berdasarkan kategori
+            // Fungsi untuk menampilkan intervensi berdasarkan kategori (kumulatif: RT -> RT+RS+RR, RS -> RS+RR, RR -> RR)
             function tampilkanIntervensi(kategori) {
+                const k = (kategori || '').toString().trim().toUpperCase();
+                let code = '';
+                if (k === 'RR' || k.includes('RENDAH')) code = 'RR';
+                else if (k === 'RS' || k.includes('SEDANG')) code = 'RS';
+                else if (k === 'RT' || k.includes('TINGGI')) code = 'RT';
+
                 $('#resikoJatuh_intervensiRR, #resikoJatuh_intervensiRS, #resikoJatuh_intervensiRT').hide();
 
-                if (kategori === 'RR') {
+                if (code === 'RR') {
+                    // only RR
                     $('#resikoJatuh_intervensiRR').show();
-                } else if (kategori === 'RS') {
+                } else if (code === 'RS') {
+                    // RS -> show RS and RR
                     $('#resikoJatuh_intervensiRS').show();
-                } else if (kategori === 'RT') {
+                    $('#resikoJatuh_intervensiRR').show();
+                } else if (code === 'RT') {
+                    // RT -> show RT, RS and RR (cumulative)
                     $('#resikoJatuh_intervensiRT').show();
+                    $('#resikoJatuh_intervensiRS').show();
+                    $('#resikoJatuh_intervensiRR').show();
+                } else {
+                    $('#resikoJatuh_intervensiRR, #resikoJatuh_intervensiRS, #resikoJatuh_intervensiRT').hide();
                 }
             }
 

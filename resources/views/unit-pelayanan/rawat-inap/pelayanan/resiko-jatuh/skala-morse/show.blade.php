@@ -2,70 +2,6 @@
 @include('unit-pelayanan.rawat-inap.pelayanan.resiko-jatuh.skala-morse.include')
 
 @section('content')
-    <style>
-        .resiko_jatuh__header-asesmen {
-            color: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-        }
-
-        .resiko_jatuh__section-separator {
-            background: white;
-            border-radius: 10px;
-            padding: 25px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        }
-
-        .resiko_jatuh__info-box {
-            background: #f8f9fa;
-            border-radius: 8px;
-            padding: 15px;
-            margin-bottom: 10px;
-            border-left: 4px solid #667eea;
-        }
-
-        .resiko_jatuh__score-display {
-            font-size: 2.5rem;
-            font-weight: bold;
-            color: #667eea;
-            text-align: center;
-            margin: 20px 0;
-        }
-
-        .resiko_jatuh__btn-outline-primary {
-            border-color: #667eea;
-            color: #667eea;
-            transition: all 0.3s ease;
-        }
-
-        .resiko_jatuh__btn-outline-primary:hover {
-            background: #667eea;
-            border-color: #667eea;
-            transform: translateX(-3px);
-        }
-
-        .table-detail th {
-            background-color: #f8f9fa;
-            font-weight: 600;
-            width: 30%;
-        }
-
-        .intervensi-item {
-            background: #f8f9fa;
-            border-radius: 8px;
-            padding: 10px 15px;
-            margin-bottom: 8px;
-            border-left: 4px solid #28a745;
-        }
-
-        .kategori-badge {
-            font-size: 1.2rem;
-            padding: 10px 20px;
-            border-radius: 25px;
-        }
-    </style>
-
     <div class="row">
         <div class="col-md-3">
             @include('components.patient-card')
@@ -76,57 +12,59 @@
                 <x-button-previous />
                 @include('components.page-header', [
                     'title' => 'Rincian Pengkajian Resiko Jatuh - Skala Morse',
-                    'description' =>
-                        'Rincian data pengkajian resiko jatuh - skala morse pasien rawat inap.',
+                    'description' => 'Rincian data pengkajian resiko jatuh - skala morse pasien rawat inap.',
                 ])
-                <!-- Informasi Pengkajian -->
-                <div class="resiko_jatuh__section-separator">
-                    <h5><i class="ti-calendar mr-2"></i> Informasi Pengkajian</h5>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <table class="table table-borderless table-detail">
-                                <tr>
-                                    <th>Tanggal Pengkajian:</th>
-                                    <td>{{ $skalaMorse->tanggal_formatted }}</td>
-                                </tr>
-                                <tr>
-                                    <th>Hari Ke:</th>
-                                    <td>{{ $skalaMorse->hari_ke }}</td>
-                                </tr>
-                            </table>
+
+                <!-- Data Dasar -->
+                <div class="mb-4">
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <label class="form-label fw-bold">Tanggal</label>
+                            <div class="form-control-plaintext bg-light p-2 rounded">
+                                {{ $skalaMorse->tanggal_formatted }}
+                            </div>
                         </div>
-                        <div class="col-md-6">
-                            <table class="table table-borderless table-detail">
-                                <tr>
-                                    <th>Petugas:</th>
-                                    <td>{{ str()->title($skalaMorse->userCreate->name ?? 'Tidak Diketahui') }}</td>
-                                </tr>
-                                <tr>
-                                    <th>Shift:</th>
-                                    <td>{{ $skalaMorse->shift_name }}</td>
-                                </tr>
-                                @if ($skalaMorse->userEdit)
-                                    <tr>
-                                        <th>Terakhir Diubah:</th>
-                                        <td>{{ str()->title($skalaMorse->userEdit->name) }}</td>
-                                    </tr>
-                                @endif
-                            </table>
+                        <div class="col-md-4">
+                            <label class="form-label fw-bold">Hari ke</label>
+                            <div class="form-control-plaintext bg-light p-2 rounded">
+                                {{ $skalaMorse->hari_ke }}
+                            </div>
                         </div>
+                        <div class="col-md-4">
+                            <label class="form-label fw-bold">Shift</label>
+                            <div class="form-control-plaintext bg-light p-2 rounded">
+                                {{ $skalaMorse->shift_name }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row g-3 mt-2">
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Petugas</label>
+                            <div class="form-control-plaintext bg-light p-2 rounded">
+                                {{ str()->title($skalaMorse->userCreate->name ?? 'Tidak Diketahui') }}
+                            </div>
+                        </div>
+                        @if ($skalaMorse->userEdit)
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">Terakhir Diubah</label>
+                                <div class="form-control-plaintext bg-light p-2 rounded">
+                                    {{ str()->title($skalaMorse->userEdit->name) }}
+                                </div>
+                            </div>
+                        @endif
                     </div>
                 </div>
 
                 <!-- Detail Penilaian -->
-                <div class="resiko_jatuh__section-separator">
-                    <h5><i class="ti-list-ol mr-2"></i> Detail Penilaian Resiko Jatuh</h5>
-
+                <div class="mb-4">
+                    <h5 class="mb-3"><i class="ti-list-ol me-2"></i> Detail Penilaian Resiko Jatuh</h5>
                     <div class="table-responsive">
-                        <table class="table table-bordered">
+                        <table class="table table-bordered mb-0">
                             <thead class="table-primary">
                                 <tr>
                                     <th>Kriteria</th>
                                     <th>Jawaban</th>
-                                    <th>Skor</th>
+                                    <th class="text-center">Skor</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -163,92 +101,158 @@
                             </tbody>
                             <tfoot class="table-warning">
                                 <tr>
-                                    <th colspan="2" class="text-center"><strong>TOTAL SKOR</strong></th>
-                                    <th class="text-center"><strong>{{ $skalaMorse->skor_total }}</strong></th>
+                                    <th colspan="2" class="text-center">TOTAL SKOR</th>
+                                    <th class="text-center">{{ $skalaMorse->skor_total }}</th>
                                 </tr>
                             </tfoot>
                         </table>
                     </div>
                 </div>
 
-                <!-- Hasil Penilaian -->
-                <div class="resiko_jatuh__section-separator">
-                    <h5><i class="ti-stats-up mr-2"></i> Hasil Penilaian</h5>
+                <!-- Hasil Skor -->
+                <div class="mb-4">
+                    <h5 class="mb-3">Hasil Penilaian</h5>
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <div class="card border-primary">
+                                <div class="card-body text-center">
+                                    <label class="form-label fw-bold">Skor Total</label>
+                                    <p class="form-control-plaintext fs-2 fw-bold">{{ $skalaMorse->skor_total }}</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card border-primary">
+                                <div class="card-body text-center">
+                                    <label class="form-label fw-bold">Kategori Resiko</label>
+                                    <p class="form-control-plaintext fs-2 fw-bold">
+                                        @switch($skalaMorse->kategori_resiko)
+                                            @case('RR')
+                                                <span class="badge bg-success">RESIKO RENDAH (RR)</span>
+                                            @break
 
-                    <div class="text-center">
-                        <div class="resiko_jatuh__score-display">{{ $skalaMorse->skor_total }}</div>
+                                            @case('RS')
+                                                <span class="badge bg-warning text-dark">RESIKO SEDANG (RS)</span>
+                                            @break
 
-                        @switch($skalaMorse->kategori_resiko)
-                            @case('RR')
-                                <span class="badge bg-success kategori-badge">RESIKO RENDAH (RR)</span>
-                                <p class="mt-3 text-muted">Skor 0-24: Resiko jatuh rendah</p>
-                            @break
-
-                            @case('RS')
-                                <span class="badge bg-warning text-dark kategori-badge">RESIKO SEDANG (RS)</span>
-                                <p class="mt-3 text-muted">Skor 25-44: Resiko jatuh sedang</p>
-                            @break
-
-                            @case('RT')
-                                <span class="badge bg-danger kategori-badge">RESIKO TINGGI (RT)</span>
-                                <p class="mt-3 text-muted">Skor ≥45: Resiko jatuh tinggi</p>
-                            @break
-                        @endswitch
+                                            @case('RT')
+                                                <span class="badge bg-danger">RESIKO TINGGI (RT)</span>
+                                            @break
+                                        @endswitch
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
                 <!-- Intervensi yang Dipilih -->
-                @if ($skalaMorse->kategori_resiko == 'RR' && $skalaMorse->intervensi_rr)
-                    <div class="resiko_jatuh__section-separator">
-                        <h5 style="color: #28a745;"><i class="ti-shield mr-2"></i> Intervensi Pencegahan - Resiko Rendah
+                @php $kat = $skalaMorse->kategori_resiko; @endphp
+
+                {{-- Intervensi Rendah (tampil kalau RR/RS/RT dan ada data) --}}
+                @if (in_array($kat, ['RR', 'RS', 'RT']) && $skalaMorse->intervensi_rr)
+                    <div class="mb-4">
+                        <h5 class="mb-3 text-success"><i class="ti-shield me-2"></i> Intervensi Pencegahan — Resiko Rendah
                         </h5>
-
-                        @php $intervensiNames = $skalaMorse->getIntervensiNamesHtml(); @endphp
-                        @if (count($intervensiNames) > 0)
-                            @foreach ($intervensiNames as $index => $nama)
-                                <div class="intervensi-item">
-                                    <strong>{{ $index + 1 }}.</strong> {!! $nama !!}
-                                </div>
-                            @endforeach
+                        @php $items = $skalaMorse->intervensi_rr ?? []; @endphp
+                        @if (!empty($items) && count($items) > 0)
+                            <ul class="list-group">
+                                @foreach ($items as $idx => $val)
+                                    <li class="list-group-item">
+                                        <i class="ti-check text-success me-2"></i>
+                                        {!! $val !!}
+                                    </li>
+                                @endforeach
+                            </ul>
                         @else
-                            <p class="text-muted">Tidak ada intervensi yang dipilih</p>
+                            <p class="text-muted mb-0">Tidak ada intervensi yang dipilih</p>
                         @endif
                     </div>
                 @endif
 
-                @if ($skalaMorse->kategori_resiko == 'RS' && $skalaMorse->intervensi_rs)
-                    <div class="resiko_jatuh__section-separator">
-                        <h5 style="color: #856404;"><i class="ti-alert mr-2"></i> Intervensi Pencegahan - Resiko Sedang</h5>
-
-                        @php $intervensiNames = $skalaMorse->getIntervensiNamesHtml(); @endphp
-                        @if (count($intervensiNames) > 0)
-                            @foreach ($intervensiNames as $index => $nama)
-                                <div class="intervensi-item" style="border-left-color: #ffc107;">
-                                    <strong>{{ $index + 1 }}.</strong> {!! $nama !!}
-                                </div>
-                            @endforeach
+                {{-- Intervensi Sedang (tampil kalau RS/RT dan ada data) --}}
+                @if (in_array($kat, ['RS', 'RT']) && $skalaMorse->intervensi_rs)
+                    <div class="mb-4">
+                        <h5 class="mb-3 text-warning"><i class="ti-alert me-2"></i> Intervensi Pencegahan — Resiko Sedang
+                        </h5>
+                        @php $items = $skalaMorse->intervensi_rs ?? []; @endphp
+                        @if (!empty($items) && count($items) > 0)
+                            <ul class="list-group">
+                                @foreach ($items as $idx => $val)
+                                    <li class="list-group-item">
+                                        <i class="ti-check text-warning me-2"></i>
+                                        {!! $val !!}
+                                    </li>
+                                @endforeach
+                            </ul>
                         @else
-                            <p class="text-muted">Tidak ada intervensi yang dipilih</p>
+                            <p class="text-muted mb-0">Tidak ada intervensi yang dipilih</p>
                         @endif
                     </div>
                 @endif
 
-                @if ($skalaMorse->kategori_resiko == 'RT' && $skalaMorse->intervensi_rt)
-                    <div class="resiko_jatuh__section-separator">
-                        <h5 style="color: #dc3545;"><i class="ti-alert mr-2"></i> Intervensi Pencegahan - Resiko Tinggi</h5>
-
-                        @php $intervensiNames = $skalaMorse->getIntervensiNamesHtml(); @endphp
-                        @if (count($intervensiNames) > 0)
-                            @foreach ($intervensiNames as $index => $nama)
-                                <div class="intervensi-item" style="border-left-color: #dc3545;">
-                                    <strong>{{ $index + 1 }}.</strong> {!! $nama !!}
-                                </div>
-                            @endforeach
+                {{-- Intervensi Tinggi (tampil hanya kalau RT dan ada data) --}}
+                @if ($kat == 'RT' && $skalaMorse->intervensi_rt)
+                    <div class="mb-4">
+                        <h5 class="mb-3 text-danger"><i class="ti-alert me-2"></i> Intervensi Pencegahan — Resiko Tinggi
+                        </h5>
+                        @php $items = $skalaMorse->intervensi_rt ?? []; @endphp
+                        @if (!empty($items) && count($items) > 0)
+                            <ul class="list-group">
+                                @foreach ($items as $idx => $val)
+                                    <li class="list-group-item">
+                                        <i class="ti-check text-danger me-2"></i>
+                                        {!! $val !!}
+                                    </li>
+                                @endforeach
+                            </ul>
                         @else
-                            <p class="text-muted">Tidak ada intervensi yang dipilih</p>
+                            <p class="text-muted mb-0">Tidak ada intervensi yang dipilih</p>
                         @endif
                     </div>
                 @endif
+
+            </x-content-card>
+
+            <x-content-card>
+                <!-- Keterangan -->
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-body">
+                                <h6 class="card-title fw-bold">Kategori Risiko:</h6>
+                                <ul class="mb-0" style="list-style: none;">
+                                    <li class="mb-2">
+                                        <span class="badge bg-success me-2">RR</span>
+                                        <strong>Resiko Rendah (0 - 24)</strong>
+                                    </li>
+                                    <li class="mb-2">
+                                        <span class="badge bg-warning text-dark me-2">RS</span>
+                                        <strong>Resiko Sedang (25 - 44)</strong>
+                                    </li>
+                                    <li>
+                                        <span class="badge bg-danger me-2">RT</span>
+                                        <strong>Resiko Tinggi (≥ 45)</strong>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-body">
+                                <h6 class="card-title fw-bold">Pengkajian resiko jatuh dilakukan pada waktu:</h6>
+                                <ol type="a" class="mb-0">
+                                    <li class="mb-1">Saat pasien masuk RS / Initial Assessment (IA)</li>
+                                    <li class="mb-1">Saat kondisi pasien berubah atau ada perubahan dalam terapi medik /
+                                        Change Of Condition (CC)</li>
+                                    <li class="mb-1">Saat pasien dipindahkan ke Unit lain / Ward Transfer (WT)</li>
+                                    <li>Setelah kejadian jatuh / Post Fall (PF)</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </x-content-card>
         </div>
     </div>
