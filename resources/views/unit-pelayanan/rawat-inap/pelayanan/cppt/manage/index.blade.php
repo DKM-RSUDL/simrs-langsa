@@ -1215,9 +1215,26 @@
                         for (let key in data) {
                             if (data.hasOwnProperty(key)) {
                                 let patient = data[key];
+                                console.log(patient)
+
+                                console.log(patient.jam)
 
                                 // Set key to input
+
+                                // Misalnya patient.tanggal = "2025-11-12 14:30:00"
+                                
+                              // Ambil jam dari format "1900-01-01 10:34:00.000"
+                                const formattedTime = patient.jam.split(' ')[1].slice(0, 5);
+
+                                // Ambil tanggal dari format "2025-11-12 00:00:00.000"
+                                const formattedDate = patient.tanggal.split(' ')[0];
+
+                                // Set ke elemen form
+                                $(target).find('#tanggal_masuk_edit').val(formattedDate);
+                                $(target).find('#jam_masuk_edit').val(formattedTime);
                                 $(target).find('input[name="tgl_cppt"]').val(tanggalData);
+                                $(target).find('input[name="urut_cppt"]').val(urutData);
+                                
                                 $(target).find('input[name="urut_cppt"]').val(urutData);
                                 $(target).find('input[name="urut_total_cppt"]').val(urutTotalData);
                                 $(target).find('input[name="unit_cppt"]').val(unitData);

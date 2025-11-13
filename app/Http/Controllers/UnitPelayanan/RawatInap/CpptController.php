@@ -125,11 +125,10 @@ class CpptController extends Controller
                 'cppt.urut' => $request->urut,
             ];
 
-            
-
             $getCppt = $this->buildCpptQuery($additionalWheres)->get();
             $cppt = $this->transformCpptData($getCppt, false); // includeNames = false
 
+         
             if (count($cppt) < 1) {
                 return response()->json([
                     'status' => 'error',
@@ -939,26 +938,30 @@ class CpptController extends Controller
             // Get kunjungan using private function
             $kunjungan = $this->getKunjungan($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
 
+           
             $tglCpptReq = $request->tgl_cppt;
             $urutCpptReq = $request->urut_total_cppt;
             $unitCpptReq = $request->unit_cppt;
             $noTransaksiCpptReq = $request->no_transaksi;
 
+
+           
             // Update anamnesis
             MrAnamnesis::where('kd_pasien', $kunjungan->kd_pasien)
                 ->where('kd_unit', $unitCpptReq)
-                ->where('tgl_masuk', $tglCpptReq)
+                // ->where('tgl_masuk', $tgl_masuk)
                 ->where('urut_cppt', $urutCpptReq)
                 ->update([
                     'anamnesis' => $request->anamnesis,
                 ]);
+             
 
-            // Update konpas
             $konpas = MrKonpas::where('kd_pasien', $kunjungan->kd_pasien)
                 ->where('kd_unit', $unitCpptReq)
-                ->where('tgl_masuk', $tglCpptReq)
+                // ->where('tgl_masuk', $tgl_masuk)
                 ->where('urut_cppt', $urutCpptReq)
                 ->first();
+            
 
             // Update tanda vital
             $tandaVitalReq = $request->tanda_vital;
@@ -970,11 +973,15 @@ class CpptController extends Controller
                     ->where('id_kondisi', $item->id_kondisi)
                     ->update([
                         'hasil' => $tandaVitalReq[$i],
+                        
                     ]);
 
                 $i++;
             }
 
+       
+
+            
             // Update CPPT
             $cppt = Cppt::where('no_transaksi', $kunjungan->no_transaksi)
                 ->where('kd_kasir', $kunjungan->kd_kasir)
@@ -982,6 +989,10 @@ class CpptController extends Controller
                 ->where('urut_total', $urutCpptReq)
                 ->first();
 
+         
+        
+
+            $new_tgl = date('Y-m-d H:i:s', strtotime($request->tanggal_masuk));
             $cpptDataUpdate = [
                 'obyektif' => $request->data_objektif,
                 'planning' => $request->planning,
@@ -994,8 +1005,11 @@ class CpptController extends Controller
                 'menjalar_id' => $request->menjalar,
                 'jenis_nyeri_id' => $request->jenis_nyeri,
                 'pemeriksaan_fisik' => $request->pemeriksaan_fisik,
+                'tanggal' => $new_tgl,
+                'jam' => date('H:i:s', strtotime($request->jam_masuk_edit))
             ];
 
+          
             Cppt::where('no_transaksi', $kunjungan->no_transaksi)
                 ->where('kd_kasir', $kunjungan->kd_kasir)
                 ->where('tanggal', $tglCpptReq)
@@ -1009,12 +1023,13 @@ class CpptController extends Controller
             $cpptTL = [
                 'tindak_lanjut_code' => $tindakLanjut,
                 'tindak_lanjut_name' => $tindakLanjutLabel,
+                'tanggal' => $new_tgl
             ];
 
             CpptTindakLanjut::where('kd_kasir', $cppt->kd_kasir)
                 ->where('no_transaksi', $cppt->no_transaksi)
                 ->where('tanggal', $cppt->tanggal)
-                ->where('jam', $cppt->jam)
+                ->where('jam', operator: $cppt->jam)
                 ->update($cpptTL);
 
             // Update diagnosis
@@ -1023,7 +1038,7 @@ class CpptController extends Controller
             // Delete old diagnose
             CpptPenyakit::where('no_transaksi', $noTransaksiCpptReq)
                 ->where('kd_unit', $unitCpptReq)
-                ->where('tgl_cppt', $tglCpptReq)
+                ->where('tgl_cppt', $tgl_masuk)
                 ->where('urut_cppt', $urutCpptReq)
                 ->delete();
 
@@ -1031,7 +1046,7 @@ class CpptController extends Controller
                 $diagInsertData = [
                     'no_transaksi' => $kunjungan->no_transaksi,
                     'kd_unit' => $kunjungan->kd_unit,
-                    'tgl_cppt' => $cppt->tanggal,
+                    'tgl_cppt' => $new_tgl,
                     'urut_cppt' => $cppt->urut_total,
                     'kd_penyakit' => null,
                     'nama_penyakit' => $diag,
@@ -1268,7 +1283,7 @@ class CpptController extends Controller
             ->leftJoin('mr_anamnesis as a', function ($j) {
                 $j->on('a.kd_pasien', '=', 't.kd_pasien')
                     ->on('a.kd_unit', '=', 't.kd_unit')
-                    ->on('a.tgl_masuk', '=', 'cppt.tanggal')
+                    // ->on('a.tgl_masuk', '=', 'cppt.tanggal')
                     ->on('a.urut_cppt', '=', 'cppt.urut_total');
             })
             // tindak lanjut (KONSISTEN: gunakan urut_total)
@@ -1282,7 +1297,7 @@ class CpptController extends Controller
             ->leftJoin('mr_konpas as kp', function ($j) {
                 $j->on('kp.kd_pasien', '=', 't.kd_pasien')
                     ->on('kp.kd_unit', '=', 't.kd_unit')
-                    ->on('kp.tgl_masuk', '=', 'cppt.tanggal')
+                    // ->on('kp.tgl_masuk', '=', 'cppt.tanggal')
                     ->on('kp.urut_cppt', '=', 'cppt.urut_total');
             })
             ->leftJoin('mr_konpasdtl as kpd', 'kpd.id_konpas', '=', 'kp.id_konpas')
@@ -1291,7 +1306,7 @@ class CpptController extends Controller
             ->leftJoin('cppt_penyakit as cp', function ($j) {
                 $j->on('cp.kd_unit', '=', 't.kd_unit')
                     ->on('cp.no_transaksi', '=', 'cppt.no_transaksi')
-                    ->on('cp.tgl_cppt', '=', 'cppt.tanggal')
+                    // ->on('cp.tgl_cppt', '=', 'cppt.tanggal')
                     ->on('cp.urut_cppt', '=', 'cppt.urut_total');
             })
             ->leftJoin('penyakit as p', 'p.kd_penyakit', '=', 'cp.kd_penyakit')
@@ -1321,6 +1336,8 @@ class CpptController extends Controller
             return [
                 'kd_pasien' => $item->first()->kd_pasien,
                 'no_transaksi' => $item->first()->no_transaksi,
+                'jam_masuk' => $item->first()->jam,
+                'tanggal_masuk' => $item->first()->tanggal,
                 'kd_kasir' => $item->first()->kd_kasir,
                 'kd_unit' => $item->first()->kd_unit,
                 'nama_unit' => $item->first()->nama_unit,
