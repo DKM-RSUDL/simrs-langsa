@@ -32,7 +32,7 @@
                 <p class="m-0">{!! nl2br(e($item->konsul)) !!}</p>
             </td>
             <td>
-                <p class="m-0">{{ $item->respon_konsul }}</p>
+                <p class="m-0">{!! nl2br(e(value: $item->respon_konsul)) !!}</p>
             </td>
             <td class="d-flex justify-content-center align-items-center" colspan="{{ $item->status == 1 ? 3 : 0 }}">
                 @php
