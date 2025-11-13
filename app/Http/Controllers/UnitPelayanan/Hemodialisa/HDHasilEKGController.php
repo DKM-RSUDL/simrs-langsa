@@ -11,6 +11,7 @@ use App\Models\Kunjungan;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class HDHasilEKGController extends Controller
 {
@@ -310,5 +311,43 @@ class HDHasilEKGController extends Controller
         }
 
         return $dataMedis;
+    }
+
+
+    // -----------------------------------------------------------------
+    // --- FUNGSI BARU DIMULAI DARI SINI ---
+    // -----------------------------------------------------------------
+
+    /**
+     * Tampilkan PDF Hasil EKG Pasien
+     */
+    public function printPDF($kd_pasien, $tgl_masuk, $urut_masuk, $id)
+    {
+        // 1. Ambil Data Medis (helper)
+        $dataMedis = $this->getDataMedis($kd_pasien, $tgl_masuk, $urut_masuk);
+
+        // 2. Ambil Data EKG
+        $hasilEkg = RmeHdEkg::where('kd_pasien', $kd_pasien)
+            ->where('kd_unit', $this->kdUnitDef_)
+            ->findOrFail($id);
+
+        // 3. Ambil data Perawat dan Dokter
+        //    (Ini BEDA dari show, kita ambil data spesifik, bukan list)
+        $perawat = HrdKaryawan::where('kd_karyawan', $hasilEkg->kd_perawat)->first();
+        $dokter = Dokter::where('kd_dokter', $hasilEkg->kd_dokter)->first();
+
+        // 4. Buat PDF
+        $pdf = Pdf::loadView('unit-pelayanan.hemodialisa.pelayanan.hasil-ekg.print', compact(
+            'dataMedis',
+            'hasilEkg',
+            'perawat',
+            'dokter'
+        ));
+
+        // Atur ukuran kertas
+        $pdf->setPaper('a4', 'portrait');
+
+        // 5. Tampilkan PDF di browser
+        return $pdf->stream('hasil-ekg-hd-' . $dataMedis->pasien->nama . '.pdf');
     }
 }
