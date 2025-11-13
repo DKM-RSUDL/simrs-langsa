@@ -63,9 +63,11 @@
         </tr>
     @endforeach
 
+    @php
+        $konsulData = $konsulIGD ?? [];
+    @endphp
 
-
-    @foreach ($konsulIGD as $konsul)
+    @foreach ($konsulData as $konsul)
         <tr>
             <td>
                 {{ date('d M Y', strtotime($konsul->tgl_konsul)) }}
