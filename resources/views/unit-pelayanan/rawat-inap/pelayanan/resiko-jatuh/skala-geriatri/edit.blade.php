@@ -884,9 +884,7 @@
                 $('#geriatri_skorTotal').text(score);
                 $('#geriatri_skorTotalInput').val(score);
 
-                $('#geriatri_intervensiRR').hide();
-                $('#geriatri_intervensiRS').hide();
-                $('#geriatri_intervensiRT').hide();
+                $('#geriatri_intervensiRR, #geriatri_intervensiRS, #geriatri_intervensiRT').hide();
 
                 let kategoriRisiko = '';
 
@@ -898,17 +896,23 @@
                         kategoriRisiko = 'Risiko Rendah';
                         $('#geriatri_kategoriResiko').text(kategoriRisiko).removeClass('text-warning text-danger')
                             .addClass('text-success');
+                        // RR only
                         $('#geriatri_intervensiRR').show();
                     } else if (score >= 6 && score <= 16) {
                         kategoriRisiko = 'Risiko Sedang';
                         $('#geriatri_kategoriResiko').text(kategoriRisiko).removeClass('text-success text-danger')
                             .addClass('text-warning');
+                        // RS + RR
                         $('#geriatri_intervensiRS').show();
+                        $('#geriatri_intervensiRR').show();
                     } else if (score >= 17 && score <= 30) {
                         kategoriRisiko = 'Risiko Tinggi';
                         $('#geriatri_kategoriResiko').text(kategoriRisiko).removeClass('text-success text-warning')
                             .addClass('text-danger');
+                        // RT + RS + RR
                         $('#geriatri_intervensiRT').show();
+                        $('#geriatri_intervensiRS').show();
+                        $('#geriatri_intervensiRR').show();
                     } else {
                         kategoriRisiko = 'Skor Tidak Valid';
                         $('#geriatri_kategoriResiko').text(kategoriRisiko).removeClass(
@@ -921,18 +925,19 @@
 
             // Function untuk menampilkan intervensi berdasarkan kategori risiko
             function tampilkanIntervensi(kategori) {
-                // Sembunyikan semua intervensi terlebih dahulu
-                $('#geriatri_intervensiRR').hide();
-                $('#geriatri_intervensiRS').hide();
-                $('#geriatri_intervensiRT').hide();
+                // Sembunyikan semua terlebih dahulu
+                $('#geriatri_intervensiRR, #geriatri_intervensiRS, #geriatri_intervensiRT').hide();
 
-                // Tampilkan intervensi sesuai kategori
+                // Tampilkan kumulatif berdasarkan kategori
                 if (kategori === 'Risiko Rendah') {
                     $('#geriatri_intervensiRR').show();
                 } else if (kategori === 'Risiko Sedang') {
                     $('#geriatri_intervensiRS').show();
+                    $('#geriatri_intervensiRR').show();
                 } else if (kategori === 'Risiko Tinggi') {
                     $('#geriatri_intervensiRT').show();
+                    $('#geriatri_intervensiRS').show();
+                    $('#geriatri_intervensiRR').show();
                 }
             }
 

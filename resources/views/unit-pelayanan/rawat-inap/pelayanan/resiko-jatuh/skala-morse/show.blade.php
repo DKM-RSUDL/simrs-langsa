@@ -25,9 +25,9 @@
                             </div>
                         </div>
                         <div class="col-md-4">
-                            <label class="form-label fw-bold">Hari ke</label>
+                            <label class="form-label fw-bold">Jam</label>
                             <div class="form-control-plaintext bg-light p-2 rounded">
-                                {{ $skalaMorse->hari_ke }}
+                                {{ $skalaMorse->jam_implementasi }}
                             </div>
                         </div>
                         <div class="col-md-4">
