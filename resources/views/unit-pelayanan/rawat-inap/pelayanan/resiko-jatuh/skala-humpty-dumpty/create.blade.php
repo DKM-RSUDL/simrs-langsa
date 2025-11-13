@@ -36,9 +36,9 @@
                                     value="{{ old('tanggal_implementasi', now()->format('Y-m-d')) }}" required>
                             </div>
                             <div class="col-md-4">
-                                <label class="form-label">Hari ke<span class="text-danger">*</span></label>
-                                <input type="number" class="form-control" id="hari_ke" name="hari_ke"
-                                    value="{{ old('hari_ke') }}" min="1" placeholder="Masukkan hari ke..." required>
+                                <label class="form-label">Jam<span class="text-danger">*</span></label>
+                                <input type="time" class="form-control" name="jam_implementasi" id="jam_implementasi"
+                                    value="{{ old('jam_implementasi', now()->format('H:i')) }}" required>
                             </div>
                             <div class="col-md-4">
                                 <label for="shift" class="form-label">Shift</label>
@@ -779,6 +779,7 @@
             const currentTime = now.toTimeString().split(' ')[0].substring(0, 5);
 
             $('#tanggal_implementasi').val(currentDate);
+            $('#jam_implementasi').val(currentTime);
         });
     </script>
 @endpush

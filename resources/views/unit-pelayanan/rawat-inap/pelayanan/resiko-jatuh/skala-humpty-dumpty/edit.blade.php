@@ -40,10 +40,9 @@
                                     required>
                             </div>
                             <div class="col-md-4">
-                                <label class="form-label">Hari ke<span class="text-danger">*</span></label>
-                                <input type="number" class="form-control" id="hari_ke" name="hari_ke"
-                                    value="{{ old('hari_ke', $dataHumptyDumpty->hari_ke) }}" min="1"
-                                    placeholder="Masukkan hari ke..." required>
+                                <label for="jam_implementasi" class="form-label">Jam Implementasi</label>
+                                <input type="time" class="form-control" name="jam_implementasi" id="jam_implementasi"
+                                    value="{{ date('H:i', strtotime($dataHumptyDumpty->jam_implementasi)) }}" required>
                             </div>
                             <div class="col-md-4">
                                 <label for="shift" class="form-label">Shift</label>
@@ -819,8 +818,8 @@
                         name: 'Tanggal Implementasi'
                     },
                     {
-                        element: $('#hari_ke'),
-                        name: 'Hari ke'
+                        element: $('#jam_implementasi'),
+                        name: 'Jam Implementasi'
                     },
                     {
                         element: $('#shift'),

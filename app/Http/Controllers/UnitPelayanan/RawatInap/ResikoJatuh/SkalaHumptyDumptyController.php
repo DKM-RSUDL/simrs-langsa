@@ -65,7 +65,7 @@ class SkalaHumptyDumptyController extends Controller
 
         // Urutkan berdasarkan tanggal terbaru
         $dataHumptyDumpty = $query->orderBy('tanggal_implementasi', 'desc')
-            ->orderBy('hari_ke', 'desc')
+            ->orderBy('jam_implementasi', 'desc')
             ->get();
 
         return view('unit-pelayanan.rawat-inap.pelayanan.resiko-jatuh.skala-humpty-dumpty.index', compact(
@@ -99,7 +99,7 @@ class SkalaHumptyDumptyController extends Controller
             ->whereDate('tgl_masuk', $tgl_masuk)
             ->where('urut_masuk', $urut_masuk)
             ->orderBy('tanggal_implementasi', 'desc')
-            ->orderBy('hari_ke', 'desc')
+            ->orderBy('jam_implementasi', 'desc')
             ->first();
 
         return view('unit-pelayanan.rawat-inap.pelayanan.resiko-jatuh.skala-humpty-dumpty.create', compact(
@@ -113,7 +113,7 @@ class SkalaHumptyDumptyController extends Controller
         // Validasi input
         $request->validate([
             'tanggal_implementasi' => 'required|date',
-            'hari_ke' => 'required|integer|min:1',
+            'jam_implementasi' => 'required',
             'shift' => 'required|in:PG,SI,ML'
         ]);
 
@@ -141,7 +141,7 @@ class SkalaHumptyDumptyController extends Controller
                 'urut_masuk' => $urut_masuk,
                 'user_created' => Auth::id(),
                 'tanggal_implementasi' => $request->tanggal_implementasi,
-                'hari_ke' => $request->hari_ke,
+                'jam_implementasi' => $request->jam_implementasi,
                 'shift' => $request->shift,
             ];
 
@@ -202,7 +202,7 @@ class SkalaHumptyDumptyController extends Controller
                         ->whereNotNull('penggunaan_medikamentosa')
                         ->where('total_skor', '>', 0)
                         ->orderBy('tanggal_implementasi', 'desc')
-                        ->orderBy('hari_ke', 'desc')
+                        ->orderBy('jam_implementasi', 'desc')
                         ->first();
 
                     if ($lastAssessment) {
@@ -313,7 +313,7 @@ class SkalaHumptyDumptyController extends Controller
         // Validasi input
         $request->validate([
             'tanggal_implementasi' => 'required|date',
-            'hari_ke' => 'required|integer|min:1',
+            'jam_implementasi' => 'required',
             'shift' => 'required|in:PG,SI,ML'
         ]);
 
@@ -358,7 +358,7 @@ class SkalaHumptyDumptyController extends Controller
 
             // Update data dasar
             $dataHumptyDumpty->tanggal_implementasi = $request->tanggal_implementasi;
-            $dataHumptyDumpty->hari_ke = $request->hari_ke;
+            $dataHumptyDumpty->jam_implementasi = $request->jam_implementasi;
             $dataHumptyDumpty->shift = $request->shift;
 
             // Logika penilaian yang sama seperti store
@@ -420,7 +420,7 @@ class SkalaHumptyDumptyController extends Controller
                         ->whereNotNull('penggunaan_medikamentosa')
                         ->where('total_skor', '>', 0)
                         ->orderBy('tanggal_implementasi', 'desc')
-                        ->orderBy('hari_ke', 'desc')
+                        ->orderBy('jam_implementasi', 'desc')
                         ->first();
 
                     if ($lastAssessment) {
