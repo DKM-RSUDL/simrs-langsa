@@ -14,12 +14,19 @@
                     class="text-muted">{{ date('H:i', strtotime($item->jam_konsul)) }}</small>
             </td>
             <td>{{ $item->dokterPengirim->nama }}<br></td>
-            <td>{{ $item->spesialis->spesialisasi }}</td>
+            {{-- <td>{{ $item->spesialis->spesialisasi }}</td> --}}
+           
             <td>
-                <p class="m-0">{{ $item->catatan }}</p>
+                <p class="m-0">{!! nl2br(e($item->catatan)) !!}</p>
             </td>
+
+             <td>
+                <p class="m-0">{!! nl2br(e($item->konsul)) !!}</p>
+            </td>
+
+
             <td>
-                <p class="m-0">{{ $item->respon_konsul }}</p>
+                <p class="m-0">{!! nl2br(e($item->respon_konsul)) !!}</p>
             </td>
             <td class="d-flex justify-content-center align-items-center" colspan="{{ $item->status == 1 ? 3 : 0 }}">
                 @php
@@ -63,9 +70,11 @@
         </tr>
     @endforeach
 
+    @php
+        $konsulData = $konsulIGD ?? [];
+    @endphp
 
-
-    @foreach ($konsulIGD as $konsul)
+    @foreach ($konsulData as $konsul)
         <tr>
             <td>
                 {{ date('d M Y', strtotime($konsul->tgl_konsul)) }}

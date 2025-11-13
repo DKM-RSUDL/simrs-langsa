@@ -188,7 +188,7 @@
                             <h5 class="section-title">1. Data masuk</h5>
 
                             <div class="form-group">
-                                <label style="min-width: 200px;">Tanggal Dan Jam Masuk</label>
+                                <label style="min-width: 200px;">Tanggal Dan Jam Pengisian</label>
                                 <div class="d-flex gap-3" style="width: 100%;">
                                     <input type="date" class="form-control" name="tanggal_masuk"
                                         id="tanggal_masuk"
@@ -311,7 +311,7 @@
                                     <div class="col-md-6">
                                         <label class="form-label">Jari Kiri</label>
                                         <div class="input-group mb-2">
-                                            <input type="file" 
+                                            <input type="file"
                                                 class="form-control @error('sidik_jari_ibu_kiri') is-invalid @enderror"
                                                 name="sidik_jari_ibu_kiri">
                                         </div>
@@ -333,7 +333,7 @@
                                     <div class="col-md-6">
                                         <label class="form-label">Jari Kanan</label>
                                         <div class="input-group mb-2">
-                                            <input type="file" 
+                                            <input type="file"
                                                 class="form-control @error('sidik_jari_ibu_kanan') is-invalid @enderror"
                                                 name="sidik_jari_ibu_kanan">
                                         </div>
@@ -361,7 +361,7 @@
                                     <div class="col-md-6">
                                         <label class="form-label">Jari Kiri</label>
                                         <div class="input-group mb-2">
-                                            <input type="file" 
+                                            <input type="file"
                                                 class="form-control @error('sidik_jari_bayi_kiri') is-invalid @enderror"
                                                 name="sidik_jari_bayi_kiri">
                                         </div>
@@ -383,7 +383,7 @@
                                     <div class="col-md-6">
                                         <label class="form-label">Jari Kanan</label>
                                         <div class="input-group mb-2">
-                                            <input type="file" 
+                                            <input type="file"
                                                 class="form-control @error('sidik_jari_bayi_kanan') is-invalid @enderror"
                                                 name="sidik_jari_bayi_kanan">
                                         </div>
@@ -2229,7 +2229,7 @@
                                         {{ isset($asesmen->rmeAsesmenPerinatologyStatusFungsional) && $asesmen->rmeAsesmenPerinatologyStatusFungsional->kesimpulan_fungsional ? $asesmen->rmeAsesmenPerinatologyStatusFungsional->kesimpulan_fungsional : 'Pilih skala aktivitas harian terlebih dahulu' }}
                                     </div>
                                 </div>
-                                
+
                                 <!-- Hidden fields untuk menyimpan data ADL -->
                                 <input type="hidden" id="adl_makan" name="adl_makan" value="{{ isset($asesmen->rmeAsesmenPerinatologyStatusFungsional) ? $asesmen->rmeAsesmenPerinatologyStatusFungsional->makan : '' }}">
                                 <input type="hidden" id="adl_berjalan" name="adl_berjalan" value="{{ isset($asesmen->rmeAsesmenPerinatologyStatusFungsional) ? $asesmen->rmeAsesmenPerinatologyStatusFungsional->berjalan : '' }}">

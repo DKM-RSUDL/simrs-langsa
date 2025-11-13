@@ -181,11 +181,11 @@
                 z-index: 1;
             }
 
-            .select2-dokter-tambahan + .select2-container {
+            .select2-dokter-tambahan+.select2-container {
                 width: calc(100% - 42px) !important;
             }
 
-            .select2-petugas-terkait + .select2-container {
+            .select2-petugas-terkait+.select2-container {
                 width: calc(100% - 42px) !important;
             }
 
@@ -245,7 +245,7 @@
                                         <select name="dpjp_utama" class="form-select select2" style="width: 100%">
                                             <option value="">--Pilih--</option>
                                             @foreach ($dokter as $dok)
-                                                <option value="{{ $dok->kd_dokter }}" 
+                                                <option value="{{ $dok->kd_dokter }}"
                                                     {{ $mppData->dpjp_utama == $dok->kd_dokter ? 'selected' : '' }}>
                                                     {{ $dok->nama }}
                                                 </option>
@@ -259,7 +259,7 @@
                                     <div class="mb-3">
                                         <label class="form-label">Dokter Tambahan</label>
                                         <div id="dokter-tambahan-container">
-                                            @if($mppData->dokter_tambahan)
+                                            @if ($mppData->dokter_tambahan)
                                                 @php
                                                     $dokterTambahanArray = json_decode($mppData->dokter_tambahan, true);
                                                     if (!is_array($dokterTambahanArray)) {
@@ -267,20 +267,22 @@
                                                         $dokterTambahanArray = [$mppData->dokter_tambahan];
                                                     }
                                                 @endphp
-                                                @foreach($dokterTambahanArray as $index => $dokterTambahan)
+                                                @foreach ($dokterTambahanArray as $index => $dokterTambahan)
                                                     <div class="dokter-tambahan-item mb-2" data-index="{{ $index }}">
                                                         <div class="input-group">
-                                                            <select name="dokter_tambahan[]" class="form-select select2-dokter-tambahan">
+                                                            <select name="dokter_tambahan[]"
+                                                                class="form-select select2-dokter-tambahan">
                                                                 <option value="">--Pilih--</option>
                                                                 @foreach ($dokter as $dok)
-                                                                    <option value="{{ $dok->kd_dokter }}" 
+                                                                    <option value="{{ $dok->kd_dokter }}"
                                                                         {{ $dokterTambahan == $dok->kd_dokter ? 'selected' : '' }}>
                                                                         {{ $dok->nama }}
                                                                     </option>
                                                                 @endforeach
                                                             </select>
-                                                            <button type="button" class="btn btn-outline-danger remove-dokter-tambahan" 
-                                                                    {{ $index == 0 ? 'style=display:none;' : '' }}>
+                                                            <button type="button"
+                                                                class="btn btn-outline-danger remove-dokter-tambahan"
+                                                                {{ $index == 0 ? 'style=display:none;' : '' }}>
                                                                 <i class="bi bi-trash"></i>
                                                             </button>
                                                         </div>
@@ -289,20 +291,25 @@
                                             @else
                                                 <div class="dokter-tambahan-item mb-2" data-index="0">
                                                     <div class="input-group">
-                                                        <select name="dokter_tambahan[]" class="form-select select2-dokter-tambahan">
+                                                        <select name="dokter_tambahan[]"
+                                                            class="form-select select2-dokter-tambahan">
                                                             <option value="">--Pilih--</option>
                                                             @foreach ($dokter as $dok)
-                                                                <option value="{{ $dok->kd_dokter }}">{{ $dok->nama }}</option>
+                                                                <option value="{{ $dok->kd_dokter }}">{{ $dok->nama }}
+                                                                </option>
                                                             @endforeach
                                                         </select>
-                                                        <button type="button" class="btn btn-outline-danger remove-dokter-tambahan" style="display: none;">
+                                                        <button type="button"
+                                                            class="btn btn-outline-danger remove-dokter-tambahan"
+                                                            style="display: none;">
                                                             <i class="bi bi-trash"></i>
                                                         </button>
                                                     </div>
                                                 </div>
                                             @endif
                                         </div>
-                                        <button type="button" class="btn btn-outline-primary btn-sm mt-2" id="add-dokter-tambahan">
+                                        <button type="button" class="btn btn-outline-primary btn-sm mt-2"
+                                            id="add-dokter-tambahan">
                                             <i class="bi bi-plus"></i> Tambah Dokter
                                         </button>
                                     </div>
@@ -313,7 +320,7 @@
                                     <div class="mb-3">
                                         <label class="form-label">Petugas Terkait</label>
                                         <div id="petugas-terkait-container">
-                                            @if($mppData->petugas_terkait)
+                                            @if ($mppData->petugas_terkait)
                                                 @php
                                                     $petugasTerkaitArray = json_decode($mppData->petugas_terkait, true);
                                                     if (!is_array($petugasTerkaitArray)) {
@@ -321,20 +328,23 @@
                                                         $petugasTerkaitArray = [$mppData->petugas_terkait];
                                                     }
                                                 @endphp
-                                                @foreach($petugasTerkaitArray as $index => $petugasTerkait)
-                                                    <div class="petugas-terkait-item mb-2" data-index="{{ $index }}">
+                                                @foreach ($petugasTerkaitArray as $index => $petugasTerkait)
+                                                    <div class="petugas-terkait-item mb-2"
+                                                        data-index="{{ $index }}">
                                                         <div class="input-group">
-                                                            <select name="petugas_terkait[]" class="form-select select2-petugas-terkait">
+                                                            <select name="petugas_terkait[]"
+                                                                class="form-select select2-petugas-terkait">
                                                                 <option value="">--Pilih--</option>
                                                                 @foreach ($perawat as $prwt)
-                                                                    <option value="{{ $prwt->kd_karyawan }}" 
+                                                                    <option value="{{ $prwt->kd_karyawan }}"
                                                                         {{ $petugasTerkait == $prwt->kd_karyawan ? 'selected' : '' }}>
                                                                         {{ "$prwt->gelar_depan $prwt->nama $prwt->gelar_belakang" }}
                                                                     </option>
                                                                 @endforeach
                                                             </select>
-                                                            <button type="button" class="btn btn-outline-danger remove-petugas-terkait" 
-                                                                    {{ $index == 0 ? 'style=display:none;' : '' }}>
+                                                            <button type="button"
+                                                                class="btn btn-outline-danger remove-petugas-terkait"
+                                                                {{ $index == 0 ? 'style=display:none;' : '' }}>
                                                                 <i class="bi bi-trash"></i>
                                                             </button>
                                                         </div>
@@ -343,7 +353,8 @@
                                             @else
                                                 <div class="petugas-terkait-item mb-2" data-index="0">
                                                     <div class="input-group">
-                                                        <select name="petugas_terkait[]" class="form-select select2-petugas-terkait">
+                                                        <select name="petugas_terkait[]"
+                                                            class="form-select select2-petugas-terkait">
                                                             <option value="">--Pilih--</option>
                                                             @foreach ($perawat as $prwt)
                                                                 <option value="{{ $prwt->kd_karyawan }}">
@@ -351,14 +362,17 @@
                                                                 </option>
                                                             @endforeach
                                                         </select>
-                                                        <button type="button" class="btn btn-outline-danger remove-petugas-terkait" style="display: none;">
+                                                        <button type="button"
+                                                            class="btn btn-outline-danger remove-petugas-terkait"
+                                                            style="display: none;">
                                                             <i class="bi bi-trash"></i>
                                                         </button>
                                                     </div>
                                                 </div>
                                             @endif
                                         </div>
-                                        <button type="button" class="btn btn-outline-success btn-sm mt-2" id="add-petugas-terkait">
+                                        <button type="button" class="btn btn-outline-success btn-sm mt-2"
+                                            id="add-petugas-terkait">
                                             <i class="bi bi-plus"></i> Tambah Petugas
                                         </button>
                                     </div>
@@ -596,6 +610,13 @@
                                                 <label class="criteria-label" for="t6">Pasien Pulang Sembuh</label>
                                             </div>
                                             <div class="criteria-item">
+                                                <input type="checkbox" name="terminasi[]" value="pulang_perbaikan"
+                                                    class="criteria-checkbox terminasi-checkbox" id="t6"
+                                                    {{ $mppData->pulang_sembuh ? 'checked' : '' }}>
+                                                <label class="criteria-label" for="t6">Pasien Pulang
+                                                    Perbaikan</label>
+                                            </div>
+                                            <div class="criteria-item">
                                                 <input type="checkbox" name="terminasi[]" value="rujuk"
                                                     class="criteria-checkbox terminasi-checkbox" id="t7"
                                                     {{ $mppData->rujuk ? 'checked' : '' }}>
@@ -643,12 +664,12 @@
 
             let dokterTambahanIndex = document.querySelectorAll('.dokter-tambahan-item').length;
             let petugasTerkaitIndex = document.querySelectorAll('.petugas-terkait-item').length;
-            
+
             // Store doctor options
             const doctorOptions = [];
             @foreach ($dokter as $dok)
                 doctorOptions.push({
-                    value: '{{ addslashes($dok->kd_dokter) }}', 
+                    value: '{{ addslashes($dok->kd_dokter) }}',
                     text: '{{ addslashes($dok->nama) }}'
                 });
             @endforeach
@@ -657,7 +678,7 @@
             const perawatOptions = [];
             @foreach ($perawat as $prwt)
                 perawatOptions.push({
-                    value: '{{ addslashes($prwt->kd_karyawan) }}', 
+                    value: '{{ addslashes($prwt->kd_karyawan) }}',
                     text: '{{ addslashes("$prwt->gelar_depan $prwt->nama $prwt->gelar_belakang") }}'
                 });
             @endforeach
@@ -697,22 +718,22 @@
             function reinitializeExistingSelects() {
                 $('.select2-dokter-tambahan').each(function() {
                     const currentValue = $(this).val();
-                    
+
                     if ($(this).hasClass('select2-hidden-accessible')) {
                         $(this).select2('destroy');
                     }
-                    
+
                     $(this).html(buildDoctorOptionsHtml(currentValue));
                     initializeSelect2(this);
                 });
 
                 $('.select2-petugas-terkait').each(function() {
                     const currentValue = $(this).val();
-                    
+
                     if ($(this).hasClass('select2-hidden-accessible')) {
                         $(this).select2('destroy');
                     }
-                    
+
                     $(this).html(buildPerawatOptionsHtml(currentValue));
                     initializeSelect2(this);
                 });
@@ -724,7 +745,7 @@
                     theme: 'bootstrap-5',
                     placeholder: '--Pilih--'
                 });
-                
+
                 setTimeout(function() {
                     reinitializeExistingSelects();
                 }, 100);
@@ -736,7 +757,7 @@
                 const newItem = document.createElement('div');
                 newItem.className = 'dokter-tambahan-item mb-2';
                 newItem.setAttribute('data-index', dokterTambahanIndex);
-                
+
                 newItem.innerHTML = `
                     <div class="input-group">
                         <select name="dokter_tambahan[]" class="form-select select2-dokter-tambahan">
@@ -747,12 +768,12 @@
                         </button>
                     </div>
                 `;
-                
+
                 container.appendChild(newItem);
-                
+
                 const newSelect = newItem.querySelector('select');
                 initializeSelect2(newSelect);
-                
+
                 dokterTambahanIndex++;
                 updateRemoveButtons();
             });
@@ -763,7 +784,7 @@
                 const newItem = document.createElement('div');
                 newItem.className = 'petugas-terkait-item mb-2';
                 newItem.setAttribute('data-index', petugasTerkaitIndex);
-                
+
                 newItem.innerHTML = `
                     <div class="input-group">
                         <select name="petugas_terkait[]" class="form-select select2-petugas-terkait">
@@ -774,40 +795,46 @@
                         </button>
                     </div>
                 `;
-                
+
                 container.appendChild(newItem);
-                
+
                 const newSelect = newItem.querySelector('select');
                 initializeSelect2(newSelect);
-                
+
                 petugasTerkaitIndex++;
                 updateRemoveButtons();
             });
 
             // Remove handlers
             document.addEventListener('click', function(e) {
-                if (e.target.classList.contains('remove-dokter-tambahan') || e.target.closest('.remove-dokter-tambahan')) {
-                    const button = e.target.classList.contains('remove-dokter-tambahan') ? e.target : e.target.closest('.remove-dokter-tambahan');
+                if (e.target.classList.contains('remove-dokter-tambahan') || e.target.closest(
+                        '.remove-dokter-tambahan')) {
+                    const button = e.target.classList.contains('remove-dokter-tambahan') ? e.target : e
+                        .target.closest('.remove-dokter-tambahan');
                     const item = button.closest('.dokter-tambahan-item');
-                    
+
                     const select = item.querySelector('select');
-                    if (typeof $.fn.select2 !== 'undefined' && $(select).hasClass('select2-hidden-accessible')) {
+                    if (typeof $.fn.select2 !== 'undefined' && $(select).hasClass(
+                            'select2-hidden-accessible')) {
                         $(select).select2('destroy');
                     }
-                    
+
                     item.remove();
                     updateRemoveButtons();
                 }
 
-                if (e.target.classList.contains('remove-petugas-terkait') || e.target.closest('.remove-petugas-terkait')) {
-                    const button = e.target.classList.contains('remove-petugas-terkait') ? e.target : e.target.closest('.remove-petugas-terkait');
+                if (e.target.classList.contains('remove-petugas-terkait') || e.target.closest(
+                        '.remove-petugas-terkait')) {
+                    const button = e.target.classList.contains('remove-petugas-terkait') ? e.target : e
+                        .target.closest('.remove-petugas-terkait');
                     const item = button.closest('.petugas-terkait-item');
-                    
+
                     const select = item.querySelector('select');
-                    if (typeof $.fn.select2 !== 'undefined' && $(select).hasClass('select2-hidden-accessible')) {
+                    if (typeof $.fn.select2 !== 'undefined' && $(select).hasClass(
+                            'select2-hidden-accessible')) {
                         $(select).select2('destroy');
                     }
-                    
+
                     item.remove();
                     updateRemoveButtons();
                 }

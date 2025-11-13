@@ -124,7 +124,7 @@ class SkalaMorseController extends Controller
         // Validasi input
         $request->validate([
             'tanggal' => 'required|date',
-            'hari_ke' => 'required|integer|min:1',
+            'jam' => 'required',
             'shift' => 'required|in:PG,SI,ML'
         ]);
 
@@ -151,7 +151,7 @@ class SkalaMorseController extends Controller
                 'urut_masuk' => $urut_masuk,
                 'user_create' => Auth::id(),
                 'tanggal' => $request->tanggal,
-                'jam' => now()->format('H:i:s'),
+                'jam' => $request->jam,
                 'hari_ke' => $request->hari_ke,
                 'shift' => $request->shift,
             ];
@@ -208,20 +208,10 @@ class SkalaMorseController extends Controller
                 }
             }
 
-            // Tambahkan intervensi berdasarkan kategori resiko
-            if (isset($data['kategori_resiko'])) {
-                if ($data['kategori_resiko'] == 'RR' && $request->has('intervensi_rr')) {
-                    $data['intervensi_rr'] = $request->intervensi_rr;
-                }
-
-                if ($data['kategori_resiko'] == 'RS' && $request->has('intervensi_rs')) {
-                    $data['intervensi_rs'] = $request->intervensi_rs;
-                }
-
-                if ($data['kategori_resiko'] == 'RT' && $request->has('intervensi_rt')) {
-                    $data['intervensi_rt'] = $request->intervensi_rt;
-                }
-            }
+            // Simpan semua intervensi yang dikirim (tampung rr/rs/rt apa adanya)
+            $data['intervensi_rr'] = $request->input('intervensi_rr', null);
+            $data['intervensi_rs'] = $request->input('intervensi_rs', null);
+            $data['intervensi_rt'] = $request->input('intervensi_rt', null);
 
             // Simpan data
             RmeSkalaMorse::create($data);
@@ -279,7 +269,7 @@ class SkalaMorseController extends Controller
         // Validasi input
         $request->validate([
             'tanggal' => 'required|date',
-            'hari_ke' => 'required|integer|min:1',
+            'jam' => 'required',
             'shift' => 'required|in:PG,SI,ML',
         ]);
 
@@ -309,7 +299,7 @@ class SkalaMorseController extends Controller
             $data = [
                 'user_edit' => Auth::id(),
                 'tanggal' => $request->tanggal,
-                'hari_ke' => $request->hari_ke,
+                'jam' => $request->jam,
                 'shift' => $request->shift,
             ];
 
@@ -337,28 +327,13 @@ class SkalaMorseController extends Controller
             }
 
             // Tambahkan intervensi berdasarkan kategori resiko
-            $kategoriResiko = $data['kategori_resiko'];
+            $data['kategori_resiko'];
 
-            // Reset intervensi hanya jika membuat penilaian baru
-            if ($request->use_existing_assessment != '1') {
-                // Reset semua intervensi untuk penilaian baru
-                $data['intervensi_rr'] = null;
-                $data['intervensi_rs'] = null;
-                $data['intervensi_rt'] = null;
-            }
-
-            // JANGAN gunakan json_encode karena model sudah ada cast 'array'
-            if ($kategoriResiko == 'RR' && $request->has('intervensi_rr')) {
-                $data['intervensi_rr'] = $request->intervensi_rr; // Langsung assign array
-            }
-
-            if ($kategoriResiko == 'RS' && $request->has('intervensi_rs')) {
-                $data['intervensi_rs'] = $request->intervensi_rs; // Langsung assign array
-            }
-
-            if ($kategoriResiko == 'RT' && $request->has('intervensi_rt')) {
-                $data['intervensi_rt'] = $request->intervensi_rt; // Langsung assign array
-            }
+            // Jika membuat penilaian baru (user menilai ulang), ambil semua intervensi dari request
+            // Jika menggunakan existing assessment (use_existing_assessment == '1'), jangan ubah intervensi
+            $data['intervensi_rr'] = $request->input('intervensi_rr', null);
+            $data['intervensi_rs'] = $request->input('intervensi_rs', null);
+            $data['intervensi_rt'] = $request->input('intervensi_rt', null);
 
             // Update data
             $skalaMorse->update($data);

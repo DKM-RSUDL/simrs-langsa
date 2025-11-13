@@ -130,12 +130,16 @@
                                             <div class="action-buttons">
                                                 <a href="{{ route('hemodialisa.pelayanan.tindakan-khusus.show', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
                                                     class="btn btn-view btn-sm" title="Lihat">
-                                                    <i class="ti-eye"></i> Lihat
+                                                    <i class="ti-eye"></i>
                                                 </a>
 
                                                 <a href="{{ route('hemodialisa.pelayanan.tindakan-khusus.edit', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
                                                     class="btn btn-edit btn-sm" title="Edit">
-                                                    <i class="ti-pencil"></i> Edit
+                                                    <i class="ti-pencil"></i>
+                                                </a>
+                                                <a href="{{ route('hemodialisa.pelayanan.tindakan-khusus.print-pdf', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
+                                                    class="btn btn-sm btn-info mx-1" target="_blank" title="Cetak">
+                                                    <i class="fas fa-print"></i>
                                                 </a>
 
                                                 <form id="deleteForm_{{ $item->id }}"

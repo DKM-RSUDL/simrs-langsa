@@ -33,13 +33,13 @@
                             <div class="tab-pane fade show active" id="resep" role="tabpanel" aria-labelledby="resep-tab">
                                 {{-- TAB 1. buatlah list disini --}}
                                 <div class="table-responsive">
-                                    <table class="table table-bordered table-sm table-hover"
+                                    <table class="table table-bordered table-sm "
                                         id="rawatDaruratKonsultasiTable">
                                         <thead class="table-primary">
                                             <tr>
                                                 <th width="10%">Tanggal</th>
-                                                <th width="20%">Dari PPA</th>
-                                                <th width="15%">Konsulen</th>
+                                                <th width="20%">Konsulen</th>
+                                                <th width="15%">Diagnosis</th>
                                                 <th width="20%">Konsul yang diminta</th>
                                                 <th width="20%">Jawaban</th>
                                                 <th width="13%">Status Konsul</th>

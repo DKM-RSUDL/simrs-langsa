@@ -56,7 +56,7 @@ class KonsultasiSpesialisController extends Controller
         // get konsul IGD
         $asalIGD = AsalIGD::where('kd_kasir', $dataMedis->kd_kasir)->where('no_transaksi', $dataMedis->no_transaksi)->first();
 
-        $konsulIGD = null;
+        $konsulIGD = [];
 
         if (!empty($asalIGD)) {
             $kunjunganIGD = $this->dataMedis->getDataMedisbyTransaksi($asalIGD->kd_kasir_asal, $asalIGD->no_transaksi_asal);
@@ -67,7 +67,7 @@ class KonsultasiSpesialisController extends Controller
                     ->whereDate('tgl_masuk', $kunjunganIGD->tgl_masuk)
                     ->where('kd_unit', $kunjunganIGD->kd_unit)
                     ->where('urut_masuk', $kunjunganIGD->urut_masuk)
-                    ->get();
+                    ->get() ?? [];
             }
         }
 

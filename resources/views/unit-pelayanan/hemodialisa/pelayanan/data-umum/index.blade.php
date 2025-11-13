@@ -55,6 +55,10 @@
                                             class="btn btn-sm btn-warning mx-2">
                                             <i class="fas fa-edit"></i>
                                         </a>
+                                        <a href="{{ route('hemodialisa.pelayanan.data-umum.print-pdf', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, encrypt($umum->id)]) }}"
+                                            class="btn btn-sm btn-info mx-1" target="_blank" title="Cetak">
+                                            <i class="fas fa-print"></i>
+                                        </a>
 
                                         <button type="button" class="btn btn-sm btn-danger btn-del-data"
                                             data-umum="{{ encrypt($umum->id) }}" data-bs-target="#deleteModal">

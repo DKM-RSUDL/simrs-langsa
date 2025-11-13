@@ -33,12 +33,13 @@
                                 @enderror
                             </div>
                             <div class="col-md-4">
-                                <label for="hari_ke" class="form-label">Hari Ke</label>
-                                <input type="number" class="form-control" name="hari_ke" id="hari_ke" min="1"
-                                    value="{{ old('hari_ke', $skalaMorse->hari_ke) }}" required>
-                                @error('hari_ke')
-                                    <div class="text-danger mt-1">{{ $message }}</div>
-                                @enderror
+                              <label for="jam" class="form-label">Jam</label>
+                            <input type="time" class="form-control @error('jam') is-invalid @enderror"
+                                id="jam" name="jam"
+                                value="{{ date('H:i', strtotime($skalaMorse->jam)) }}" required>
+                            @error('jam')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
                             </div>
                             <div class="col-md-4">
                                 <label for="shift" class="form-label">Shift</label>
@@ -709,16 +710,30 @@
                 tampilkanIntervensi(kategori);
             }
 
-            // Fungsi untuk menampilkan intervensi berdasarkan kategori
+            // Fungsi untuk menampilkan intervensi berdasarkan kategori (kumulatif: RT -> RT+RS+RR, RS -> RS+RR, RR -> RR)
             function tampilkanIntervensi(kategori) {
+                const k = (kategori || '').toString().trim().toUpperCase();
+                let code = '';
+                if (k === 'RR' || k.includes('RENDAH')) code = 'RR';
+                else if (k === 'RS' || k.includes('SEDANG')) code = 'RS';
+                else if (k === 'RT' || k.includes('TINGGI')) code = 'RT';
+
                 $('#resikoJatuh_intervensiRR, #resikoJatuh_intervensiRS, #resikoJatuh_intervensiRT').hide();
 
-                if (kategori === 'RR') {
+                if (code === 'RR') {
+                    // only RR
                     $('#resikoJatuh_intervensiRR').show();
-                } else if (kategori === 'RS') {
+                } else if (code === 'RS') {
+                    // RS -> show RS and RR
                     $('#resikoJatuh_intervensiRS').show();
-                } else if (kategori === 'RT') {
+                    $('#resikoJatuh_intervensiRR').show();
+                } else if (code === 'RT') {
+                    // RT -> show RT, RS and RR (cumulative)
                     $('#resikoJatuh_intervensiRT').show();
+                    $('#resikoJatuh_intervensiRS').show();
+                    $('#resikoJatuh_intervensiRR').show();
+                } else {
+                    $('#resikoJatuh_intervensiRR, #resikoJatuh_intervensiRS, #resikoJatuh_intervensiRT').hide();
                 }
             }
 

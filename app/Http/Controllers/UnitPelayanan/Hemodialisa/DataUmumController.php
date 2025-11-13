@@ -12,6 +12,9 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Barryvdh\DomPDF\Facade\Pdf;
+use App\Models\SjpKunjungan;
+use App\Models\RMEResume;
 
 class DataUmumController extends Controller
 {
@@ -373,5 +376,66 @@ class DataUmumController extends Controller
             DB::rollBack();
             return back()->with('error', $e->getMessage());
         }
+    }
+
+    /**
+     * Tampilkan PDF Data Umum Pasien
+     */
+    public function printPDF($kd_pasien, $tgl_masuk, $urut_masuk, $idEncrypt)
+    {
+        // 1. Ambil Data Kunjungan (dataMedis)
+        $dataMedis = Kunjungan::with([
+            'pasien.agama',
+            'pasien.pendidikan',
+            'pasien.marital',
+            'pasien.pekerjaan',
+            'pasien.kelurahan.kecamatan.kabupaten.propinsi'
+        ])
+            ->join('transaksi as t', function ($join) {
+                $join->on('kunjungan.kd_pasien', '=', 't.kd_pasien');
+                $join->on('kunjungan.kd_unit', '=', 't.kd_unit');
+                $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
+                $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
+            })
+            ->where('kunjungan.kd_unit', $this->kdUnitDef_)
+            ->where('kunjungan.kd_pasien', $kd_pasien)
+            ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
+            ->where('kunjungan.urut_masuk', $urut_masuk)
+            ->first();
+
+        if (!$dataMedis) {
+            abort(404, 'Data Kunjungan not found');
+        }
+
+        if ($dataMedis->pasien && $dataMedis->pasien->tgl_lahir) {
+            $dataMedis->pasien->umur = Carbon::parse($dataMedis->pasien->tgl_lahir)->age;
+        } else {
+            $dataMedis->pasien->umur = 'Tidak Diketahui';
+        }
+
+        // 2. Ambil Data Umum
+        $id = decrypt($idEncrypt);
+        $dataUmum = RmeHdDataUmum::find($id); // Data utama
+
+        if (empty($dataUmum)) {
+            abort(404, 'Data Umum not found');
+        }
+
+        // 3. Ambil Data Alergi
+        //    (Sesuai query di fungsi show() Anda)
+        $alergiPasien = RmeAlergiPasien::where('kd_pasien', $kd_pasien)->get();
+
+        // 4. Buat PDF
+        $pdf = Pdf::loadView('unit-pelayanan.hemodialisa.pelayanan.data-umum.print', compact(
+            'dataMedis',
+            'dataUmum',
+            'alergiPasien'
+        ));
+
+        // Atur ukuran kertas
+        $pdf->setPaper('a4', 'portrait');
+
+        // 7. Tampilkan PDF di browser
+        return $pdf->stream('data-umum-hd-' . $dataMedis->pasien->nama . '.pdf');
     }
 }

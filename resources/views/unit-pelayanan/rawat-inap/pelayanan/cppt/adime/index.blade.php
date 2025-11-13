@@ -1,6 +1,5 @@
 @extends('layouts.administrator.master')
 
-
 @push('css')
     <link rel="stylesheet" href="{{ asset('assets/css/MedisGawatDaruratController.css') }}">
     <style>
@@ -69,10 +68,10 @@
                                 </div>
                                 <div class="col-md-8">
                                     <div class="d-flex gap-3">
-                                        <input type="date" class="form-control" name="tanggal_masuk" id="tanggal_masuk"
-                                            value="{{ date('Y-m-d') }}">
-                                        <input type="time" class="form-control" name="jam_masuk" id="jam_masuk"
-                                            value="{{ date('H:i') }}">
+                                        <input type="date" class="form-control" name="{{ !empty($isEdit) ? 'tanggal_masuk_edit' : 'tanggal_masuk' }}" id="tanggal_masuk"
+                                            value="{{ !empty($isEdit) ? date('Y-m-d',strtotime($cppt['tanggal'])) : date('Y-m-d') }}"> 
+                                        <input type="time" class="form-control" name="{{ !empty($isEdit) ? 'jam_masuk_edit' : 'jamn_masuk_edit' }}" id="jam_masuk"
+                                            value="{{  !empty($isEdit) ? date('H:i',strtotime($cppt['jam'])) : date('H:i') }}">
                                     </div>
                                 </div>
                             </div>

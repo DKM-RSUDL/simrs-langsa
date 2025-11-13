@@ -28,9 +28,12 @@
                                     value="{{ old('tanggal', date('Y-m-d')) }}" required>
                             </div>
                             <div class="col-md-4">
-                                <label class="form-label">Hari ke <span class="text-danger">*</span></label>
-                                <input type="number" class="form-control" name="hari_ke" value="{{ old('hari_ke') }}"
-                                    min="1" placeholder="Masukkan hari ke..." required>
+                                <label for="jam" class="form-label">Jam</label>
+                                <input type="time" class="form-control @error('jam') is-invalid @enderror" id="jam"
+                                    name="jam" value="{{ old('jam') }}" required>
+                                @error('jam')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
                             </div>
                             <div class="col-md-4">
                                 <label class="form-label">Shift <span class="text-danger">*</span></label>
@@ -626,16 +629,31 @@
                 tampilkanIntervensi(kategori);
             }
 
-            // Fungsi untuk menampilkan intervensi berdasarkan kategori
+            // Fungsi untuk menampilkan intervensi berdasarkan kategori (aturan: RT -> hanya RT, RS -> RS+RR, RR -> RR)
             function tampilkanIntervensi(kategori) {
+                const k = (kategori || '').toString().trim().toUpperCase();
+                let code = '';
+                if (k === 'RR' || k.includes('RENDAH')) code = 'RR';
+                else if (k === 'RS' || k.includes('SEDANG')) code = 'RS';
+                else if (k === 'RT' || k.includes('TINGGI')) code = 'RT';
+
+                // sembunyikan semua dulu
                 $('#resikoJatuh_intervensiRR, #resikoJatuh_intervensiRS, #resikoJatuh_intervensiRT').hide();
 
-                if (kategori === 'RR') {
+                if (code === 'RR') {
                     $('#resikoJatuh_intervensiRR').show();
-                } else if (kategori === 'RS') {
+                } else if (code === 'RS') {
+                    // RS menampilkan RS + RR
                     $('#resikoJatuh_intervensiRS').show();
-                } else if (kategori === 'RT') {
+                    $('#resikoJatuh_intervensiRR').show();
+                } else if (code === 'RT') {
+                    // RT kumulatif: tampilkan RT + RS + RR
                     $('#resikoJatuh_intervensiRT').show();
+                    $('#resikoJatuh_intervensiRS').show();
+                    $('#resikoJatuh_intervensiRR').show();
+                } else {
+                    // tidak dinilai — sembunyikan semua
+                    $('#resikoJatuh_intervensiRR, #resikoJatuh_intervensiRS, #resikoJatuh_intervensiRT').hide();
                 }
             }
 
@@ -737,5 +755,13 @@
                 }
             }
         });
+
+        // Set tanggal dan jam otomatis
+        const now = new Date();
+        const currentDate = now.toISOString().split('T')[0];
+        const currentTime = now.toTimeString().split(' ')[0].substring(0, 5);
+
+        $('#tanggal').val(currentDate);
+        $('#jam').val(currentTime);
     </script>
 @endpush

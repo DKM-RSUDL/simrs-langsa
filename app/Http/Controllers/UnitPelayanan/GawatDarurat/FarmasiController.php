@@ -82,6 +82,38 @@ class FarmasiController extends Controller
         );
     }
 
+    function generateNoOrder($tglOrder)
+    {
+        // Pastikan $tglOrder berupa Carbon atau tanggal yang valid
+        $tanggal = Carbon::parse($tglOrder)->format('Y-m-d');
+
+        // Ambil data terakhir berdasarkan tanggal masuk
+        $lastOrder = MrResep::whereDate('tgl_order', $tanggal)
+            ->orderByDesc('id_mrresep')
+            ->first();
+
+        // Format dasar tanggal: yyyyMMdd
+        $prefix = Carbon::parse($tglOrder)->format('Ymd');
+
+        if (!$lastOrder) {
+            // Jika belum ada data untuk tanggal tersebut
+            $noOrder = $prefix . '0001';
+        } else {
+            // Ambil KD_ORDER terakhir
+            $lastKdOrder = $lastOrder->id_mrresep;
+
+            // Jika prefix berbeda dengan tanggal saat ini, reset ke 0001
+            if (substr($lastKdOrder, 0, 8) !== $prefix) {
+                $noOrder = $prefix . '0001';
+            } else {
+                // Tambah 1 dari KD_ORDER terakhir
+                $noOrder = str_pad($lastKdOrder + 1, 12, '0', STR_PAD_LEFT);
+            }
+        }
+
+        return $noOrder;
+    }
+
     public function store($kd_pasien, $tgl_masuk, Request $request)
     {
         DB::beginTransaction();
@@ -114,27 +146,13 @@ class FarmasiController extends Controller
                 ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
                 ->first();
 
+
+            $tglOrder = Carbon::parse($validatedData['tgl_order'])->format('Y-m-d');
+            // JAM_ORDER harus datetime penuh, gunakan TGL_ORDER untuk jam
+            $jamOrder = Carbon::parse($validatedData['tgl_order'])->format('H:i:s');
+
             // Generate ID_MRRESEP
-            $tglMasuk = Carbon::parse($validatedData['tgl_order']);
-            $prefix = $tglMasuk->format('Ymd');
-            $lastResep = MrResep::where('ID_MRRESEP', 'like', $prefix . '%')
-                ->orderBy('ID_MRRESEP', 'desc')
-                ->first();
-
-            if ($lastResep) {
-                $lastNumber = intval(substr($lastResep->ID_MRRESEP, -4));
-                $newNumber = $lastNumber + 1;
-            } else {
-                $newNumber = 1;
-            }
-
-            $ID_MRRESEP = $prefix . str_pad($newNumber, 4, '0', STR_PAD_LEFT);
-
-            // Periksa apakah ID sudah ada (untuk keamanan tambahan)
-            while (MrResep::where('ID_MRRESEP', $ID_MRRESEP)->exists()) {
-                $newNumber++;
-                $ID_MRRESEP = $prefix . str_pad($newNumber, 4, '0', STR_PAD_LEFT);
-            }
+            $ID_MRRESEP = $this->generateNoOrder($tglOrder);
 
             // Simpan ke MR_RESEP
             $mrResep = new MrResep();
@@ -145,8 +163,8 @@ class FarmasiController extends Controller
             $mrResep->KD_DOKTER = $validatedData['kd_dokter'];
             $mrResep->ID_MRRESEP = $ID_MRRESEP;
             $mrResep->CAT_RACIKAN = $validatedData['cat_racikan'] ?? '';
-            $mrResep->TGL_ORDER = $validatedData['tgl_order'];
-            $mrResep->JAM_ORDER = $validatedData['jam_order'];
+            $mrResep->TGL_ORDER = $tglOrder;
+            $mrResep->JAM_ORDER = $jamOrder;
             $mrResep->STATUS = 0;
             $mrResep->DILAYANI = 0;
             $mrResep->STTS_TERIMA = 0;
@@ -199,10 +217,7 @@ class FarmasiController extends Controller
                 'obat.*.satuan' => 'nullable|max:50',
             ]);
 
-            // Konversi tgl_order ke format datetime
-            $tglOrder = Carbon::parse($validatedData['tgl_order'])->format('Y-m-d H:i:s');
-            // JAM_ORDER harus datetime penuh, gunakan TGL_ORDER untuk jam
-            $jamOrder = $tglOrder;
+
 
             // Cari kunjungan
             $kunjungan = Kunjungan::join('transaksi as t', function ($join) {
@@ -219,21 +234,13 @@ class FarmasiController extends Controller
                 throw new \Exception('Data kunjungan tidak ditemukan.');
             }
 
-            // Generate ID_MRRESEP (sebagai string)
-            $tglMasuk = Carbon::parse($validatedData['tgl_order']);
-            $prefix = $tglMasuk->format('Ymd');
-            $lastResep = MrResep::where('ID_MRRESEP', 'like', $prefix . '%')
-                ->orderBy('ID_MRRESEP', 'desc')
-                ->first();
+            // Konversi tgl_order ke format datetime
+            $tglOrder = Carbon::parse($validatedData['tgl_order'])->format('Y-m-d');
+            // JAM_ORDER harus datetime penuh, gunakan TGL_ORDER untuk jam
+            $jamOrder = Carbon::parse($validatedData['tgl_order'])->format('H:i:s');
 
-            $newNumber = $lastResep ? intval(substr($lastResep->ID_MRRESEP, -4)) + 1 : 1;
-            $ID_MRRESEP = $prefix . str_pad($newNumber, 4, '0', STR_PAD_LEFT);
-
-            // Periksa apakah ID sudah ada
-            while (MrResep::where('ID_MRRESEP', $ID_MRRESEP)->exists()) {
-                $newNumber++;
-                $ID_MRRESEP = $prefix . str_pad($newNumber, 4, '0', STR_PAD_LEFT);
-            }
+            // Generate ID_MRRESEP
+            $ID_MRRESEP = $this->generateNoOrder($tglOrder);
 
             // Simpan ke MR_RESEP
             $mrResep = MrResep::create([
