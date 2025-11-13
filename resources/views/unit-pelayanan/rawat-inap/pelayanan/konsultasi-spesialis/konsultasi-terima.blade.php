@@ -14,8 +14,8 @@
                     class="text-muted">{{ date('H:i', strtotime($item->jam_konsul)) }}</small>
             </td>
             <td>{{ $item->dokterPengirim->nama }}<br></td>
-            {{-- <td>{{ $item->spesialis->spesialisasi }}</td> --}}
-           
+            <td>{{ $item->dokterTujuan->nama_lengkap }}</td>
+
             <td>
                 <p class="m-0">{!! nl2br(e($item->catatan)) !!}</p>
             </td>

@@ -38,6 +38,7 @@
                                         <thead class="table-primary">
                                             <tr>
                                                 <th width="10%">Tanggal</th>
+                                                <th width="20%">Dari Dokter</th>
                                                 <th width="20%">Konsulen</th>
                                                 <th width="15%">Diagnosis</th>
                                                 <th width="20%">Konsul yang diminta</th>
