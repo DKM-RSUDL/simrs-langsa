@@ -836,14 +836,25 @@
 
             // Fungsi untuk menampilkan intervensi berdasarkan kategori
             function tampilkanIntervensi(kategori) {
+                const k = (kategori || '').toString().trim().toUpperCase();
+                let code = '';
+                if (k === 'RR' || k.includes('RENDAH')) code = 'RR';
+                else if (k === 'RS' || k.includes('SEDANG')) code = 'RS';
+                else if (k === 'RT' || k.includes('TINGGI')) code = 'RT';
+
+                // gunakan ID yang ada di view (prefix "geriatri_...")
+
                 $('#geriatri_intervensiRR, #geriatri_intervensiRS, #geriatri_intervensiRT').hide();
 
-                if (kategori === 'Risiko Rendah') {
+                if (code === 'RR') {
                     $('#geriatri_intervensiRR').show();
-                } else if (kategori === 'Risiko Sedang') {
+                } else if (code === 'RS') {
                     $('#geriatri_intervensiRS').show();
-                } else if (kategori === 'Risiko Tinggi') {
+                    $('#geriatri_intervensiRR').show();
+                } else if (code === 'RT') {
                     $('#geriatri_intervensiRT').show();
+                    $('#geriatri_intervensiRS').show();
+                    $('#geriatri_intervensiRR').show();
                 }
             }
 

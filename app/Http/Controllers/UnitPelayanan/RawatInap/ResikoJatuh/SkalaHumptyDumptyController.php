@@ -220,77 +220,42 @@ class SkalaHumptyDumptyController extends Controller
             }
 
             // Tambahkan intervensi berdasarkan kategori risiko
-            if (isset($data['kategori_risiko'])) {
-                // Reset semua intervensi
-                $interventionFields = [
-                    'observasi_ambulasi',
-                    'orientasi_kamar_mandi',
-                    'orientasi_bertahap',
-                    'tempatkan_bel',
-                    'instruksi_bantuan',
-                    'pagar_pengaman',
-                    'tempat_tidur_rendah',
-                    'edukasi_perilaku',
-                    'monitor_berkala',
-                    'anjuran_kaus_kaki',
-                    'lantai_antislip',
-                    'semua_intervensi_rendah',
-                    'gelang_kuning',
-                    'pasang_gambar',
-                    'tanda_daftar_nama',
-                    'pertimbangkan_obat',
-                    'alat_bantu_jalan',
-                    'pintu_terbuka',
-                    'jangan_tinggalkan',
-                    'dekat_nurse_station',
-                    'bed_posisi_rendah',
-                    'edukasi_keluarga'
-                ];
+            // Reset semua intervensi kemudian simpan semua checkbox yang dikirim (tanpa filter kategori)
+            $interventionFields = [
+                'observasi_ambulasi',
+                // orientasi group handled separately (orientasi_rs)
+                //'orientasi_kamar_mandi',
+                //'orientasi_bertahap',
+                //'tempatkan_bel',
+                //'instruksi_bantuan',
+                'pagar_pengaman',
+                'tempat_tidur_rendah',
+                'edukasi_perilaku',
+                'monitor_berkala',
+                'anjuran_kaus_kaki',
+                'lantai_antislip',
+                'semua_intervensi_rendah',
+                'gelang_kuning',
+                'pasang_gambar',
+                'tanda_daftar_nama',
+                'pertimbangkan_obat',
+                'alat_bantu_jalan',
+                'pintu_terbuka',
+                'jangan_tinggalkan',
+                'dekat_nurse_station',
+                'bed_posisi_rendah',
+                'edukasi_keluarga'
+            ];
 
-                foreach ($interventionFields as $field) {
-                    $data[$field] = 0;
-                }
+            // Map orientasi_rs group checkbox to individual DB fields
+            $orientasiGroup = $request->has('orientasi_rs') ? 1 : 0;
+            $data['orientasi_kamar_mandi'] = $orientasiGroup;
+            $data['orientasi_bertahap'] = $orientasiGroup;
+            $data['tempatkan_bel'] = $orientasiGroup;
+            $data['instruksi_bantuan'] = $orientasiGroup;
 
-                // Set intervensi sesuai kategori dan input
-                if ($data['kategori_risiko'] == 'Risiko Rendah') {
-                    $lowRiskFields = [
-                        'observasi_ambulasi',
-                        'orientasi_kamar_mandi',
-                        'orientasi_bertahap',
-                        'tempatkan_bel',
-                        'instruksi_bantuan',
-                        'pagar_pengaman',
-                        'tempat_tidur_rendah',
-                        'edukasi_perilaku',
-                        'monitor_berkala',
-                        'anjuran_kaus_kaki',
-                        'lantai_antislip'
-                    ];
-
-                    foreach ($lowRiskFields as $field) {
-                        $data[$field] = $request->has($field) ? 1 : 0;
-                    }
-                }
-
-                if ($data['kategori_risiko'] == 'Risiko Tinggi') {
-                    $highRiskFields = [
-                        'semua_intervensi_rendah',
-                        'gelang_kuning',
-                        'pasang_gambar',
-                        'tanda_daftar_nama',
-                        'pertimbangkan_obat',
-                        'alat_bantu_jalan',
-                        'pintu_terbuka',
-                        'jangan_tinggalkan',
-                        'dekat_nurse_station',
-                        'bed_posisi_rendah',
-                        'edukasi_keluarga'
-                    ];
-
-                    foreach ($highRiskFields as $field) {
-                        $data[$field] = $request->has($field) ? 1 : 0;
-                    }
-                }
+            foreach ($interventionFields as $field) {
+                $data[$field] = $request->has($field) ? 1 : 0;
             }
 
             // Simpan data
@@ -476,10 +441,11 @@ class SkalaHumptyDumptyController extends Controller
             // Reset semua intervensi terlebih dahulu
             $interventionFields = [
                 'observasi_ambulasi',
-                'orientasi_kamar_mandi',
-                'orientasi_bertahap',
-                'tempatkan_bel',
-                'instruksi_bantuan',
+                // orientasi group handled via orientasi_rs
+                //'orientasi_kamar_mandi',
+                //'orientasi_bertahap',
+                //'tempatkan_bel',
+                //'instruksi_bantuan',
                 'pagar_pengaman',
                 'tempat_tidur_rendah',
                 'edukasi_perilaku',
@@ -498,50 +464,16 @@ class SkalaHumptyDumptyController extends Controller
                 'bed_posisi_rendah',
                 'edukasi_keluarga'
             ];
+            // Map orientasi_rs group to the four internal fields
+            $orientasiGroup = $request->has('orientasi_rs') ? 1 : 0;
+            $dataHumptyDumpty->orientasi_kamar_mandi = $orientasiGroup;
+            $dataHumptyDumpty->orientasi_bertahap = $orientasiGroup;
+            $dataHumptyDumpty->tempatkan_bel = $orientasiGroup;
+            $dataHumptyDumpty->instruksi_bantuan = $orientasiGroup;
 
+            // Assign remaining intervensi sesuai input request (tampung apa adanya)
             foreach ($interventionFields as $field) {
-                $dataHumptyDumpty->$field = 0;
-            }
-
-            // Set intervensi berdasarkan kategori dan input
-            if ($dataHumptyDumpty->kategori_risiko == 'Risiko Rendah') {
-                $lowRiskFields = [
-                    'observasi_ambulasi',
-                    'orientasi_kamar_mandi',
-                    'orientasi_bertahap',
-                    'tempatkan_bel',
-                    'instruksi_bantuan',
-                    'pagar_pengaman',
-                    'tempat_tidur_rendah',
-                    'edukasi_perilaku',
-                    'monitor_berkala',
-                    'anjuran_kaus_kaki',
-                    'lantai_antislip'
-                ];
-
-                foreach ($lowRiskFields as $field) {
-                    $dataHumptyDumpty->$field = $request->has($field) ? 1 : 0;
-                }
-            }
-
-            if ($dataHumptyDumpty->kategori_risiko == 'Risiko Tinggi') {
-                $highRiskFields = [
-                    'semua_intervensi_rendah',
-                    'gelang_kuning',
-                    'pasang_gambar',
-                    'tanda_daftar_nama',
-                    'pertimbangkan_obat',
-                    'alat_bantu_jalan',
-                    'pintu_terbuka',
-                    'jangan_tinggalkan',
-                    'dekat_nurse_station',
-                    'bed_posisi_rendah',
-                    'edukasi_keluarga'
-                ];
-
-                foreach ($highRiskFields as $field) {
-                    $dataHumptyDumpty->$field = $request->has($field) ? 1 : 0;
-                }
+                $dataHumptyDumpty->$field = $request->has($field) ? 1 : 0;
             }
 
             $dataHumptyDumpty->user_updated = auth()->user()->id;

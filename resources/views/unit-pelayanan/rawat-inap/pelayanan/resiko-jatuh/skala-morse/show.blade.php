@@ -25,9 +25,9 @@
                             </div>
                         </div>
                         <div class="col-md-4">
-                            <label class="form-label fw-bold">Hari ke</label>
+                            <label class="form-label fw-bold">Jam</label>
                             <div class="form-control-plaintext bg-light p-2 rounded">
-                                {{ $skalaMorse->hari_ke }}
+                                {{ $skalaMorse->jam_implementasi }}
                             </div>
                         </div>
                         <div class="col-md-4">
@@ -36,22 +36,6 @@
                                 {{ $skalaMorse->shift_name }}
                             </div>
                         </div>
-                    </div>
-                    <div class="row g-3 mt-2">
-                        <div class="col-md-6">
-                            <label class="form-label fw-bold">Petugas</label>
-                            <div class="form-control-plaintext bg-light p-2 rounded">
-                                {{ str()->title($skalaMorse->userCreate->name ?? 'Tidak Diketahui') }}
-                            </div>
-                        </div>
-                        @if ($skalaMorse->userEdit)
-                            <div class="col-md-6">
-                                <label class="form-label fw-bold">Terakhir Diubah</label>
-                                <div class="form-control-plaintext bg-light p-2 rounded">
-                                    {{ str()->title($skalaMorse->userEdit->name) }}
-                                </div>
-                            </div>
-                        @endif
                     </div>
                 </div>
 
@@ -211,6 +195,23 @@
                         @endif
                     </div>
                 @endif
+
+                <!-- Informasi Petugas -->
+                <div class="card mb-4 shadow-sm">
+                    <div class="card-body">
+                        <h6 class="card-title fw-bold">Informasi Petugas</h6>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-2"><strong>Nama Petugas:</strong>
+                                    {{ $skalaMorse->userCreated->name ?? 'Unknown' }}</div>
+                            </div>
+                            <div class="col-md-6">
+                                <div><strong>Dibuat Pada:</strong>
+                                    {{ date('d/m/Y H:i', strtotime($skalaMorse->created_at)) }} WIB</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
             </x-content-card>
 

@@ -400,7 +400,7 @@
                                     value="1">
                                 <div class="form-check-label">
                                     <strong>2. Orientasikan pasien terhadap lingkungan dan rutinitas RS</strong>
-                                    <ul class="mb-0 mt-2">
+                                    <ul class="mb-0 mt-2" style="list-style-type: none;">
                                         <li>Tunjukkan lokasi kamar mandi</li>
                                         <li>Jika pasien linglung, orientasi dilaksanakan bertahap</li>
                                         <li>Tempatkan bel ditempat yang mudah dicapai</li>
@@ -460,7 +460,7 @@
                         </div>
 
                         <!-- Intervensi untuk Risiko Tinggi -->
-                        <div id="highRiskInterventions" style="display: none;">
+                        <div id="highRiskInterventions" style="display: none;" class="mt-5">
                             <h5 class="mb-3">INTERVENSI PENCEGAHAN JATUH - RESIKO TINGGI</h5>
 
                             <div class="alert alert-danger">
@@ -630,8 +630,11 @@
                 $('#lowRiskInterventions, #highRiskInterventions').hide();
 
                 if (kategori === 'Risiko Rendah') {
+                    // hanya rendah
                     $('#lowRiskInterventions').show();
                 } else if (kategori === 'Risiko Tinggi') {
+                    // kumulatif: tampilkan rendah + tinggi
+                    $('#lowRiskInterventions').show();
                     $('#highRiskInterventions').show();
                 }
             }
