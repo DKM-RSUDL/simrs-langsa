@@ -10,6 +10,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class HDHasilLabController extends Controller
 {
@@ -383,5 +384,40 @@ class HDHasilLabController extends Controller
             DB::rollback();
             return back()->with('error', 'Gagal menghapus data: ' . $e->getMessage());
         }
+    }
+    public function printPDF($kd_pasien, $tgl_masuk, $urut_masuk, $id)
+    {
+        // Ambil data kunjungan pasien
+        $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
+            ->join('transaksi as t', function ($join) {
+                $join->on('kunjungan.kd_pasien', '=', 't.kd_pasien');
+                $join->on('kunjungan.kd_unit', '=', 't.kd_unit');
+                $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
+                $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
+            })
+            ->where('kunjungan.kd_unit', $this->kdUnitDef_) // ✅ pakai underscore
+            ->where('kunjungan.kd_pasien', $kd_pasien)
+            ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
+            ->where('kunjungan.urut_masuk', $urut_masuk)
+            ->firstOrFail();
+
+        // Hitung umur pasien jika ada tanggal lahir
+        if ($dataMedis->pasien && $dataMedis->pasien->tgl_lahir) {
+            $dataMedis->pasien->umur = \Carbon\Carbon::parse($dataMedis->pasien->tgl_lahir)->age;
+        } else {
+            $dataMedis->pasien->umur = 'Tidak Diketahui';
+        }
+
+        // Ambil hasil lab dan detailnya
+        $dataHasilLab = \App\Models\RmeDataHasilLab::with('detail')->findOrFail($id);
+
+        // Buat PDF dari view
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView(
+            'unit-pelayanan.hemodialisa.pelayanan.hasil-lab.print',
+            compact('dataMedis', 'dataHasilLab')
+        )->setPaper('A4', 'portrait');
+
+        // Tampilkan PDF di browser
+        return $pdf->stream('Hasil_Lab_' . ($dataMedis->pasien->nama_pasien ?? 'Pasien') . '.pdf');
     }
 }

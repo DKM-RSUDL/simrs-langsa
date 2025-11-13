@@ -226,7 +226,11 @@
                                                 class="btn btn-warning btn-sm btn-action" title="Edit Data">
                                                 <i class="ti-pencil"></i>
                                             </a>
-
+                                              <!-- Tombol print -->
+                                            <a href="{{ route('hemodialisa.pelayanan.hasil-lab.print-pdf', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $lab->id]) }}"
+                                                class="btn btn-sm btn-info mx-1" target="_blank" title="Cetak">
+                                                <i class="fas fa-print"></i>
+                                            </a>
                                             <!-- Tombol Delete -->
                                             <form method="POST"
                                                 action="{{ route('hemodialisa.pelayanan.hasil-lab.destroy', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $lab->id]) }}"
