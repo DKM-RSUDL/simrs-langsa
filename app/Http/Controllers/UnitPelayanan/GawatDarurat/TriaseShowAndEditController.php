@@ -58,6 +58,10 @@ class TriaseShowAndEditController extends Controller
 
     
         $triase = $this->getTriaseData($dataMedis);
+        if (!$triase) {
+            return back()->with('error', 'Data triase tidak ditemukan.');
+        }
+
 
         // -----------------------------
         // VITAL SIGN
