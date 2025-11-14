@@ -4,7 +4,6 @@ namespace App\Http\Controllers\UnitPelayanan\GawatDarurat;
 
 use App\Models\DataTriase;
 use App\Models\Kunjungan;
-use App\Services\AsesmenService;
 use Exception;
 use App\Services\BaseService;
 use Illuminate\Http\Request;
@@ -14,13 +13,11 @@ class TriaseShowAndEditController extends Controller
 {
     protected $baseService;
     protected $kdUnit;
-    protected $asesmenService;
-    protected $IGDservice;
+  
     public function __construct()
     {
         $this->baseService = new BaseService();
         $this->kdUnit = 3; // Gawat Darurat
-        $this->asesmenService = new AsesmenService();
     }
     public function index($kd_pasien, $tgl_masuk, $urut_masuk)
     {
