@@ -73,6 +73,9 @@
                         name: 'name',
                         orderable: true,
                         searchable: true,
+                        render: function(data, type, row) {
+                            return `${row.karyawan.gelar_depan} ${row.karyawan.nama} ${row.karyawan.gelar_belakang}`;
+                        },
                     },
                     {
                         data: 'roles',

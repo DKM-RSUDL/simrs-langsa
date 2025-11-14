@@ -7,6 +7,7 @@ use App\Models\Cppt;
 use App\Models\CpptInstruksiPpa;
 use App\Models\CpptPenyakit;
 use App\Models\CpptTindakLanjut;
+use App\Models\Dokter;
 use App\Models\HrdKaryawan;
 use App\Models\Kunjungan;
 use App\Models\MrAnamnesis;
@@ -518,18 +519,14 @@ class CpptController extends Controller
         }
     }
 
-    public function getLastDiagnosesAjax(Request $request)
+    public function getLastDiagnosesAjax(Request $request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
     {
         try {
-            $kd_unit = $request->kd_unit;
-            $kd_pasien = $request->kd_pasien;
-            $tgl_masuk = $request->tgl_masuk;
-            $urut_masuk = $request->urut_masuk;
-
             $tipeCppt = $this->getTipeCpptByUser();
+            $userId = Auth::user()->id;
 
             // Get transaksi data
-            $transaction = $this->getTransaksiData($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
+            $transaction = $this->baseService->getDataMedis($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
 
             if (! $transaction) {
                 return response()->json([
@@ -539,14 +536,32 @@ class CpptController extends Controller
                 ]);
             }
 
-            // Ambil CPPT terakhir berdasarkan tipe PPA yang sama
+            // Ambil CPPT terakhir berdasarkan tipe PPA yang sama dan bukan dari user yang login
             $lastCppt = Cppt::join('transaksi as t', function ($join) {
                 $join->on('cppt.no_transaksi', '=', 't.no_transaksi')
                     ->on('cppt.kd_kasir', '=', 't.kd_kasir');
             })
                 ->where('t.kd_pasien', $kd_pasien)
                 ->where('t.kd_unit', $kd_unit)
+                ->whereDate('t.tgl_transaksi', $tgl_masuk)
+                ->where('t.urut_masuk', $urut_masuk)
                 ->where('cppt.tipe_cppt', $tipeCppt)
+                ->where('cppt.user_penanggung', '!=', $userId)
+                ->orderBy('cppt.tanggal', 'desc')
+                ->orderBy('cppt.jam', 'desc')
+                ->first();
+
+            // Ambil CPPT terakhir berdasarkan tipe PPA yang sama dan dari user yang sama
+            $lastCpptUser = Cppt::join('transaksi as t', function ($join) {
+                $join->on('cppt.no_transaksi', '=', 't.no_transaksi')
+                    ->on('cppt.kd_kasir', '=', 't.kd_kasir');
+            })
+                ->where('t.kd_pasien', $kd_pasien)
+                ->where('t.kd_unit', $kd_unit)
+                ->whereDate('t.tgl_transaksi', $tgl_masuk)
+                ->where('t.urut_masuk', $urut_masuk)
+                ->where('cppt.tipe_cppt', $tipeCppt)
+                ->where('cppt.user_penanggung', $userId)
                 ->orderBy('cppt.tanggal', 'desc')
                 ->orderBy('cppt.jam', 'desc')
                 ->first();
@@ -559,14 +574,45 @@ class CpptController extends Controller
                 ]);
             }
 
-            // Ambil diagnosis dari CPPT terakhir
-            $diagnoses = CpptPenyakit::where('no_transaksi', $lastCppt->no_transaksi)
+            // Ambil diagnosis dari CPPT terakhir yg bukan dr user login
+            $diagnosesLast = CpptPenyakit::where('no_transaksi', $lastCppt->no_transaksi)
                 ->where('kd_unit', $kd_unit)
-                ->where('tgl_cppt', $lastCppt->tanggal)
+                ->whereDate('tgl_cppt', $lastCppt->tanggal)
                 ->where('urut_cppt', $lastCppt->urut_total)
+                ->groupBy('nama_penyakit')
+                ->groupBy('id')
+                ->select('nama_penyakit')
+                ->orderBy('id')
                 ->get()
                 ->pluck('nama_penyakit')
                 ->toArray();
+
+            // Ambil diagnosis dari CPPT terakhir yg dr user login (jika ada)
+            $diagnosesUser = [];
+            if ($lastCpptUser) {
+                $diagnosesUser = CpptPenyakit::where('no_transaksi', $lastCpptUser->no_transaksi)
+                    ->where('kd_unit', $kd_unit)
+                    ->whereDate('tgl_cppt', $lastCpptUser->tanggal)
+                    ->where('urut_cppt', $lastCpptUser->urut_total)
+                    ->groupBy('nama_penyakit')
+                    ->groupBy('id')
+                    ->select('nama_penyakit')
+                    ->orderBy('id')
+                    ->get()
+                    ->pluck('nama_penyakit')
+                    ->toArray();
+            }
+
+            // Gabungkan kedua array dan hapus duplikat (jika nama sama hanya muncul 1)
+            $diagnoses = array_values(array_unique(array_merge($diagnosesUser, $diagnosesLast)));
+
+            // $merged = $diagnosesUser;
+            // foreach ($diagnosesLast as $d) {
+            //     if (! in_array($d, $merged, true)) {
+            //         $merged[] = $d;
+            //     }
+            // }
+            // $diagnoses = $merged;
 
             return response()->json([
                 'status' => 'success',
@@ -696,7 +742,7 @@ class CpptController extends Controller
         try {
             // Get kunjungan using private function
 
-            $kunjungan = $this->getKunjungan($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
+            $kunjungan = $this->baseService->getDataMedis($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
 
             if (! $kunjungan) {
                 throw new Exception('Data kunjungan tidak ditemukan!');
@@ -759,7 +805,6 @@ class CpptController extends Controller
                     'kd_unit' => $kunjungan->kd_unit,
                     'tgl_cppt' => $tanggal,
                     'urut_cppt' => $lastUrutTotalCppt,
-                    'kd_penyakit' => null,
                     'nama_penyakit' => $diag,
                 ];
 
@@ -868,7 +913,11 @@ class CpptController extends Controller
             ];
 
             if ($tipe_cppt == 1) {
-                $resumeData['diagnosis'] = $diagnosisReq;
+                // get kd karyawan login
+                $kdKaryawan = Auth::user()->kd_karyawan ?? null;
+                // get dokter by kd karyawan
+                $dokter = Dokter::where('kd_karyawan', $kdKaryawan)->first();
+                if (($dokter->kd_dokter ?? null) == ($kunjungan->kd_dokter ?? null)) $resumeData['diagnosis'] = $diagnosisReq;
             } else {
                 // konpas
                 if ($vitalSignData['sistole'] ?? null) $resumeData['konpas']['sistole'] = ['hasil' => $vitalSignData['sistole']];
@@ -928,7 +977,7 @@ class CpptController extends Controller
 
         try {
             // Get kunjungan using private function
-            $kunjungan = $this->getKunjungan($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
+            $kunjungan = $this->baseService->getDataMedis($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
 
 
             $tglCpptReq = $request->tgl_cppt;
@@ -992,7 +1041,6 @@ class CpptController extends Controller
             // Update CPPT
             $cppt = Cppt::where('no_transaksi', $kunjungan->no_transaksi)
                 ->where('kd_kasir', $kunjungan->kd_kasir)
-                ->where('tanggal', $tglCpptReq)
                 ->where('urut_total', $urutCpptReq)
                 ->first();
 
@@ -1029,7 +1077,6 @@ class CpptController extends Controller
             // Delete old diagnose
             CpptPenyakit::where('no_transaksi', $noTransaksiCpptReq)
                 ->where('kd_unit', $unitCpptReq)
-                ->where('tgl_cppt', $tgl_masuk)
                 ->where('urut_cppt', $urutCpptReq)
                 ->delete();
 
@@ -1039,7 +1086,6 @@ class CpptController extends Controller
                     'kd_unit' => $kunjungan->kd_unit,
                     'tgl_cppt' => $new_tgl,
                     'urut_cppt' => $cppt->urut_total,
-                    'kd_penyakit' => null,
                     'nama_penyakit' => $diag,
                 ];
 
@@ -1059,7 +1105,11 @@ class CpptController extends Controller
             $tipe_cppt = $this->getTipeCpptByUser($cppt->tipe_cppt);
 
             if ($tipe_cppt == 1) {
-                $resumeData['diagnosis'] = $diagnosisList;
+                // get kd karyawan login
+                $kdKaryawan = Auth::user()->kd_karyawan ?? null;
+                // get dokter by kd karyawan
+                $dokter = Dokter::where('kd_karyawan', $kdKaryawan)->first();
+                if (($dokter->kd_dokter ?? null) == ($kunjungan->kd_dokter ?? null)) $resumeData['diagnosis'] = $diagnosisList;
             } else {
                 // konpas
                 if ($vitalSignData['sistole'] ?? null) $resumeData['konpas']['sistole'] = ['hasil' => $vitalSignData['sistole']];
@@ -1285,8 +1335,6 @@ class CpptController extends Controller
                 'kf.kondisi',
                 'kf.satuan',
                 'kpd.hasil',
-                'p.kd_penyakit',
-                'p.penyakit',
                 'cp.nama_penyakit',
             ])
             // transaksi
@@ -1326,7 +1374,6 @@ class CpptController extends Controller
                     // ->on('cp.tgl_cppt', '=', 'cppt.tanggal')
                     ->on('cp.urut_cppt', '=', 'cppt.urut_total');
             })
-            ->leftJoin('penyakit as p', 'p.kd_penyakit', '=', 'cp.kd_penyakit')
             // Apply additional wheres
             ->when($additionalWheres, function ($query) use ($additionalWheres) {
                 foreach ($additionalWheres as $column => $value) {
@@ -1402,12 +1449,6 @@ class CpptController extends Controller
                 ],
                 'cppt_penyakit' => $item->groupBy('nama_penyakit')->map(function ($penyakit) {
                     return ['nama_penyakit' => $penyakit->first()->nama_penyakit];
-                }),
-                'penyakit' => $item->groupBy('kd_penyakit')->map(function ($penyakit) {
-                    return [
-                        'kd_penyakit' => $penyakit->first()->kd_penyakit,
-                        'nama_penyakit' => $penyakit->first()->penyakit,
-                    ];
                 }),
                 'instruksi_ppa' => $instruksiPpa,
                 'instruksi_ppa_nama' => $transformedInstruksi, // Only populated if $includeNames=true

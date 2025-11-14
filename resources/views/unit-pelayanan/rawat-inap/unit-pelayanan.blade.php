@@ -101,7 +101,8 @@
                             <tr>
                                 <th width="100px">Aksi</th>
                                 <th>Pasien</th>
-                                <th>No RM / Reg</th>
+                                <th>No RM / Tgl Masuk</th>
+                                <th>DPJP</th>
                                 <th>Alamat</th>
                                 <th>Jaminan</th>
                                 <th>Status Pelayanan</th>
@@ -172,10 +173,15 @@
                             return `
                                 <div class="rm-reg">
                                     RM: ${row.kd_pasien ? row.kd_pasien : 'N/A'}<br>
-                                    Reg: ${row.reg_number ? row.reg_number : 'N/A'}
+                                    Tgl: ${row.tgl_masuk ? row.tgl_masuk : 'N/A'}
                                 </div>
                             `;
                         },
+                        defaultContent: ''
+                    },
+                    {
+                        data: 'dokter.nama_lengkap',
+                        name: '',
                         defaultContent: ''
                     },
                     {

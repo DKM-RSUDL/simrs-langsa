@@ -9,7 +9,8 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="addDiagnosisModal">Input Asesmen/Diagnosis</h5>
-                <button type="button" class="btn-close CancelDiagnose" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button type="button" class="btn-close CancelDiagnose" data-bs-dismiss="modal"
+                    aria-label="Close"></button>
             </div>
             <div class="modal-body">
 
@@ -31,7 +32,7 @@
 
                 <h6 class="fw-bold mt-5">Daftar Diagnosis</h6>
                 <ol type="1" id="listDiagnosa">
-                    @if(!empty($lastDiagnoses))
+                    @if (!empty($lastDiagnoses))
                         @foreach ($lastDiagnoses as $item)
                             <li>{{ $item }}</li>
                         @endforeach
@@ -39,7 +40,7 @@
                 </ol>
             </div>
             <div class="modal-footer">
-                <button  type="button" class="btn btn-secondary CancelDiagnose"  data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-secondary CancelDiagnose" data-bs-dismiss="modal">Close</button>
                 <button type="button" id="btnSaveDiagnose" class="btn btn-primary">Simpan</button>
             </div>
         </div>
@@ -48,7 +49,7 @@
 
 
 <script>
-    document.getElementById('openVerticalCenterModal').addEventListener('click', function () {
+    document.getElementById('openVerticalCenterModal').addEventListener('click', function() {
         var modalKedua = new bootstrap.Modal(document.getElementById('addDiagnosisModal'), {
             backdrop: 'static', // Agar tidak menutup modal pertama ketika klik di luar modal kedua
             keyboard: false // Agar tidak bisa ditutup dengan tombol ESC
@@ -60,7 +61,5 @@
         DiagnoseArray.map((item) => {
             ListData.append(`<li>${item}</li>`)
         })
-
-        console.log(DiagnoseArray)
     });
 </script>

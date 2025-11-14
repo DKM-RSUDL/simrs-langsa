@@ -58,14 +58,14 @@
             if (searchInputValue != '') {
                 let ListData = $('#listDiagnosa')
                 ListData.empty()
-                   
+
                 DiagnoseArray.map((item)=>{
                         ListData.append(`<li>${item}</li>`)
                 })
 
                 DiagnoseArrayTemp.map((item)=>{
                         ListData.append(`<li>${item}</li>`)
-                })    
+                })
 
                 $('#addDiagnosisModal #searchInput').val('');
                 console.log("Temp Data :", searchInputValue,DiagnoseArrayTemp)
@@ -85,7 +85,7 @@
         if (DiagnoseArrayTemp.length > 0) {
             DiagnoseArrayTemp = []
         }
-        
+
     })
 
     // Data karyawan
@@ -685,7 +685,7 @@
                     created_at: new Date().toLocaleString('id-ID')
                 });
 
-               
+
             });
         }
 
@@ -765,10 +765,6 @@
             method: 'POST',
             data: {
                 _token: '{{ csrf_token() }}',
-                kd_unit: '{{ $dataMedis->kd_unit }}',
-                kd_pasien: '{{ $dataMedis->kd_pasien }}',
-                tgl_masuk: '{{ date("Y-m-d", strtotime($dataMedis->tgl_masuk)) }}',
-                urut_masuk: '{{ $dataMedis->urut_masuk }}'
             },
             success: function (response) {
                 // console.log('Response dari database:', response);
@@ -782,18 +778,19 @@
                     //     // console.log('Menambah diagnosis ke-' + (index + 1) + ':', diagnosis);
                     //     $('#addDiagnosisModal #listDiagnosa').append(`<li>${escapeHtml(diagnosis)}</li>`);
                     // });
-                    
+
                     if(first){
+
                         const dignoseListContent = render_list_diagonis_content(response.data)
                         const ListData = $('#diagnoseList');
-                        
+
                         ListData.empty()
                         DiagnoseArray = response.data
                         ListData.html(dignoseListContent);
 
                         setupDiagnosisDrag(ListData)
                     }
-                   
+
 
                     // console.log('Total <li> di modal:', $('#addDiagnosisModal #listDiagnosa li').length);
                 } else {
@@ -831,7 +828,7 @@
                 }
             });
         }, 100);
-        
+
     }
 
     $('#addDiagnosisModal #btnSaveDiagnose').off('click').on('click', function (e) {
@@ -845,7 +842,7 @@
             if (text && !text.includes('Tidak ada') && !text.includes('Gagal') && !text.includes('Memuat')) {
                 html += `
                     <div class="diag-item-wrap position-relative bg-white border rounded mb-2 p-3 shadow-sm" style="user-select:none;">
-                        <div class="drag-handle position-absolute start-0 top-0 bottom-0 d-flex align-items-center ps-3 text-muted fw-bold" 
+                        <div class="drag-handle position-absolute start-0 top-0 bottom-0 d-flex align-items-center ps-3 text-muted fw-bold"
                             style="cursor:grab; font-size:22px; width:50px;">
                             ⋮⋮
                         </div>
@@ -860,11 +857,11 @@
                     </div>`;
                 index++;
             }
-            
+
         });
 
-        const $target = $('#addCpptModal').children().length === 0 
-            ? $('#diagnoseList') 
+        const $target = $('#addCpptModal').children().length === 0
+            ? $('#diagnoseList')
             : $('#addCpptModal #diagnoseList');
 
         DiagnoseArrayTemp.map((item)=>{
@@ -891,7 +888,7 @@
             if (text && !text.includes('Tidak ada') && !text.includes('Gagal') && !text.includes('Memuat')) {
                 html += `
                     <div class="diag-item-wrap position-relative bg-white border rounded mb-2 p-3 shadow-sm" style="user-select:none;">
-                        <div class="drag-handle position-absolute start-0 top-0 bottom-0 d-flex align-items-center ps-3 text-muted fw-bold" 
+                        <div class="drag-handle position-absolute start-0 top-0 bottom-0 d-flex align-items-center ps-3 text-muted fw-bold"
                             style="cursor:grab; font-size:22px; width:50px;">
                             ⋮⋮
                         </div>
@@ -965,7 +962,7 @@
     //             $('#addDiagnosisModal #listDiagnosa').append(`<li>${escapeHtml(diagnosis)}</li>`);
     //         });
 
-           
+
     //     }
 
     // });
@@ -998,7 +995,7 @@
                     // Masukkan satu per satu
                     response.data.forEach(function (diagnosis, index) {
                         console.log('Menambah diagnosis ke-' + (index + 1) + ':', diagnosis);
-                        
+
                         $('#addDiagnosisModal #listDiagnosa').append(`<li>${escapeHtml(diagnosis)}</li>`);
                     });
 
@@ -1018,7 +1015,7 @@
         });
     }
 
-    
+
 
 
     // Function terpisah untuk initial load
@@ -1037,7 +1034,7 @@
             },
             success: function (response) {
                 if (response.status === 'success' && response.data && response.data.length > 0) {
-                    
+
                     const dignoseListContent = render_list_diagonis_content(response.data)
                     $('#addCpptModal #diagnoseList').html(dignoseListContent);
 
@@ -1061,10 +1058,11 @@
     const render_list_diagonis_content = (data)=>{
             var dignoseListContent = '';
 
+
             data.forEach(function (diagnosis, index) {
                 dignoseListContent += `
                      <div class="diag-item-wrap position-relative bg-white border rounded mb-2 p-3 shadow-sm" style="user-select:none;">
-                        <div class="drag-handle position-absolute start-0 top-0 bottom-0 d-flex align-items-center ps-3 text-muted fw-bold" 
+                        <div class="drag-handle position-absolute start-0 top-0 bottom-0 d-flex align-items-center ps-3 text-muted fw-bold"
                             style="cursor:grab; font-size:22px; width:50px;">
                             ⋮⋮
                         </div>
@@ -1161,7 +1159,7 @@
         var target = $this.attr('data-bs-target');
         var tipe_data=  $this.attr('data-tipe-cppt');
 
-        
+
 
         tanggal = tanggalData;
         urut = urutData;
@@ -1187,7 +1185,7 @@
             no_transaksi: "{{ $dataMedis->no_transaksi }}",
             tanggal: tanggal,
             urut: urut,
-            
+
         }).toString();
 
         location.href = `${url}?${queryString}`;
@@ -1222,7 +1220,7 @@
                                 // Set key to input
 
                                 // Misalnya patient.tanggal = "2025-11-12 14:30:00"
-                                
+
                               // Ambil jam dari format "1900-01-01 10:34:00.000"
                                 const formattedTime = patient.jam.split(' ')[1].slice(0, 5);
 
@@ -1234,7 +1232,7 @@
                                 $(target).find('#jam_masuk_edit').val(formattedTime);
                                 $(target).find('input[name="tgl_cppt"]').val(tanggalData);
                                 $(target).find('input[name="urut_cppt"]').val(urutData);
-                                
+
                                 $(target).find('input[name="urut_cppt"]').val(urutData);
                                 $(target).find('input[name="urut_total_cppt"]').val(urutTotalData);
                                 $(target).find('input[name="unit_cppt"]').val(unitData);
@@ -1315,18 +1313,18 @@
 
                                         dignoseListContent += `
                                             <div class="diag-item-wrap position-relative bg-white border rounded mb-2 p-3 shadow-sm" style="user-select:none;">
-                                                
+
                                                 <!-- DRAG HANDLE -->
-                                                <div class="drag-handle position-absolute start-0 top-0 bottom-0 d-flex align-items-center ps-3 text-muted fw-bold" 
+                                                <div class="drag-handle position-absolute start-0 top-0 bottom-0 d-flex align-items-center ps-3 text-muted fw-bold"
                                                      style="cursor:grab; font-size:22px; width:50px; user-select:none;">
                                                     ⋮⋮
                                                 </div>
 
                                                 <div class="d-flex align-items-center justify-content-between ps-5 pe-2">
                                                     <p class="m-0 fw-bold flex-fill">${escapeHtml(diag.nama_penyakit)}</p>
-                                                    <span class="btnListDiagnose text-danger" 
-                                                          data-id="${index}" 
-                                                          data-name="${escapeHtml(diag.nama_penyakit)}" 
+                                                    <span class="btnListDiagnose text-danger"
+                                                          data-id="${index}"
+                                                          data-name="${escapeHtml(diag.nama_penyakit)}"
                                                           style="cursor:pointer; z-index:10;">
                                                         <i class="ti ti-close"></i>
                                                     </span>
@@ -1375,7 +1373,7 @@
                                 // Simpan data PPA
                                 window.MASTER_EDIT_INSTRUKSI_PPA = patient.instruksi_ppa || [];
 
-                                
+
 
                                 // CRITICAL: Simpan data instruksi PPA ke GLOBAL variable yang persisten
                                 window.MASTER_EDIT_INSTRUKSI_PPA = patient.instruksi_ppa || [];
@@ -1400,7 +1398,7 @@
                                 .MASTER_EDIT_INSTRUKSI_PPA)) {
                                 loadEditInstruksiPpaFromAjaxDataFinal(window
                                     .MASTER_EDIT_INSTRUKSI_PPA);
-                                
+
                                 // console.log('PPA data loaded successfully:', editInstruksiPpaData.length, 'items');
                             } else {
                                 // console.warn('No master PPA data found');
@@ -1423,10 +1421,10 @@
                 }
                 });
         }
-        
+
     });
 
-    
+
 
   // Delete diagnosis dari list
     $(document).on('click', '.btnListDiagnose', function (e) {
@@ -1480,17 +1478,17 @@
                 console.log("Masuk Edit")
 
                 DiagnoseArrayTemp.push(searchInputValue)
-                
+
                 let ListData = $('#editDiagnosisModal #listDiagnosa')
                 ListData.empty()
-                   
+
                 DiagnoseArray.map((item)=>{
                         ListData.append(`<li>${item}</li>`)
                 })
 
                 DiagnoseArrayTemp.map((item)=>{
                         ListData.append(`<li>${item}</li>`)
-                })    
+                })
 
                 $('#addDiagnosisModal #searchInput').val('');
                 console.log("Temp Data :", searchInputValue,DiagnoseArrayTemp)
@@ -1499,11 +1497,11 @@
             }else{
                 $('#listDiagnosa').append(`<li>${searchInputValue}</li>`);
             }
-           
+
         }
     });
 
-  
+
 
     // Event handler untuk buka modal diagnosis dengan proteksi data PPA
     $('#editCpptModal #openEditDiagnosisModal').click(function (e) {
@@ -1808,7 +1806,7 @@
         if(once === 0){
             DiagnoseArray = []
             DiagnoseArrayTemp = []
-            const data = await loadPreviousDiagnosesFromDatabase(true);        
+            const data = await loadPreviousDiagnosesFromDatabase(true);
             once++
         }
     })
