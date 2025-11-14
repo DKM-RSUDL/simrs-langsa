@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\UnitPelayanan\GawatDarurat;
 
 use App\Models\DataTriase;
-use App\Models\Kunjungan;
+use App\Services\AsesmenService;
 use Exception;
 use App\Services\BaseService;
 use Illuminate\Http\Request;
@@ -13,11 +13,13 @@ class TriaseShowAndEditController extends Controller
 {
     protected $baseService;
     protected $kdUnit;
+    protected $asesmenService;
     protected $IGDservice;
     public function __construct()
     {
         $this->baseService = new BaseService();
         $this->kdUnit = 3; // Gawat Darurat
+        $this->asesmenService = new AsesmenService();
     }
     public function index($kd_pasien, $tgl_masuk, $urut_masuk)
     {
@@ -32,10 +34,10 @@ class TriaseShowAndEditController extends Controller
         $data = $this->getTriaseData($dataMedis);
 
         if (!$data) {
-            return back()->with('error', 'Data triase tidak ditemukan.');
+            abort(404, 'Data triase not found');
         }
-     
-        $vitalSign = json_decode($data->vital_sign,true);
+
+        $vitalSign = $this->asesmenService->getVitalSignData($dataMedis->kd_kasir, $dataMedis->no_transaksi);
         $data->triase = json_decode($data->triase, true);
 
 
@@ -91,15 +93,6 @@ class TriaseShowAndEditController extends Controller
             'disability'  => $request->disability ?? [],
         ];
 
-        $kunjunganData = [
-            'kd_triase' => $request->kd_triase,
-        ];
-
-        Kunjungan::where('kunjungan.kd_pasien', $dataMedis->kd_pasien)
-            ->where('kunjungan.kd_unit', $dataMedis->kd_unit)
-            ->where('kunjungan.urut_masuk', $dataMedis->urut_masuk)
-            ->whereDate('kunjungan.tgl_masuk', $dataMedis->tgl_masuk)
-            ->update($kunjunganData);
 
         // -----------------------------
         // SIMPAN KE DATABASE
@@ -107,7 +100,7 @@ class TriaseShowAndEditController extends Controller
         $triase->update([
             'vital_sign'   => json_encode($vitalSign),
             'triase'       => json_encode($abcdn),
-            'kd_triase' => $request->kd_triase,
+            'kode_triase'  => $request->kd_triase,
             'hasil_triase' => $request->ket_triase,
         ]);
 
