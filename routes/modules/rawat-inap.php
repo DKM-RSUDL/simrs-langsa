@@ -132,6 +132,7 @@ Route::prefix('rawat-inap')->group(function () {
                             Route::get('/', 'index')->name('.index');
                             Route::post('/', 'store')->name('.store');
                             Route::put('/', 'update')->name('.update');
+                            Route::get('/print', 'printCppt')->name('print');
                             Route::post('/get-icd10-ajax', 'getIcdTenAjax')->name('.get-icd10-ajax');
                             Route::post('/get-cppt-ajax', 'getCpptAjax')->name('.get-cppt-ajax');
                             Route::get('/get-cppt-adime', 'getCpptAdime')->name('.get-cppt-adime');
