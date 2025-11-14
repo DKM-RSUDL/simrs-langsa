@@ -37,8 +37,8 @@
                         <ul class="nav nav-tabs" id="myTab" role="tablist">
                             <li class="nav-item" role="presentation">
                                 <button class="nav-link active" id="resep-tab" data-bs-toggle="tab" data-bs-target="#resep"
-                                    type="button" role="tab" aria-controls="resep" aria-selected="true">E-Resep Obat &
-                                    BMHP</button>
+                                    type="button" role="tab" aria-controls="resep" aria-selected="true">E-Resep
+                                    Rawat</button>
                             </li>
                             <li class="nav-item" role="presentation">
                                 <button class="nav-link" id="catatan-tab" data-bs-toggle="tab" data-bs-target="#riwayat"
@@ -67,7 +67,7 @@
                                 <button class="nav-link" id="e-resep-obat-pulang-tab" data-bs-toggle="tab"
                                     data-bs-target="#e-resep-obat-pulang" type="button" role="tab"
                                     aria-controls="e-resep-obat-pulang" aria-selected="false">
-                                    E-Resep Obat Pulang
+                                    E-Resep Pulang
                                 </button>
                             </li>
                         </ul>

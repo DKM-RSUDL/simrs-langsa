@@ -1,6 +1,5 @@
 @extends('layouts.administrator.master')
 
-
 @push('css')
     <link rel="stylesheet" href="{{ asset('assets/css/MedisGawatDaruratController.css') }}">
     <style>
@@ -69,10 +68,10 @@
                                 </div>
                                 <div class="col-md-8">
                                     <div class="d-flex gap-3">
-                                        <input type="date" class="form-control" name="tanggal_masuk" id="tanggal_masuk"
-                                            value="{{ date('Y-m-d') }}">
-                                        <input type="time" class="form-control" name="jam_masuk" id="jam_masuk"
-                                            value="{{ date('H:i') }}">
+                                        <input type="date" class="form-control" name="{{ !empty($isEdit) ? 'tanggal_masuk_edit' : 'tanggal_masuk' }}" id="tanggal_masuk"
+                                            value="{{ !empty($isEdit) ? date('Y-m-d',strtotime($cppt['tanggal'])) : date('Y-m-d') }}"> 
+                                        <input type="time" class="form-control" name="{{ !empty($isEdit) ? 'jam_masuk_edit' : 'jamn_masuk_edit' }}" id="jam_masuk"
+                                            value="{{  !empty($isEdit) ? date('H:i',strtotime($cppt['jam'])) : date('H:i') }}">
                                     </div>
                                 </div>
                             </div>
@@ -103,45 +102,60 @@
                                     </div>
                                     <div class="row">
                                         <div class="col-12">
-                                            <div class="bg-secondary-subtle rounded-2 p-3" id="diagnoseList">
-                                                @if (!empty($lastDiagnoses) && empty($isEdit))
-                                                    @foreach ($lastDiagnoses as $index => $item)
-                                                        <div class="diag-item-wrap">
-                                                            <a href="#" class="fw-bold text-decoration-none">
-                                                                <div
-                                                                    class="d-flex align-items-center justify-content-between">
-                                                                    <p class="m-0 p-0">{{ $item }}</p>
-                                                                    <span class="btnListDiagnose"
-                                                                        data-name="{{ $item }}"
-                                                                        data-id="{{ $index }}">
-                                                                        <i class="ti-close text-danger"></i>
-                                                                    </span>
-                                                                </div>
-                                                            </a>
-                                                            <input type="hidden" name="diagnose_name[]"
-                                                                value="{{ $item }}}">
+                                         <div class="bg-secondary-subtle rounded-2 p-3" id="diagnoseList">
+                                            @if (!empty($lastDiagnoses) && empty($isEdit))
+                                                {{-- Data dari $lastDiagnoses (array string atau array sederhana) --}}
+                                                @foreach ($lastDiagnoses as $index => $text)
+                                                    @php
+                                                        $nama = is_array($text) ? ($text['nama_penyakit'] ?? $text[0] ?? $text) : $text;
+                                                    @endphp
+
+                                                    <div class="diag-item-wrap position-relative bg-white border rounded mb-2 p-3 shadow-sm" style="user-select:none;">
+                                                        <div class="drag-handle position-absolute start-0 top-0 bottom-0 d-flex align-items-center ps-3 text-muted fw-bold" 
+                                                            style="cursor:grab; font-size:22px; width:50px;">
+                                                              ⋮⋮
                                                         </div>
-                                                    @endforeach
-                                                @else
-                                                    @foreach (($cppt['cppt_penyakit'] ?? []) as $index => $item)
-                                                        <div class="diag-item-wrap">
-                                                            <a href="#" class="fw-bold text-decoration-none">
-                                                                <div
-                                                                    class="d-flex align-items-center justify-content-between">
-                                                                    <p class="m-0 p-0">{{ $item['nama_penyakit'] }}</p>
-                                                                    <span class="btnListDiagnose"
-                                                                        data-name="{{ $item['nama_penyakit'] }}"
-                                                                        data-id="{{ $index }}">
-                                                                        <i class="ti-close text-danger"></i>
-                                                                    </span>
-                                                                </div>
-                                                            </a>
-                                                            <input type="hidden" name="diagnose_name[]"
-                                                                value="{{ $item['nama_penyakit'] }}}">
+                                                        <div class="d-flex align-items-center justify-content-between ps-5 pe-2">
+                                                            <p class="m-0 fw-bold flex-fill">{{ e($nama) }}</p>
+                                                            <span class="btnListDiagnose text-danger" 
+                                                                data-id="{{ $index }}" 
+                                                                data-name="{{ e($nama) }}" 
+                                                                style="cursor:pointer;">
+                                                                <i class="ti ti-close"></i>
+                                                            </span>
                                                         </div>
-                                                    @endforeach
-                                                @endif
-                                            </div>
+                                                        <input type="hidden" name="diagnose_name[]" value="{{ e($nama) }}">
+                                                        <input type="hidden" name="diagnose_order[]" value="{{ $index }}" class="order-input">
+                                                    </div>
+                                                @endforeach
+
+                                            @elseif (!empty($cppt) && !empty($cppt['cppt_penyakit']))
+                                                {{-- Data dari $cppt['cppt_penyakit'] (array of objects/arrays) --}}
+                                                @foreach ($cppt['cppt_penyakit'] as $index => $item)
+                                                    @php
+                                                        $nama = $item['nama_penyakit'] ?? ($item->nama_penyakit ?? '');
+                                                    @endphp
+
+                                                    <div class="diag-item-wrap position-relative bg-white border rounded mb-2 p-3 shadow-sm" style="user-select:none;">
+                                                        <div class="drag-handle position-absolute start-0 top-0 bottom-0 d-flex align-items-center ps-3 text-muted fw-bold" 
+                                                            style="cursor:grab; font-size:22px; width:50px;">
+                                                             ⋮⋮
+                                                        </div>
+                                                        <div class="d-flex align-items-center justify-content-between ps-5 pe-2">
+                                                            <p class="m-0 fw-bold flex-fill">{{ e($nama) }}</p>
+                                                            <span class="btnListDiagnose text-danger" 
+                                                                data-id="{{ $index }}" 
+                                                                data-name="{{ e($nama) }}" 
+                                                                style="cursor:pointer;">
+                                                                <i class="ti ti-close"></i>
+                                                            </span>
+                                                        </div>
+                                                        <input type="hidden" name="diagnose_name[]" value="{{ e($nama) }}">
+                                                        <input type="hidden" name="diagnose_order[]" value="{{ $index }}" class="order-input">
+                                                    </div>
+                                                @endforeach
+                                            @endif
+                                        </div>      
                                         </div>
                                     </div>
                                 </div>
@@ -408,9 +422,7 @@
 
                         <!-- Submit -->
                         <div class="text-end mt-4">
-                            <button type="submit" class="btn btn-primary px-4">
-                                <i class="bi bi-save me-2"></i>Simpan
-                            </button>
+                           <x-button-submit />
                         </div>
                     </form>
                 </div>
@@ -420,5 +432,17 @@
 @endsection
 
 @push('js')
+    <script>
+        new Sortable(document.getElementById('diagnoseList'), {
+        handle: '.drag-handle',
+        animation: 150,
+        ghostClass: 'bg-light',
+        onEnd: function () {
+            document.querySelectorAll('#diagnoseList .order-input').forEach((input, i) => {
+                input.value = i;
+            });
+        }
+    });
+    </script>
     @include('unit-pelayanan.rawat-inap.pelayanan.cppt.manage.index')
 @endpush

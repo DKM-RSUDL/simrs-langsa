@@ -72,7 +72,7 @@
                             </a>
 
                             {{-- Selesai --}}
-                            {{-- <a href="{{ route('rawat-inap.unit.selesai', $unit->kd_unit) }}"
+                            <a href="{{ route('rawat-inap.unit.selesai', $unit->kd_unit) }}"
                                 class="text-decoration-none col-12 col-md-4">
                                 <div class="rounded bg-success text-white">
                                     <div class="card-body d-flex align-items-center gap-3 px-3">
@@ -84,7 +84,7 @@
                                         </div>
                                     </div>
                                 </div>
-                            </a> --}}
+                            </a>
                         </div>
                     </div>
 
@@ -104,7 +104,7 @@
                                 <th>No RM / Reg</th>
                                 <th>Alamat</th>
                                 <th>Jaminan</th>
-                                <th>Status Pelayanan</th>
+                                {{-- <th>Status Pelayanan</th> --}}
                                 {{-- <th>Keterangan</th>
                                 <th>Tindak Lanjut</th> --}}
                             </tr>
@@ -188,16 +188,16 @@
                         name: 'jaminan',
                         defaultContent: ''
                     },
-                    {
-                        data: 'status_pelayanan',
-                        name: 'status_pelayanan',
-                        render: function(data, type, row) {
-                            let bgBadge = 'secondary';
-                            if (row.status_inap == 1) bgBadge = 'success';
-                            return `<span class="badge text-bg-${bgBadge}">${row.keterangan_kunjungan ?? '-'}</span>`;
-                        },
-                        defaultContent: ''
-                    },
+                    // {
+                    //     data: 'status_pelayanan',
+                    //     name: 'status_pelayanan',
+                    //     render: function(data, type, row) {
+                    //         let bgBadge = 'secondary';
+                    //         if (row.status_inap == 1) bgBadge = 'success';
+                    //         return `<span class="badge text-bg-${bgBadge}">${row.keterangan_kunjungan ?? '-'}</span>`;
+                    //     },
+                    //     defaultContent: ''
+                    // },
                     // { data: 'keterangan', name: 'keterangan', defaultContent: '' },
                     // { data: 'tindak_lanjut', name: 'tindak_lanjut', defaultContent: '' },
                 ],

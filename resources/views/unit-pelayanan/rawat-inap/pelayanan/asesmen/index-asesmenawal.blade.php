@@ -310,7 +310,7 @@
                     </a>
                 @endif
 
-                @if ($item->kategori == 2 && $item->sub_kategori == 6)
+                @if ($item->kategori == 1 && $item->sub_kategori == 6)
                     <a href="{{ route('rawat-inap.asesmen.keperawatan.opthamology.show', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
                         class="btn btn-sm btn-info">
                         <i class="fas fa-eye me-1"></i> Lihat

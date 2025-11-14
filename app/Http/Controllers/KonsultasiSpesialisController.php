@@ -36,25 +36,27 @@ class KonsultasiSpesialisController extends Controller
 
 
         $columnnValue = $category == "Minta" ? 'dokter_pengirim' : 'dokter_tujuan';
-        $acuan = Dokter::select('kd_dokter')->where('kd_karyawan', Auth::user()->kd_karyawan)->first();
+        $acuan = Dokter::select('kd_karyawan')->where('kd_karyawan', Auth::user()->kd_karyawan)->first();
         if (empty($acuan)) {
             $columnnValue = 'user_create';
             $acuan = Auth::user()->kd_karyawan;
+        } else {
+            $acuan = $acuan->kd_karyawan;
         }
 
         $dataMedis = $this->dataMedis->getDataMedis($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
         if (empty($dataMedis)) abort(404, 'Data not found');
 
         $dataKonsul = KonsultasiSpesialis::with(['dokterPengirim', 'dokterTujuan', 'spesialis'])
-            ->where($columnnValue, $acuan)
             ->where('kd_kasir', $dataMedis->kd_kasir)
             ->where('no_transaksi', $dataMedis->no_transaksi)
             ->get();
 
+
         // get konsul IGD
         $asalIGD = AsalIGD::where('kd_kasir', $dataMedis->kd_kasir)->where('no_transaksi', $dataMedis->no_transaksi)->first();
 
-        $konsulIGD = null;
+        $konsulIGD = [];
 
         if (!empty($asalIGD)) {
             $kunjunganIGD = $this->dataMedis->getDataMedisbyTransaksi($asalIGD->kd_kasir_asal, $asalIGD->no_transaksi_asal);
@@ -65,7 +67,7 @@ class KonsultasiSpesialisController extends Controller
                     ->whereDate('tgl_masuk', $kunjunganIGD->tgl_masuk)
                     ->where('kd_unit', $kunjunganIGD->kd_unit)
                     ->where('urut_masuk', $kunjunganIGD->urut_masuk)
-                    ->get();
+                    ->get() ?? [];
             }
         }
 

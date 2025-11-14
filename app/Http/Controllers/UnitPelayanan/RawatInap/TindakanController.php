@@ -18,29 +18,25 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Barryvdh\DomPDF\Facade\Pdf;
 use App\Models\SjpKunjungan;
-
+use App\Services\BaseService;
 
 class TindakanController extends Controller
 {
+    private $baseService;
+
     public function __construct()
     {
         $this->middleware('can:read unit-pelayanan/rawat-inap');
+        $this->baseService = new BaseService();
     }
 
     public function index(Request $request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
     {
-        $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
-            ->join('transaksi as t', function ($join) {
-                $join->on('kunjungan.kd_pasien', '=', 't.kd_pasien');
-                $join->on('kunjungan.kd_unit', '=', 't.kd_unit');
-                $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
-                $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
-            })
-            ->where('kunjungan.kd_pasien', $kd_pasien)
-            ->where('kunjungan.kd_unit', $kd_unit)
-            ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
-            ->where('kunjungan.urut_masuk', $urut_masuk)
-            ->first();
+        $dataMedis = $this->baseService->getDataMedis($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
+
+        if (!$dataMedis) {
+            abort(404, 'Data not found');
+        }
 
         $produk = Produk::select([
             'tarif.kd_produk',
@@ -135,16 +131,6 @@ class TindakanController extends Controller
             ->whereRelation('dokter', 'status', 1)
             ->get();
 
-        if ($dataMedis->pasien && $dataMedis->pasien->tgl_lahir) {
-            $dataMedis->pasien->umur = Carbon::parse($dataMedis->pasien->tgl_lahir)->age;
-        } else {
-            $dataMedis->pasien->umur = 'Tidak Diketahui';
-        }
-
-        if (!$dataMedis) {
-            abort(404, 'Data not found');
-        }
-
 
         return view('unit-pelayanan.rawat-inap.pelayanan.tindakan.index', compact(
             'dataMedis',
@@ -182,18 +168,7 @@ class TindakanController extends Controller
 
         try {
 
-            $kunjungan = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
-                ->join('transaksi as t', function ($join) {
-                    $join->on('kunjungan.kd_pasien', '=', 't.kd_pasien');
-                    $join->on('kunjungan.kd_unit', '=', 't.kd_unit');
-                    $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
-                    $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
-                })
-                ->where('kunjungan.kd_pasien', $kd_pasien)
-                ->where('kunjungan.kd_unit', $kd_unit)
-                ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
-                ->where('kunjungan.urut_masuk', $urut_masuk)
-                ->first();
+            $kunjungan = $this->baseService->getDataMedis($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
 
             $lastTindakanUrut = ListTindakanPasien::select(['urut_list'])
                 ->where('kd_pasien', $kd_pasien)
@@ -256,7 +231,9 @@ class TindakanController extends Controller
 
             DetailTransaksi::create($dataDetailTransaksi);
 
-            $this->createResume($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
+            // create resume
+            $resumeData = [];
+            $this->baseService->updateResumeMedis($kunjungan->kd_unit, $kunjungan->kd_pasien, $kunjungan->tgl_masuk, $kunjungan->urut_masuk, $resumeData);
 
             DB::commit();
             return back()->with('success', 'Tindakan berhasil ditambah');
@@ -358,6 +335,9 @@ class TindakanController extends Controller
 
         try {
 
+            $dataMedis = $this->baseService->getDataMedis($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
+            if (empty($dataMedis)) throw new Exception('Data medis tidak ditemukan');
+
             $tindakan = ListTindakanPasien::where('kd_pasien', $kd_pasien)
                 ->where('kd_unit', $kd_unit)
                 ->whereDate('tgl_masuk', $tgl_masuk)
@@ -404,7 +384,9 @@ class TindakanController extends Controller
                 ->whereDate('tgl_transaksi', $tgl_masuk)
                 ->update($dataDetailTransaksi);
 
-            $this->createResume($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
+            // create resume
+            $resumeData = [];
+            $this->baseService->updateResumeMedis($dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk, $resumeData);
 
             DB::commit();
             return back()->with('success', 'Tindakan berhasil diubah');
@@ -511,42 +493,5 @@ class TindakanController extends Controller
         $pdf->setPaper('a4', 'portrait');
 
         return $pdf->stream('daftar-tindakan-' . $dataMedis->pasien->nama_pasien . '.pdf');
-    }
-    public function createResume($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
-    {
-        // get resume
-        $resume = RMEResume::where('kd_pasien', $kd_pasien)
-            ->where('kd_unit', $kd_unit)
-            ->whereDate('tgl_masuk', $tgl_masuk)
-            ->where('urut_masuk', $urut_masuk)
-            ->first();
-
-        if (empty($resume)) {
-            $resumeData = [
-                'kd_pasien'     => $kd_pasien,
-                'kd_unit'       => $kd_unit,
-                'tgl_masuk'     => $tgl_masuk,
-                'urut_masuk'    => $urut_masuk,
-                'status'        => 0
-            ];
-
-            $newResume = RMEResume::create($resumeData);
-            $newResume->refresh();
-
-            // create resume detail
-            $resumeDtlData = [
-                'id_resume'     => $newResume->id
-            ];
-
-            RmeResumeDtl::create($resumeDtlData);
-        } else {
-            // get resume dtl
-            $resumeDtl = RmeResumeDtl::where('id_resume', $resume->id)->first();
-            $resumeDtlData = [
-                'id_resume'     => $resume->id
-            ];
-
-            if (empty($resumeDtl)) RmeResumeDtl::create($resumeDtlData);
-        }
     }
 }

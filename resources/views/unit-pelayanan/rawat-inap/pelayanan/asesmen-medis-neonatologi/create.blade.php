@@ -27,7 +27,7 @@
                     <h5 class="section-title">1. Data masuk</h5>
 
                     <div class="form-group">
-                        <label style="min-width: 200px;">Tanggal Dan Jam Masuk</label>
+                        <label style="min-width: 200px;">Tanggal Dan Jam Pengisian</label>
                         <div class="d-flex gap-3" style="width: 100%;">
                             <input type="date" class="form-control" name="tanggal"
                                 value="{{ date('Y-m-d') }}">
@@ -600,7 +600,7 @@
                             <div class="col-md-9">
                                 <div class="input-group">
                                     <input type="number" class="form-control" name="nadi"
-                                        placeholder="0">
+                                        placeholder="nadi" value="{{ isset($vitalSignsData) && $vitalSignsData ? $vitalSignsData->nadi : '' }}">
                                     <span class="input-group-text">x/mnt</span>
                                 </div>
                             </div>
@@ -614,7 +614,7 @@
                             <div class="col-md-9">
                                 <div class="input-group">
                                     <input type="number" class="form-control" name="respirasi"
-                                        placeholder="0">
+                                        placeholder="respirasi" value="{{ isset($vitalSignsData) && $vitalSignsData ? $vitalSignsData->respiration : '' }}">
                                     <span class="input-group-text">x/mnt</span>
                                 </div>
                             </div>
@@ -626,7 +626,8 @@
                                 <label class="form-label">SpO:</label>
                             </div>
                             <div class="col-md-9">
-                                <input type="number" class="form-control" name="spo" placeholder="0">
+                                <input type="number" class="form-control" name="spo" placeholder="spo"
+                                    value="{{ isset($vitalSignsData) && $vitalSignsData ? $vitalSignsData->spo2_tanpa_o2 : '' }}">
                             </div>
                         </div>
 
@@ -657,7 +658,7 @@
                             <div class="col-md-9">
                                 <div class="input-group">
                                     <input type="text" class="form-control" name="temperatur"
-                                        step="0.1" placeholder="36.5">
+                                        step="0.1" placeholder="suhu" value="{{ isset($vitalSignsData) && $vitalSignsData ? $vitalSignsData->suhu : '' }}">
                                     <span class="input-group-text">°C</span>
                                 </div>
                             </div>
@@ -693,7 +694,7 @@
                             <div class="col-md-9">
                                 <div class="input-group">
                                     <input type="number" class="form-control" name="bb_sekarang"
-                                        step="0.01" min="0" placeholder="0.00">
+                                        step="0.01" min="0" placeholder="bb" value="{{ isset($vitalSignsData) && $vitalSignsData ? $vitalSignsData->berat_badan : '' }}">
                                     <span class="input-group-text">kg</span>
                                 </div>
                             </div>
@@ -707,7 +708,7 @@
                             <div class="col-md-9">
                                 <div class="input-group">
                                     <input type="number" class="form-control" name="pb_sekarang"
-                                        step="0.1" min="0" placeholder="0.0">
+                                        step="0.1" min="0" placeholder="tb" value="{{ isset($vitalSignsData) && $vitalSignsData ? $vitalSignsData->tinggi_badan : '' }}">
                                     <span class="input-group-text">cm</span>
                                 </div>
                             </div>

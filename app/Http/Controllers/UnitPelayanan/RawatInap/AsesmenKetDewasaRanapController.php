@@ -38,17 +38,22 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\Services\AsesmenService;
+use App\Services\BaseService;
 use App\Services\CheckResumeService;
+use Exception;
 
 class AsesmenKetDewasaRanapController extends Controller
 {
     protected $asesmenService;
     protected $checkResumeService;
+    private $baseService;
+
     public function __construct()
     {
         $this->middleware('can:read unit-pelayanan/rawat-inap');
         $this->asesmenService = new AsesmenService();
         $this->checkResumeService = new CheckResumeService();
+        $this->baseService = new BaseService();
     }
 
     private function getDataMedis($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
@@ -213,14 +218,21 @@ class AsesmenKetDewasaRanapController extends Controller
     {
         DB::beginTransaction();
         try {
+
+            $dataMedis = $this->baseService->getDataMedis($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
+            if (empty($dataMedis)) throw new Exception('Data kunjungan tidak ditemukan !');
+
+            $formatDate = date('Y-m-d', strtotime($request->tanggal));
+            $formatTime = date('H:i:s', strtotime($request->jam));
+
             // 1. Buat record RmeAsesmen
             $asesmen = new RmeAsesmen();
-            $asesmen->kd_pasien = $request->kd_pasien;
-            $asesmen->kd_unit = $request->kd_unit;
-            $asesmen->tgl_masuk = $request->tgl_masuk;
-            $asesmen->urut_masuk = $request->urut_masuk;
+            $asesmen->kd_pasien = $dataMedis->kd_pasien;
+            $asesmen->kd_unit = $dataMedis->kd_unit;
+            $asesmen->tgl_masuk = $dataMedis->tgl_masuk;
+            $asesmen->urut_masuk = $dataMedis->urut_masuk;
             $asesmen->user_id = Auth::id();
-            $asesmen->waktu_asesmen = now();
+            $asesmen->waktu_asesmen = "$formatDate $formatTime";
             $asesmen->kategori = 2;
             $asesmen->sub_kategori = 1;
             $asesmen->save();
@@ -237,11 +249,8 @@ class AsesmenKetDewasaRanapController extends Controller
                 'berat_badan' => $request->bb ? (int) $request->bb : null,
             ];
 
-
-            $lastTransaction = $this->asesmenService->getTransaksiData($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
-
             // Simpan vital sign menggunakan service
-            $this->asesmenService->store($vitalSignData, $kd_pasien, $lastTransaction->no_transaksi, $lastTransaction->kd_kasir);
+            $this->asesmenService->store($vitalSignData, $kd_pasien, $dataMedis->no_transaksi, $dataMedis->kd_kasir);
 
             // Simpan ke tabel RmeAsesmenKetDewasaRanap
             $asesmenKetDewasaRanap = RmeAsesmenKetDewasaRanap::create([
@@ -534,13 +543,38 @@ class AsesmenKetDewasaRanapController extends Controller
             // Handle alergi
             $this->handleAlergiData($request, $kd_pasien);
 
-            // Panggil ResumeService
-            $resume = $this->checkResumeService->checkAndCreateResume([
-                'kd_pasien' => $kd_pasien,
-                'kd_unit' => $kd_unit,
-                'tgl_masuk' => $tgl_masuk,
-                'urut_masuk' => $urut_masuk
-            ]);
+
+            // create resume
+            $resumeData = [
+                'anamnesis'             => $request->keluhan_utama,
+
+                'konpas'                =>
+                [
+                    'sistole'   => [
+                        'hasil' => $vitalSignData['sistole'] ?? null
+                    ],
+                    'distole'   => [
+                        'hasil' => $vitalSignData['diastole'] ?? null
+                    ],
+                    'respiration_rate'   => [
+                        'hasil' => $vitalSignData['respiration'] ?? null
+                    ],
+                    'suhu'   => [
+                        'hasil' => $vitalSignData['suhu'] ?? null
+                    ],
+                    'nadi'   => [
+                        'hasil' => $vitalSignData['nadi'] ?? null
+                    ],
+                    'tinggi_badan'   => [
+                        'hasil' => $vitalSignData['tinggi_badan'] ?? null
+                    ],
+                    'berat_badan'   => [
+                        'hasil' => $vitalSignData['berat_badan'] ?? null
+                    ]
+                ]
+            ];
+
+            $this->baseService->updateResumeMedis($dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk, $resumeData);
 
             DB::commit();
 
@@ -552,7 +586,7 @@ class AsesmenKetDewasaRanapController extends Controller
                     'urut_masuk' => $urut_masuk
                 ])
                 ->with('success', 'Data Asesmen Awal Keperawatan Rawat Inap Dewasa');
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             DB::rollback();
             return back()
                 ->withInput()
@@ -577,7 +611,7 @@ class AsesmenKetDewasaRanapController extends Controller
                     'asesmenKetDewasaRanapDiagnosisKeperawatan'
                 ]
             )->findOrFail($id);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $asesmen = RmeAsesmen::findOrFail($id);
         }
 
@@ -619,7 +653,7 @@ class AsesmenKetDewasaRanapController extends Controller
                     'asesmenKetDewasaRanapDiagnosisKeperawatan'
                 ]
             )->findOrFail($id);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $asesmen = RmeAsesmen::findOrFail($id);
         }
 
@@ -648,14 +682,21 @@ class AsesmenKetDewasaRanapController extends Controller
     {
         DB::beginTransaction();
         try {
+
+            $dataMedis = $this->baseService->getDataMedis($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
+            if (empty($dataMedis)) throw new Exception('Data kunjungan tidak ditemukan !');
+
+            $formatDate = date('Y-m-d', strtotime($request->tanggal));
+            $formatTime = date('H:i:s', strtotime($request->jam));
+
             // 1. Buat record RmeAsesmen
             $asesmen = RmeAsesmen::findOrFail($id);
-            $asesmen->kd_pasien = $request->kd_pasien;
-            $asesmen->kd_unit = $request->kd_unit;
-            $asesmen->tgl_masuk = $request->tgl_masuk;
-            $asesmen->urut_masuk = $request->urut_masuk;
+            $asesmen->kd_pasien = $dataMedis->kd_pasien;
+            $asesmen->kd_unit = $dataMedis->kd_unit;
+            $asesmen->tgl_masuk = $dataMedis->tgl_masuk;
+            $asesmen->urut_masuk = $dataMedis->urut_masuk;
             $asesmen->user_id = Auth::id();
-            $asesmen->waktu_asesmen = now();
+            $asesmen->waktu_asesmen = "$formatDate $formatTime";
             $asesmen->kategori = 2;
             $asesmen->sub_kategori = 1;
             $asesmen->save();
@@ -672,10 +713,8 @@ class AsesmenKetDewasaRanapController extends Controller
                 'berat_badan' => $request->bb ? (int) $request->bb : null,
             ];
 
-            $lastTransaction = $this->asesmenService->getTransaksiData($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
-
             // Simpan vital sign menggunakan service
-            $this->asesmenService->store($vitalSignData, $kd_pasien, $lastTransaction->no_transaksi, $lastTransaction->kd_kasir);
+            $this->asesmenService->store($vitalSignData, $kd_pasien, $dataMedis->no_transaksi, $dataMedis->kd_kasir);
 
             $asesmen->asesmenKetDewasaRanap()->updateOrCreate(
                 ['id_asesmen' => $asesmen->id],
@@ -975,13 +1014,37 @@ class AsesmenKetDewasaRanapController extends Controller
             // Handle alergi
             $this->handleAlergiData($request, $kd_pasien);
 
-            // Panggil ResumeService
-            $resume = $this->checkResumeService->checkAndCreateResume([
-                'kd_pasien' => $kd_pasien,
-                'kd_unit' => $kd_unit,
-                'tgl_masuk' => $tgl_masuk,
-                'urut_masuk' => $urut_masuk
-            ]);
+            // create resume
+            $resumeData = [
+                'anamnesis'             => $request->keluhan_utama,
+
+                'konpas'                =>
+                [
+                    'sistole'   => [
+                        'hasil' => $vitalSignData['sistole'] ?? null
+                    ],
+                    'distole'   => [
+                        'hasil' => $vitalSignData['diastole'] ?? null
+                    ],
+                    'respiration_rate'   => [
+                        'hasil' => $vitalSignData['respiration'] ?? null
+                    ],
+                    'suhu'   => [
+                        'hasil' => $vitalSignData['suhu'] ?? null
+                    ],
+                    'nadi'   => [
+                        'hasil' => $vitalSignData['nadi'] ?? null
+                    ],
+                    'tinggi_badan'   => [
+                        'hasil' => $vitalSignData['tinggi_badan'] ?? null
+                    ],
+                    'berat_badan'   => [
+                        'hasil' => $vitalSignData['berat_badan'] ?? null
+                    ]
+                ]
+            ];
+
+            $this->baseService->updateResumeMedis($dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk, $resumeData);
 
             DB::commit();
 
@@ -993,7 +1056,7 @@ class AsesmenKetDewasaRanapController extends Controller
                     'urut_masuk' => $urut_masuk
                 ])
                 ->with('success', 'Data asesmen medis anak berhasil diperbarui');
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             DB::rollback();
             return back()
                 ->withInput()
@@ -1063,7 +1126,7 @@ class AsesmenKetDewasaRanapController extends Controller
             return view('unit-pelayanan.gawat-darurat.action-gawat-darurat.asesmen-keperawatan.show', $data);
         } catch (ModelNotFoundException $e) {
             return back()->with('error', 'Data asesmen tidak ditemukan.');
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return back()->with('error', 'Terjadi kesalahan saat memuat data asesmen.');
         }
     }

@@ -20,7 +20,7 @@
 
                     <div class="row mb-3">
                         <div class="col-md-6">
-                            <label class="form-label fw-bold">Tanggal Dan Jam Masuk</label>
+                            <label class="form-label fw-bold">Tanggal Dan Jam Pengisian</label>
                             <p>{{ Carbon\Carbon::parse($asesmenGeriatri->waktu_masuk)->format('d/m/Y H:i') }}
                             </p>
                         </div>
@@ -271,9 +271,9 @@
                                             <td>{{ $alergi->reaksi }}</td>
                                             <td>
                                                 <span
-                                                    class="badge 
+                                                    class="badge
                                                     @if ($alergi->tingkat_keparahan == 'Ringan') bg-success
-                                                    @elseif($alergi->tingkat_keparahan == 'Sedang') bg-warning  
+                                                    @elseif($alergi->tingkat_keparahan == 'Sedang') bg-warning
                                                     @elseif($alergi->tingkat_keparahan == 'Berat') bg-danger
                                                     @else bg-secondary @endif">
                                                     {{ $alergi->tingkat_keparahan }}

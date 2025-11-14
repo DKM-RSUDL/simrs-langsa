@@ -99,7 +99,6 @@
                                                 <tr>
                                                     <th>No</th>
                                                     <th>Tanggal</th>
-                                                    <th>Hari Ke</th>
                                                     <th>Shift</th>
                                                     <th>Skor Total</th>
                                                     <th>Kategori Resiko</th>
@@ -111,8 +110,12 @@
                                                 @forelse($skalaMorseData as $index => $item)
                                                     <tr>
                                                         <td>{{ $skalaMorseData->firstItem() + $index }}</td>
-                                                        <td>{{ $item->tanggal_formatted }}</td>
-                                                        <td>{{ $item->hari_ke }}</td>
+                                                        <td>
+                                                            <strong>{{ date('d/m/Y', strtotime($item->tanggal)) }}</strong><br>
+                                                            <small
+                                                                class="text-muted">{{ date('H:i', strtotime($item->jam)) }}
+                                                                WIB</small>
+                                                        </td>
                                                         <td>{{ $item->shift_name }}</td>
                                                         <td>
                                                             <span class="fw-bold fs-5">{{ $item->skor_total }}</span>

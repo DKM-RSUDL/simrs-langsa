@@ -786,9 +786,12 @@
                     if(first){
                         const dignoseListContent = render_list_diagonis_content(response.data)
                         const ListData = $('#diagnoseList');
+                        
                         ListData.empty()
                         DiagnoseArray = response.data
                         ListData.html(dignoseListContent);
+
+                        setupDiagnosisDrag(ListData)
                     }
                    
 
@@ -811,57 +814,111 @@
 
 
     // Simpan diagnosis dari modal ke form
+    function setupDiagnosisDrag($container) {
+        setTimeout(() => {
+            const el = $container[0];
+            if (el?.sortable) el.sortable.destroy();
+
+            el.sortable = Sortable.create(el, {
+                animation: 180,
+                handle: '.drag-handle',
+                ghostClass: 'bg-primary',
+                onEnd: () => {
+                    $container.find('.diag-item-wrap').each(function (i) {
+                        $(this).find('.order-input').val(i);
+                        $(this).find('.btnListDiagnose').attr('data-id', i);
+                    });
+                }
+            });
+        }, 100);
+        
+    }
+
     $('#addDiagnosisModal #btnSaveDiagnose').off('click').on('click', function (e) {
         e.preventDefault();
-        console.log("ooooooooooooooooooooooooooooooooooooooooooo")
 
-        // // Backup data PPA
-        // var currentPpaBackup = editInstruksiPpaData ? JSON.parse(JSON.stringify(editInstruksiPpaData)) : [];
+        let html = '';
+        let index = 0;
 
-        var dignoseListContent = '';
-        let diagnoses = $('#addDiagnosisModal #listDiagnosa li');
-
-        // console.log('Jumlah diagnosis yang akan disimpan:', diagnoses.length);
-
-        $(diagnoses).each(function (i, e) {
-            var diagnosisText = $(e).text().trim();
-            // console.log('Processing diagnosis ' + (i+1) + ':', diagnosisText);
-
-            // Skip placeholder text
-            if (diagnosisText &&
-                !diagnosisText.includes('Tidak ada') &&
-                !diagnosisText.includes('Gagal') &&
-                !diagnosisText.includes('Memuat')) {
-
-                dignoseListContent += `<div class="diag-item-wrap">
-                        <a href="#" class="fw-bold text-decoration-none">
-                            <div class="d-flex align-items-center justify-content-between">
-                                <p class="m-0 p-0">${escapeHtml(diagnosisText)}</p>
-                                <span class="btnListDiagnose" data-id = "${escapeHtml(i)}" 
-                                data-name = "${escapeHtml(diagnosisText)}">
-                                    <i class="ti-close text-danger"></i>
-                                </span>
-                            </div>
-                        </a>
-                        <input type="hidden" name="diagnose_name[]" value="${escapeHtml(diagnosisText)}">
+        $('#addDiagnosisModal #listDiagnosa li').each(function () {
+            let text = $(this).text().trim();
+            if (text && !text.includes('Tidak ada') && !text.includes('Gagal') && !text.includes('Memuat')) {
+                html += `
+                    <div class="diag-item-wrap position-relative bg-white border rounded mb-2 p-3 shadow-sm" style="user-select:none;">
+                        <div class="drag-handle position-absolute start-0 top-0 bottom-0 d-flex align-items-center ps-3 text-muted fw-bold" 
+                            style="cursor:grab; font-size:22px; width:50px;">
+                            ⋮⋮
+                        </div>
+                        <div class="d-flex align-items-center justify-content-between ps-5 pe-2">
+                            <p class="m-0 fw-bold flex-fill">${escapeHtml(text)}</p>
+                            <span class="btnListDiagnose text-danger" data-id="${index}" data-name="${escapeHtml(text)}" style="cursor:pointer;">
+                                <i class="ti ti-close"></i>
+                            </span>
+                        </div>
+                        <input type="hidden" name="diagnose_name[]" value="${escapeHtml(text)}">
+                        <input type="hidden" name="diagnose_order[]" value="${index}" class="order-input">
                     </div>`;
+                index++;
             }
+            
         });
-        console.log("Temp Data", DiagnoseArrayTemp)
+
+        const $target = $('#addCpptModal').children().length === 0 
+            ? $('#diagnoseList') 
+            : $('#addCpptModal #diagnoseList');
 
         DiagnoseArrayTemp.map((item)=>{
-            DiagnoseArray.push(item)
+          DiagnoseArray.push(item)
         })
-        DiagnoseArrayTemp = []
-        console.log("Berhasil Ditambah : ", DiagnoseArray)
 
-        if($('#addCpptModal').children().length == 0){
-            $('#diagnoseList').html(dignoseListContent);
-        }else{
-            $('#addCpptModal #diagnoseList').html(dignoseListContent);
-        }
-        // console.log('Diagnosis berhasil disimpan');
+        DiagnoseArrayTemp = []
+
+
+        $target.html(html);
         $('#addDiagnosisModal').modal('hide');
+
+        setupDiagnosisDrag($target);
+    });
+
+    $('#editDiagnosisModal #btnSaveDiagnose').off('click').on('click', function (e) {
+        e.preventDefault();
+
+        let html = '';
+        let index = 0;
+
+        $('#editDiagnosisModal #listDiagnosa li').each(function () {
+            let text = $(this).text().trim();
+            if (text && !text.includes('Tidak ada') && !text.includes('Gagal') && !text.includes('Memuat')) {
+                html += `
+                    <div class="diag-item-wrap position-relative bg-white border rounded mb-2 p-3 shadow-sm" style="user-select:none;">
+                        <div class="drag-handle position-absolute start-0 top-0 bottom-0 d-flex align-items-center ps-3 text-muted fw-bold" 
+                            style="cursor:grab; font-size:22px; width:50px;">
+                            ⋮⋮
+                        </div>
+                        <div class="d-flex align-items-center justify-content-between ps-5 pe-2">
+                            <p class="m-0 fw-bold flex-fill">${escapeHtml(text)}</p>
+                            <span class="btnListDiagnose text-danger" data-id="${index}" data-name="${escapeHtml(text)}" style="cursor:pointer;">
+                                <i class="ti ti-close"></i>
+                            </span>
+                        </div>
+                        <input type="hidden" name="diagnose_name[]" value="${escapeHtml(text)}">
+                        <input type="hidden" name="diagnose_order[]" value="${index}" class="order-input">
+                    </div>`;
+                index++;
+            }
+        });
+
+        DiagnoseArrayTemp.map((item)=>{
+          DiagnoseArray.push(item)
+        })
+
+        DiagnoseArrayTemp = []
+
+        const $target = $('#editCpptModal').find('#diagnoseList'); // sesuaikan kalau beda
+        $target.html(html);
+        $('#editDiagnosisModal').modal('hide');
+
+        setupDiagnosisDrag($target);
     });
 
     // Event handler untuk tombol "Gunakan" diagnosis sebelumnya
@@ -941,6 +998,7 @@
                     // Masukkan satu per satu
                     response.data.forEach(function (diagnosis, index) {
                         console.log('Menambah diagnosis ke-' + (index + 1) + ':', diagnosis);
+                        
                         $('#addDiagnosisModal #listDiagnosa').append(`<li>${escapeHtml(diagnosis)}</li>`);
                     });
 
@@ -983,6 +1041,9 @@
                     const dignoseListContent = render_list_diagonis_content(response.data)
                     $('#addCpptModal #diagnoseList').html(dignoseListContent);
 
+                    const target = $('#addCpptModal #diagnoseList')
+                    setupDiagnosisDrag(target)
+
                     if (typeof showToast === 'function') {
                         showToast('success', `${response.data.length} diagnosis terakhir dimuat otomatis`);
                     }
@@ -1002,16 +1063,19 @@
 
             data.forEach(function (diagnosis, index) {
                 dignoseListContent += `
-                    <div class="diag-item-wrap" data-index="${index}">
-                        <a href="#" class="fw-bold text-decoration-none">
-                            <div class="d-flex align-items-center justify-content-between">
-                                <p class="m-0 p-0">${escapeHtml(diagnosis)}</p>
-                                <span class="btnListDiagnose" data-id="${index}" data-name=${escapeHtml(diagnosis)}>
-                                    <i class="ti-close text-danger"></i>
-                                </span>
-                            </div>
-                        </a>
+                     <div class="diag-item-wrap position-relative bg-white border rounded mb-2 p-3 shadow-sm" style="user-select:none;">
+                        <div class="drag-handle position-absolute start-0 top-0 bottom-0 d-flex align-items-center ps-3 text-muted fw-bold" 
+                            style="cursor:grab; font-size:22px; width:50px;">
+                            ⋮⋮
+                        </div>
+                        <div class="d-flex align-items-center justify-content-between ps-5 pe-2">
+                            <p class="m-0 fw-bold flex-fill">${escapeHtml(diagnosis)}</p>
+                            <span class="btnListDiagnose text-danger" data-id="${index}" data-name="${escapeHtml(diagnosis)}" style="cursor:pointer;">
+                                <i class="ti ti-close"></i>
+                            </span>
+                        </div>
                         <input type="hidden" name="diagnose_name[]" value="${escapeHtml(diagnosis)}">
+                        <input type="hidden" name="diagnose_order[]" value="${index}" class="order-input">
                     </div>`;
             });
             return dignoseListContent
@@ -1151,9 +1215,26 @@
                         for (let key in data) {
                             if (data.hasOwnProperty(key)) {
                                 let patient = data[key];
+                                console.log(patient)
+
+                                console.log(patient.jam)
 
                                 // Set key to input
+
+                                // Misalnya patient.tanggal = "2025-11-12 14:30:00"
+                                
+                              // Ambil jam dari format "1900-01-01 10:34:00.000"
+                                const formattedTime = patient.jam.split(' ')[1].slice(0, 5);
+
+                                // Ambil tanggal dari format "2025-11-12 00:00:00.000"
+                                const formattedDate = patient.tanggal.split(' ')[0];
+
+                                // Set ke elemen form
+                                $(target).find('#tanggal_masuk_edit').val(formattedDate);
+                                $(target).find('#jam_masuk_edit').val(formattedTime);
                                 $(target).find('input[name="tgl_cppt"]').val(tanggalData);
+                                $(target).find('input[name="urut_cppt"]').val(urutData);
+                                
                                 $(target).find('input[name="urut_cppt"]').val(urutData);
                                 $(target).find('input[name="urut_total_cppt"]').val(urutTotalData);
                                 $(target).find('input[name="unit_cppt"]').val(unitData);
@@ -1217,33 +1298,84 @@
                                     `#jenis_nyeri option[value="${patient?.jenis?.id || ''}"]`)
                                     .attr('selected', 'selected');
 
-                                // diagnosis set value
+                                                                // diagnosis set value
                                 var penyakit = patient.cppt_penyakit;
                                 var dignoseListContent = '';
+                                let index = 0;
 
-                              
+                                // Kosongkan array biar gak double
+                                DiagnoseArray = [];
+                                DiagnoseArrayTemp = [];
 
+                                // Loop penyakit
                                 for (let d in penyakit) {
                                     if (penyakit.hasOwnProperty(d)) {
-                                        
                                         let diag = penyakit[d];
-                                        DiagnoseArray.push(diag.nama_penyakit)
+                                        DiagnoseArray.push(diag.nama_penyakit);
+
                                         dignoseListContent += `
-                                            <div class="diag-item-wrap" data-index="${d}">
-                                                <a href="#" class="fw-bold text-decoration-none">
-                                                    <div class="d-flex align-items-center justify-content-between">
-                                                        <p class="m-0 p-0">${diag.nama_penyakit}</p>
-                                                        <span class="btnListDiagnose" data-name="${diag.nama_penyakit}" data-index="${d}">
-                                                            <i class="ti-close text-danger"></i>
-                                                        </span>
-                                                    </div>
-                                                </a>
-                                                <input type="hidden" name="diagnose_name[]" value="${diag.nama_penyakit}">
+                                            <div class="diag-item-wrap position-relative bg-white border rounded mb-2 p-3 shadow-sm" style="user-select:none;">
+                                                
+                                                <!-- DRAG HANDLE -->
+                                                <div class="drag-handle position-absolute start-0 top-0 bottom-0 d-flex align-items-center ps-3 text-muted fw-bold" 
+                                                     style="cursor:grab; font-size:22px; width:50px; user-select:none;">
+                                                    ⋮⋮
+                                                </div>
+
+                                                <div class="d-flex align-items-center justify-content-between ps-5 pe-2">
+                                                    <p class="m-0 fw-bold flex-fill">${escapeHtml(diag.nama_penyakit)}</p>
+                                                    <span class="btnListDiagnose text-danger" 
+                                                          data-id="${index}" 
+                                                          data-name="${escapeHtml(diag.nama_penyakit)}" 
+                                                          style="cursor:pointer; z-index:10;">
+                                                        <i class="ti ti-close"></i>
+                                                    </span>
+                                                </div>
+
+                                                <input type="hidden" name="diagnose_name[]" value="${escapeHtml(diag.nama_penyakit)}">
+                                                <input type="hidden" name="diagnose_order[]" value="${index}" class="order-input">
                                             </div>`;
+
+                                        index++;
                                     }
                                 }
 
-                                $(target).find('#diagnoseList').html(dignoseListContent);
+                                // INI YANG BENAR: Cari #diagnoseList DI DALAM MODAL YANG SEDANG DIBUKA!
+                                const $currentModal = $(target); // modal yang diklik (data-bs-target)
+                                const $diagnoseList = $currentModal.find('#diagnoseList');
+
+                                // Tempel data
+                                $diagnoseList.html(dignoseListContent);
+
+                                // RE-INIT SORTABLE DENGAN ELEMENT YANG BENAR
+                                setTimeout(() => {
+                                    const el = $diagnoseList[0];
+
+                                    if (el && el.sortable) {
+                                        el.sortable.destroy();
+                                    }
+
+                                    if (el) {
+                                        el.sortable = Sortable.create(el, {
+                                            animation: 180,
+                                            handle: '.drag-handle',
+                                            ghostClass: 'bg-primary',
+                                            onEnd: () => {
+                                                $diagnoseList.finaaaad('.diag-item-wrap').each(function(idx) {
+                                                    $(this).find('.order-input').val(idx);
+                                                    $(this).find('.btnListDiagnose').attr('data-id', idx);
+                                                });
+                                            }
+                                        });
+
+                                        console.log("%cEDIT CPPT: DRAG & DROP SUDAH AKTIF! BISA GESER PAKE ⋮⋮", "background:#00aa00;color:white;padding:10px 20px;font-size:16px;border-radius:8px;");
+                                    }
+                                }, 150);
+
+                                // Simpan data PPA
+                                window.MASTER_EDIT_INSTRUKSI_PPA = patient.instruksi_ppa || [];
+
+                                
 
                                 // CRITICAL: Simpan data instruksi PPA ke GLOBAL variable yang persisten
                                 window.MASTER_EDIT_INSTRUKSI_PPA = patient.instruksi_ppa || [];
@@ -1302,8 +1434,10 @@
 
         const name = $(this).data('name'); // ✅ ambil nama dari data-id
 
+        console.log(name)
+
         console.log('DiagnoseArray sebelum hapus:', DiagnoseArray);
-        const index = DiagnoseArray.findIndex((item) => item === name);
+        const index = DiagnoseArray.findIndex((item) => item == name);
 
         if (index !== -1) {
             DiagnoseArray.splice(index, 1); // ✅ hapus elemen berdasarkan index
@@ -1344,8 +1478,10 @@
         if (searchInputValue != '') {
             if($('#editDiagnosisModal').children.length > 0){
                 console.log("Masuk Edit")
+
+                DiagnoseArrayTemp.push(searchInputValue)
                 
-                let ListData = $('#listDiagnosa')
+                let ListData = $('#editDiagnosisModal #listDiagnosa')
                 ListData.empty()
                    
                 DiagnoseArray.map((item)=>{
@@ -1869,5 +2005,6 @@
 
     $(document).on('click','.btn-close',function (){
         DiagnoseArrayTemp = [];
+        document.querySelectorAll('.modal-backdrop').forEach(backdrop => backdrop.remove());
     })
 </script>

@@ -31,7 +31,7 @@
                             <h5 class="section-title">1. Data masuk</h5>
 
                             <div class="form-group">
-                                <label style="min-width: 200px;">Tanggal Dan Jam Masuk</label>
+                                <label style="min-width: 200px;">Tanggal Dan Jam Pengisian</label>
                                 <div class="d-flex gap-3" style="width: 100%;">
                                     <input type="date" class="form-control" name="tanggal_masuk"
                                         id="tanggal_masuk" value="{{ date('Y-m-d') }}">
@@ -90,12 +90,12 @@
                                     <div class="flex-grow-1">
                                         <label class="form-label">Sistole</label>
                                         <input type="number" class="form-control" name="sistole"
-                                            placeholder="120" min="70" max="300">
+                                            placeholder="sistole" min="70" max="300" value="{{ isset($vitalSignsData) && $vitalSignsData ? $vitalSignsData->sistole : '' }}">
                                     </div>
                                     <div class="flex-grow-1">
                                         <label class="form-label">Diastole</label>
                                         <input type="number" class="form-control" name="diastole"
-                                            placeholder="80" min="40" max="150">
+                                            placeholder="diastole" min="40" max="150" value="{{ isset($vitalSignsData) && $vitalSignsData ? $vitalSignsData->diastole : '' }}">
                                     </div>
                                 </div>
                             </div>
@@ -103,32 +103,32 @@
                             <div class="form-group">
                                 <label style="min-width: 220px;">Suhu (°C)</label>
                                 <input type="text" class="form-control" name="suhu" step="0.1"
-                                    placeholder="36.5" min="30" max="45">
+                                    placeholder="suhu" min="30" max="45" value="{{ isset($vitalSignsData) && $vitalSignsData ? $vitalSignsData->suhu : '' }}">
                             </div>
 
                             <div class="form-group">
                                 <label style="min-width: 220px;">Respirasi (Per Menit)</label>
-                                <input type="number" class="form-control" name="respirasi" placeholder="20"
-                                    min="10" max="50">
+                                <input type="number" class="form-control" name="respirasi" placeholder="respirasi"
+                                    min="10" max="50" value="{{ isset($vitalSignsData) && $vitalSignsData ? $vitalSignsData->respiration : '' }}">
                             </div>
 
                             <div class="form-group">
                                 <label style="min-width: 220px;">Nadi (Per Menit)</label>
-                                <input type="number" class="form-control" name="nadi" placeholder="80"
-                                    min="40" max="200">
+                                <input type="number" class="form-control" name="nadi" placeholder="nadi"
+                                    min="40" max="200" value="{{ isset($vitalSignsData) && $vitalSignsData ? $vitalSignsData->nadi : '' }}">
                             </div>
 
                             {{-- TAMBAHAN VITAL SIGN: BB, TB, IMT --}}
                             <div class="form-group">
                                 <label style="min-width: 220px;">Berat Badan (Kg)</label>
                                 <input type="number" class="form-control" name="berat_badan" id="berat_badan"
-                                    placeholder="70" step="0.1" min="10" max="300">
+                                    placeholder="bb" step="0.1" min="10" max="300" value="{{ isset($vitalSignsData) && $vitalSignsData ? $vitalSignsData->berat_badan : '' }}">
                             </div>
 
                             <div class="form-group">
                                 <label style="min-width: 220px;">Tinggi Badan (Cm)</label>
                                 <input type="number" class="form-control" name="tinggi_badan" id="tinggi_badan"
-                                    placeholder="170" step="0.1" min="50" max="250">
+                                    placeholder="tb" step="0.1" min="50" max="250" value="{{ isset($vitalSignsData) && $vitalSignsData ? $vitalSignsData->tinggi_badan : '' }}">
                             </div>
 
                             <div class="form-group">

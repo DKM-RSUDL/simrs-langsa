@@ -36,7 +36,7 @@
                                 <h5 class="section-title">1. Data Masuk</h5>
 
                                 <div class="form-group row">
-                                    <label class="col-sm-3 col-form-label">Tanggal dan Jam Masuk</label>
+                                    <label class="col-sm-3 col-form-label">Tanggal dan Jam Pengisian</label>
                                     <div class="col-sm-8 d-flex gap-3">
                                         <input type="date" class="form-control" name="tgl_masuk"
                                             value="{{ date('Y-m-d') }}">
@@ -141,7 +141,7 @@
                                     <label class="d-block mb-2" style="min-width: 200px;">Pernafasan (Per Menit)</label>
                                     <input type="number" class="form-control" name="pernafasan"
                                         placeholder="frekuensi nafas per menit"
-                                        value="{{ $asesmen->rmeAsesmenObstetriPemeriksaanFisik->pernafasan ?? '' }}">
+                                        value="{{ isset($vitalSignsData) && $vitalSignsData ? $vitalSignsData->respiration : '' }}">
                                     <label class="d-block ml-2">Jam</label>
                                     <input type="time" class="form-control" name="serviks_jam_pembukaan">
                                 </div>
@@ -509,11 +509,11 @@
 
                                 <div class="form-group mt-4">
                                     <label style="min-width: 200px;">Tinggi Badan</label>
-                                    <input type="number" class="form-control" name="antropometri_tinggi_badan">
+                                    <input type="number" class="form-control" name="antropometri_tinggi_badan" value="{{ isset($vitalSignsData) && $vitalSignsData ? $vitalSignsData->tinggi_badan : '' }}">
                                 </div>
                                 <div class="form-group mt-4">
                                     <label style="min-width: 200px;">Berat Badan</label>
-                                    <input type="number" class="form-control" name="antropometr_berat_badan">
+                                    <input type="number" class="form-control" name="antropometr_berat_badan" value="{{ isset($vitalSignsData) && $vitalSignsData ? $vitalSignsData->berat_badan : '' }}">
                                 </div>
 
                                 <div class="form-group">

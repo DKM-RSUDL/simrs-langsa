@@ -3,6 +3,8 @@
     $isDokterSpesialis = Auth::user()->can('is-dokter-spesialis');
 @endphp
 
+
+
 <div class="d-grid gap-2">
     @canany(['is-gizi', 'is-admin'])
         <button class="btn mb-2 btn-primary" id="directToGizi">
@@ -69,7 +71,7 @@
                             <!-- S (SUBJECTIVE) - Skala Nyeri (Hanya untuk Non-Dokter Spesialis) -->
                             @if(!$isDokterSpesialis)
                                 <div class="mt-4">
-                                    <h6 class="fw-bold text-primary mb-3 border-bottom pb-2">S (SUBJECTIVE) - Skala Nyeri
+                                    <h6 class="fw-bold text-primary mb-3 border-bottom pb-2">O (OBJECTIVE) - Skala Nyeri
                                     </h6>
                                     <div class="row g-3">
                                         <div class="col-md-4">
@@ -102,7 +104,7 @@
                             <!-- S (SUBJECTIVE) - Detail Nyeri -->
                             @if(!$isDokterSpesialis)
                                 <div class="mt-4">
-                                    <h6 class="fw-bold text-primary mb-3 border-bottom pb-2">S (SUBJECTIVE) - Detail Nyeri
+                                    <h6 class="fw-bold text-primary mb-3 border-bottom pb-2">O (OBJECTIVE) - Detail Nyeri
                                     </h6>
 
                                     <!-- Lokasi dan Durasi -->
@@ -331,7 +333,7 @@
                             @endif
 
                             <!-- O (OBJECTIVE) - Pemeriksaan Fisik -->
-                            <div class="mb-4" hidden= {{ $isDokterSpesialis ? true : false }}>
+                            <div class="mb-4" hidden={{ $isDokterSpesialis ? true : false }}>
                                 <h6 class="fw-bold text-primary mb-3 border-bottom pb-2">
                                     {{ $isDokterSpesialis ? 'O (OBJECTIVE)' : 'O (OBJECTIVE) - Pemeriksaan Fisik' }}
                                 </h6>
@@ -364,8 +366,8 @@
                                     </h6>
                                     @include('unit-pelayanan.rawat-inap.pelayanan.cppt.create-diagnosis')
                                 </div>
-                                <div class="bg-light rounded p-3 border" id="diagnoseList">
-                                    <!-- Daftar diagnosis akan ditampilkan di sini -->
+                               <div id="diagnoseList" class="diagnosis-container">
+                                    <!-- jQuery bakal isi sini -->
                                 </div>
                             </div>
 
@@ -481,7 +483,7 @@
 
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">Simpan</button>
+                    <x-button-submit />
                 </div>
             </form>
         </div>
@@ -508,7 +510,22 @@
                 </div>
                 <div class="modal-body">
                     <div class="row g-4">
-                        <div class="{{ $isDokterSpesialis ? 'col-12' : 'col-md-7' }}">
+                        <div class="{{ $isDokterSpesialis ? 'col-12' : 'col-md-7' }} mb-4">
+                             <div class="border rounded p-3 bg-light">
+                                <div class="row align-items-center">
+                                    <div class="col-md-4">
+                                        <label class="form-label fw-bold mb-0">Tanggal & Jam Masuk</label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <div class="d-flex gap-3">
+                                            <input type="date" class="form-control" name="tanggal_masuk"
+                                                id="tanggal_masuk_edit">
+                                            <input type="time" class="form-control" name="jam_masuk_edit" id="jam_masuk_edit">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
                             {{-- ====================== S (SUBJECTIVE) ====================== --}}
                             <div class="mb-4">
                                 <h6 class="fw-bold text-primary mb-3 border-bottom pb-2">
@@ -529,8 +546,8 @@
 
                             @if(!$isDokterSpesialis)
                                 {{-- S (SUBJECTIVE) - Skala Nyeri --}}
-                                <div class="mb-4"  >
-                                    <h6 class="fw-bold text-primary mb-3 border-bottom pb-2">S (SUBJECTIVE) - Skala Nyeri
+                                <div class="mb-4">
+                                    <h6 class="fw-bold text-primary mb-3 border-bottom pb-2">O (OBJECTIVE) - Skala Nyeri
                                     </h6>
                                     <div class="row g-3">
                                         <div class="col-md-4">
@@ -561,7 +578,7 @@
                             @endif
                             @if(!$isDokterSpesialis)
                                 <div class="mt-4">
-                                    <h6 class="fw-bold text-primary mb-3 border-bottom pb-2">S (SUBJECTIVE) - Detail Nyeri
+                                    <h6 class="fw-bold text-primary mb-3 border-bottom pb-2">O (OBJECTIVE) - Detail Nyeri
                                     </h6>
 
                                     <!-- Lokasi dan Durasi -->
@@ -852,7 +869,31 @@
                                     </h6>
                                     @include('unit-pelayanan.rawat-inap.pelayanan.cppt.edit-diagnosis')
                                 </div>
-                                <div class="bg-light rounded p-3 border" id="diagnoseList"></div>
+                                <div class="bg-light rounded p-3 border" id="diagnoseList">
+                                    <div class="p-2 text-muted small">Tarik untuk mengubah urutan diagnosis</div>
+
+                                    <!-- INI YANG BISA DI-DRAG -->
+                                    <div x-data x-init="
+                                                Sortable.create($el, {
+                                                    animation: 150,
+                                                    ghostClass: 'bg-primary',
+                                                    handle: '.drag-handle',
+                                                    onEnd: updateHiddenOrder
+                                                });
+                                                
+                                                function updateHiddenOrder() {
+                                                    const items = $el.querySelectorAll('.diag-item-wrap');
+                                                    items.forEach((item, index) => {
+                                                        item.dataset.sort = index;
+                                                        // update hidden input urutan (opsional)
+                                                        const hidden = item.querySelector('input[name=\'diagnose_order[]\']');
+                                                        if (hidden) hidden.value = index;
+                                                    });
+                                                }
+                                            " class="diagnosis-sortable">
+                                        <!-- List akan diisi oleh JS kamu di sini -->
+                                    </div>
+                                </div>
                             </div>
 
                             {{-- P (PLANNING) - Planning / Rencana --}}
@@ -966,7 +1007,9 @@
 
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">Simpan</button>
+                   <div class="text-end">
+                            <x-button-submit />
+                   </div>
                 </div>
             </form>
         </div>

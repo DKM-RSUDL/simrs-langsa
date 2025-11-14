@@ -83,8 +83,18 @@ class SkalaMorseController extends Controller
     {
         $dataMedis = $this->getDataMedis($kd_pasien, $kd_unit, $tgl_masuk, $urut_masuk);
 
+        // Ambil data penilaian terakhir yang valid untuk menentukan apakah penilaian perlu ditampilkan
+        $lastAssessment = RmeSkalaMorse::where('kd_pasien', $kd_pasien)
+            ->where('kd_unit', $kd_unit)
+            ->whereDate('tgl_masuk', $tgl_masuk)
+            ->where('urut_masuk', $urut_masuk)
+            ->orderBy('tanggal', 'desc')
+            ->orderBy('jam', 'desc')
+            ->first();
+
         return view('unit-pelayanan.rawat-inap.pelayanan.resiko-jatuh.skala-morse.create', compact(
             'dataMedis',
+            'lastAssessment'
         ));
     }
 
@@ -114,7 +124,7 @@ class SkalaMorseController extends Controller
         // Validasi input
         $request->validate([
             'tanggal' => 'required|date',
-            'hari_ke' => 'required|integer|min:1',
+            'jam' => 'required',
             'shift' => 'required|in:PG,SI,ML'
         ]);
 
@@ -129,7 +139,7 @@ class SkalaMorseController extends Controller
                 ->first();
 
             if ($existingData) {
-                return back()->with('error', 'Data dengan tanggal ' . date('d/m/Y', strtotime($request->tanggal_implementasi)) . ' dan shift ' . ucfirst($request->shift) . ' sudah ada. Silakan pilih tanggal atau shift yang berbeda.')
+                return back()->with('error', 'Data dengan tanggal ' . date('d/m/Y', strtotime($request->tanggal)) . ' dan shift ' . $request->shift . ' sudah ada. Silakan pilih tanggal atau shift yang berbeda.')
                     ->withInput();
             }
 
@@ -141,32 +151,67 @@ class SkalaMorseController extends Controller
                 'urut_masuk' => $urut_masuk,
                 'user_create' => Auth::id(),
                 'tanggal' => $request->tanggal,
-                'jam' => now()->format('H:i:s'),
+                'jam' => $request->jam,
                 'hari_ke' => $request->hari_ke,
                 'shift' => $request->shift,
-                'riwayat_jatuh' => $request->riwayat_jatuh,
-                'diagnosa_sekunder' => $request->diagnosa_sekunder,
-                'bantuan_ambulasi' => $request->bantuan_ambulasi,
-                'terpasang_infus' => $request->terpasang_infus,
-                'gaya_berjalan' => $request->gaya_berjalan,
-                'status_mental' => $request->status_mental,
-                'skor_total' => $request->skor_total,
-                'kategori_resiko' => $request->kategori_resiko,
             ];
 
-            // Tambahkan intervensi berdasarkan kategori resiko
-            // JANGAN gunakan json_encode karena model sudah ada cast 'array'
-            if ($request->kategori_resiko == 'RR' && $request->has('intervensi_rr')) {
-                $data['intervensi_rr'] = $request->intervensi_rr; // Langsung assign array
+            // Jika ada penilaian baru (checkbox dicentang atau use_existing_assessment = 0)
+            if (($request->filled('skor_total') && $request->filled('kategori_resiko')) || $request->use_existing_assessment == '0') {
+                $data['riwayat_jatuh'] = $request->riwayat_jatuh;
+                $data['diagnosa_sekunder'] = $request->diagnosa_sekunder;
+                $data['bantuan_ambulasi'] = $request->bantuan_ambulasi;
+                $data['terpasang_infus'] = $request->terpasang_infus;
+                $data['gaya_berjalan'] = $request->gaya_berjalan;
+                $data['status_mental'] = $request->status_mental;
+                $data['skor_total'] = $request->skor_total;
+                $data['kategori_resiko'] = $request->kategori_resiko;
+            } else {
+                // Gunakan data existing atau data terakhir yang valid
+                if ($request->has('existing_riwayat_jatuh')) {
+                    // Gunakan data dari hidden input (existing)
+                    $data['riwayat_jatuh'] = $request->existing_riwayat_jatuh;
+                    $data['diagnosa_sekunder'] = $request->existing_diagnosa_sekunder;
+                    $data['bantuan_ambulasi'] = $request->existing_bantuan_ambulasi;
+                    $data['terpasang_infus'] = $request->existing_terpasang_infus;
+                    $data['gaya_berjalan'] = $request->existing_gaya_berjalan;
+                    $data['status_mental'] = $request->existing_status_mental;
+                    $data['skor_total'] = $request->existing_skor_total;
+                    $data['kategori_resiko'] = $request->existing_kategori_resiko;
+                } else {
+                    // Fallback: Gunakan data terakhir yang valid
+                    $lastAssessment = RmeSkalaMorse::where('kd_pasien', $kd_pasien)
+                        ->where('kd_unit', $kd_unit)
+                        ->whereDate('tgl_masuk', $tgl_masuk)
+                        ->where('urut_masuk', $urut_masuk)
+                        ->whereNotNull('riwayat_jatuh')
+                        ->whereNotNull('diagnosa_sekunder')
+                        ->whereNotNull('bantuan_ambulasi')
+                        ->whereNotNull('terpasang_infus')
+                        ->whereNotNull('gaya_berjalan')
+                        ->whereNotNull('status_mental')
+                        ->where('skor_total', '>', 0)
+                        ->orderBy('tanggal', 'desc')
+                        ->orderBy('jam', 'desc')
+                        ->first();
+
+                    if ($lastAssessment) {
+                        $data['riwayat_jatuh'] = $lastAssessment->riwayat_jatuh;
+                        $data['diagnosa_sekunder'] = $lastAssessment->diagnosa_sekunder;
+                        $data['bantuan_ambulasi'] = $lastAssessment->bantuan_ambulasi;
+                        $data['terpasang_infus'] = $lastAssessment->terpasang_infus;
+                        $data['gaya_berjalan'] = $lastAssessment->gaya_berjalan;
+                        $data['status_mental'] = $lastAssessment->status_mental;
+                        $data['skor_total'] = $lastAssessment->skor_total;
+                        $data['kategori_resiko'] = $lastAssessment->kategori_resiko;
+                    }
+                }
             }
 
-            if ($request->kategori_resiko == 'RS' && $request->has('intervensi_rs')) {
-                $data['intervensi_rs'] = $request->intervensi_rs; // Langsung assign array
-            }
-
-            if ($request->kategori_resiko == 'RT' && $request->has('intervensi_rt')) {
-                $data['intervensi_rt'] = $request->intervensi_rt; // Langsung assign array
-            }
+            // Simpan semua intervensi yang dikirim (tampung rr/rs/rt apa adanya)
+            $data['intervensi_rr'] = $request->input('intervensi_rr', null);
+            $data['intervensi_rs'] = $request->input('intervensi_rs', null);
+            $data['intervensi_rt'] = $request->input('intervensi_rt', null);
 
             // Simpan data
             RmeSkalaMorse::create($data);
@@ -224,7 +269,7 @@ class SkalaMorseController extends Controller
         // Validasi input
         $request->validate([
             'tanggal' => 'required|date',
-            'hari_ke' => 'required|integer|min:1',
+            'jam' => 'required',
             'shift' => 'required|in:PG,SI,ML',
         ]);
 
@@ -254,36 +299,41 @@ class SkalaMorseController extends Controller
             $data = [
                 'user_edit' => Auth::id(),
                 'tanggal' => $request->tanggal,
-                'hari_ke' => $request->hari_ke,
+                'jam' => $request->jam,
                 'shift' => $request->shift,
-                'riwayat_jatuh' => $request->riwayat_jatuh,
-                'diagnosa_sekunder' => $request->diagnosa_sekunder,
-                'bantuan_ambulasi' => $request->bantuan_ambulasi,
-                'terpasang_infus' => $request->terpasang_infus,
-                'gaya_berjalan' => $request->gaya_berjalan,
-                'status_mental' => $request->status_mental,
-                'skor_total' => $request->skor_total,
-                'kategori_resiko' => $request->kategori_resiko,
             ];
 
-            // Reset semua intervensi
-            $data['intervensi_rr'] = null;
-            $data['intervensi_rs'] = null;
-            $data['intervensi_rt'] = null;
+            // Cek apakah menggunakan assessment existing atau membuat baru
+            if ($request->use_existing_assessment == '1') {
+                // Gunakan data existing (tidak membuat penilaian baru)
+                $data['riwayat_jatuh'] = $request->existing_riwayat_jatuh;
+                $data['diagnosa_sekunder'] = $request->existing_diagnosa_sekunder;
+                $data['bantuan_ambulasi'] = $request->existing_bantuan_ambulasi;
+                $data['terpasang_infus'] = $request->existing_terpasang_infus;
+                $data['gaya_berjalan'] = $request->existing_gaya_berjalan;
+                $data['status_mental'] = $request->existing_status_mental;
+                $data['skor_total'] = $request->existing_skor_total;
+                $data['kategori_resiko'] = $request->existing_kategori_resiko;
+            } else {
+                // Gunakan data penilaian baru
+                $data['riwayat_jatuh'] = $request->riwayat_jatuh;
+                $data['diagnosa_sekunder'] = $request->diagnosa_sekunder;
+                $data['bantuan_ambulasi'] = $request->bantuan_ambulasi;
+                $data['terpasang_infus'] = $request->terpasang_infus;
+                $data['gaya_berjalan'] = $request->gaya_berjalan;
+                $data['status_mental'] = $request->status_mental;
+                $data['skor_total'] = $request->skor_total;
+                $data['kategori_resiko'] = $request->kategori_resiko;
+            }
 
             // Tambahkan intervensi berdasarkan kategori resiko
-            // JANGAN gunakan json_encode karena model sudah ada cast 'array'
-            if ($request->kategori_resiko == 'RR' && $request->has('intervensi_rr')) {
-                $data['intervensi_rr'] = $request->intervensi_rr; // Langsung assign array
-            }
+            $data['kategori_resiko'];
 
-            if ($request->kategori_resiko == 'RS' && $request->has('intervensi_rs')) {
-                $data['intervensi_rs'] = $request->intervensi_rs; // Langsung assign array
-            }
-
-            if ($request->kategori_resiko == 'RT' && $request->has('intervensi_rt')) {
-                $data['intervensi_rt'] = $request->intervensi_rt; // Langsung assign array
-            }
+            // Jika membuat penilaian baru (user menilai ulang), ambil semua intervensi dari request
+            // Jika menggunakan existing assessment (use_existing_assessment == '1'), jangan ubah intervensi
+            $data['intervensi_rr'] = $request->input('intervensi_rr', null);
+            $data['intervensi_rs'] = $request->input('intervensi_rs', null);
+            $data['intervensi_rt'] = $request->input('intervensi_rt', null);
 
             // Update data
             $skalaMorse->update($data);

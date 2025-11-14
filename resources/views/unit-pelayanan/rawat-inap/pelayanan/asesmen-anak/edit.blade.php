@@ -186,13 +186,13 @@
                                 <h5 class="section-title">1. Data masuk</h5>
 
                                 <div class="form-group">
-                                    <label style="min-width: 200px;">Tanggal Dan Jam Masuk</label>
+                                    <label style="min-width: 200px;">Tanggal Dan Jam Pengisian</label>
                                     <div class="d-flex gap-3" style="width: 100%;">
                                         <input type="date" class="form-control" name="tanggal_masuk"
                                             id="tanggal_masuk"
-                                            value="{{ Carbon\Carbon::parse($asesmen->waktu_asesmen)->format('Y-m-d') }}">
+                                            value="{{ date('Y-m-d', strtotime($asesmen->waktu_asesmen)) }}">
                                         <input type="time" class="form-control" name="jam_masuk" id="jam_masuk"
-                                            value="{{ Carbon\Carbon::parse($asesmen->waktu_asesmen)->format('H:i') }}">
+                                            value="{{ date('H:i', strtotime($asesmen->waktu_asesmen)) }}">
                                     </div>
                                 </div>
 
@@ -4845,25 +4845,8 @@
 
             const BasicModule = {
                 init() {
-                    this.setDefaultDateTime();
                     this.initAnthropometricCalculation();
                     this.initPhysicalExamination();
-                },
-
-                setDefaultDateTime() {
-                    const currentDate = new Date();
-                    const dateInput = document.getElementById('tanggal_masuk');
-                    const timeInput = document.getElementById('jam_masuk');
-
-                    if (dateInput) {
-                        dateInput.value = currentDate.toISOString().split('T')[0];
-                    }
-
-                    if (timeInput) {
-                        const hours = String(currentDate.getHours()).padStart(2, '0');
-                        const minutes = String(currentDate.getMinutes()).padStart(2, '0');
-                        timeInput.value = `${hours}:${minutes}`;
-                    }
                 },
 
                 initAnthropometricCalculation() {
@@ -6870,14 +6853,14 @@
         function toggleRencana(diagnosisType) {
             // Handle special case for respiratory group (3 diagnosis yang menggunakan 1 rencana)
             const respiratoryGroup = ['bersihan_jalan_nafas', 'risiko_aspirasi', 'pola_nafas_tidak_efektif'];
-            
+
             if (respiratoryGroup.includes(diagnosisType)) {
                 // Check if any of the 3 respiratory checkboxes is checked
                 const anyRespChecked = respiratoryGroup.some(diagnosis => {
                     const checkbox = document.getElementById('diag_' + diagnosis);
                     return checkbox && checkbox.checked;
                 });
-                
+
                 const rencanaDiv = document.getElementById('rencana_bersihan_jalan_nafas');
                 if (rencanaDiv) {
                     if (anyRespChecked) {
@@ -6911,8 +6894,8 @@
         document.addEventListener('DOMContentLoaded', function() {
             // Daftar semua diagnosis
             const allDiagnosis = [
-                'bersihan_jalan_nafas', 
-                'risiko_aspirasi', 
+                'bersihan_jalan_nafas',
+                'risiko_aspirasi',
                 'pola_nafas_tidak_efektif',
                 'penurunan_curah_jantung',
                 'perfusi_perifer',

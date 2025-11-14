@@ -1,5 +1,7 @@
 @extends('layouts.administrator.master')
 
+
+
 @section('content')
     <x-content-card>
         <div class="content-wrapper">

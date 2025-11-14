@@ -155,7 +155,7 @@
                             <tr>
                                 <th>Tanggal</th>
                                 <th>Nama Tindakan</th>
-                                <th>Unit Pelayanan</th>
+                                {{-- <th>Unit Pelayanan</th> --}}
                                 <th>PPA</th>
                                 <th>Keterangan</th>
                                 <th>Gambar</th>
@@ -172,7 +172,7 @@
                                             {{ $tdk->produk->deskripsi }}
                                         </span>
                                     </td>
-                                    <td>{{ $tdk->unit->nama_unit }} / {{ $tdk->produk->klas->klasifikasi }}</td>
+                                    {{-- <td>{{ $tdk->unit->nama_unit }} / {{ $tdk->produk->klas->klasifikasi }}</td> --}}
                                     <td>{{ $tdk->ppa->nama_lengkap }}</td>
                                     <td>{{ $tdk->keterangan }}</td>
                                     <td>

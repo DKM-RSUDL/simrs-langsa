@@ -20,7 +20,29 @@
             flex-grow: 1;
             width: 350px;
         }
+
+        #diagnoseList {
+            min-height: 80px;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border: 1px dashed #dee2e6;
+        }
+        .diag-item:hover {
+            background: #f1f3f5 !important;
+        }
+        .drag-handle {
+            cursor: grab;
+            width: 40px;
+        }
+        .drag-handle:active { cursor: grabbing; }
+        .dragging {
+            opacity: 0.5;
+            background: #0d6efd !important;
+            transform: rotate(4deg);
+        }
     </style>
+    
 @endpush
 
 @section('content')
@@ -97,6 +119,7 @@
                         </div>
                     </div>
 
+<<<<<<< HEAD
                     <div class="card-body">
                         <div class="d-flex align-items-start">
                             <!-- Sidebar navigation -->
@@ -118,6 +141,28 @@
                                                 <small class="d-block">
                                                     {{ date('H:i', strtotime($value['jam'])) }}
                                                 </small>
+=======
+                        <!-- Tab content -->
+                        <div class="tab-content flex-grow-1" id="v-pills-tabContent">
+                            @php
+                                // dd($cppt);
+                                $j = 0;
+                            @endphp
+
+                            @foreach ($cppt as $key => $value)
+                                <div class="tab-pane fade @if ($j == 0) show active @endif" id="v-pills-home-{{ $j }}" role="tabpanel">
+                                    <!-- HEADER -->
+                                    <div class="patient-card bg-light border rounded-3 shadow-sm p-3 mb-3">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <div class="d-flex align-items-center">
+                                                <img src="{{ asset('assets/img/profile.jpg') }}" alt="Avatar" class="rounded-circle me-3" width="50" height="50">
+                                                <div>
+                                                    <p class="mb-0 fw-semibold text-dark">Catatan Perkembangan Pasien Terintegrasi</p>
+                                                    <small class="text-muted">
+                                                        <strong>{{ $value['nama_penanggung'] }}</strong> 
+                                                    </small>
+                                                </div>
+>>>>>>> origin/rizaldev
                                             </div>
                                             <img src="{{ asset('assets/img/profile.jpg') }}" alt="Avatar"
                                                 class="rounded-circle" width="50" height="50">

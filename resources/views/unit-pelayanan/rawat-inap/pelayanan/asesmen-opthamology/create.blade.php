@@ -32,7 +32,7 @@
                                     <h5 class="section-title">1. Data masuk</h5>
 
                                     <div class="form-group">
-                                        <label style="min-width: 200px;">Tanggal Dan Jam Masuk</label>
+                                        <label style="min-width: 200px;">Tanggal Dan Jam Pengisian</label>
                                         <div class="d-flex gap-3" style="width: 100%;">
                                             <input type="date" class="form-control" name="tanggal_masuk"
                                                 id="tanggal_masuk" value="{{ date('Y-m-d') }}">
@@ -653,13 +653,13 @@
                                         <div class="form-group">
                                             <label style="min-width: 200px;">Tinggi Badan (Cm)</label>
                                             <input type="number" id="tinggi_badan" name="tinggi_badan"
-                                                class="form-control">
+                                                class="form-control" value="{{ isset($vitalSignsData) && $vitalSignsData ? $vitalSignsData->tinggi_badan : '' }}">
                                         </div>
 
                                         <div class="form-group">
                                             <label style="min-width: 200px;">Berat Badan (Kg)</label>
                                             <input type="number" id="berat_badan" name="berat_badan"
-                                                class="form-control">
+                                                class="form-control" value="{{ isset($vitalSignsData) && $vitalSignsData ? $vitalSignsData->berat_badan : '' }}">
                                         </div>
 
                                         <div class="form-group">

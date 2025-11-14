@@ -235,7 +235,39 @@ class LaborController extends Controller
         return view('unit-pelayanan.gawat-darurat.action-gawat-darurat.labor.createpk', compact('kd_pasien', 'tgl_masuk'));
     }
 
-    public function store(Request $request)
+    function generateNoOrder($tglMasuk)
+    {
+        // Pastikan $tglMasuk berupa Carbon atau tanggal yang valid
+        $tanggal = Carbon::parse($tglMasuk)->format('Y-m-d');
+
+        // Ambil data terakhir berdasarkan tanggal masuk
+        $lastOrder = SegalaOrder::whereDate('tgl_masuk', $tanggal)
+            ->orderByDesc('kd_order')
+            ->first();
+
+        // Format dasar tanggal: yyyyMMdd
+        $prefix = Carbon::parse($tglMasuk)->format('Ymd');
+
+        if (!$lastOrder) {
+            // Jika belum ada data untuk tanggal tersebut
+            $noOrder = $prefix . '0001';
+        } else {
+            // Ambil KD_ORDER terakhir
+            $lastKdOrder = $lastOrder->kd_order;
+
+            // Jika prefix berbeda dengan tanggal saat ini, reset ke 0001
+            if (substr($lastKdOrder, 0, 8) !== $prefix) {
+                $noOrder = $prefix . '0001';
+            } else {
+                // Tambah 1 dari KD_ORDER terakhir
+                $noOrder = str_pad($lastKdOrder + 1, 12, '0', STR_PAD_LEFT);
+            }
+        }
+
+        return $noOrder;
+    }
+
+    public function store(Request $request, $kd_pasien, $tgl_masuk)
     {
         DB::beginTransaction();
 
@@ -297,23 +329,10 @@ class LaborController extends Controller
                 }
             }
 
-            $tglOrder = \Carbon\Carbon::parse($validatedData['tgl_order'])->format('Ymd');
-            $lastOrder = SegalaOrder::where('kd_order', 'like', $tglOrder . '%')
-                ->orderBy('kd_order', 'desc')
-                ->first();
-
-            $newOrderNumber = $lastOrder ? ((int)substr($lastOrder->kd_order, -4)) + 1 : 1;
-            $newOrderNumber = str_pad((string)$newOrderNumber, 4, '0', STR_PAD_LEFT);
-            $newKdOrder = $tglOrder . $newOrderNumber;
-
-            while (SegalaOrder::where('kd_order', $newKdOrder)->exists()) {
-                $newOrderNumber = (int)$newOrderNumber + 1;
-                $newOrderNumber = str_pad((string)$newOrderNumber, 4, '0', STR_PAD_LEFT);
-                $newKdOrder = $tglOrder . $newOrderNumber;
-            }
+            $newOrderNumber = $this->generateNoOrder($tgl_masuk);
 
             $segalaOrder = SegalaOrder::create([
-                'kd_order' => $newKdOrder,
+                'kd_order' => $newOrderNumber,
                 'kd_pasien' => $validatedData['kd_pasien'],
                 'kd_unit' => $validatedData['kd_unit'],
                 'tgl_masuk' => $validatedData['tgl_masuk'],
@@ -336,7 +355,7 @@ class LaborController extends Controller
 
             foreach ($validatedData['kd_produk'] as $index => $kd_produk) {
                 $segalaOrderDet = SegalaOrderDet::create([
-                    'kd_order' => $newKdOrder,
+                    'kd_order' => $newOrderNumber,
                     'urut' => $validatedData['urut'][$index],
                     'kd_produk' => $kd_produk,
                     'jumlah' => 1,

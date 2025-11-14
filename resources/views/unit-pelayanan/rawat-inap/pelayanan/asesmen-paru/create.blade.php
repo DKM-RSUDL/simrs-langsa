@@ -30,7 +30,7 @@
                             <h5 class="section-title">1. Data masuk</h5>
 
                             <div class="form-group">
-                                <label style="min-width: 200px;">Tanggal Dan Jam Masuk</label>
+                                <label style="min-width: 200px;">Tanggal Dan Jam Pengisian</label>
                                 <div class="d-flex gap-3" style="width: 100%;">
                                     <input type="date" class="form-control" name="tanggal" value="{{ date('Y-m-d') }}">
                                     <input type="time" class="form-control" name="jam_masuk" value="{{ date('H:i') }}">
@@ -192,11 +192,11 @@
                                                         <div class="d-flex gap-3" style="width: 100%;">
                                                             <div class="flex-grow-1">
                                                                 <input type="number" class="form-control"
-                                                                    name="darah_sistole" placeholder="Sistole">
+                                                                    name="darah_sistole" placeholder="Sistole" value="{{ isset($vitalSignsData) && $vitalSignsData ? $vitalSignsData->sistole : '' }}">
                                                             </div>
                                                             <div class="flex-grow-1">
                                                                 <input type="number" class="form-control"
-                                                                    name="darah_diastole" placeholder="Diastole">
+                                                                    name="darah_diastole" placeholder="Diastole" value="{{ isset($vitalSignsData) && $vitalSignsData ? $vitalSignsData->diastole : '' }}">
                                                             </div>
                                                         </div>
                                                     </div>
@@ -210,7 +210,7 @@
                                                     <div class="col-lg-6">
                                                         <div class="d-flex align-items-center gap-2">
                                                             <input type="number"
-                                                                class="form-control input-inline input-sm" name="nadi">
+                                                                class="form-control input-inline input-sm" name="nadi" value="{{ isset($vitalSignsData) && $vitalSignsData ? $vitalSignsData->nadi : '' }}">
                                                             <span>x/menit</span>
                                                         </div>
                                                     </div>
@@ -225,7 +225,7 @@
                                                         <div class="d-flex align-items-center gap-2">
                                                             <input type="number"
                                                                 class="form-control input-inline input-sm"
-                                                                name="frekuensi_pernafasan">
+                                                                name="frekuensi_pernafasan" value="{{ isset($vitalSignsData) && $vitalSignsData ? $vitalSignsData->respiration : '' }}">
                                                             <span>x/menit</span>
                                                             <select class="form-select input-inline input-md"
                                                                 name="pernafasan_tipe">
@@ -246,7 +246,7 @@
                                                         <div class="d-flex align-items-center gap-2">
                                                             <input type="number"
                                                                 class="form-control input-inline input-sm"
-                                                                name="temperatur">
+                                                                name="temperatur" value="{{ isset($vitalSignsData) && $vitalSignsData ? $vitalSignsData->suhu : '' }}">
                                                             <span>°C</span>
                                                         </div>
                                                     </div>
@@ -261,7 +261,7 @@
                                                         <div class="d-flex align-items-center gap-2">
                                                             <input type="number"
                                                                 class="form-control input-inline input-sm"
-                                                                name="saturasi_oksigen" min="0" max="100">
+                                                                name="saturasi_oksigen" min="0" max="100" value="{{ isset($vitalSignsData) && $vitalSignsData ? $vitalSignsData->spo2_tanpa_o2 : '' }}">
                                                             <span>%</span>
                                                         </div>
                                                     </div>

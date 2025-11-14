@@ -23,7 +23,7 @@
 
                             <!-- Tanggal dan Jam Masuk -->
                             <div class="row mb-3">
-                                <label class="col-sm-3 col-form-label">Tanggal dan Jam Masuk:</label>
+                                <label class="col-sm-3 col-form-label">Tanggal dan Jam Pengisian:</label>
                                 <div class="col-sm-9">
                                     <div class="row">
                                         <div class="col-md-6">

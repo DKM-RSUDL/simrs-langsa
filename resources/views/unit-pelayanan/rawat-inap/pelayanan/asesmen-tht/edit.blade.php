@@ -39,12 +39,12 @@
                             <h5 class="section-title">1. Data masuk</h5>
 
                             <div class="form-group">
-                                <label style="min-width: 200px;">Tanggal Dan Jam Masuk</label>
+                                <label style="min-width: 200px;">Tanggal Dan Jam Pengisian</label>
                                 <div class="d-flex gap-3" style="width: 100%;">
                                     <input type="date" class="form-control" name="tgl_masuk"
-                                        value="{{ $asesmen->rmeAsesmenTht[0]->tgl_masuk ?? date('Y-m-d') }}">
+                                        value="{{ date('Y-m-d', strtotime($asesmen->waktu_asesmen)) ?? date('Y-m-d') }}">
                                     <input type="time" class="form-control" name="jam_masuk"
-                                        value="{{ $asesmen->rmeAsesmenTht[0]->jam_masuk ?? date('H:i') }}">
+                                        value="{{ date('H:i', strtotime($asesmen->waktu_asesmen)) ?? date('H:i') }}">
                                 </div>
                             </div>
 

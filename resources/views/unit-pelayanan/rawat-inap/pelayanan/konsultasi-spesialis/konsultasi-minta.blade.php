@@ -8,18 +8,31 @@
     'isTerima' => $isTerima,
     'firstFrame' => true,
 ])
+
+
     @foreach ($dataKonsul as $item)
         <tr>
             <td>{{ $item->tanggal_konsul }}<br><small
                     class="text-muted">{{ date('H:i', strtotime($item->jam_konsul)) }}</small>
             </td>
-            <td>{{ $item->dokterPengirim->nama }}<br></td>
-            <td>{{ $item->spesialis->spesialisasi }}</td>
-            <td>
-                <p class="m-0">{{ $item->catatan }}</p>
+            <td>{{ $item->dokterPengirim->nama_lengkap }}<br></td>
+            <td>{{ $item->dokterTujuan->nama_lengkap }}</td>
+            {{-- <td>
+                <p class="m-0">{!!  $item->konsul  !!}</p>
             </td>
             <td>
-                <p class="m-0">{{ $item->respon_konsul }}</p>
+                <p class="m-0">{!!  $item->catatan  !!}</p>
+            </td> --}}
+
+
+            <td>
+                <p class="m-0">{!! nl2br(e($item->catatan)) !!}</p>
+            </td>
+              <td>
+                <p class="m-0">{!! nl2br(e($item->konsul)) !!}</p>
+            </td>
+            <td>
+                <p class="m-0">{!! nl2br(e(value: $item->respon_konsul)) !!}</p>
             </td>
             <td class="d-flex justify-content-center align-items-center" colspan="{{ $item->status == 1 ? 3 : 0 }}">
                 @php
@@ -46,9 +59,9 @@
                 <span class="badge {{ $style }}">{{ $status }}</span>
             </td>
 
-            @if ($item->status == 0)
-                {{-- Jika status Dikirim, tampilkan tombol Edit dan Hapus --}}
-                <td>
+            {{-- Jika status Dikirim, tampilkan tombol Edit dan Hapus --}}
+            <td>
+                @if ($item->status == 0)
                     <div class="d-flex gap-2 justify-content-center" role="group">
                         <button class="btn btn-sm btn-warning btn-edit-konsultasi" data-id="{{ $item->id }}"
                             title="Edit">
@@ -74,17 +87,16 @@
                             </button>
                         </form>
                     </div>
-                </td>
-            @else
-                {{-- Jika status bukan Dikirim (misalnya Diterima), tampilkan indikator bahwa aksi tidak tersedia --}}
-                <td class="text-center text-muted">
-                    <em>-</em>
-                </td>
-            @endif
+                @endif
+            </td>
         </tr>
     @endforeach
 
-    @foreach ($konsulIGD as $konsul)
+    @php
+        $konsulData = $konsulIGD ?? [];
+    @endphp
+
+    @foreach ($konsulData as $konsul)
         <tr>
             <td>
                 {{ date('d M Y', strtotime($konsul->tgl_konsul)) }}
@@ -120,7 +132,8 @@
             </td>
             <td>
                 <x-table-action>
-                    <a href="{{ route('rawat-inap.konsultasi-spesialis.igd.print', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, encrypt($konsul->id)]) }}" class="btn btn-sm btn-success btn-print-konsultasi" target="_blank">
+                    <a href="{{ route('rawat-inap.konsultasi-spesialis.igd.print', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, encrypt($konsul->id)]) }}"
+                        class="btn btn-sm btn-success btn-print-konsultasi" target="_blank">
                         <i class="fas fa-print"></i>
                     </a>
                 </x-table-action>
