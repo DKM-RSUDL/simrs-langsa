@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\UnitPelayanan\GawatDarurat;
+
 use App\Models\DataTriase;
 use App\Services\AsesmenService;
 use Exception;
@@ -12,13 +13,13 @@ class TriaseShowAndEditController extends Controller
 {
     protected $baseService;
     protected $kdUnit;
-    protected $asesmenService; 
+    protected $asesmenService;
     protected $IGDservice;
-    public function __construct(){
+    public function __construct()
+    {
         $this->baseService = new BaseService();
         $this->kdUnit = 3; // Gawat Darurat
         $this->asesmenService = new AsesmenService();
-
     }
     public function index($kd_pasien, $tgl_masuk, $urut_masuk)
     {
@@ -29,26 +30,30 @@ class TriaseShowAndEditController extends Controller
             $urut_masuk
         );
 
-    
+
         $data = $this->getTriaseData($dataMedis);
-     
+
+        if (!$data) {
+            abort(404, 'Data triase not found');
+        }
+
         $vitalSign = $this->asesmenService->getVitalSignData($dataMedis->kd_kasir, $dataMedis->no_transaksi);
         $data->triase = json_decode($data->triase, true);
 
-    
+
         if (!$dataMedis) {
             abort(404, 'Data not found');
         }
 
         return view(
             'unit-pelayanan.gawat-darurat.action-gawat-darurat.triase.show',
-            compact('dataMedis','vitalSign','data')
+            compact('dataMedis', 'vitalSign', 'data')
         );
     }
 
     public function update(Request $request, $kd_pasien, $tgl_masuk, $urut_masuk)
     {
-       
+
         $dataMedis = $this->baseService->getDataMedis(
             $this->kdUnit,
             $kd_pasien,
@@ -56,7 +61,7 @@ class TriaseShowAndEditController extends Controller
             $urut_masuk
         );
 
-    
+
         $triase = $this->getTriaseData($dataMedis);
         if (!$triase) {
             return back()->with('error', 'Data triase tidak ditemukan.');
@@ -88,11 +93,6 @@ class TriaseShowAndEditController extends Controller
             'disability'  => $request->disability ?? [],
         ];
 
-      
-        $triase->vital_sign = json_encode($vitalSign);
-        $triase->save();
-
-        $this->asesmenService->store($vitalSign, $kd_pasien, $dataMedis->no_transaksi, $dataMedis->kd_kasir);
 
         // -----------------------------
         // SIMPAN KE DATABASE
