@@ -28,21 +28,26 @@
             border-radius: 8px;
             border: 1px dashed #dee2e6;
         }
+
         .diag-item:hover {
             background: #f1f3f5 !important;
         }
+
         .drag-handle {
             cursor: grab;
             width: 40px;
         }
-        .drag-handle:active { cursor: grabbing; }
+
+        .drag-handle:active {
+            cursor: grabbing;
+        }
+
         .dragging {
             opacity: 0.5;
             background: #0d6efd !important;
             transform: rotate(4deg);
         }
     </style>
-
 @endpush
 
 @section('content')
@@ -159,22 +164,27 @@
                             @endphp
 
                             @foreach ($cppt as $key => $value)
-                                <div class="tab-pane fade @if ($j == 0) show active @endif" id="v-pills-home-{{ $j }}" role="tabpanel">
+                                <div class="tab-pane fade @if ($j == 0) show active @endif"
+                                    id="v-pills-home-{{ $j }}" role="tabpanel">
                                     <!-- HEADER -->
                                     <div class="patient-card bg-light border rounded-3 shadow-sm p-3 mb-3">
                                         <div class="d-flex justify-content-between align-items-center">
                                             <div class="d-flex align-items-center">
-                                                <img src="{{ asset('assets/img/profile.jpg') }}" alt="Avatar" class="rounded-circle me-3" width="50" height="50">
+                                                <img src="{{ asset('assets/img/profile.jpg') }}" alt="Avatar"
+                                                    class="rounded-circle me-3" width="50" height="50">
                                                 <div>
-                                                    <p class="mb-0 fw-semibold text-dark">Catatan Perkembangan Pasien Terintegrasi</p>
+                                                    <p class="mb-0 fw-semibold text-dark">Catatan Perkembangan Pasien
+                                                        Terintegrasi</p>
                                                     <small class="text-muted">
                                                         <strong>{{ $value['nama_penanggung'] }}</strong>
                                                     </small>
                                                 </div>
                                             </div>
                                             <div class="text-end">
-                                                <span class="badge bg-primary-subtle text-dark border">{{ date('d M Y', strtotime($value['tanggal'])) }}</span><br>
-                                                <small class="text-muted">{{ date('H:i', strtotime($value['jam'])) }}</small>
+                                                <span
+                                                    class="badge bg-primary-subtle text-dark border">{{ date('d M Y', strtotime($value['tanggal'])) }}</span><br>
+                                                <small
+                                                    class="text-muted">{{ date('H:i', strtotime($value['jam'])) }}</small>
                                             </div>
                                         </div>
                                     </div>
@@ -198,7 +208,8 @@
                                                     @foreach ($value['kondisi']['konpas'] as $val)
                                                         <div class="col-md-6 mb-1 small">
                                                             <i class="bi bi-caret-right-fill text-success"></i>
-                                                            {{ $val['nama_kondisi'] }} : <strong>{{ $val['hasil'] }}</strong> {{ $val['satuan'] }}
+                                                            {{ $val['nama_kondisi'] }} :
+                                                            <strong>{{ $val['hasil'] }}</strong> {{ $val['satuan'] }}
                                                         </div>
                                                     @endforeach
                                                 </div>
@@ -232,7 +243,8 @@
                                                     @foreach ($value['kondisi']['konpas'] as $val)
                                                         <div class="col-md-6 mb-1 small">
                                                             <i class="bi bi-caret-right-fill text-primary"></i>
-                                                            {{ $val['nama_kondisi'] }} : <strong>{{ $val['hasil'] }}</strong> {{ $val['satuan'] }}
+                                                            {{ $val['nama_kondisi'] }} :
+                                                            <strong>{{ $val['hasil'] }}</strong> {{ $val['satuan'] }}
                                                         </div>
                                                     @endforeach
                                                 </div>
@@ -284,29 +296,46 @@
                                                     <tbody>
                                                         @forelse ($value['instruksi_ppa_nama'] as $index => $instruksi)
                                                             @php
-                                                                $ppa_kode = is_array($instruksi) ? $instruksi['ppa'] : $instruksi->ppa;
-                                                                $karyawan_ppa = $karyawan->where('kd_karyawan', $ppa_kode)->first();
-                                                                $nama_ppa = $karyawan_ppa ?
-                                                                    trim(($karyawan_ppa->gelar_depan ? $karyawan_ppa->gelar_depan.' ' : '') .
-                                                                        $karyawan_ppa->nama .
-                                                                        ($karyawan_ppa->gelar_belakang ? ', '.$karyawan_ppa->gelar_belakang : ''))
+                                                                $ppa_kode = is_array($instruksi)
+                                                                    ? $instruksi['ppa']
+                                                                    : $instruksi->ppa;
+                                                                $karyawan_ppa = $karyawan
+                                                                    ->where('kd_karyawan', $ppa_kode)
+                                                                    ->first();
+                                                                $nama_ppa = $karyawan_ppa
+                                                                    ? trim(
+                                                                        ($karyawan_ppa->gelar_depan
+                                                                            ? $karyawan_ppa->gelar_depan . ' '
+                                                                            : '') .
+                                                                            $karyawan_ppa->nama .
+                                                                            ($karyawan_ppa->gelar_belakang
+                                                                                ? ', ' . $karyawan_ppa->gelar_belakang
+                                                                                : ''),
+                                                                    )
                                                                     : $ppa_kode;
                                                             @endphp
                                                             <tr>
-                                                                <td class="text-center fw-bold text-primary">{{ sprintf('%02d', $index + 1) }}</td>
+                                                                <td class="text-center fw-bold text-primary">
+                                                                    {{ sprintf('%02d', $index + 1) }}</td>
                                                                 <td>
                                                                     <div class="d-flex align-items-center">
-                                                                        <span class="badge bg-info text-dark me-2">PPA</span>
+                                                                        <span
+                                                                            class="badge bg-info text-dark me-2">PPA</span>
                                                                         <div>
                                                                             <strong>{{ $nama_ppa }}</strong><br>
-                                                                            <small class="text-muted">{{ $ppa_kode }}</small>
+                                                                            <small
+                                                                                class="text-muted">{{ $ppa_kode }}</small>
                                                                         </div>
                                                                     </div>
                                                                 </td>
-                                                                <td>{{ is_array($instruksi) ? $instruksi['instruksi'] : $instruksi->instruksi }}</td>
+                                                                <td>{{ is_array($instruksi) ? $instruksi['instruksi'] : $instruksi->instruksi }}
+                                                                </td>
                                                             </tr>
                                                         @empty
-                                                            <tr><td colspan="3" class="text-center text-muted py-3">Tidak ada instruksi</td></tr>
+                                                            <tr>
+                                                                <td colspan="3" class="text-center text-muted py-3">
+                                                                    Tidak ada instruksi</td>
+                                                            </tr>
                                                         @endforelse
                                                     </tbody>
                                                 </table>
@@ -322,12 +351,17 @@
                                             </span>
                                         @else
                                             @canany(['is-admin', 'is-dokter-umum', 'is-dokter-spesialis'])
-                                                <form action="{{ route('rawat-inap.cppt.verifikasi', [$dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk]) }}" method="post">
+                                                <form
+                                                    action="{{ route('rawat-inap.cppt.verifikasi', [$dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk]) }}"
+                                                    method="post">
                                                     @csrf
                                                     @method('put')
-                                                    <input type="hidden" name="kd_pasien" value="{{ $dataMedis->kd_pasien }}">
-                                                    <input type="hidden" name="no_transaksi" value="{{ $dataMedis->no_transaksi }}">
-                                                    <input type="hidden" name="kd_kasir" value="{{ $dataMedis->kd_kasir }}">
+                                                    <input type="hidden" name="kd_pasien"
+                                                        value="{{ $dataMedis->kd_pasien }}">
+                                                    <input type="hidden" name="no_transaksi"
+                                                        value="{{ $dataMedis->no_transaksi }}">
+                                                    <input type="hidden" name="kd_kasir"
+                                                        value="{{ $dataMedis->kd_kasir }}">
                                                     <input type="hidden" name="tanggal" value="{{ $value['tanggal'] }}">
                                                     <input type="hidden" name="urut" value="{{ $value['urut'] }}">
                                                     <button type="submit" class="btn btn-outline-primary btn-sm">
@@ -339,10 +373,8 @@
 
                                         @if ($value['user_penanggung'] == auth()->user()->id && !$value['verified'])
                                             <button class="btn btn-outline-secondary btn-sm btn-edit-cppt"
-                                                data-bs-target="#editCpptModal"
-                                                data-tgl="{{ $value['tanggal'] }}"
-                                                data-urut="{{ $value['urut'] }}"
-                                                data-unit="{{ $value['kd_unit'] }}"
+                                                data-bs-target="#editCpptModal" data-tgl="{{ $value['tanggal'] }}"
+                                                data-urut="{{ $value['urut'] }}" data-unit="{{ $value['kd_unit'] }}"
                                                 data-transaksi="{{ $value['no_transaksi'] }}"
                                                 data-urut-total="{{ $value['urut_total'] }}"
                                                 data-tipe-cppt="{{ $value['tipe_cppt'] }}">

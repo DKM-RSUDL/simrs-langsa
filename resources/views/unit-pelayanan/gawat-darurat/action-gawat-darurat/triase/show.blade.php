@@ -96,7 +96,7 @@
                             <div class="row g-4">
 
                                 {{-- VITAL SIGN --}}
-                                <div class="col-12 vital-sign-section">
+                               <div class="col-12 vital-sign-section">
                                     <div class="card-header border-bottom bg-light">
                                         <p class="m-0 fw-bold">Vital Sign</p>
                                     </div>
@@ -105,71 +105,53 @@
                                         {{-- BARIS 1 --}}
                                         <div class="row g-3 mt-1">
                                             <div class="col-md-3">
-                                                <div class="form-floating">
-                                                    <input type="number" class="form-control" name="sistole" id="sistole"
-                                                        value="{{ old('sistole', $vitalSign['sistole'] ?? '') }}">
-                                                    <label for="sistole">TD (Sistole)</label>
-                                                </div>
+                                                <label for="sistole" class="form-label">TD (Sistole)</label>
+                                                <input type="number" class="form-control" name="sistole" id="sistole"
+                                                    value="{{ old('sistole', $vitalSign['sistole'] ?? '') }}">
                                             </div>
                                             <div class="col-md-3">
-                                                <div class="form-floating">
-                                                    <input type="number" class="form-control" name="diastole" id="diastole"
-                                                        value="{{ old('diastole', $vitalSign['diastole'] ?? '') }}">
-                                                    <label for="diastole">TD (Diastole)</label>
-                                                </div>
+                                                <label for="diastole" class="form-label">TD (Diastole)</label>
+                                                <input type="number" class="form-control" name="diastole" id="diastole"
+                                                    value="{{ old('diastole', $vitalSign['diastole'] ?? '') }}">
                                             </div>
                                             <div class="col-md-3">
-                                                <div class="form-floating">
-                                                    <input type="number" class="form-control" name="nadi" id="nadi"
-                                                        value="{{ old('nadi', $vitalSign['nadi'] ?? '') }}">
-                                                    <label for="nadi">Nadi (x/mnt)</label>
-                                                </div>
+                                                <label for="nadi" class="form-label">Nadi (x/mnt)</label>
+                                                <input type="number" class="form-control" name="nadi" id="nadi"
+                                                    value="{{ old('nadi', $vitalSign['nadi'] ?? '') }}">
                                             </div>
                                             <div class="col-md-3">
-                                                <div class="form-floating">
-                                                    <input type="number" class="form-control" name="respiration" id="respiration"
-                                                        value="{{ old('respiration', $vitalSign['respiration'] ?? '') }}">
-                                                    <label for="respiration">Resp (x/mnt)</label>
-                                                </div>
+                                                <label for="respiration" class="form-label">Resp (x/mnt)</label>
+                                                <input type="number" class="form-control" name="respiration" id="respiration"
+                                                    value="{{ old('respiration', $vitalSign['respiration'] ?? '') }}">
                                             </div>
                                         </div>
 
                                         {{-- BARIS 2 --}}
                                         <div class="row g-3 mt-3">
                                             <div class="col-md-2">
-                                                <div class="form-floating">
-                                                    <input type="text" class="form-control" name="suhu" id="suhu"
-                                                        value="{{ old('suhu', $vitalSign['suhu'] ?? '') }}">
-                                                    <label for="suhu">Suhu °C</label>
-                                                </div>
+                                                <label for="suhu" class="form-label">Suhu °C</label>
+                                                <input type="text" class="form-control" name="suhu" id="suhu"
+                                                    value="{{ old('suhu', $vitalSign['suhu'] ?? '') }}">
                                             </div>
                                             <div class="col-md-2">
-                                                <div class="form-floating">
-                                                    <input type="number" class="form-control" name="spo2_tanpa_o2" id="spo2_tanpa_o2"
-                                                        value="{{ old('spo2_tanpa_o2', $vitalSign['spo2_tanpa_o2'] ?? '') }}">
-                                                    <label for="spo2_tanpa_o2">SpO2 (tanpa O2)</label>
-                                                </div>
+                                                <label for="spo2_tanpa_o2" class="form-label">SpO2 (tanpa O2)</label>
+                                                <input type="number" class="form-control" name="spo2_tanpa_o2" id="spo2_tanpa_o2"
+                                                    value="{{ old('spo2_tanpa_o2', $vitalSign['spo2_tanpa_o2'] ?? '') }}">
                                             </div>
                                             <div class="col-md-2">
-                                                <div class="form-floating">
-                                                    <input type="number" class="form-control" name="spo2_dengan_o2" id="spo2_dengan_o2"
-                                                        value="{{ old('spo2_dengan_o2', $vitalSign['spo2_dengan_o2'] ?? '') }}">
-                                                    <label for="spo2_dengan_o2">SpO2 (dengan O2)</label>
-                                                </div>
+                                                <label for="spo2_dengan_o2" class="form-label">SpO2 (dengan O2)</label>
+                                                <input type="number" class="form-control" name="spo2_dengan_o2" id="spo2_dengan_o2"
+                                                    value="{{ old('spo2_dengan_o2', $vitalSign['spo2_dengan_o2'] ?? '') }}">
                                             </div>
                                             <div class="col-md-3">
-                                                <div class="form-floating">
-                                                    <input type="number" class="form-control" name="tinggi_badan" id="tinggi_badan"
-                                                        value="{{ old('tinggi_badan', $vitalSign['tinggi_badan'] ?? '') }}">
-                                                    <label for="tinggi_badan">TB (cm)</label>
-                                                </div>
+                                                <label for="tinggi_badan" class="form-label">TB (cm)</label>
+                                                <input type="number" class="form-control" name="tinggi_badan" id="tinggi_badan"
+                                                    value="{{ old('tinggi_badan', $vitalSign['tinggi_badan'] ?? '') }}">
                                             </div>
                                             <div class="col-md-3">
-                                                <div class="form-floating">
-                                                    <input type="number" class="form-control" name="berat_badan" id="berat_badan"
-                                                        value="{{ old('berat_badan', $vitalSign['berat_badan'] ?? '') }}">
-                                                    <label for="berat_badan">BB (Kg)</label>
-                                                </div>
+                                                <label for="berat_badan" class="form-label">BB (Kg)</label>
+                                                <input type="number" class="form-control" name="berat_badan" id="berat_badan"
+                                                    value="{{ old('berat_badan', $vitalSign['berat_badan'] ?? '') }}">
                                             </div>
                                         </div>
                                     </div>

@@ -32,6 +32,7 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class CpptController extends Controller
 {
@@ -115,6 +116,63 @@ class CpptController extends Controller
             'vitalSignData' => $vitalSignData,
             'lastCpptData' => $lastCpptData,
         ]);
+    }
+    //
+    // PASTE FUNGSI BARU ANDA DI SINI
+    //
+    public function printPDF(Request $request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
+    {
+        $dataMedis = $this->dataMedis($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
+        $tandaVital = MrKondisiFisik::OrderBy('urut')->get();
+        $faktorPemberat = RmeFaktorPemberat::all();
+        $faktorPeringan = RmeFaktorPeringan::all();
+        $kualitasNyeri = RmeKualitasNyeri::all();
+        $frekuensiNyeri = RmeFrekuensiNyeri::all();
+        $menjalar = RmeMenjalar::all();
+        $jenisNyeri = RmeJenisNyeri::all();
+        $karyawan = HrdKaryawan::orderBy('kd_karyawan', 'asc')->get();
+
+        if ($dataMedis->pasien && $dataMedis->pasien->tgl_lahir) {
+            $dataMedis->pasien->umur = Carbon::parse($dataMedis->pasien->tgl_lahir)->age;
+        } else {
+            $dataMedis->pasien->umur = 'Tidak Diketahui';
+        }
+
+        if (! $dataMedis) {
+            abort(404, 'Data not found');
+        }
+
+        $vitalSignData = $this->getVitalSignForCppt($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
+        $lastCpptData = $this->getLastCpptData($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
+
+        // get cppt - REFACTORED
+        $additionalWheres = [
+            't.kd_pasien' => $dataMedis->kd_pasien,
+            't.kd_unit' => $dataMedis->kd_unit,
+            'cppt.no_transaksi'
+            => $dataMedis->no_transaksi,
+            'cppt.kd_kasir' => $dataMedis->kd_kasir,
+        ];
+
+        $getCppt = $this->buildCpptQuery($additionalWheres)->get();
+        $cppt = $this->transformCpptData($getCppt, true); // includeNames = true
+
+        $pdf = Pdf::loadView('unit-pelayanan.rawat-inap.pelayanan.cppt.print', [
+            'dataMedis' => $dataMedis,
+            'tandaVital' => $tandaVital,
+            'faktorPemberat' => $faktorPemberat,
+            'faktorPeringan' => $faktorPeringan,
+            'kualitasNyeri' => $kualitasNyeri,
+            'frekuensiNyeri' => $frekuensiNyeri,
+            'menjalar' => $menjalar,
+            'jenisNyeri' => $jenisNyeri,
+            'cppt' => $cppt,
+            'karyawan' => $karyawan,
+            'vitalSignData' => $vitalSignData,
+            'lastCpptData' => $lastCpptData,
+        ])->setPaper('a4', 'portrait');
+
+        return $pdf->stream('CPPT_' . $dataMedis->pasien->nama . '_' . date('YmdHis') . '.pdf');
     }
 
     public function getCpptAjax(Request $request)
@@ -536,6 +594,7 @@ class CpptController extends Controller
                 ]);
             }
 
+
             // Ambil CPPT terakhir berdasarkan tipe PPA yang sama dan bukan dari user yang login
             $lastCppt = Cppt::join('transaksi as t', function ($join) {
                 $join->on('cppt.no_transaksi', '=', 't.no_transaksi')
@@ -566,30 +625,26 @@ class CpptController extends Controller
                 ->orderBy('cppt.jam', 'desc')
                 ->first();
 
-            if (! $lastCppt) {
-                return response()->json([
-                    'status' => 'success',
-                    'message' => 'Tidak ada diagnosis sebelumnya',
-                    'data' => [],
-                ]);
-            }
 
             // Ambil diagnosis dari CPPT terakhir yg bukan dr user login
-            $diagnosesLast = CpptPenyakit::where('no_transaksi', $lastCppt->no_transaksi)
-                ->where('kd_unit', $kd_unit)
-                ->whereDate('tgl_cppt', $lastCppt->tanggal)
-                ->where('urut_cppt', $lastCppt->urut_total)
-                ->groupBy('nama_penyakit')
-                ->groupBy('id')
-                ->select('nama_penyakit')
-                ->orderBy('id')
-                ->get()
-                ->pluck('nama_penyakit')
-                ->toArray();
+            $diagnosesLast = [];
+            if (!empty($lastCppt)) {
+                $diagnosesLast = CpptPenyakit::where('no_transaksi', $lastCppt->no_transaksi)
+                    ->where('kd_unit', $kd_unit)
+                    ->whereDate('tgl_cppt', $lastCppt->tanggal)
+                    ->where('urut_cppt', $lastCppt->urut_total)
+                    ->groupBy('nama_penyakit')
+                    ->groupBy('id')
+                    ->select('nama_penyakit')
+                    ->orderBy('id')
+                    ->get()
+                    ->pluck('nama_penyakit')
+                    ->toArray();
+            }
 
             // Ambil diagnosis dari CPPT terakhir yg dr user login (jika ada)
             $diagnosesUser = [];
-            if ($lastCpptUser) {
+            if (!empty($lastCpptUser)) {
                 $diagnosesUser = CpptPenyakit::where('no_transaksi', $lastCpptUser->no_transaksi)
                     ->where('kd_unit', $kd_unit)
                     ->whereDate('tgl_cppt', $lastCpptUser->tanggal)
@@ -606,21 +661,13 @@ class CpptController extends Controller
             // Gabungkan kedua array dan hapus duplikat (jika nama sama hanya muncul 1)
             $diagnoses = array_values(array_unique(array_merge($diagnosesUser, $diagnosesLast)));
 
-            // $merged = $diagnosesUser;
-            // foreach ($diagnosesLast as $d) {
-            //     if (! in_array($d, $merged, true)) {
-            //         $merged[] = $d;
-            //     }
-            // }
-            // $diagnoses = $merged;
-
             return response()->json([
                 'status' => 'success',
                 'message' => 'Data ditemukan',
                 'data' => $diagnoses,
                 'cppt_info' => [
-                    'tanggal' => $lastCppt->tanggal,
-                    'jam' => $lastCppt->jam,
+                    'tanggal' => $lastCppt->tanggal ?? null,
+                    'jam' => $lastCppt->jam ?? null,
                     'tipe' => $tipeCppt,
                 ],
             ]);
@@ -1251,6 +1298,7 @@ class CpptController extends Controller
             }
         }
     }
+
 
     public function cpptGizi($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
     {
