@@ -215,10 +215,11 @@
                                 <div class="bg-light p-3 border rounded">
                                     <div style="max-height: 150px; overflow-y: auto;">
                                         <ol type="1">
-                                            <li>
-                                                <a href="#"
-                                                    class="fw-bold">{{ $dataResume->listTindakanPasien->produk->deskripsi ?? '-' }}</a>
-                                            </li>
+                                            @foreach ($tindakan as $tind)
+                                                <li>
+                                                    {{ $tind->produk->deskripsi }}
+                                                </li>
+                                            @endforeach
                                         </ol>
                                     </div>
                                 </div>
@@ -237,7 +238,7 @@
                                 </div>
 
                                 <div class="mt-3">
-                                    <strong class="fw-bold">Resep Obat</strong>
+                                    <strong class="fw-bold">Resep Obat Dirawat</strong>
                                     <div class="bg-light p-3 border rounded">
                                         <div style="max-height: 150px; overflow-y: auto;">
                                             <div class="table-responsive">
@@ -254,6 +255,44 @@
                                                     </thead>
                                                     <tbody>
                                                         @foreach ($riwayatObatHariIni as $obat)
+                                                            <tr>
+                                                                <td>{{ $loop->iteration }}</td>
+                                                                <td>
+                                                                    {{ $obat->nama_obat ?? '-' }}
+                                                                </td>
+                                                                <td>{{ $obat->jumlah_takaran }}
+                                                                    {{ $obat->satuan_takaran }}
+                                                                </td>
+                                                                <td>{{ explode(',', $obat->cara_pakai)[0] }}</td>
+                                                                <td>{{ (int) $obat->jumlah ?? '-' }}</td>
+                                                                <td>-</td>
+                                                            </tr>
+                                                        @endforeach
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="mt-3">
+                                    <strong class="fw-bold">Resep Obat Pulang</strong>
+                                    <div class="bg-light p-3 border rounded">
+                                        <div style="max-height: 150px; overflow-y: auto;">
+                                            <div class="table-responsive">
+                                                <table class="table table-bordered table-hover">
+                                                    <thead class="table-secondary">
+                                                        <tr>
+                                                            <th>NO</th>
+                                                            <th>Nama Obat</th>
+                                                            <th>Dosis</th>
+                                                            <th>Frek</th>
+                                                            <th>Qty</th>
+                                                            <th>Rate</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        @foreach ($resepPulang as $obat)
                                                             <tr>
                                                                 <td>{{ $loop->iteration }}</td>
                                                                 <td>
