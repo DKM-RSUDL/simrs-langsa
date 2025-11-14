@@ -4,6 +4,12 @@
     $tglMasukData = date('Y-m-d', strtotime($dataMedis->tgl_masuk));
 
     $navItems = [
+          [
+            'validate' => false,
+            'icon' => 'tools.png',
+            'label' => 'Triase',
+            'link' => route('show-triase.index', [$dataMedis->pasien->kd_pasien, $tglMasukData, $dataMedis->urut_masuk]),
+        ],
         [
             'validate' => false,
             'icon' => 'verified_badge.png',
