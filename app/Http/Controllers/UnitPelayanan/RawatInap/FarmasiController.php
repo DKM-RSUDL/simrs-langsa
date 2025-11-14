@@ -50,14 +50,8 @@ class FarmasiController extends Controller
             abort(404, 'Data not found');
         }
 
-        if ($dataMedis->pasien && $dataMedis->pasien->tgl_lahir) {
-            $dataMedis->pasien->umur = Carbon::parse($dataMedis->pasien->tgl_lahir)->age;
-        } else {
-            $dataMedis->pasien->umur = 'Tidak Diketahui';
-        }
-
         $riwayatObat = $this->getRiwayatObat($kd_pasien);
-        $riwayatObatHariIni = $this->getRiwayatObatHariIni($kd_pasien);
+        $riwayatObatHariIni = $this->getRiwayatObatHariIni($dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk);
 
         // Pisahkan resep hari ini menjadi Inap (RESEP_PULANG = 0) dan Pulang (RESEP_PULANG = 1)
         $today = Carbon::today()->toDateString();
@@ -92,6 +86,9 @@ class FarmasiController extends Controller
             ->leftJoin('APT_OBAT', 'MR_RESEPDTL.KD_PRD', '=', 'APT_OBAT.KD_PRD')
             ->leftJoin('APT_SATUAN', 'APT_OBAT.KD_SATUAN', '=', 'APT_SATUAN.KD_SATUAN')
             ->where('MR_RESEP.KD_PASIEN', $kd_pasien)
+            ->where('MR_RESEP.KD_UNIT', $kd_unit)
+            ->whereDate('MR_RESEP.TGL_MASUK', $tgl_masuk)
+            ->where('MR_RESEP.URUT_MASUK', $urut_masuk)
             ->where('MR_RESEP.RESEP_PULANG', 1)
             ->select(
                 'MR_RESEP.TGL_ORDER',
@@ -238,23 +235,6 @@ class FarmasiController extends Controller
 
             $ID_MRRESEP = $this->generateNoOrder($tglOrder);
 
-            // Log data sebelum insert
-            $resepData = [
-                'KD_PASIEN' => $kunjungan->kd_pasien,
-                'KD_UNIT' => $kunjungan->kd_unit,
-                'TGL_MASUK' => $kunjungan->tgl_masuk,
-                'URUT_MASUK' => $kunjungan->urut_masuk,
-                'KD_DOKTER' => $validatedData['kd_dokter'],
-                'ID_MRRESEP' => $ID_MRRESEP,
-                'CAT_RACIKAN' => $validatedData['cat_racikan'] ?? null,
-                'TGL_ORDER' => $tglOrder,
-                'JAM_ORDER' => $jamOrder,
-                'STATUS' => '0', // varchar(50)
-                'DILAYANI' => 0, // tinyint
-                'STTS_TERIMA' => '0', // varchar(50)
-                'KRONIS' => '0', // varchar(2)
-                'PRB' => '0', // varchar(2)
-            ];
             // Simpan ke MR_RESEP
             $mrResep = new MrResep();
             $mrResep->KD_PASIEN = $kunjungan->kd_pasien; // varchar(12)
@@ -341,9 +321,9 @@ class FarmasiController extends Controller
             ]);
 
             // Konversi tgl_order ke format datetime
-            $tglOrder = Carbon::parse($validatedData['tgl_order'])->format('Y-m-d H:i:s');
+            $tglOrder = Carbon::parse($validatedData['tgl_order'])->format('Y-m-d');
             // JAM_ORDER harus datetime penuh, gunakan TGL_ORDER untuk jam
-            $jamOrder = $tglOrder;
+            $jamOrder = Carbon::parse($validatedData['tgl_order'])->format('H:i:s');
 
             // Cari kunjungan
             $kunjungan = Kunjungan::join('transaksi as t', function ($join) {
@@ -585,7 +565,7 @@ class FarmasiController extends Controller
     }
 
 
-    private function getRiwayatObatHariIni($kd_pasien)
+    private function getRiwayatObatHariIni($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
     {
         $today = Carbon::today()->toDateString();
 
@@ -595,7 +575,14 @@ class FarmasiController extends Controller
             ->leftJoin('APT_OBAT', 'MR_RESEPDTL.KD_PRD', '=', 'APT_OBAT.KD_PRD')
             ->leftJoin('APT_SATUAN', 'APT_OBAT.KD_SATUAN', '=', 'APT_SATUAN.KD_SATUAN')
             ->where('MR_RESEP.KD_PASIEN', $kd_pasien)
+            ->where('MR_RESEP.KD_UNIT', $kd_unit)
+            ->whereDate('MR_RESEP.TGL_MASUK', $tgl_masuk)
+            ->where('MR_RESEP.URUT_MASUK', $urut_masuk)
             ->whereDate('MR_RESEP.TGL_ORDER', $today)
+            ->where(function ($query) {
+                $query->where('MR_RESEP.RESEP_PULANG', '!=', 1)
+                    ->orWhereNull('MR_RESEP.RESEP_PULANG');
+            })
             ->select(
                 'MR_RESEP.TGL_ORDER',
                 'DOKTER.NAMA as NAMA_DOKTER',
