@@ -38,7 +38,7 @@ class TriaseShowAndEditController extends Controller
             abort(404, 'Data triase not found');
         }
 
-        $vitalSign = $this->asesmenService->getVitalSignData($dataMedis->kd_kasir, $dataMedis->no_transaksi);
+        $vitalSign =json_decode($data->vital_sign, true);
         $data->triase = json_decode($data->triase, true);
 
 
