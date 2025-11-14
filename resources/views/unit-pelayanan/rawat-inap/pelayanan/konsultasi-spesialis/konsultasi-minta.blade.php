@@ -15,8 +15,8 @@
             <td>{{ $item->tanggal_konsul }}<br><small
                     class="text-muted">{{ date('H:i', strtotime($item->jam_konsul)) }}</small>
             </td>
-            <td>{{ $item->dokterPengirim->nama }}<br></td>
-            {{-- <td>{{ $item->spesialis->konsul }}</td> --}}
+            <td>{{ $item->dokterPengirim->nama_lengkap }}<br></td>
+            <td>{{ $item->dokterTujuan->nama_lengkap }}</td>
             {{-- <td>
                 <p class="m-0">{!!  $item->konsul  !!}</p>
             </td>
@@ -24,7 +24,7 @@
                 <p class="m-0">{!!  $item->catatan  !!}</p>
             </td> --}}
 
-           
+
             <td>
                 <p class="m-0">{!! nl2br(e($item->catatan)) !!}</p>
             </td>
