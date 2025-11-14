@@ -43,14 +43,17 @@ class FarmasiController extends Controller
         }
 
         $riwayatObat = $this->getRiwayatObat($kd_pasien);
-        $riwayatObatHariIni = $this->getRiwayatObatHariIni($kd_pasien);
+        $riwayatObatHariIni = $this->getRiwayatObatHariIni($dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk);
 
         $riwayatObatHariIniPulang = DB::table('MR_RESEP')
             ->join('DOKTER', 'MR_RESEP.KD_DOKTER', '=', 'DOKTER.KD_DOKTER')
             ->leftJoin('MR_RESEPDTL', 'MR_RESEP.ID_MRRESEP', '=', 'MR_RESEPDTL.ID_MRRESEP')
             ->leftJoin('APT_OBAT', 'MR_RESEPDTL.KD_PRD', '=', 'APT_OBAT.KD_PRD')
             ->leftJoin('APT_SATUAN', 'APT_OBAT.KD_SATUAN', '=', 'APT_SATUAN.KD_SATUAN')
-            ->where('MR_RESEP.KD_PASIEN', $kd_pasien)
+            ->where('MR_RESEP.KD_PASIEN', $dataMedis->kd_pasien)
+            ->where('MR_RESEP.KD_UNIT', 3)
+            ->whereDate('MR_RESEP.TGL_MASUK', $dataMedis->tgl_masuk)
+            ->where('MR_RESEP.URUT_MASUK', $dataMedis->urut_masuk)
             ->where('MR_RESEP.RESEP_PULANG', 1)
             ->select(
                 'MR_RESEP.TGL_ORDER',
@@ -434,7 +437,7 @@ class FarmasiController extends Controller
             ->get();
     }
 
-    private function getRiwayatObatHariIni($kd_pasien)
+    private function getRiwayatObatHariIni($kd_pasien, $tgl_masuk, $urut_masuk)
     {
         $today = Carbon::today()->toDateString();
 
@@ -444,7 +447,14 @@ class FarmasiController extends Controller
             ->leftJoin('APT_OBAT', 'MR_RESEPDTL.KD_PRD', '=', 'APT_OBAT.KD_PRD')
             ->leftJoin('APT_SATUAN', 'APT_OBAT.KD_SATUAN', '=', 'APT_SATUAN.KD_SATUAN')
             ->where('MR_RESEP.KD_PASIEN', $kd_pasien)
+            ->where('MR_RESEP.KD_UNIT', 3)
+            ->whereDate('MR_RESEP.TGL_MASUK', $tgl_masuk)
+            ->where('MR_RESEP.URUT_MASUK', $urut_masuk)
             ->whereDate('MR_RESEP.TGL_ORDER', $today)
+            ->where(function ($query) {
+                $query->where('MR_RESEP.RESEP_PULANG', '!=', 1)
+                    ->orWhereNull('MR_RESEP.RESEP_PULANG');
+            })
             ->select(
                 'MR_RESEP.TGL_ORDER',
                 'DOKTER.NAMA as NAMA_DOKTER',
