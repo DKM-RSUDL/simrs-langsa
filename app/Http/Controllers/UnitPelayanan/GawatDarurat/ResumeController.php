@@ -189,7 +189,7 @@ class ResumeController extends Controller
             $dataMedis->pasien->umur = 'Tidak Diketahui';
         }
 
-      
+
 
         return view(
             'unit-pelayanan.gawat-darurat.action-gawat-darurat.resume.index',
@@ -205,7 +205,6 @@ class ResumeController extends Controller
                 'dataResume',
                 'dataGet',
                 'unitKonsul',
-                'vitalSign'
             )
         );
     }
@@ -270,6 +269,15 @@ class ResumeController extends Controller
 
         // Mengambil data obat
         $riwayatObatHariIni = $this->getRiwayatObatHariIni($kd_pasien, $tgl_masuk, $dataMedis->urut_masuk);
+        $resepPulang = $this->getObatPulang($dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk);
+
+        // tindakan
+        $tindakan = ListTindakanPasien::with(['produk'])
+            ->where('kd_pasien', $dataMedis->kd_pasien)
+            ->where('kd_unit', $dataMedis->kd_unit)
+            ->whereDate('tgl_masuk', date('Y-m-d', strtotime($dataMedis->tgl_masuk)))
+            ->where('urut_masuk', $dataMedis->urut_masuk)
+            ->get();
 
         // get last ttv
         $vitalSign = $this->asesmenService->getVitalSignData($dataMedis->kd_kasir, $dataMedis->no_transaksi);
@@ -294,7 +302,9 @@ class ResumeController extends Controller
                 'vitalSign',
                 'kodeICD',
                 'kodeICD9',
-                'unitKonsul'
+                'unitKonsul',
+                'resepPulang',
+                'tindakan'
             )
         );
     }
@@ -589,12 +599,8 @@ class ResumeController extends Controller
 
         $hasilKonpas = "$tdKonpas, $rr, $resp, $temp, $tb, $bb";
 
-        $resepAll = MrResep::with(['detailResep'])
-            ->where('kd_pasien', $dataMedis->kd_pasien)
-            ->where('kd_unit', $dataMedis->kd_unit)
-            ->whereDate('tgl_masuk', date('Y-m-d', strtotime($dataMedis->tgl_masuk)))
-            ->where('urut_masuk', $dataMedis->urut_masuk)
-            ->get();
+        $resepRawat = $this->getRiwayatObatHariIni($dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk);
+        $resepPulang = $this->getObatPulang($dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk);
 
         $labor = SegalaOrder::with(['details'])
             ->where('kd_pasien', $dataMedis->kd_pasien)
@@ -639,11 +645,12 @@ class ResumeController extends Controller
             'resume',
             'dataMedis',
             'hasilKonpas',
-            'resepAll',
             'labor',
             'radiologi',
             'tindakan',
-            'pemeriksaanFisik'
+            'pemeriksaanFisik',
+            'resepRawat',
+            'resepPulang'
         ))
             ->setPaper('a4', 'potrait');
         return $pdf->stream('resume_' . $resume->kd_pasien . '_' . $resume->tgl_konsul . '.pdf');
@@ -661,6 +668,39 @@ class ResumeController extends Controller
             ->whereDate('MR_RESEP.tgl_masuk', $tgl_masuk)
             ->where('MR_RESEP.urut_masuk', $urut_masuk)
             ->where('MR_RESEP.kd_unit', 3)
+            ->where(function ($query) {
+                $query->where('MR_RESEP.RESEP_PULANG', '!=', 1)
+                    ->orWhereNull('MR_RESEP.RESEP_PULANG');
+            })
+            ->select(
+                'MR_RESEP.TGL_ORDER',
+                'DOKTER.NAMA as NAMA_DOKTER',
+                'MR_RESEP.ID_MRRESEP',
+                'MR_RESEP.STATUS',
+                'MR_RESEPDTL.CARA_PAKAI',
+                'MR_RESEPDTL.JUMLAH',
+                'MR_RESEPDTL.KET',
+                'MR_RESEPDTL.JUMLAH_TAKARAN',
+                'MR_RESEPDTL.SATUAN_TAKARAN',
+                'APT_OBAT.NAMA_OBAT'
+            )
+            ->distinct()
+            ->orderBy('MR_RESEP.TGL_ORDER', 'desc')
+            ->get();
+    }
+
+    private function getObatPulang($kd_pasien, $tgl_masuk, $urut_masuk)
+    {
+        return DB::table('MR_RESEP')
+            ->join('DOKTER', 'MR_RESEP.KD_DOKTER', '=', 'DOKTER.KD_DOKTER')
+            ->leftJoin('MR_RESEPDTL', 'MR_RESEP.ID_MRRESEP', '=', 'MR_RESEPDTL.ID_MRRESEP')
+            ->leftJoin('APT_OBAT', 'MR_RESEPDTL.KD_PRD', '=', 'APT_OBAT.KD_PRD')
+            ->leftJoin('APT_SATUAN', 'APT_OBAT.KD_SATUAN', '=', 'APT_SATUAN.KD_SATUAN')
+            ->where('MR_RESEP.KD_PASIEN', $kd_pasien)
+            ->whereDate('MR_RESEP.tgl_masuk', $tgl_masuk)
+            ->where('MR_RESEP.urut_masuk', $urut_masuk)
+            ->where('MR_RESEP.kd_unit', 3)
+            ->where('MR_RESEP.RESEP_PULANG', 1)
             ->select(
                 'MR_RESEP.TGL_ORDER',
                 'DOKTER.NAMA as NAMA_DOKTER',

@@ -111,7 +111,7 @@
                                                     <tr>
                                                         <td>{{ $skalaMorseData->firstItem() + $index }}</td>
                                                         <td>
-                                                            <strong>{{ date('d/m/Y', strtotime($item->tanggal_implementasi)) }}</strong><br>
+                                                            <strong>{{ date('d/m/Y', strtotime($item->tanggal)) }}</strong><br>
                                                             <small
                                                                 class="text-muted">{{ date('H:i', strtotime($item->jam)) }}
                                                                 WIB</small>
