@@ -42,7 +42,7 @@
             transform: rotate(4deg);
         }
     </style>
-    
+
 @endpush
 
 @section('content')
@@ -139,7 +139,7 @@
                                         </div>
                                         <img src="{{ asset('assets/img/profile.jpg') }}" alt="Avatar"
                                             class="rounded-circle" width="50" height="50">
-                                        <div class="ms-3">
+                                        <div class="ms-3 text-start">
                                             <p class="mb-0"><strong>{{ $value['nama_penanggung'] }}</strong></p>
                                             <small class="text-sm">{{ str()->title($value['jenis_tenaga']) }}</small>
                                         </div>
@@ -168,7 +168,7 @@
                                                 <div>
                                                     <p class="mb-0 fw-semibold text-dark">Catatan Perkembangan Pasien Terintegrasi</p>
                                                     <small class="text-muted">
-                                                        <strong>{{ $value['nama_penanggung'] }}</strong> 
+                                                        <strong>{{ $value['nama_penanggung'] }}</strong>
                                                     </small>
                                                 </div>
                                             </div>
