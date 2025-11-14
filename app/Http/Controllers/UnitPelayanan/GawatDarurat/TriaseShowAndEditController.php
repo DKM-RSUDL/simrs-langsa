@@ -31,8 +31,12 @@ class TriaseShowAndEditController extends Controller
 
     
         $data = $this->getTriaseData($dataMedis);
+
+        if (!$data) {
+            return back()->with('error', 'Data triase tidak ditemukan.');
+        }
      
-        $vitalSign = $this->asesmenService->getVitalSignData($dataMedis->kd_kasir, $dataMedis->no_transaksi);
+        $vitalSign = json_decode($data->vital_sign,true);
         $data->triase = json_decode($data->triase, true);
 
     
@@ -87,12 +91,6 @@ class TriaseShowAndEditController extends Controller
             'circulation' => $request->circulation ?? [],
             'disability'  => $request->disability ?? [],
         ];
-
-      
-        $triase->vital_sign = json_encode($vitalSign);
-        $triase->save();
-
-        $this->asesmenService->store($vitalSign, $kd_pasien, $dataMedis->no_transaksi, $dataMedis->kd_kasir);
 
         // -----------------------------
         // SIMPAN KE DATABASE
