@@ -139,6 +139,7 @@ Route::prefix('rawat-inap')->group(function () {
                             Route::post('/get-last-diagnoses', 'getLastDiagnosesAjax')->name('.get-last-diagnoses');
                             Route::put('/verifikasi', 'verifikasiCppt')->name('.verifikasi');
                             Route::get('/gizi', 'cpptGizi')->name('.cppt-gizi');
+                            Route::get('/print-pdf', 'printPDF')->name('.print-pdf');
                         });
                     });
                 });
