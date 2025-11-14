@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\UnitPelayanan\GawatDaruratController;
 use App\Http\Controllers\MedisGawatDaruratController;
+use App\Http\Controllers\UnitPelayanan\GawatDarurat\TriaseShowAndEditController as GawatDaruratTriaseShowAndEditController;
 use App\Http\Controllers\UnitPelayanan\GawatDarurat\AsesmenController as GawatDaruratAsesmenController;
 use App\Http\Controllers\UnitPelayanan\GawatDarurat\AsesmenKeperawatanController;
 use App\Http\Controllers\UnitPelayanan\GawatDarurat\AudiometriController as GawatDaruratAudiometriController;
@@ -58,10 +59,9 @@ Route::prefix('gawat-darurat')->group(function () {
     Route::put('/ubah-foto-triase/{kdKasir}/{noTrx}', [GawatDaruratController::class, 'updateFotoTriase'])->name('gawat-darurat.ubah-foto-triase');
     Route::get('/triase/{kd_pasien}/{tgl_masuk}/print-pdf', [GawatDaruratController::class, 'generatePDF'])
         ->name('gawat-darurat.triase.printPDF');
-
     Route::prefix('pelayanan')->group(function () {
+        
         Route::prefix('/{kd_pasien}/{tgl_masuk}')->group(function () {
-
             // Update Pasien
             Route::prefix('{urut_masuk}/ubah-pasien')->group(function () {
                 Route::name('ubah-pasien')->group(function () {
@@ -71,6 +71,8 @@ Route::prefix('gawat-darurat')->group(function () {
                     });
                 });
             });
+
+           
 
             // general consent
             Route::prefix('{urut_masuk}/general-consent')->group(function () {
@@ -198,6 +200,15 @@ Route::prefix('gawat-darurat')->group(function () {
                 });
             });
 
+         
+            Route::prefix('{urut_masuk}/show-triase')->group(function(){
+                Route::name('show-triase')->group(callback: function(){
+                    Route::controller(GawatDaruratTriaseShowAndEditController::class)->group(function(){
+                           Route::get('/', 'index')->name('.index');
+                           Route::put('/','update')->name('.update');
+                    });
+                });
+             });
 
             // Route::prefix('{urut_masuk}/asesmen')->group(function () {
             Route::prefix('{urut_masuk}/asesmen')->group(function () {

@@ -23,3 +23,7 @@
 .h-fit {
     height: fit-content !important;
 }
+
+.multiline {
+    white-space: pre-line !important;
+}

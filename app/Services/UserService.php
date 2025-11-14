@@ -18,7 +18,7 @@ class UserService
         //     $query->where('name', '!=', 'admin');
         // })->with('user.roles')->get();
 
-        $data = User::with(['roles']);
+        $data = User::with(['roles', 'karyawan']);
 
         return DataTables::of($data)
             ->addIndexColumn()

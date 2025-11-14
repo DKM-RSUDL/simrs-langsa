@@ -273,10 +273,8 @@
             <tr>
                 <th>Terapi Selama Dirawat</th>
                 <td>
-                    @foreach ($resepAll as $resep)
-                        @foreach ($resep->detailResep as $dt)
-                            - {{ $dt->aptObat->nama_obat . ' ' . $dt->cara_pakai }} <br>
-                        @endforeach
+                    @foreach ($resepRawat as $item)
+                        - {{ "$item->nama_obat $item->cara_pakai" }} <br>
                     @endforeach
                 </td>
             </tr>
@@ -285,11 +283,9 @@
                 <tr>
                     <th>Terapi Pulang</th>
                     <td>
-                        @foreach ($resepAll as $resep)
-                            @foreach ($resep->detailResep as $dt)
-                                - {{ $dt->aptObat->nama_obat . ' ' . $dt->cara_pakai }} <br>
-                            @endforeach
-                        @endforeach
+                        @foreach ($resepPulang as $item)
+                        - {{ "$item->nama_obat $item->cara_pakai" }} <br>
+                    @endforeach
                     </td>
                 </tr>
             @endif

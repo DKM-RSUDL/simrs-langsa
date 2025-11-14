@@ -1,10 +1,14 @@
 # PAPERLESS TEAM RSUD LANGSA
 
 # Komponen
+
 ### 1. `page-header`
+
 **Lokasi:** `resources/views/components/page-header.blade.php`  
 **Fungsi:** Menampilkan judul dan deskripsi halaman secara konsisten di seluruh aplikasi.
+
 #### 📘 Penggunaan
+
 ```blade
 @include('components.page-header', [
     'title' => 'Masukkan judul',
@@ -13,8 +17,10 @@
 ```
 
 ### 2. `button-previous`
+
 **Lokasi:** `resources/views/components/button-previous.blade.php`  
 **Fungsi:** Membuat tombol kembali untuk disetiap halaman.
+
 ```blade
 @props([
     'href' => url()->previous(),
@@ -28,8 +34,10 @@
 ```
 
 ### 3. `content-card`
+
 **Lokasi:** `resources/views/components/content-card.blade.php`  
 **Fungsi:** Membuat body content untuk semua halaman.
+
 ```blade
 @props([
     'class' => 'card h-auto',
@@ -43,8 +51,26 @@
 </div>
 ```
 
+### 4. `multiline-css`
+
+**Lokasi:** `public/assets/paperless/style.css`  
+**Fungsi:** Menjaga karakter ENTER (newline) dari input `<textarea>` saat teks ditampilkan kembali di view (misalnya di `<p>`, `<div>`, `<td>`).
+
+```css
+.multiline {
+    white-space: pre-line !important;
+}
+```
+
+```blade
+<p class="multiline">{{ $rekam->keluhan_utama }}</p>
+
+<td class="multiline">{{ $rekam->riwayat_penyakit }}</td>
+
+<div class="multiline">{{ $rekam->tindakan }}</div>
+```
+Teks akan tampil dengan baris baru sesuai ENTER yang diketik di textarea, tanpa perlu nl2br() atau <br> manual.
+
 
 © 2025 — **PaperlessHospital.id**  
 _Dikembangkan oleh Tim IT RSUD Langsa_
-
-
