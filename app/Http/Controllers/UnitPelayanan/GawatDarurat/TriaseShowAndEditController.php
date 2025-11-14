@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\UnitPelayanan\GawatDarurat;
 
 use App\Models\DataTriase;
+use App\Models\Kunjungan;
 use App\Services\AsesmenService;
 use Exception;
 use App\Services\BaseService;
@@ -93,6 +94,15 @@ class TriaseShowAndEditController extends Controller
             'disability'  => $request->disability ?? [],
         ];
 
+        $kunjunganData = [
+            'kd_triase' => $request->kd_triase,
+        ];
+
+        Kunjungan::where('kunjungan.kd_pasien', $dataMedis->kd_pasien)
+            ->where('kunjungan.kd_unit', $dataMedis->kd_unit)
+            ->where('kunjungan.urut_masuk', $dataMedis->urut_masuk)
+            ->whereDate('kunjungan.tgl_masuk', $dataMedis->tgl_masuk)
+            ->update($kunjunganData);
 
         // -----------------------------
         // SIMPAN KE DATABASE
@@ -100,7 +110,7 @@ class TriaseShowAndEditController extends Controller
         $triase->update([
             'vital_sign'   => json_encode($vitalSign),
             'triase'       => json_encode($abcdn),
-            'kode_triase'  => $request->kd_triase,
+            'kd_triase' => $request->kd_triase,
             'hasil_triase' => $request->ket_triase,
         ]);
 
@@ -119,3 +129,5 @@ class TriaseShowAndEditController extends Controller
         }
     }
 }
+
+
