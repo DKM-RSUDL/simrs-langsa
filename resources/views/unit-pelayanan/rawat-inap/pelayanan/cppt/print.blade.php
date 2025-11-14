@@ -3,458 +3,346 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cetak CPPT - {{ $dataMedis->pasien->nama_pasien ?? 'Pasien' }}</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-
+    <title>CPPT - {{ $dataMedis->pasien->nama ?? '' }}</title>
     <style>
+        @page {
+            size: A4 portrait;
+            margin: 10mm;
+        }
+
         body {
-            font-family: 'Times New Roman', Times, serif;
-            font-size: 10pt;
-            color: #000;
-            background-color: #fff;
-        }
-
-        .container-print {
-            max-width: 100%;
-            margin: 0;
-            padding: 0;
-        }
-
-        .print-header {
-            border-bottom: 3px double #000;
-            padding-bottom: 10px;
-            margin-bottom: 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .header-left {
-            display: flex;
-            align-items: center;
-        }
-
-        .header-left img {
-            width: 70px;
-            /* Sesuaikan ukuran logo */
-            height: auto;
-            margin-right: 15px;
-        }
-
-        .header-left .title-container {
-            text-align: center;
-        }
-
-        .header-left h4 {
-            font-size: 1.4rem;
-            font-weight: bold;
-            margin-bottom: 2px;
-        }
-
-        .header-left p {
-            font-size: 0.8rem;
-            margin-bottom: 0;
-            line-height: 1.3;
-        }
-
-        .patient-info {
-            border: 2px solid #000;
-            padding: 8px;
-            font-size: 9pt;
-            width: 300px;
-            /* Lebar kotak info pasien */
-            min-height: 80px;
-            /* Tinggi minimal */
-        }
-
-        .patient-info table {
-            width: 100%;
-        }
-
-        .patient-info td {
-            padding: 1px 3px;
-            vertical-align: top;
-        }
-
-        .patient-info .label {
-            width: 70px;
-            font-weight: 600;
-        }
-
-        .main-table {
-            width: 100%;
-            border-collapse: collapse;
-            border: 2px solid #000;
-        }
-
-        .main-table th,
-        .main-table td {
-            border: 1px solid #000;
-            padding: 8px;
-            vertical-align: top;
-            text-align: left;
-            word-break: break-word;
-            /* Mencegah teks meluber */
-        }
-
-        .main-table thead th {
-            font-size: 9pt;
-            font-weight: bold;
-            text-align: center;
-            vertical-align: middle;
-            background-color: #f0f0f0;
-        }
-
-        /* Penyesuaian lebar kolom agar sesuai gambar */
-        .col-datetime {
-            width: 8%;
-        }
-
-        .col-ppa {
-            width: 15%;
-        }
-
-        .col-soap {
-            width: 37%;
-        }
-
-        .col-instruksi {
-            width: 25%;
-        }
-
-        .col-verif {
-            width: 15%;
-        }
-
-        .ppa-info strong {
-            display: block;
-            font-size: 10pt;
-        }
-
-        .ppa-info small {
+            font-family: DejaVu Sans, sans-serif;
             font-size: 8pt;
             color: #333;
         }
 
-        .soap-container {
-            font-size: 9pt;
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6,
+        p {
+            margin: 0;
+            padding: 0;
         }
 
-        .soap-s,
-        .soap-o,
-        .soap-a,
-        .soap-p,
-        .soap-d,
-        .soap-i,
-        .soap-m,
-        .soap-e {
-            margin-bottom: 5px;
+        .header-table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: #f0f0f0;
+            padding: 0;
+            position: relative;
         }
 
-        .soap-container strong {
-            font-size: 10pt;
+        .td-left {
+            width: 40%;
+            text-align: left;
+            vertical-align: middle;
         }
 
-        .soap-o ul,
-        .soap-a ul {
-            padding-left: 20px;
-            margin-bottom: 0;
-            list-style-type: disc;
+        .td-center {
+            width: 40%;
+            text-align: center;
+            vertical-align: middle;
         }
 
-        .soap-o li,
-        .soap-a li {
-            font-size: 9pt;
+        .td-right {
+            width: 20%;
+            position: relative;
+            padding: 0;
         }
 
-        .instruksi-list {
-            font-size: 9pt;
-            margin-bottom: 0;
-            padding-left: 0;
-            list-style: none;
+        .brand-table {
+            border-collapse: collapse;
+            background-color: transparent;
         }
 
-        .instruksi-list li {
-            margin-bottom: 5px;
-            padding-bottom: 5px;
-            border-bottom: 1px dashed #ccc;
+        .va-middle {
+            vertical-align: middle;
         }
 
-        .instruksi-list li:last-child {
-            border-bottom: none;
-            margin-bottom: 0;
+        .brand-logo {
+            width: 60px;
+            height: auto;
+            margin-right: 2px;
         }
 
-        .instruksi-list strong {
+        .brand-name {
+            font-weight: 700;
+            margin: 0;
+            font-size: 14px;
+        }
+
+        .brand-info {
+            margin: 0;
+            font-size: 7px;
+        }
+
+        .title-main {
             display: block;
-            color: #000;
+            font-size: 16px;
+            font-weight: bold;
+            margin: 0;
         }
 
-        .verification-status {
-            font-size: 9pt;
+        .title-sub {
+            display: block;
+            font-size: 14px;
+            font-weight: bold;
+            margin: 0;
+        }
+
+        .unit-box {
+            background-color: #bbbbbb;
+            padding: 15px 0px;
+            width: 100%;
+            margin: 0 auto;
             text-align: center;
         }
 
-        .verification-status .verified {
-            color: #006400;
+        .unit-text {
+            font-size: 18px;
             font-weight: bold;
+            color: #ffffff;
         }
 
-        .verification-status .unverified {
-            color: #888;
+        .patient-table {
+            width: 100%;
+            margin-top: 15px;
+            border-collapse: collapse;
+        }
+
+        .patient-table th,
+        .patient-table td {
+            border: 1px solid #ccc;
+            padding: 5px 7px;
+            font-size: 9pt;
+        }
+
+        .patient-table th {
+            background-color: #f2f2f2;
+            text-align: left;
+            width: 130px;
+        }
+
+        .cppt-main-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .cppt-main-table th,
+        .cppt-main-table td {
+            border: 1px solid #000;
+            padding: 5px;
+            vertical-align: top;
+        }
+
+        .cppt-main-table th {
+            background-color: #f0f0f0;
+            font-weight: bold;
+            text-align: center;
+            font-size: 8pt;
+        }
+
+        .cppt-main-table td {
+            font-size: 7.5pt;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+        }
+
+        /* Mengatur lebar kolom */
+        .cppt-main-table .col-tanggal {
+            width: 12%;
+        }
+
+        .cppt-main-table .col-profesi {
+            width: 15%;
+        }
+
+        .cppt-main-table .col-rencana {
+            width: 38%;
+        }
+
+        .cppt-main-table .col-instruksi {
+            width: 20%;
+        }
+
+
+        .cppt-main-table .col-review {
+            width: 15%;
+        }
+
+        .soap-label {
+            font-weight: bold;
+            margin-right: 3px;
+        }
+
+        .paraf-text {
+            text-align: right;
+            margin-top: 10px;
             font-style: italic;
         }
 
-        @page {
-            size: A4 landscape;
-            /* Mengatur halaman menjadi landscape */
-            margin: 0.5in;
+        .instruksi-ppa-box {
+            font-size: 7pt;
         }
 
-        @media print {
-            body {
-                margin: 0;
-                font-size: 10pt;
-            }
+        .instruksi-ppa-item {
+            margin-bottom: 3px;
+        }
 
-            .container-print {
-                width: 100%;
-                padding: 0;
-            }
-
-            .main-table thead th {
-                background-color: #f0f0f0 !important;
-                -webkit-print-color-adjust: exact;
-                /* Memaksa print background color */
-                color-adjust: exact;
-            }
-
-            .main-table td {
-                page-break-inside: avoid;
-                /* Mencegah baris terpotong */
-            }
-
-            .main-table tr {
-                page-break-inside: avoid;
-                page-break-after: auto;
-            }
-
-            .main-table thead {
-                display: table-header-group;
-                /* Memastikan header tabel muncul di setiap halaman */
-            }
+        .instruksi-ppa-item strong {
+            display: block;
+            margin-bottom: 1px;
         }
     </style>
 </head>
 
 <body>
-    <div class="container-print">
-        <div class="print-header">
-            <div class="header-left">
-                <img src="{{ asset('assets/img/logo_rs.png') }}" alt="Logo RS">
-                <div class="title-container">
-                    <h4>CATATAN PERKEMBANGAN PASIEN TERINTEGRASI</h4>
-                    <p>
-                        <strong>RSUD LANGSA (Contoh)</strong><br>
-                        Jl. Jend. A. Yani, Paya Bujok Seuleumak, Langsa Baro, Kota Langsa
-                    </p>
-                </div>
-            </div>
-
-            <div class="patient-info">
-                <table>
-                    <tbody>
+    <header>
+        <table class="header-table">
+            <tr>
+                <td class="td-left">
+                    <table class="brand-table">
                         <tr>
-                            <td class="label">NRM</td>
-                            <td>: {{ $dataMedis->kd_pasien ?? '-' }}</td>
-                        </tr>
-                        <tr>
-                            <td class="label">Nama</td>
-                            <td>: {{ $dataMedis->pasien->nama_pasien ?? '-' }}</td>
-                        </tr>
-                        <tr>
-                            <td class="label">Jenis Kelamin</td>
-                            <td>: {{ $dataMedis->pasien->jenis_kelamin == 'L' ? 'Laki-laki' : 'Perempuan' }}</td>
-                        </tr>
-                        <tr>
-                            <td class="label">Tanggal Lahir</td>
-                            <td>:
-                                {{ $dataMedis->pasien->tgl_lahir ? date('d-m-Y', strtotime($dataMedis->pasien->tgl_lahir)) : '-' }}
-                                (Umur {{ $dataMedis->pasien->umur ?? '-' }} Thn)
+                            <td class="va-middle"><img src="{{ public_path('assets/img/Logo-RSUD-Langsa-1.png') }}"
+                                    alt="Logo" class="brand-logo"></td>
+                            <td class="va-middle">
+                                <p class="brand-name">RSUD Langsa</p>
+                                <p class="brand-info">Jl. Jend. A. Yani No.1 Kota Langsa</p>
+                                <p class="brand-info">Telp. 0641-22051, email: rsulangsa@gmail.com</p>
+                                <p class="brand-info">www.rsud.langsakota.go.id</p>
                             </td>
                         </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-
-        <table class="main-table">
-            <thead>
-                <tr>
-                    <th class="col-datetime">TGL/JAM</th>
-                    <th class="col-ppa">PROFESIONAL PEMBERI ASUHAN</th>
-                    <th class="col-soap">HASIL ASESMEN PASIEN DAN PEMBERIAN PELAYANAN
-                        <br><small>(Tulis SOAP/ADIME disertai sasaran terukur)
-                            Tulis nama dan paraf pada akhir catatan</small>
-                    </th>
-                    <th class="col-instruksi">INSTRUKSI PPA
-                        <br><small>(Tulis Instruksi PPA termasuk pasca bedah,
-                            tulis dengan rinci dan jelas)</small>
-                    </th>
-                    <th class="col-verif">REVIEW & VERIFIKASI DPJP
-                        <br><small>(Tulis nama, tgl, jam. DPJP harus
-                            membaca/review seluruh rencana asuhan)</small>
-                    </th>
-                </tr>
-            </thead>
-            <tbody>
-                @forelse ($cppt as $value)
-                    <tr>
-                        <td class="text-center">
-                            {{ date('d-m-Y', strtotime($value['tanggal'])) }}<br>
-                            <strong>{{ date('H:i', strtotime($value['jam'])) }}</strong>
-                        </td>
-
-                        <td>
-                            <div class="ppa-info">
-                                <strong>{{ $value['nama_penanggung'] }}</strong>
-                                <small>({{ str()->title($value['jenis_tenaga']) }})</small>
-                            </div>
-                        </td>
-
-                        <td>
-                            <div class="soap-container">
-                                @if (!empty($value['tipe_cppt']) && $value['tipe_cppt'] != 4)
-                                    <div class="soap-s">
-                                        <strong>S:</strong> {{ $value['anamnesis'] ?? '-' }}
-                                    </div>
-                                    <div class="soap-o">
-                                        <strong>O:</strong>
-                                        <ul>
-                                            @foreach ($value['kondisi']['konpas'] as $val)
-                                                <li>
-                                                    {{ $val['nama_kondisi'] }} : <strong>{{ $val['hasil'] }}</strong>
-                                                    {{ $val['satuan'] }}
-                                                </li>
-                                            @endforeach
-                                        </ul>
-                                        <p class="mb-0">{{ $value['pemeriksaan_fisik'] }}</p>
-                                        <p class="mb-0">{{ $value['obyektif'] }}</p>
-                                    </div>
-                                    <div class="soap-a">
-                                        <strong>A:</strong>
-                                        <ul>
-                                            @forelse ($value['cppt_penyakit'] as $v)
-                                                <li>{{ $v['nama_penyakit'] }}</li>
-                                            @empty
-                                                <li>-</li>
-                                            @endforelse
-                                        </ul>
-                                    </div>
-                                    <div class="soap-p">
-                                        <strong>P:</strong> {{ $value['planning'] ?? '-' }}
-                                    </div>
-                                @else
-                                    <div class="soap-a">
-                                        <strong>A (Assessment):</strong> {{ $value['anamnesis'] ?? '-' }}
-                                        <ul>
-                                            @foreach ($value['kondisi']['konpas'] as $val)
-                                                <li>
-                                                    {{ $val['nama_kondisi'] }} : <strong>{{ $val['hasil'] }}</strong>
-                                                    {{ $val['satuan'] }}
-                                                </li>
-                                            @endforeach
-                                        </ul>
-                                    </div>
-                                    <div class="soap-d">
-                                        <strong>D (Diagnosis):</strong>
-                                        <ul>
-                                            @forelse ($value['cppt_penyakit'] as $v)
-                                                <li>{{ $v['nama_penyakit'] }}</li>
-                                            @empty
-                                                <li>-</li>
-                                            @endforelse
-                                        </ul>
-                                    </div>
-                                    <div class="soap-i">
-                                        <strong>I (Intervention):</strong> {{ $value['pemeriksaan_fisik'] ?? '-' }}
-                                    </div>
-                                    <div class="soap-m">
-                                        <strong>M (Monitoring):</strong> {{ $value['obyektif'] ?? '-' }}
-                                    </div>
-                                    <div class="soap-e">
-                                        <strong>E (Evaluation):</strong> {{ $value['planning'] ?? '-' }}
-                                    </div>
-                                @endif
-                            </div>
-                        </td>
-
-                        <td>
-                            <ul class="instruksi-list">
-                                @forelse ($value['instruksi_ppa_nama'] as $instruksi)
-                                    @php
-                                        // Logika untuk mendapatkan nama PPA dari $karyawan
-                                        $ppa_kode = is_array($instruksi) ? $instruksi['ppa'] : $instruksi->ppa;
-                                        $karyawan_ppa = $karyawan->where('kd_karyawan', $ppa_kode)->first();
-                                        $nama_ppa = $karyawan_ppa
-                                            ? trim(
-                                                ($karyawan_ppa->gelar_depan ? $karyawan_ppa->gelar_depan . ' ' : '') .
-                                                    $karyawan_ppa->nama .
-                                                    ($karyawan_ppa->gelar_belakang
-                                                        ? ', ' . $karyawan_ppa->gelar_belakang
-                                                        : ''),
-                                            )
-                                            : $ppa_kode;
-                                    @endphp
-                                    <li>
-                                        <strong>Kepada: {{ $nama_ppa }}</strong>
-                                        {{ is_array($instruksi) ? $instruksi['instruksi'] : $instruksi->instruksi }}
-                                    </li>
-                                @empty
-                                    <li class="text-center text-muted">(Tidak ada instruksi)</li>
-                                @endforelse
-                            </ul>
-                        </td>
-
-                        <td>
-                            <div class="verification-status">
-                                @if ($value['verified'])
-                                    <span class="verified">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                            fill="currentColor" class="bi bi-check-circle-fill" viewBox="0 0 16 16">
-                                            <path
-                                                d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06l2.5 2.5a.75.75 0 0 0 1.06 0l4.5-4.5a.75.75 0 0 0 .022-1.08z" />
-                                        </svg>
-                                        Terverifikasi
-                                    </span>
-                                    {{-- <small>Oleh: ...</small> --}}
-                                @else
-                                    <span class="unverified">(Belum Diverifikasi)</span>
-                                @endif
-                            </div>
-                        </td>
-                    </tr>
-                @empty
-                    <tr>
-                        <td colspan="5" class="text-center text-muted">Belum ada data CPPT.</td>
-                    </tr>
-                @endforelse
-            </tbody>
+                    </table>
+                </td>
+                <td class="td-center">
+                    <span class="title-main">CATATAN PERKEMBANGAN</span>
+                    <span class="title-sub">PASIEN TERINTEGRASI (CPPT)</span>
+                </td>
+                <td class="td-right">
+                    <div class="unit-box"><span class="unit-text" style="font-size: 14px;">RAWAT INAP</span></div>
+                </td>
+            </tr>
         </table>
+    </header>
 
-    </div>
+    <table class="patient-table">
+        <tr>
+            <th>No. RM</th>
+            <td>{{ $dataMedis->pasien->kd_pasien ?? '-' }}</td>
+            <th>Tgl. Lahir</th>
+            <td>{{ $dataMedis->pasien->tgl_lahir ? \Carbon\Carbon::parse($dataMedis->pasien->tgl_lahir)->format('d M Y') : '-' }}
+            </td>
+        </tr>
+        <tr>
+            <th>Nama Pasien</th>
+            <td>{{ $dataMedis->pasien->nama ?? '-' }}</td>
+            <th>Umur</th>
+            <td>{{ $dataMedis->pasien->umur ?? '-' }} Tahun</td>
+        </tr>
+    </table>
 
-    <script>
-        window.onload = function() {
-            window.print();
-        }
-    </script>
+    <table class="cppt-main-table">
+        <thead>
+            <tr>
+                <th class="col-tanggal">TANGGAL/JAM</th>
+                <th class="col-profesi">Profesional Pemberi Asuhan</th>
+                <th class="col-rencana"> HASIL ASESMEN PASIEN DAN PEMBERIAN PELAYANAN
+                    <br><small>Tulis (SOAP/ ADIME disertai sasaran terukur)
+                        Tulis nama dan paraf pada akhir catatan</small>
+                </th>
+                <th class="col-instruksi">
+                    INSTRUKSI PPA
+                    <br><small>(Tulis Instruksi PPA termasuk pasca bedah, tulis dengan rinci dan jelas)</small>
+                </th>
+                <th class="col-review">REVIEW & VERIFIKASI DPJP
+                    <br><small>(Tulis nama, tgl,jam) DPJP harus membaca/ review seluruh rencana asuhan</small>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach ($cppt as $key => $value)
+                <tr>
+                    <td class="col-tanggal">
+                        {{ date('d/m/Y', strtotime($value['tanggal'])) }}<br>
+                        {{ date('H:i', strtotime($value['jam'])) }}
+                    </td>
+
+                    <td class="col-profesi">
+                        {{ $value['nama_penanggung'] }}<br>
+                        <small>({{ str()->title($value['jenis_tenaga']) }})</small>
+                    </td>
+
+                    <td class="col-rencana">
+                        @if (!empty($value['tipe_cppt']) && $value['tipe_cppt'] != 4)
+                            {{-- Format SOAP --}}
+                            <p><span class="soap-label">S:</span> {!! nl2br(e($value['anamnesis'] ?? '-')) !!}</p>
+                            <p><span class="soap-label">O:</span>
+                                @foreach ($value['kondisi']['konpas'] as $val)
+                                    {{ $val['nama_kondisi'] }}: <strong>{{ $val['hasil'] }}</strong>
+                                    {{ $val['satuan'] }}
+                                @endforeach
+                                {!! nl2br(e($value['pemeriksaan_fisik'] ?? '')) !!}
+                                {!! nl2br(e($value['obyektif'] ?? '')) !!}
+                            </p>
+                            <p><span class="soap-label">A:</span>
+                                @forelse ($value['cppt_penyakit'] as $v)
+                                    {{ $v['nama_penyakit'] }}{{ !$loop->last ? '; ' : '' }}
+                                @empty
+                                    -
+                                @endforelse
+                            </p>
+                            <p><span class="soap-label">P:</span> {!! nl2br(e($value['planning'] ?? '-')) !!}</p>
+                        @else
+                            {{-- Format ADIME (Gizi) --}}
+                            <p><span class="soap-label">A:</span> {!! nl2br(e($value['anamnesis'] ?? '-')) !!}</p>
+                            <p><span class="soap-label">D:</span>
+                                @forelse ($value['cppt_penyakit'] as $v)
+                                    {{ $v['nama_penyakit'] }}{{ !$loop->last ? '; ' : '' }}
+                                @empty
+                                    -
+                                @endforelse
+                            </p>
+                            <p><span class="soap-label">I:</span> {!! nl2br(e($value['pemeriksaan_fisik'] ?? '-')) !!}</p>
+                            <p><span class="soap-label">M:</span> {!! nl2br(e($value['obyektif'] ?? '-')) !!}</p>
+                            <p><span class="soap-label">E:</span> {!! nl2br(e($value['planning'] ?? '-')) !!}</p>
+                        @endif
+                        <p class="paraf-text">Paraf {{ $value['jenis_tenaga'] }}</p>
+                    </td>
+
+                    <td class="col-instruksi">
+                        @if (count($value['instruksi_ppa_nama']) > 0)
+                            <div class="instruksi-ppa-box">
+                                @foreach ($value['instruksi_ppa_nama'] as $instruksi)
+                                    <div class="instruksi-ppa-item">
+                                        <span>{!! nl2br(e($instruksi['instruksi'])) !!}</span>
+                                    </div>
+                                @endforeach
+                            </div>
+                        @else
+                            -
+                        @endif
+                    </td>
+
+                    <td class="col-review" style="text-align: center; vertical-align: middle;">
+                        @if ($value['verified'])
+                            <p style="font-size: 7.5pt; font-weight: bold; color: green;">
+                                DIVERIFIKASI
+                            </p>
+                        @else
+                            <p style="font-size: 7.5pt; font-style: italic; color: #999;">
+                                Belum Verifikasi
+                            </p>
+                        @endif
+                        <p class="paraf-text" style="text-align: center; margin-top: 20px;">Paraf DPJP</p>
+                    </td>
+                </tr>
+            @endforeach
+        </tbody>
+    </table>
 </body>
 
 </html>
-
-
-
-
-

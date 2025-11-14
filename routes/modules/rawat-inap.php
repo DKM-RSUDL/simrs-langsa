@@ -132,7 +132,6 @@ Route::prefix('rawat-inap')->group(function () {
                             Route::get('/', 'index')->name('.index');
                             Route::post('/', 'store')->name('.store');
                             Route::put('/', 'update')->name('.update');
-                            Route::get('/print', 'printCppt')->name('print');
                             Route::post('/get-icd10-ajax', 'getIcdTenAjax')->name('.get-icd10-ajax');
                             Route::post('/get-cppt-ajax', 'getCpptAjax')->name('.get-cppt-ajax');
                             Route::get('/get-cppt-adime', 'getCpptAdime')->name('.get-cppt-adime');
@@ -140,6 +139,7 @@ Route::prefix('rawat-inap')->group(function () {
                             Route::post('/get-last-diagnoses', 'getLastDiagnosesAjax')->name('.get-last-diagnoses');
                             Route::put('/verifikasi', 'verifikasiCppt')->name('.verifikasi');
                             Route::get('/gizi', 'cpptGizi')->name('.cppt-gizi');
+                            Route::get('/print-pdf', 'printPDF')->name('.print-pdf');
                         });
                     });
                 });

@@ -156,7 +156,7 @@ class CpptController extends Controller
         $getCppt = $this->buildCpptQuery($additionalWheres)->get();
         $cppt = $this->transformCpptData($getCppt, true); // includeNames = true
 
-        $pdf = Pdf::loadView('unit-pelayanan.rawat-inap.pelayanan.cppt.pdf', [
+        $pdf = Pdf::loadView('unit-pelayanan.rawat-inap.pelayanan.cppt.print', [
             'dataMedis' => $dataMedis,
             'tandaVital' => $tandaVital,
             'faktorPemberat' => $faktorPemberat,
