@@ -98,7 +98,6 @@ class TriaseShowAndEditController extends Controller
         $triase->update([
             'vital_sign'   => json_encode($vitalSign),
             'triase'       => json_encode($abcdn),
-            'kode_triase'  => $request->kd_triase,
             'hasil_triase' => $request->ket_triase,
         ]);
 
