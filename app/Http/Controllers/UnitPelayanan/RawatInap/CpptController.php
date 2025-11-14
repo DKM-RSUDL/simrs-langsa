@@ -594,6 +594,7 @@ class CpptController extends Controller
                 ]);
             }
 
+
             // Ambil CPPT terakhir berdasarkan tipe PPA yang sama dan bukan dari user yang login
             $lastCppt = Cppt::join('transaksi as t', function ($join) {
                 $join->on('cppt.no_transaksi', '=', 't.no_transaksi')
@@ -624,30 +625,26 @@ class CpptController extends Controller
                 ->orderBy('cppt.jam', 'desc')
                 ->first();
 
-            if (! $lastCppt) {
-                return response()->json([
-                    'status' => 'success',
-                    'message' => 'Tidak ada diagnosis sebelumnya',
-                    'data' => [],
-                ]);
-            }
 
             // Ambil diagnosis dari CPPT terakhir yg bukan dr user login
-            $diagnosesLast = CpptPenyakit::where('no_transaksi', $lastCppt->no_transaksi)
-                ->where('kd_unit', $kd_unit)
-                ->whereDate('tgl_cppt', $lastCppt->tanggal)
-                ->where('urut_cppt', $lastCppt->urut_total)
-                ->groupBy('nama_penyakit')
-                ->groupBy('id')
-                ->select('nama_penyakit')
-                ->orderBy('id')
-                ->get()
-                ->pluck('nama_penyakit')
-                ->toArray();
+            $diagnosesLast = [];
+            if (!empty($lastCppt)) {
+                $diagnosesLast = CpptPenyakit::where('no_transaksi', $lastCppt->no_transaksi)
+                    ->where('kd_unit', $kd_unit)
+                    ->whereDate('tgl_cppt', $lastCppt->tanggal)
+                    ->where('urut_cppt', $lastCppt->urut_total)
+                    ->groupBy('nama_penyakit')
+                    ->groupBy('id')
+                    ->select('nama_penyakit')
+                    ->orderBy('id')
+                    ->get()
+                    ->pluck('nama_penyakit')
+                    ->toArray();
+            }
 
             // Ambil diagnosis dari CPPT terakhir yg dr user login (jika ada)
             $diagnosesUser = [];
-            if ($lastCpptUser) {
+            if (!empty($lastCpptUser)) {
                 $diagnosesUser = CpptPenyakit::where('no_transaksi', $lastCpptUser->no_transaksi)
                     ->where('kd_unit', $kd_unit)
                     ->whereDate('tgl_cppt', $lastCpptUser->tanggal)
@@ -664,21 +661,13 @@ class CpptController extends Controller
             // Gabungkan kedua array dan hapus duplikat (jika nama sama hanya muncul 1)
             $diagnoses = array_values(array_unique(array_merge($diagnosesUser, $diagnosesLast)));
 
-            // $merged = $diagnosesUser;
-            // foreach ($diagnosesLast as $d) {
-            //     if (! in_array($d, $merged, true)) {
-            //         $merged[] = $d;
-            //     }
-            // }
-            // $diagnoses = $merged;
-
             return response()->json([
                 'status' => 'success',
                 'message' => 'Data ditemukan',
                 'data' => $diagnoses,
                 'cppt_info' => [
-                    'tanggal' => $lastCppt->tanggal,
-                    'jam' => $lastCppt->jam,
+                    'tanggal' => $lastCppt->tanggal ?? null,
+                    'jam' => $lastCppt->jam ?? null,
                     'tipe' => $tipeCppt,
                 ],
             ]);
