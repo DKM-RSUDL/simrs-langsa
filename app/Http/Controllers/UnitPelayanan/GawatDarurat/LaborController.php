@@ -6,7 +6,9 @@ use App\Http\Controllers\Controller;
 use App\Models\DokterKlinik;
 use App\Models\Kunjungan;
 use App\Models\LapLisItemPemeriksaan;
+use App\Models\MrAnamnesis;
 use App\Models\Otoritas;
+use App\Models\RmeAsesmen;
 use App\Models\RMEResume;
 use App\Models\RmeResumeDtl;
 use App\Models\SegalaOrder;
@@ -353,6 +355,21 @@ class LaborController extends Controller
                 'indikasi_klinis'   => $validatedData['indikasi_klinis']
             ]);
 
+            dd($this->formatDiagnosis($validatedData['diagnosis'] ?? ''));
+
+            // Store ke MrAnamnesis
+            MrAnamnesis::create([
+                'kd_pasien' => $validatedData['kd_pasien'],
+                'kd_unit' => $validatedData['kd_unit'],
+                'tgl_masuk' => $validatedData['tgl_masuk'],
+                'urut_masuk' => $validatedData['urut_masuk'],
+                'urut_cppt' => '',
+                'urut' => 0,
+                'anamnesis' => $validatedData['indikasi_klinis'] ?? '',
+                'dd' => $this->formatDiagnosis($validatedData['diagnosis'] ?? ''),
+                // 'dd' => $validatedData['diagnosis'] ?? '',
+            ]);
+
             foreach ($validatedData['kd_produk'] as $index => $kd_produk) {
                 $segalaOrderDet = SegalaOrderDet::create([
                     'kd_order' => $newOrderNumber,
@@ -561,5 +578,56 @@ class LaborController extends Controller
                 'file_url'  => "https://e-rsudlangsa.id/dokumen/lab_pk/$otoritas->file"
             ]
         ]);
+    }
+
+    /**
+     * Sederhana: format diagnosis jadi numbered list.
+     * Menerima string (atau array/JSON string), memisah by newline/comma/semicolon.
+     * Contoh output:
+     * "1. fever\n2. febris"
+     */
+    protected function formatDiagnosis($diagnosis)
+    {
+        if (empty($diagnosis)) {
+            return '';
+        }
+
+        $raw = is_string($diagnosis) ? $diagnosis : '';
+
+        if (is_array($diagnosis)) {
+            $items = $diagnosis;
+        } else {
+            $decoded = json_decode($diagnosis, true);
+            if (json_last_error() === JSON_ERROR_NONE && is_array($decoded)) {
+                $items = $decoded;
+            } else {
+                // split by newline/comma/semicolon
+                $items = preg_split('/[\r\n,;]+/', $diagnosis);
+                // jika hasil split hanya 1 item, coba pecah berdasarkan pola bernomor "1. .. 2. .."
+                if (count($items) === 1) {
+                    $split = preg_split('/\d+\s*[\.\)]\s*/', $diagnosis, -1, PREG_SPLIT_NO_EMPTY);
+                    if (count($split) > 1) {
+                        $items = $split;
+                    }
+                }
+            }
+        }
+
+        $lines = [];
+        $n = 0;
+        foreach ($items as $it) {
+            $it = trim($it);
+            if ($it === '') continue;
+            // hapus awalan nomor jika ada
+            $it = preg_replace('/^\s*\d+\s*[\.\)]\s*/', '', $it);
+            $n++;
+            $lines[] = $n . '. ' . $it;
+        }
+
+        // kalau input asli punya pemisah (newline/comma/semicolon) pakai newline,
+        // kalau tidak pakai spasi agar terlihat di tampilan HTML: "1. A 2. B"
+        $glue = (is_string($raw) && preg_match('/[\r\n,;]/', $raw)) ? "\n" : ' ';
+
+        return implode($glue, $lines);
     }
 }
