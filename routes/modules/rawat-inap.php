@@ -139,6 +139,7 @@ Route::prefix('rawat-inap')->group(function () {
                             Route::post('/get-last-diagnoses', 'getLastDiagnosesAjax')->name('.get-last-diagnoses');
                             Route::put('/verifikasi', 'verifikasiCppt')->name('.verifikasi');
                             Route::get('/gizi', 'cpptGizi')->name('.cppt-gizi');
+                            Route::get('/print-pdf', 'printPDF')->name('.print-pdf');
                         });
                     });
                 });
@@ -443,8 +444,10 @@ Route::prefix('rawat-inap')->group(function () {
                     Route::name('.rawat-inap-resume')->group(function () {
                         Route::controller(RawatInapResumeController::class)->group(function () {
                             Route::get('/', 'index')->name('.index');
+                            Route::get('/{data}/detail', 'detail')->name('.detail');
                             Route::post('/validasi', 'validasiResume')->name('.validasi');
                             Route::put('/{id}', 'update')->name('.update');
+                            Route::get('/{data}/pdf', 'pdf')->name('.pdf');
                         });
                     });
                 });

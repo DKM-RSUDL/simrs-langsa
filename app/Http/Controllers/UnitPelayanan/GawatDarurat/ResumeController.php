@@ -34,6 +34,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class ResumeController extends Controller
 {
@@ -576,8 +577,6 @@ class ResumeController extends Controller
         // get last ttv
         $vitalSign = $this->asesmenService->getVitalSignData($dataMedis->kd_kasir, $dataMedis->no_transaksi);
 
-        $konpas = $resume->konpas;
-
         $sistole = $vitalSign->sistole ?? '-';
         $distole = $vitalSign->diastole ?? '-';
         $tdKonpas = "TD : $sistole/$distole mmHg";
@@ -636,10 +635,11 @@ class ResumeController extends Controller
             ->first();
 
         $pemeriksaanFisik = RmeAsesmenPemeriksaanFisik::with(['itemFisik'])
-            ->where('id_asesmen', $lastAsesmen->id)
+            ->where('id_asesmen', ($lastAsesmen->id ?? 0))
             ->where('is_normal', 0)
             ->get();
 
+        $qrCode = base64_encode(QrCode::format('png')->size(100)->errorCorrection('H')->generate($dataMedis->dokter->nama_lengkap));
 
         $pdf = Pdf::loadView('unit-pelayanan.gawat-darurat.action-gawat-darurat.resume.resume-medis.print', compact(
             'resume',
@@ -650,7 +650,8 @@ class ResumeController extends Controller
             'tindakan',
             'pemeriksaanFisik',
             'resepRawat',
-            'resepPulang'
+            'resepPulang',
+            'qrCode'
         ))
             ->setPaper('a4', 'potrait');
         return $pdf->stream('resume_' . $resume->kd_pasien . '_' . $resume->tgl_konsul . '.pdf');

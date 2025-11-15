@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Print Resume Medis IGD</title>
+    <title>Print Resume Medis</title>
 
     <style>
         body {
@@ -123,7 +123,7 @@
             <p>Jl. Jend. A. Yani No.1 Kota Langsa</p>
         </div>
         <div class="center-column">
-            <p>Resume Medis<br>IGD</p>
+            <p>Resume Medis<br>Rawat Inap</p>
         </div>
         <div class="right-column">
             <table class="info-table">
@@ -279,16 +279,16 @@
                 </td>
             </tr>
 
-            @if ($resume->rmeResumeDet->tindak_lanjut_code == 6)
-                <tr>
-                    <th>Terapi Pulang</th>
-                    <td>
-                        @foreach ($resepPulang as $item)
+            {{-- @if ($resume->rmeResumeDet->tindak_lanjut_code == 6) --}}
+            <tr>
+                <th>Terapi Pulang</th>
+                <td>
+                    @foreach ($resepPulang as $item)
                         - {{ "$item->nama_obat $item->cara_pakai" }} <br>
                     @endforeach
-                    </td>
-                </tr>
-            @endif
+                </td>
+            </tr>
+            {{-- @endif --}}
 
             <tr class="table-section-title">
                 <th colspan="2">Anjuran / Follow up</th>
@@ -330,14 +330,14 @@
                     <th>Tujuan Rujuk</th>
                     <td>{{ $resume->rmeResumeDet->rs_rujuk }}</td>
                 </tr>
-                <tr>
+                {{-- <tr>
                     <th>Alasan Rujuk</th>
                     <td>{{ alasanRujukLabel($resume->rmeResumeDet->alasan_rujuk) }}</td>
                 </tr>
                 <tr>
                     <th>Transportasi Rujuk</th>
                     <td>{{ transportasiRujukLabel($resume->rmeResumeDet->transportasi_rujuk) }}</td>
-                </tr>
+                </tr> --}}
             @endif
 
             @if ($resume->rmeResumeDet->tindak_lanjut_code == 8)
@@ -381,6 +381,7 @@
             <p>DPJP yang merawat</p>
             <br>
             <img src="data:image/png;base64,{{ generateQrCode($dataMedis->dokter->nama_lengkap) }}" alt="QR Code">
+
             <p class="name-konsulen">{{ $dataMedis->dokter->nama_lengkap }}</p>
             <p class="identity-num">
                 @php
