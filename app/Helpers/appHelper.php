@@ -3,9 +3,11 @@
 use App\Models\Kunjungan;
 use App\Models\Navigation;
 use App\Models\OrderHD;
+use App\Models\RmeMasterTindakLanjut;
 use App\Models\Role;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Cache;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 if (!function_exists('getMenus')) {
     function getMenus()
@@ -125,48 +127,54 @@ if (!function_exists('selisihHari')) {
 }
 
 if (!function_exists('tindakLanjutLabel')) {
+    // function tindakLanjutLabel($tlCode)
+    // {
+    //     $label = '-';
+
+    //     switch ($tlCode) {
+    //         case 1:
+    //             $label = 'Rawat Inap';
+    //             break;
+    //         case 2:
+    //             $label = 'Kontrol Ulang';
+    //             break;
+    //         case 3:
+    //             $label = 'Selesai di Unit';
+    //             break;
+    //         case 4:
+    //             $label = 'Rujuk Internal';
+    //             break;
+    //         case 5:
+    //             $label = 'Rujuk RS Lain';
+    //             break;
+    //         case 6:
+    //             $label = 'Pulang';
+    //             break;
+    //         case 7:
+    //             $label = 'Kamar Operasi';
+    //             break;
+    //         case 8:
+    //             $label = 'Berobat Jalan Ke Poli';
+    //             break;
+    //         case 9:
+    //             $label = 'Menolak Rawat Inap';
+    //             break;
+    //         case 10:
+    //             $label = 'Meninggal Dunia';
+    //             break;
+    //         case 11:
+    //             $label = 'Doa (Death On Arrive)';
+    //             break;
+    //     }
+
+
+    //     return $label;
+    // }
+
     function tindakLanjutLabel($tlCode)
     {
-        $label = '-';
-
-        switch ($tlCode) {
-            case 1:
-                $label = 'Rawat Inap';
-                break;
-            case 2:
-                $label = 'Kontrol Ulang';
-                break;
-            case 3:
-                $label = 'Selesai di Unit';
-                break;
-            case 4:
-                $label = 'Rujuk Internal';
-                break;
-            case 5:
-                $label = 'Rujuk RS Lain';
-                break;
-            case 6:
-                $label = 'Pulang';
-                break;
-            case 7:
-                $label = 'Kamar Operasi';
-                break;
-            case 8:
-                $label = 'Berobat Jalan Ke Poli';
-                break;
-            case 9:
-                $label = 'Menolak Rawat Inap';
-                break;
-            case 10:
-                $label = 'Meninggal Dunia';
-                break;
-            case 11:
-                $label = 'Doa (Death On Arrive)';
-                break;
-        }
-
-
-        return $label;
+        $tindakLanjut = RmeMasterTindakLanjut::where('kode', $tlCode)->first();
+        return $tindakLanjut->nama ?? '-';
     }
 }
 
@@ -642,5 +650,21 @@ if (!function_exists('carbon_parse')) {
             // Return null on parse failure to avoid breaking callers; caller can handle null.
             return null;
         }
+    }
+}
+
+
+/*============================================*/
+        /* QR CODE GENERATE HELPER */
+/*============================================*/
+
+if(!function_exists('generateQrCode')) {
+    function generateQrCode($text, $size = 100, $type = 'text')
+    {
+        $qrCode = null;
+
+        if($type == 'text') $qrCode = base64_encode(QrCode::format('png')->size($size)->errorCorrection('H')->generate($text));
+
+        return $qrCode;
     }
 }

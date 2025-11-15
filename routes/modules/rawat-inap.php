@@ -444,8 +444,10 @@ Route::prefix('rawat-inap')->group(function () {
                     Route::name('.rawat-inap-resume')->group(function () {
                         Route::controller(RawatInapResumeController::class)->group(function () {
                             Route::get('/', 'index')->name('.index');
+                            Route::get('/{data}/detail', 'detail')->name('.detail');
                             Route::post('/validasi', 'validasiResume')->name('.validasi');
                             Route::put('/{id}', 'update')->name('.update');
+                            Route::get('/{data}/pdf', 'pdf')->name('.pdf');
                         });
                     });
                 });
