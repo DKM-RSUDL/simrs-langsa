@@ -279,46 +279,71 @@
                     <td class="col-rencana">
                         @if (!empty($value['tipe_cppt']) && $value['tipe_cppt'] != 4)
                             {{-- Format SOAP --}}
-                            <p><span class="soap-label">S:</span> {!! nl2br(e($value['anamnesis'] ?? '-')) !!}</p>
-                            <p><span class="soap-label">O:</span>
+                            <p><span class="soap-label">S(Subjective):</span> {!! nl2br(e($value['anamnesis'] ?? '-')) !!}</p>
+
+                            <p style="margin-top: 5px;"><span class="soap-label">O(Objective):</span></p>
+                            <ul style="padding-left: 20px; margin: 0; list-style-type: none;">
                                 @foreach ($value['kondisi']['konpas'] as $val)
-                                    {{ $val['nama_kondisi'] }}: <strong>{{ $val['hasil'] }}</strong>
-                                    {{ $val['satuan'] }}
+                                    @if (!empty($val['hasil']))
+                                        <li>{{ $val['nama_kondisi'] }}: <strong>{{ $val['hasil'] }}</strong>
+                                            {{ $val['satuan'] }}</li>
+                                    @endif
                                 @endforeach
-                                {!! nl2br(e($value['pemeriksaan_fisik'] ?? '')) !!}
-                                {!! nl2br(e($value['obyektif'] ?? '')) !!}
-                            </p>
-                            <p><span class="soap-label">A:</span>
+                            </ul>
+                            <p style="margin-top: 5px;">{!! nl2br(e($value['pemeriksaan_fisik'] ?? '')) !!}</p>
+                            <p>{!! nl2br(e($value['obyektif'] ?? '')) !!}</p>
+
+                            <p style="margin-top: 5px;"><span class="soap-label">A(Assessment):</span>
                                 @forelse ($value['cppt_penyakit'] as $v)
                                     {{ $v['nama_penyakit'] }}{{ !$loop->last ? '; ' : '' }}
                                 @empty
                                     -
                                 @endforelse
                             </p>
-                            <p><span class="soap-label">P:</span> {!! nl2br(e($value['planning'] ?? '-')) !!}</p>
+                            <p style="margin-top: 5px;"><span class="soap-label">P(Plan):</span> {!! nl2br(e($value['planning'] ?? '-')) !!}
+                            </p>
                         @else
                             {{-- Format ADIME (Gizi) --}}
-                            <p><span class="soap-label">A:</span> {!! nl2br(e($value['anamnesis'] ?? '-')) !!}</p>
-                            <p><span class="soap-label">D:</span>
+                            <p><span class="soap-label">A (Assessment):</span></p>
+                            <ul style="padding-left: 20px; margin: 0 0 5px 0; list-style-type: none;">
+                                @foreach ($value['kondisi']['konpas'] as $val)
+                                    @if (!empty($val['hasil']))
+                                        <li>{{ $val['nama_kondisi'] }}: <strong>{{ $val['hasil'] }}</strong>
+                                            {{ $val['satuan'] }}</li>
+                                    @endif
+                                @endforeach
+                            </ul>
+                            <p>{!! nl2br(e($value['anamnesis'] ?? '-')) !!}</p>
+
+                            <p style="margin-top: 5px;"><span class="soap-label">D (Diagnosis):</span>
                                 @forelse ($value['cppt_penyakit'] as $v)
                                     {{ $v['nama_penyakit'] }}{{ !$loop->last ? '; ' : '' }}
                                 @empty
                                     -
                                 @endforelse
                             </p>
-                            <p><span class="soap-label">I:</span> {!! nl2br(e($value['pemeriksaan_fisik'] ?? '-')) !!}</p>
-                            <p><span class="soap-label">M:</span> {!! nl2br(e($value['obyektif'] ?? '-')) !!}</p>
-                            <p><span class="soap-label">E:</span> {!! nl2br(e($value['planning'] ?? '-')) !!}</p>
+                            <p style="margin-top: 5px;"><span class="soap-label">I (Intervention):</span>
+                                {!! nl2br(e($value['pemeriksaan_fisik'] ?? '-')) !!}</p>
+                            <p style="margin-top: 5px;"><span class="soap-label">M (Monitoring):</span>
+                                {!! nl2br(e($value['obyektif'] ?? '-')) !!}</p>
+                            <p style="margin-top: 5px;"><span class="soap-label">E (Evaluation):</span>
+                                {!! nl2br(e($value['planning'] ?? '-')) !!}</p>
                         @endif
-                        <p class="paraf-text">Paraf {{ $value['jenis_tenaga'] }}</p>
                     </td>
 
                     <td class="col-instruksi">
                         @if (count($value['instruksi_ppa_nama']) > 0)
                             <div class="instruksi-ppa-box">
                                 @foreach ($value['instruksi_ppa_nama'] as $instruksi)
-                                    <div class="instruksi-ppa-item">
-                                        <span>{!! nl2br(e($instruksi['instruksi'])) !!}</span>
+                                    <div class="instruksi-ppa-item"
+                                        style="margin-bottom: 8px; padding-bottom: 5px; border-bottom: 1px dotted #eee;">
+
+                                        <div>{!! nl2br(e($instruksi['instruksi'])) !!}</div>
+
+                                        <div
+                                            style="text-align: right; font-style: italic; font-size: 7.5pt; margin-top: 5px;">
+                                            ({{ $instruksi['nama_lengkap'] ?? $instruksi['ppa'] }})
+                                        </div>
                                     </div>
                                 @endforeach
                             </div>
@@ -337,7 +362,6 @@
                                 Belum Verifikasi
                             </p>
                         @endif
-                        <p class="paraf-text" style="text-align: center; margin-top: 20px;">Paraf DPJP</p>
                     </td>
                 </tr>
             @endforeach

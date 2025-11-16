@@ -1392,8 +1392,8 @@ class CpptController extends Controller
                     $query->where($column, $value);
                 }
             })
-            ->orderBy('cppt.tanggal', 'desc')
-            ->orderBy('cppt.jam', 'desc')
+            ->orderBy('cppt.tanggal', 'asc')
+            ->orderBy('cppt.jam', 'asc')
             ->orderBy('kf.urut');
     }
 
