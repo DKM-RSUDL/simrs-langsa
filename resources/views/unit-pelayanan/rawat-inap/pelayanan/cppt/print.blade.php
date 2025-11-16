@@ -169,6 +169,10 @@
             width: 20%;
         }
 
+        .cppt-main-table th small {
+            font-weight: normal;
+        }
+
 
         .cppt-main-table .col-review {
             width: 15%;
