@@ -64,23 +64,13 @@
                         $frekuensi = trim($cara_pakai_parts[0] ?? '');
                         $keterangan = trim($cara_pakai_parts[1] ?? '');
 
-                        switch($resep->status) {
+                        switch ($resep->status) {
                             case 0:
                                 $statusText = 'Menunggu';
                                 $statusIcon = '<i class="bi bi-hourglass text-warning"></i>';
                                 $statusClass = 'text-warning';
                                 break;
                             case 1:
-                                $statusText = 'Sedang diracik';
-                                $statusIcon = '<i class="bi bi-gear-fill text-primary"></i>';
-                                $statusClass = 'text-primary';
-                                break;
-                            case 2:
-                                $statusText = 'Selesai diracik';
-                                $statusIcon = '<i class="bi bi-check-circle text-success"></i>';
-                                $statusClass = 'text-success';
-                                break;
-                            case 3:
                                 $statusText = 'Sudah diambil';
                                 $statusIcon = '<i class="bi bi-bag-check-fill text-info"></i>';
                                 $statusClass = 'text-info';
@@ -96,13 +86,13 @@
                                 $statusClass = 'text-secondary';
                         }
                     @endphp
-                    
+
                     <tr>
-                        <td>{{ \Carbon\Carbon::parse($resep->tgl_order)->format('d/m/Y') }}</td>    
+                        <td>{{ \Carbon\Carbon::parse($resep->tgl_order)->format('d/m/Y') }}</td>
                         <td>{{ $resep->nama_obat ?? 'Tidak ada informasi' }}</td>
                         <td>{{ $resep->jumlah_takaran }} {{ Str::title($resep->satuan_takaran) }}</td>
                         <td>{{ $frekuensi }}</td>
-                        <td>{{ (int)$resep->jumlah ?? 'Tidak ada informasi' }}</td>
+                        <td>{{ (int) $resep->jumlah ?? 'Tidak ada informasi' }}</td>
                         <td>Rute</td>
                         <td>{{ $keterangan }}</td>
                         <td>{{ $resep->nama_dokter }}</td>
@@ -113,7 +103,7 @@
                 @endforeach
             </tbody>
         </table>
-    </div>    
+    </div>
 
     @if (isset($error))
         <div class="alert alert-warning">{{ $error }}</div>
@@ -125,59 +115,59 @@
 </div>
 
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    const table = document.getElementById('resepTable');
-    const rows = table.getElementsByTagName('tr');
-    const selectEpisode = document.getElementById('selectEpisode');
-    const startDate = document.getElementById('startDate');
-    const endDate = document.getElementById('endDate');
-    const searchInput = document.getElementById('searchInput');
+    document.addEventListener('DOMContentLoaded', function() {
+        const table = document.getElementById('resepTable');
+        const rows = table.getElementsByTagName('tr');
+        const selectEpisode = document.getElementById('selectEpisode');
+        const startDate = document.getElementById('startDate');
+        const endDate = document.getElementById('endDate');
+        const searchInput = document.getElementById('searchInput');
 
-    function filterTable() {
-        const episodeValue = selectEpisode.value;
-        const startDateValue = new Date(startDate.value);
-        const endDateValue = new Date(endDate.value);
-        const searchValue = searchInput.value.toLowerCase();
+        function filterTable() {
+            const episodeValue = selectEpisode.value;
+            const startDateValue = new Date(startDate.value);
+            const endDateValue = new Date(endDate.value);
+            const searchValue = searchInput.value.toLowerCase();
 
-        for (let i = 1; i < rows.length; i++) {
-            let row = rows[i];
-            let showRow = true;
+            for (let i = 1; i < rows.length; i++) {
+                let row = rows[i];
+                let showRow = true;
 
-            // Filter by date
-            let dateCell = row.cells[0].innerText;
-            let rowDate = new Date(dateCell.split('/').reverse().join('-'));
+                // Filter by date
+                let dateCell = row.cells[0].innerText;
+                let rowDate = new Date(dateCell.split('/').reverse().join('-'));
 
-            if (episodeValue !== 'semua') {
-                let daysAgo = new Date();
-                daysAgo.setDate(daysAgo.getDate() - parseInt(episodeValue));
-                if (rowDate < daysAgo) {
+                if (episodeValue !== 'semua') {
+                    let daysAgo = new Date();
+                    daysAgo.setDate(daysAgo.getDate() - parseInt(episodeValue));
+                    if (rowDate < daysAgo) {
+                        showRow = false;
+                    }
+                }
+
+                if (!isNaN(startDateValue.getTime()) && rowDate < startDateValue) {
                     showRow = false;
                 }
-            }
 
-            if (!isNaN(startDateValue.getTime()) && rowDate < startDateValue) {
-                showRow = false;
-            }
-
-            if (!isNaN(endDateValue.getTime()) && rowDate > endDateValue) {
-                showRow = false;
-            }
-
-            // Filter by search input
-            if (searchValue !== '') {
-                let rowText = row.innerText.toLowerCase();
-                if (rowText.indexOf(searchValue) === -1) {
+                if (!isNaN(endDateValue.getTime()) && rowDate > endDateValue) {
                     showRow = false;
                 }
-            }
 
-            row.style.display = showRow ? '' : 'none';
+                // Filter by search input
+                if (searchValue !== '') {
+                    let rowText = row.innerText.toLowerCase();
+                    if (rowText.indexOf(searchValue) === -1) {
+                        showRow = false;
+                    }
+                }
+
+                row.style.display = showRow ? '' : 'none';
+            }
         }
-    }
 
-    selectEpisode.addEventListener('change', filterTable);
-    startDate.addEventListener('change', filterTable);
-    endDate.addEventListener('change', filterTable);
-    searchInput.addEventListener('input', filterTable);
-});
+        selectEpisode.addEventListener('change', filterTable);
+        startDate.addEventListener('change', filterTable);
+        endDate.addEventListener('change', filterTable);
+        searchInput.addEventListener('input', filterTable);
+    });
 </script>

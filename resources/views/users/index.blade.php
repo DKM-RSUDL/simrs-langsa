@@ -74,7 +74,7 @@
                         orderable: true,
                         searchable: true,
                         render: function(data, type, row) {
-                            return `${row.karyawan.gelar_depan} ${row.karyawan.nama} ${row.karyawan.gelar_belakang}`;
+                            return `${row.karyawan.gelar_depan ?? ''} ${row.karyawan.nama} ${row.karyawan.gelar_belakang ?? ''}`;
                         },
                     },
                     {

@@ -72,16 +72,6 @@
                                 $statusClass = 'text-warning';
                                 break;
                             case 1:
-                                $statusText = 'Sedang diracik';
-                                $statusIcon = '<i class="bi bi-gear-fill text-primary"></i>';
-                                $statusClass = 'text-primary';
-                                break;
-                            case 2:
-                                $statusText = 'Selesai diracik';
-                                $statusIcon = '<i class="bi bi-check-circle text-success"></i>';
-                                $statusClass = 'text-success';
-                                break;
-                            case 3:
                                 $statusText = 'Sudah diambil';
                                 $statusIcon = '<i class="bi bi-bag-check-fill text-info"></i>';
                                 $statusClass = 'text-info';
