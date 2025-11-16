@@ -21,5 +21,11 @@ class RmeTransferPasienAntarRuang extends Model
     public function userEdit()
     {
         return $this->belongsTo(User::class, 'user_edit', 'id');
-    }   
+    }
+
+    public function serahTerima()
+    {
+        return $this->hasOne(RmeSerahTerima::class, 'transfer_id', 'id');
+    }
+
 }
