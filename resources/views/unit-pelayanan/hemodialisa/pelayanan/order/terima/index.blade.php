@@ -27,19 +27,19 @@
                                 <div class="row g-3">
                                     <div class="col-12 mb-3">
                                         <label>Subjective</label>
-                                        <textarea name="subjective" placeholder="Data subjektif" class="form-control" rows="5" disabled>{{ old('subjective', $serahTerima->subjective) }}</textarea>
+                                        <textarea name="subjective" placeholder="Data subjektif" class="form-control" rows="5" disabled>{{ old('subjective', ($serahTerima->subjective ?? '')) }}</textarea>
                                     </div>
                                     <div class="col-12 mb-3">
                                         <label>Background</label>
-                                        <textarea name="background" placeholder="Background" class="form-control" rows="5" disabled>{{ old('background', $serahTerima->background) }}</textarea>
+                                        <textarea name="background" placeholder="Background" class="form-control" rows="5" disabled>{{ old('background', ($serahTerima->background ?? '')) }}</textarea>
                                     </div>
                                     <div class="col-12 mb-3">
                                         <label>Assessment</label>
-                                        <textarea name="assessment" placeholder="Assessment" class="form-control" rows="5" disabled>{{ old('assessment', $serahTerima->assessment) }}</textarea>
+                                        <textarea name="assessment" placeholder="Assessment" class="form-control" rows="5" disabled>{{ old('assessment', ($serahTerima->assessment ?? '')) }}</textarea>
                                     </div>
                                     <div class="col-12 mb-3">
                                         <label>Recommendation</label>
-                                        <textarea name="recomendation" placeholder="Recommendation" class="form-control" rows="5" disabled>{{ old('recomendation', $serahTerima->recomendation) }}</textarea>
+                                        <textarea name="recomendation" placeholder="Recommendation" class="form-control" rows="5" disabled>{{ old('recomendation', ($serahTerima->recomendation ?? '')) }}</textarea>
                                     </div>
                                 </div>
                             </div>
@@ -57,20 +57,19 @@
                                 <div class="mb-3">
                                     <label for="petugas_menyerahkan">Petugas yang Menyerahkan</label>
                                     <input type="text" class="form-control" disabled
-                                        value="{{ $serahTerima->petugasAsal->gelar_depan . ' ' . str()->title($serahTerima->petugasAsal->nama) . ' ' . $serahTerima->petugasAsal->gelar_belakang }}">
+                                        value="{{ ($serahTerima->petugasAsal->gelar_depan ?? '') . ' ' . str()->title($serahTerima->petugasAsal->nama ?? '') . ' ' . ($serahTerima->petugasAsal->gelar_belakang ?? '') }}">
                                 </div>
 
                                 <div class="mb-3 row">
                                     <div class="col-md-6">
                                         <label>Tanggal</label>
                                         <input type="date" name="tanggal_menyerahkan"
-                                            value="{{ $serahTerima->tanggal_menyerahkan }}" class="form-control" disabled>
+                                            value="{{ $serahTerima->tanggal_menyerahkan ?? '' }}" class="form-control" disabled>
                                     </div>
                                     <div class="col-md-6">
                                         <label>Jam</label>
                                         <input type="time" name="jam_menyerahkan"
-                                            value="{{ date('H:i', strtotime($serahTerima->jam_menyerahkan)) }}"
-                                            class="form-control" disabled>
+                                            value="{{ !empty($serahTerima->jam_menyerahkan) ? date('H:i', strtotime($serahTerima->jam_menyerahkan)) : '' }}" class="form-control" disabled>
                                     </div>
                                 </div>
                             </div>

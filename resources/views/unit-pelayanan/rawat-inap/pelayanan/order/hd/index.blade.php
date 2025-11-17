@@ -11,7 +11,7 @@
                 <x-button-previous />
 
                 @include('components.page-header', [
-                    'title' => 'Serah Terima / Order HD',
+                    'title' => 'Order Hemodialisa (HD)',
                     'description' =>
                         'Order pelayanan Hemodialisa (HD) pasien rawat inap dengan mengisi formulir di bawah ini.',
                 ])
@@ -23,7 +23,7 @@
 
                     {{-- START : HANDOVER --}}
                     <div class="row">
-                        <div class="col-6">
+                        {{-- <div class="col-6">
                             <div class="mb-4">
                                 <h5 class="fw-bold">SBAR</h5>
                                 <div class="row g-3">
@@ -45,12 +45,12 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </div> --}}
 
-                        <div class="col-6">
+                        <div class="col-12">
                             <div class="mb-4">
-                                <h5 class="fw-bold">Yang Menyerahkan:</h5>
-                                <div class="mb-3">
+                                <h5 class="fw-bold">Waktu Rencana HD:</h5>
+                                {{-- <div class="mb-3">
                                     <label for="kd_unit_asal">Dari Unit/ Ruang</label>
                                     <select name="kd_unit_asal" id="kd_unit_asal" class="form-select select2" disabled>
                                         <option value="">--Pilih--</option>
@@ -76,7 +76,7 @@
                                             </option>
                                         @endforeach
                                     </select>
-                                </div>
+                                </div> --}}
 
                                 <div class="mb-3 row">
                                     <div class="col-md-6">

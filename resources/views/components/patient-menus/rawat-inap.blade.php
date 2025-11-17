@@ -65,11 +65,7 @@
                 <div class="list-group list-group-flush">
                     <a href="{{ $pelayananUrl }}/transfer-pasien-antar-ruang"
                         class="list-group-item list-group-item-action">
-                        Pindah Ruangan Rawat Inap
-                    </a>
-                    <a href="#"
-                        class="list-group-item list-group-item-action">
-                        Transfer Ke Penunjang
+                        Pindah Ruangan
                     </a>
                 </div>
             </div>

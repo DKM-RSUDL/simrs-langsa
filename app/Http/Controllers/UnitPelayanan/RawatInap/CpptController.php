@@ -117,6 +117,7 @@ class CpptController extends Controller
             'lastCpptData' => $lastCpptData,
         ]);
     }
+
     //
     // PASTE FUNGSI BARU ANDA DI SINI
     //
@@ -153,7 +154,7 @@ class CpptController extends Controller
             'cppt.kd_kasir' => $dataMedis->kd_kasir,
         ];
 
-     
+
         $getCppt = $this->buildCpptQueryForPrint($additionalWheres)->get();
         $cppt = $this->transformCpptData($getCppt, true);
 
@@ -174,6 +175,7 @@ class CpptController extends Controller
 
         return $pdf->stream('CPPT_' . $dataMedis->pasien->nama . '_' . date('YmdHis') . '.pdf');
     }
+
     private function buildCpptQueryForPrint($additionalWheres = [])
     {
         return Cppt::with(['dtCppt', 'pemberat', 'peringan', 'kualitas', 'frekuensi', 'menjalar', 'jenis', 'userPenanggung'])
@@ -591,9 +593,6 @@ class CpptController extends Controller
     {
         $tipeCppt = $this->getTipeCpptByUser();
 
-
-
-
         // Ambil diagnosis terakhir berdasarkan tipe PPA yang sama
         $lastCppt = Cppt::join('transaksi as t', function ($join) {
             $join->on('cppt.no_transaksi', '=', 't.no_transaksi')
@@ -747,8 +746,6 @@ class CpptController extends Controller
         }
     }
 
-
-
     private function getKunjungan($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
     {
         return Kunjungan::join('transaksi as t', function ($join) {
@@ -823,7 +820,6 @@ class CpptController extends Controller
             ],
         ];
     }
-
 
     public function store($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, Request $request)
     {
@@ -1365,7 +1361,6 @@ class CpptController extends Controller
             }
         }
     }
-
 
     public function cpptGizi($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
     {

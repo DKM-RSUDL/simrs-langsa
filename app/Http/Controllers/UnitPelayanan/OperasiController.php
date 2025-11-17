@@ -224,8 +224,8 @@ class OperasiController extends Controller
         $dokters = $this->getDokters();
         $dokterAnastesi = DokterAnastesi::with(['dokter:kd_dokter,nama_lengkap'])->where('aktif', 1)->get();
 
-        $operasi = OrderOK::where('kd_kasir', $kd_kasir)->where('no_transaksi', $no_transaksi)
-            ->whereDate('tgl_jadwal', $tanggal_op)
+        $operasi = OrderOK::where('kd_kasir', $dataMedis->kd_kasir)->where('no_transaksi', $dataMedis->no_transaksi)
+            ->whereDate('tgl_op', $tanggal_op)
             ->where('jam_op', $jam_op)
             ->where('status', 0)
             ->first();
@@ -337,12 +337,12 @@ class OperasiController extends Controller
             $nginap = $this->baseService->getNginapData($dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk);
 
             $order = OrderOK::where('kd_kasir', $kd_kasir)->where('no_transaksi', $no_transaksi)
-                ->whereDate('tgl_jadwal', $tanggal_op)
+                ->whereDate('tgl_op', $tanggal_op)
                 ->where('jam_op', $jam_op)
                 ->first();
 
-            if ($order->status) throw new Exception('Order sudah diproses sebelumnya.');
             if (!$order) throw new Exception('Order tidak ditemukan.');
+            if ($order->status) throw new Exception('Order sudah diproses sebelumnya.');
 
             // mapping data kd kasir
             $mappingData = $this->mappingDataByKdKasir($kd_kasir);

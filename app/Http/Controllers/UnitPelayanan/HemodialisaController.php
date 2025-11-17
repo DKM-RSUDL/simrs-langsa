@@ -366,15 +366,15 @@ class HemodialisaController extends Controller
             $order->save();
 
             // update serah terima
-            $serahTerima = RmeSerahTerima::find($order->id_serah_terima);
+            // $serahTerima = RmeSerahTerima::find($order->id_serah_terima);
 
-            if (!empty($serahTerima)) {
-                $serahTerima->tanggal_terima = $request->tanggal_terima;
-                $serahTerima->jam_terima = $request->jam_terima;
-                $serahTerima->petugas_terima = $request->petugas_terima;
-                $serahTerima->status = 2;
-                $serahTerima->save();
-            }
+            // if (!empty($serahTerima)) {
+            //     $serahTerima->tanggal_terima = $request->tanggal_terima;
+            //     $serahTerima->jam_terima = $request->jam_terima;
+            //     $serahTerima->petugas_terima = $request->petugas_terima;
+            //     $serahTerima->status = 2;
+            //     $serahTerima->save();
+            // }
 
             DB::commit();
             return to_route('hemodialisa.pelayanan', [$dataMedis->kd_pasien, $tglSekarang, $urut_masuk])->with('success', 'Order berhasil diterima');

@@ -8,12 +8,15 @@ use App\Models\HrdKaryawan;
 use App\Models\KamarInduk;
 use App\Models\Kunjungan;
 use App\Models\Nginap;
+use App\Models\OrderHD;
+use App\Models\OrderOK;
 use App\Models\PasienInap;
 use App\Models\RmeAlergiPasien;
 use App\Models\RmeCatatanPemberianObat;
 use App\Models\RmeSerahTerima;
 use App\Models\Unit;
 use App\Models\RmeTransferPasienAntarRuang;
+use App\Services\BaseService;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
@@ -22,25 +25,17 @@ use Illuminate\Validation\ValidationException;
 
 class TransferPasienAntarRuang extends Controller
 {
+    private $baseService;
+
     public function __construct()
     {
         $this->middleware('can:read unit-pelayanan/rawat-inap');
+        $this->baseService = new BaseService();
     }
 
     public function index(Request $request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
     {
-        $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
-            ->join('transaksi as t', function ($join) {
-                $join->on('kunjungan.kd_pasien', '=', 't.kd_pasien')
-                    ->on('kunjungan.kd_unit', '=', 't.kd_unit')
-                    ->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi')
-                    ->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
-            })
-            ->where('kunjungan.kd_pasien', $kd_pasien)
-            ->where('kunjungan.kd_unit', $kd_unit)
-            ->where('kunjungan.urut_masuk', $urut_masuk)
-            ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
-            ->first();
+        $dataMedis = $this->baseService->getDataMedis($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
 
         if (!$dataMedis) {
             abort(404, 'Data not found');
@@ -76,10 +71,7 @@ class TransferPasienAntarRuang extends Controller
         }
 
         // Ambil data dengan pagination, urutkan berdasarkan tanggal
-        $transfers = $query->where(function ($q) {
-            $q->where('to_penunjang', 0)->orWhereNull('to_penunjang');
-        })
-            ->orderBy('tanggal', 'desc')
+        $transfers = $query->orderBy('tanggal', 'desc')
             ->orderBy('jam', 'desc')
             ->paginate(10);
 
@@ -108,18 +100,7 @@ class TransferPasienAntarRuang extends Controller
 
     public function create($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
     {
-        $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
-            ->join('transaksi as t', function ($join) {
-                $join->on('kunjungan.kd_pasien', '=', 't.kd_pasien');
-                $join->on('kunjungan.kd_unit', '=', 't.kd_unit');
-                $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
-                $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
-            })
-            ->where('kunjungan.kd_pasien', $kd_pasien)
-            ->where('kunjungan.kd_unit', $kd_unit)
-            ->where('kunjungan.urut_masuk', $urut_masuk)
-            ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
-            ->first();
+        $dataMedis = $this->baseService->getDataMedis($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
 
 
         if (!$dataMedis) {
@@ -132,24 +113,6 @@ class TransferPasienAntarRuang extends Controller
         } else {
             $dataMedis->pasien->umur = 'Tidak Diketahui';
         }
-
-        // Cek apakah sudah ada data transfer
-        $existingTransfer = RmeTransferPasienAntarRuang::where('kd_pasien', $kd_pasien)
-            ->where('kd_unit', $kd_unit)
-            ->whereDate('tgl_masuk', $tgl_masuk)
-            ->where('urut_masuk', $urut_masuk)
-            ->first();
-
-        // Jika ada data existing, redirect ke edit
-        // if ($existingTransfer) {
-        //     return redirect()->route('rawat-inap.transfer-pasien-antar-ruang.index', [
-        //         $kd_unit,
-        //         $kd_pasien,
-        //         $tgl_masuk,
-        //         $urut_masuk,
-        //         $existingTransfer->id
-        //     ])->with('info', 'Data transfer sudah ada, silakan edit data tersebut.');
-        // }
 
         $unit = Unit::where('aktif', 1)->get();
         $unitTujuan = Unit::where('kd_bagian', 1)
@@ -166,6 +129,7 @@ class TransferPasienAntarRuang extends Controller
 
         // Ambil riwayat catatan pemberian obat untuk ditampilkan (hanya read)
         $riwayatObat = $this->getRiwayatCatatanPemberianObat($kd_pasien, $kd_unit, $tgl_masuk, $urut_masuk);
+        $jenisStore = 1;
 
         return view('unit-pelayanan.rawat-inap.pelayanan.transfer-pasien-antar-ruang.create', compact(
             'dataMedis',
@@ -174,7 +138,8 @@ class TransferPasienAntarRuang extends Controller
             'petugas',
             'dokter',
             'alergiPasien',
-            'riwayatObat' // <-- ditambahkan
+            'riwayatObat',
+            'jenisStore'
         ));
     }
 
@@ -187,21 +152,7 @@ class TransferPasienAntarRuang extends Controller
             // Validasi data
             $validated = $this->validateTransferData($request);
 
-
-            $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
-                ->join('transaksi as t', function ($join) {
-                    $join->on('kunjungan.kd_pasien', '=', 't.kd_pasien');
-                    $join->on('kunjungan.kd_unit', '=', 't.kd_unit');
-                    $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
-                    $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
-                })
-                ->where('kunjungan.kd_pasien', $kd_pasien)
-                ->where('kunjungan.kd_unit', $kd_unit)
-                ->where('kunjungan.urut_masuk', $urut_masuk)
-                ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
-                ->first();
-
-
+            $dataMedis = $this->baseService->getDataMedis($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
             if (empty($dataMedis)) return back()->with('error', 'Data kunjungan tidak ditemukan !');
 
 
@@ -223,18 +174,6 @@ class TransferPasienAntarRuang extends Controller
             $oldUnitNginap = $nginap->kd_unit_kamar;
             $urutNginap = $nginap->urut_nginap;
             $newUrutNginap = $urutNginap + 1;
-
-            // Cek apakah sudah ada data transfer
-            $existingTransfer = RmeTransferPasienAntarRuang::where('kd_pasien', $kd_pasien)
-                ->where('kd_unit', $kd_unit)
-                ->whereDate('tgl_masuk', $tgl_masuk)
-                ->where('urut_masuk', $urut_masuk)
-                ->first();
-
-            if ($existingTransfer) {
-                return back()->withErrors(['error' => 'Data transfer sudah ada untuk pasien ini.'])->withInput();
-            }
-
 
             // Prepare data untuk disimpan
             $transferData = $this->prepareTransferData($validated, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
@@ -379,12 +318,7 @@ class TransferPasienAntarRuang extends Controller
     {
         $transfer = RmeTransferPasienAntarRuang::findOrFail($id);
 
-        $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
-            ->where('kd_pasien', $kd_pasien)
-            ->where('kd_unit', $kd_unit)
-            ->where('urut_masuk', $urut_masuk)
-            ->whereDate('tgl_masuk', $tgl_masuk)
-            ->first();
+        $dataMedis = $this->baseService->getDataMedis($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
 
         if (!$dataMedis) {
             abort(404, 'Data medis not found');
@@ -420,12 +354,7 @@ class TransferPasienAntarRuang extends Controller
     {
         $transfer = RmeTransferPasienAntarRuang::findOrFail($id);
 
-        $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
-            ->where('kd_pasien', $kd_pasien)
-            ->where('kd_unit', $kd_unit)
-            ->where('urut_masuk', $urut_masuk)
-            ->whereDate('tgl_masuk', $tgl_masuk)
-            ->first();
+        $dataMedis = $this->baseService->getDataMedis($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
 
         if (!$dataMedis) {
             abort(404, 'Data medis not found');
@@ -537,7 +466,7 @@ class TransferPasienAntarRuang extends Controller
         return $request->validate([
             // Unit dan Kamar
             'kd_unit_tujuan' => 'required|string',
-            'no_kamar' => 'required|string',
+            'no_kamar' => 'nullable|string',
 
             // Petugas yang menyerahkan
             'petugas_menyerahkan' => 'required|string',
@@ -635,8 +564,8 @@ class TransferPasienAntarRuang extends Controller
             'kd_unit' => $kd_unit,
             'tgl_masuk' => $tgl_masuk,
             'urut_masuk' => $urut_masuk,
-            'tanggal' => now()->format('Y-m-d'),
-            'jam' => now()->format('H:i:s'),
+            'tanggal' => $validated['tanggal_menyerahkan'],
+            'jam' => $validated['jam_menyerahkan'],
             'dokter_merawat' => $validated['dokter_merawat'] ?? null,
             'diagnosis_utama' => $validated['diagnosis_utama'] ?? null,
             'diagnosis_sekunder' => $validated['diagnosis_sekunder'] ?? null,
@@ -902,5 +831,166 @@ class TransferPasienAntarRuang extends Controller
             )
             ->orderBy('tanggal', 'desc')
             ->get();
+    }
+
+
+    /*=============================================================================
+                    TRANSFER KE PENUNJANG
+    =============================================================================*/
+
+    public function transferPenunjang($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
+    {
+        $dataMedis = $this->baseService->getDataMedis($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
+
+        if (!$dataMedis) {
+            abort(404, 'Data not found');
+        }
+
+        $unit = Unit::where('aktif', 1)->get();
+        $unitTujuan = Unit::whereIn('kd_unit', [71, 72, 74, 76])->where('aktif', 1)->get();
+
+        $petugas = HrdKaryawan::where('kd_jenis_tenaga', 2)
+            ->where('kd_detail_jenis_tenaga', 1)
+            ->where('status_peg',  1)
+            ->get();
+
+        $dokter = Dokter::where('status', 1)->orderBy('nama', 'asc')->get();
+        $alergiPasien = RmeAlergiPasien::where('kd_pasien', $kd_pasien)->get();
+
+        // Ambil riwayat catatan pemberian obat untuk ditampilkan (hanya read)
+        $riwayatObat = $this->getRiwayatCatatanPemberianObat($kd_pasien, $kd_unit, $tgl_masuk, $urut_masuk);
+        $jenisStore = 7;
+
+        return view('unit-pelayanan.rawat-inap.pelayanan.transfer-pasien-antar-ruang.create', compact(
+            'dataMedis',
+            'unit',
+            'unitTujuan',
+            'petugas',
+            'dokter',
+            'alergiPasien',
+            'riwayatObat',
+            'jenisStore'
+        ));
+    }
+
+
+    private function checkExistingOrder($dataMedis, $kd_unit_tujuan)
+    {
+        // OK
+        if ($kd_unit_tujuan == 71) {
+            $existingOrder = OrderOK::where('kd_kasir', $dataMedis->kd_kasir)
+                ->where('no_transaksi', $dataMedis->no_transaksi)
+                ->count();
+
+            if ($existingOrder > 0) return true;
+        }
+
+        // HD
+        if ($kd_unit_tujuan == 72) {
+            $existingOrder = OrderHD::where('kd_kasir_asal', $dataMedis->kd_kasir)
+                ->where('no_transaksi_asal', $dataMedis->no_transaksi)
+                ->count();
+
+            if ($existingOrder > 0) return true;
+        }
+
+        if (in_array($kd_unit_tujuan, [74, 76])) return true;
+
+        return false;
+    }
+
+    public function storeTransferPenunjang(Request $request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
+    {
+        DB::beginTransaction();
+
+        try {
+
+            // Validasi data
+            $validated = $this->validateTransferData($request);
+
+            $dataMedis = $this->baseService->getDataMedis($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
+            if (empty($dataMedis)) throw new Exception('Data medis tidak ditemukan.');
+
+            // cek unit yg dipilih
+            $unitTujuan = Unit::where('kd_unit', $request->kd_unit_tujuan)
+                ->where('aktif', 1)
+                ->first();
+
+            if (empty($unitTujuan)) throw new Exception('Unit tujuan tidak valid.');
+            if (!in_array($unitTujuan->kd_bagian, [71, 72, 74, 76])) throw new Exception('Unit tujuan harus merupakan unit penunjang.');
+
+            $existingOrder = $this->checkExistingOrder($dataMedis, $unitTujuan->kd_unit);
+            if (!$existingOrder) throw new Exception("Pasien belum memiliki order di $unitTujuan->nama_unit.");
+
+            // Prepare data untuk disimpan
+            $transferData = $this->prepareTransferData($validated, $dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk);
+            $transferData['to_penunjang'] = 1;
+
+            // Simpan data
+            $transfer = RmeTransferPasienAntarRuang::create($transferData);
+
+            // Validasi data alergi
+            $alergiData = json_decode($request->alergis, true);
+
+            if (!empty($alergiData)) {
+                // Hapus data alergi lama untuk pasien ini
+                RmeAlergiPasien::where('kd_pasien', $kd_pasien)->delete();
+
+                // Simpan data alergi baru
+                foreach ($alergiData as $alergi) {
+                    // Skip data yang sudah ada di database (is_existing = true)
+                    // kecuali jika ingin update
+                    RmeAlergiPasien::create([
+                        'kd_pasien' => $kd_pasien,
+                        'jenis_alergi' => $alergi['jenis_alergi'],
+                        'nama_alergi' => $alergi['alergen'],
+                        'reaksi' => $alergi['reaksi'],
+                        'tingkat_keparahan' => $alergi['tingkat_keparahan']
+                    ]);
+                }
+            }
+
+            // Get Pasien Inap Data
+            $pasienInap = PasienInap::where('kd_kasir', $dataMedis->kd_kasir)
+                ->where('no_transaksi', $dataMedis->no_transaksi)
+                ->first();
+
+            $oldUnitInap = $pasienInap->kd_unit;
+
+            // CREATE DATA SERAH TERIMA
+            $handOverData = [
+                'kd_pasien'             => $dataMedis->kd_pasien,
+                'tgl_masuk'             => $dataMedis->tgl_masuk,
+                'urut_masuk'            => $dataMedis->urut_masuk,
+                'urut_masuk_tujuan'     => $dataMedis->urut_masuk,
+                'kd_unit_asal'          => $oldUnitInap,
+                'kd_unit_tujuan'        => $request->kd_unit_tujuan,
+                'petugas_menyerahkan'   => $request->petugas_menyerahkan,
+                'tanggal_menyerahkan'   => $request->tanggal_menyerahkan,
+                'jam_menyerahkan'       => $request->jam_menyerahkan,
+                'transfer_id'           => $transfer->id ?? null,
+                'status'                => 1
+            ];
+
+            RmeSerahTerima::create($handOverData);
+
+            $this->baseService->updateKetKunjungan($dataMedis->kd_kasir, $dataMedis->no_transaksi, $unitTujuan->nama_unit, 0);
+
+            DB::commit();
+
+            return redirect()->route('rawat-inap.transfer-pasien-antar-ruang.index', [
+                $dataMedis->kd_unit,
+                $dataMedis->kd_pasien,
+                $dataMedis->tgl_masuk,
+                $dataMedis->urut_masuk,
+                $transfer->id
+            ])->with('success', 'Data transfer pasien berhasil disimpan.');
+        } catch (ValidationException $e) {
+            DB::rollback();
+            return back()->withErrors($e->errors())->withInput();
+        } catch (Exception $e) {
+            DB::rollback();
+            return back()->withErrors(['error' => 'Terjadi kesalahan: ' . $e->getMessage()])->withInput();
+        }
     }
 }
