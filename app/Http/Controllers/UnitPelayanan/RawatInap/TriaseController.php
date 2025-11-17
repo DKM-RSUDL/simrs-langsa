@@ -8,6 +8,8 @@ use App\Models\DataTriase;
 use App\Services\AsesmenService;
 use App\Services\BaseService;
 use Illuminate\Http\Request;
+use Barryvdh\DomPDF\Facade\Pdf;
+use App\Models\SjpKunjungan;
 
 class TriaseController extends Controller
 {
@@ -61,12 +63,64 @@ class TriaseController extends Controller
         $vitalSign = json_decode($triase->vital_sign, true);
         $triase->triase = json_decode($triase->triase, true);
 
-
-
-
         return view(
             'unit-pelayanan.rawat-inap.pelayanan.triase.show',
             compact('dataMedis', 'vitalSign', 'triase')
         );
+    }
+    public function printPDF($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
+    {
+        // get kunjungan ranap
+        $dataMedis = $this->baseService->getDataMedis(
+            $kd_unit,
+            $kd_pasien,
+            $tgl_masuk,
+            $urut_masuk
+        );
+
+        if (empty($dataMedis)) {
+            abort(404, 'Data kunjungan tidak ditemukan !');
+        }
+
+        // GET ASAL IGD
+        $asalIGD = AsalIGD::where('kd_kasir', $dataMedis->kd_kasir)
+            ->where('no_transaksi', $dataMedis->no_transaksi)
+            ->first();
+
+        if (empty($asalIGD)) {
+            abort(404, 'Data IGD tidak ditemukan !');
+        }
+
+        // get kunjungan IGD
+        $kunjunganIGD = $this->baseService
+            ->getDataMedisbyTransaksi($asalIGD->kd_kasir_asal, $asalIGD->no_transaksi_asal);
+
+        if (empty($kunjunganIGD)) {
+            abort(404, 'Data kunjungan IGD tidak ditemukan !');
+        }
+
+        // get data triase
+        $triase = DataTriase::with(['dokter'])
+            ->find($kunjunganIGD->triase_id);
+
+        if (empty($triase)) {
+            abort(404, 'Data triase tidak ditemukan');
+        }
+
+        $triase->triase = json_decode($triase->triase, true);
+        $pasien = $dataMedis->pasien;
+
+        // Generate PDF
+        $pdf = Pdf::loadView(
+            'unit-pelayanan.rawat-inap.pelayanan.triase.print',
+            compact('dataMedis', 'triase', 'pasien')
+        )
+            ->setPaper('A4', 'portrait')
+            ->setOptions([
+                'isHtml5ParserEnabled' => true,
+                'isRemoteEnabled' => true, // AGAR ASSET() BISA MUNCUL
+            ]);
+
+        return $pdf->stream('triase.pdf'); // tampilkan di browser
     }
 }

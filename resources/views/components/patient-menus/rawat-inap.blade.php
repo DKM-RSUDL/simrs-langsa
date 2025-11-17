@@ -255,6 +255,17 @@
                             target="_blank" class="list-group-item list-group-item-action">
                             CPPT
                         </a>
+                        @if (isset($dataMedis) && $dataMedis)
+                            <a href="{{ route('rawat-inap.triase.print-pdf', [
+                                'kd_unit' => $dataMedis?->kd_unit ?? '',
+                                'kd_pasien' => $dataMedis?->kd_pasien ?? '',
+                                'tgl_masuk' => $dataMedis?->tgl_masuk ?? '',
+                                'urut_masuk' => $dataMedis?->urut_masuk ?? '',
+                            ]) }}"
+                                target="_blank" class="list-group-item list-group-item-action">
+                                Triase
+                            </a>
+                        @endif
                     @endif
                 </div>
             </div>
