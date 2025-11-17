@@ -29,7 +29,7 @@
                         <div class="col-md-4">
                             <x-content-card>
                                 <label for="kd_dokter" class="form-label fw-bold h5 text-dark">Dokter Pengirim:</label>
-                                <select id="kd_dokter" name="kd_dokter" class="form-select"
+                                <select id="kd_dokter" name="kd_dokter" class="form-select select2"
                                     aria-label="Pilih dokter pengirim">
                                     <option value="" disabled selected>-Pilih Dokter Pengirim-</option>
                                     @foreach ($dataDokter as $d)
@@ -97,23 +97,15 @@
                                 </div>
                             </x-content-card>
 
-                            {{-- <x-content-card>
-                                <h6 class="fw-bold">Catatan Klinis/Diagnosis</h6>
-                                <textarea class="form-control" id="diagnosis" name="diagnosis" readonly>{{ $diagnosisText ?: '-' }}</textarea>
-                            </x-content-card> --}}
-
                             <x-content-card>
                                 <h6 class="fw-bold">Diagnosis</h6>
                                 <div class="diagnosis-list">
                                     @if (count($diagnosisList) > 0)
-                                        <ul class="list-unstyled mb-0">
+                                        <ol class="mb-0 ps-3">
                                             @foreach ($diagnosisList as $diagnosis)
-                                                <li class="mb-2">
-                                                    <i class="fas fa-circle-notch me-2 text-primary"></i>
-                                                    {{ $diagnosis }}
-                                                </li>
+                                                <li class="mb-2">{{ $diagnosis }}</li>
                                             @endforeach
-                                        </ul>
+                                        </ol>
                                     @else
                                         <p class="mb-0">-</p>
                                     @endif
