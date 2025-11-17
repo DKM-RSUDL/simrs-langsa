@@ -130,28 +130,42 @@
     <x-content-card>
         <div class="row">
             <div class="col-md-12">
-                <div class="emergency__container">
-                    <h4 class="fw-bold">Bedah Sentral</h4>
+                <div class="row g-3 align-items-start">
+                    <div class="col-12 col-md-7">
+                        <h4 class="fw-bold">Bedah Sentral</h4>
+                    </div>
 
-                    <a href="{{ route('operasi.index') }}">
-                        <div class="custom__card all__patients">
-                            <img src="{{ asset('assets/img/icons/Sick.png') }}" alt="Icon" width="40">
-                            <div class="text-center">
-                                <p class="m-0 p-0">Aktif</p>
-                                <p class="m-0 p-0 fs-4 fw-bold">3</p>
-                            </div>
-                        </div>
-                    </a>
+                    <div class="col-12 col-md-5">
+                        <div class="row g-2">
+                            {{-- Aktif (Primary) --}}
+                            <a href="{{ route('operasi.index') }}" class="text-decoration-none col-12 col-md-6">
+                                <div class="rounded bg-primary text-white">
+                                    <div class="card-body d-flex align-items-center gap-3 px-3">
+                                        <img src="{{ asset('assets/img/icons/Sick.png') }}" alt="Icon" width="36"
+                                            height="36">
+                                        <div class="text-start">
+                                            <div class="small mb-1">Aktif</div>
+                                            <div class="fs-4 fw-bold">3</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
 
-                    <a href="{{ route('operasi.pending-order') }}">
-                        <div class="custom__card Pending">
-                            <img src="{{ asset('assets/img/icons/Sick.png') }}" alt="Icon" width="40">
-                            <div class="text-center">
-                                <p class="m-0 p-0">Pending Order Masuk</p>
-                                <p class="m-0 p-0 fs-4 fw-bold">33</p>
-                            </div>
+                            {{-- Pending Order Masuk (Warning) --}}
+                            <a href="{{ route('operasi.pending-order') }}" class="text-decoration-none col-12 col-md-6">
+                                <div class="rounded bg-warning text-white">
+                                    <div class="card-body d-flex align-items-center gap-3 px-3">
+                                        <img src="{{ asset('assets/img/icons/Sick.png') }}" alt="Icon" width="36"
+                                            height="36">
+                                        <div class="text-start">
+                                            <div class="small mb-1">Pending Order Masuk</div>
+                                            <div class="fs-4 fw-bold">33</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
                         </div>
-                    </a>
+                    </div>
                 </div>
             </div>
         </div>
