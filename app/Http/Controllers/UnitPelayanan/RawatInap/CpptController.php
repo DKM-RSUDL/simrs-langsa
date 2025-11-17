@@ -244,7 +244,6 @@ class CpptController extends Controller
     }
 
 
-
     public function getCpptAjax(Request $request)
     {
         try {
