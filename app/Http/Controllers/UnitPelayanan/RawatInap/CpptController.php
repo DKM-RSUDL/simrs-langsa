@@ -925,20 +925,28 @@ class CpptController extends Controller
                 CpptPenyakit::create($diagInsertData);
             }
 
-            // Store anamnesis
-            $lastUrutMasukAnamnesis = MrAnamnesis::where('kd_pasien', $kunjungan->kd_pasien)
+           
+          
+
+             // Store anamnesis
+            $lastUrutAnamnesisMax = MrAnamnesis::where('kd_pasien', $kunjungan->kd_pasien)
+                ->where('kd_unit', $kunjungan->kd_unit)
+                ->where('kd_pasien', $kunjungan->kd_pasien)
                 ->where('kd_unit', $kunjungan->kd_unit)
                 ->whereDate('tgl_masuk', $tanggal)
-                ->count();
-            $lastUrutMasukAnamnesis += 1;
+                ->orderBy('urut', 'desc')
+                ->first();
+
+        
+            $lastUrutAnamnesisMax = ($lastUrutAnamnesisMax->urut ?? 0) + 1;
 
             $anamnesisInsertData = [
                 'kd_pasien' => $kunjungan->kd_pasien,
                 'kd_unit' => $kunjungan->kd_unit,
                 'tgl_masuk' => $tanggal,
-                'urut_masuk' => $lastUrutMasukAnamnesis,
+                'urut_masuk' => $kunjungan->urut_masuk,
                 'urut_cppt' => $lastUrutTotalCppt,
-                'urut' => 0,
+                'urut' => $lastUrutAnamnesisMax,
                 'anamnesis' => $request->anamnesis,
                 'dd' => '',
             ];
@@ -953,18 +961,18 @@ class CpptController extends Controller
 
             $newIdKonpas = (empty($konpasMax)) ? date('Ymd', strtotime($tanggal)) . '0001' : (int) $konpasMax + 1;
 
-            $lastUrutMasukKonpas = MrKonpas::where('kd_pasien', $kunjungan->kd_pasien)
-                ->where('kd_unit', $kunjungan->kd_unit)
-                ->whereDate('tgl_masuk', $tanggal)
-                ->count();
-            $lastUrutMasukKonpas += 1;
+            // $lastUrutMasukKonpas = MrKonpas::where('kd_pasien', $kunjungan->kd_pasien)
+            //     ->where('kd_unit', $kunjungan->kd_unit)
+            //     ->whereDate('tgl_masuk', $tanggal)
+            //     ->count();
+            // $lastUrutMasukKonpas += 1;
 
             $konpasInsertData = [
                 'id_konpas' => $newIdKonpas,
                 'kd_pasien' => $kunjungan->kd_pasien,
                 'kd_unit' => $kunjungan->kd_unit,
                 'tgl_masuk' => $tanggal,
-                'urut_masuk' => $urut_masuk,
+                'urut_masuk' => $kunjungan->urut_masuk,
                 'urut_cppt' => $lastUrutTotalCppt,
                 'catatan' => '',
             ];
@@ -1101,15 +1109,7 @@ class CpptController extends Controller
 
 
 
-            // Update anamnesis
-            MrAnamnesis::where('kd_pasien', $kunjungan->kd_pasien)
-                ->where('kd_unit', $unitCpptReq)
-                // ->where('tgl_masuk', $tgl_masuk)
-                ->where('urut_cppt', $urutCpptReq)
-                ->update([
-                    'anamnesis' => $request->anamnesis,
-                ]);
-
+           
 
             $konpas = MrKonpas::where('kd_pasien', $kunjungan->kd_pasien)
                 ->where('kd_unit', $unitCpptReq)
@@ -1176,6 +1176,19 @@ class CpptController extends Controller
                 'tanggal' => $new_tgl,
                 'jam' => date('H:i:s', strtotime($request->jam_masuk_edit))
             ];
+
+             // Update anamnesis
+            MrAnamnesis::where('kd_pasien', $kunjungan->kd_pasien)
+                ->where('kd_unit', $unitCpptReq)
+                ->where('kd_pasien', $kunjungan->kd_pasien)
+                ->where('urut_masuk', $kunjungan->urut_masuk)
+                // ->where('tgl_masuk', $tgl_masuk)
+                ->where('urut_cppt', $urutCpptReq)
+                ->update([
+                    'anamnesis' => $request->anamnesis,
+                    'tgl_masuk' => $new_tgl,
+                ]);
+
 
 
             Cppt::where('no_transaksi', $kunjungan->no_transaksi)
