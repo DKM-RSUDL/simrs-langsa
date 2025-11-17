@@ -1513,6 +1513,7 @@ Route::prefix('rawat-inap')->group(function () {
                     Route::name('.triase')->group(function () {
                         Route::controller(TriaseController::class)->group(function () {
                             Route::get('/show', 'show')->name('.show');
+                            Route::get('/print-pdf', 'printPDF')->name('.print-pdf');
                         });
                     });
                 });
