@@ -308,7 +308,7 @@
                         <div class="form-group">
                             <label for="laporan_prosedur_operasi" class="col-md-3 col-form-label"
                                 style="min-width: 200px;">Laporan Prosedur Operasi</label>
-                            <textarea placeholder="Jelaskan deskripsilengkap tentang prosedur bedah yang dilakukan "
+                            <textarea placeholder="Jelaskan deskripsilengkap tentang prosedur bedah yang dilakukan" rows="15"
                                 name="laporan_prosedur_operasi" id="laporan_prosedur_operasi" class="form-control"></textarea>
                         </div>
                     </div>
