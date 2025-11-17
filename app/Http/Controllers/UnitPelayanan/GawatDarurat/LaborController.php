@@ -355,8 +355,13 @@ class LaborController extends Controller
                 'indikasi_klinis'   => $validatedData['indikasi_klinis']
             ]);
 
-            dd($this->formatDiagnosis($validatedData['diagnosis'] ?? ''));
-
+            // Ambil urut terakhir MrAnamnesis untuk pasien ini
+            $lastAnamnesis = MrAnamnesis::where('kd_pasien', $validatedData['kd_pasien'])
+            ->where('kd_unit', $validatedData['kd_unit'])
+            ->where('tgl_masuk', $validatedData['tgl_masuk'])
+            ->orderByDesc('urut')
+            ->first();
+            
             // Store ke MrAnamnesis
             MrAnamnesis::create([
                 'kd_pasien' => $validatedData['kd_pasien'],
@@ -364,10 +369,9 @@ class LaborController extends Controller
                 'tgl_masuk' => $validatedData['tgl_masuk'],
                 'urut_masuk' => $validatedData['urut_masuk'],
                 'urut_cppt' => '',
-                'urut' => 0,
+                'urut' => $lastAnamnesis ? $lastAnamnesis->urut + 1 : 0,
                 'anamnesis' => $validatedData['indikasi_klinis'] ?? '',
                 'dd' => $this->formatDiagnosis($validatedData['diagnosis'] ?? ''),
-                // 'dd' => $validatedData['diagnosis'] ?? '',
             ]);
 
             foreach ($validatedData['kd_produk'] as $index => $kd_produk) {
