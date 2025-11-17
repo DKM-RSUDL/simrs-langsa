@@ -260,7 +260,7 @@
 
                 <td class="td-right">
                     <div class="igd-box">
-                        <span class="igd-text">RWI</span>
+                        <span class="igd-text">IGD</span>
                     </div>
                 </td>
             </tr>
@@ -387,21 +387,21 @@
                 $warna = '';
                 $label = '';
 
-                if ($kdTriase === 1) {
+                if ($kdTriase === 5) {
+                    $warna = 'bg-dark';
+                    $label = 'DOA';
+                } elseif ($kdTriase === 4) {
                     $warna = 'bg-danger';
                     $label = 'RESUSITASI';
-                } elseif ($kdTriase === 2) {
-                    $warna = 'bg-warning';
-                    $label = 'URGENT';
                 } elseif ($kdTriase === 3) {
                     $warna = 'bg-danger';
                     $label = 'EMERGENCY';
-                } elseif ($kdTriase === 4) {
+                } elseif ($kdTriase === 2) {
+                    $warna = 'bg-warning';
+                    $label = 'URGENT';
+                } elseif ($kdTriase === 1) {
                     $warna = 'bg-success';
                     $label = 'FALSE EMERGENCY';
-                } elseif ($kdTriase === 5) {
-                    $warna = 'bg-dark';
-                    $label = 'DOA';
                 } else {
                     $warna = '';
                     $label = '-';
