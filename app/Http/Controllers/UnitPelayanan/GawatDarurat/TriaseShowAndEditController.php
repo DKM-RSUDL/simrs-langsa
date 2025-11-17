@@ -13,7 +13,7 @@ class TriaseShowAndEditController extends Controller
 {
     protected $baseService;
     protected $kdUnit;
-  
+
     public function __construct()
     {
         $this->baseService = new BaseService();
@@ -108,7 +108,7 @@ class TriaseShowAndEditController extends Controller
         $triase->update([
             'vital_sign'   => json_encode($vitalSign),
             'triase'       => json_encode($abcdn),
-            'kd_triase' => $request->kd_triase,
+            'kode_triase' => $request->kd_triase,
             'hasil_triase' => $request->ket_triase,
         ]);
 
