@@ -397,21 +397,21 @@
                 $warna = '';
                 $label = '';
 
-                if ($kdTriase === 1) {
-                    $warna = 'bg-success';
-                    $label = 'RESUSITASI';
-                } elseif ($kdTriase === 2) {
-                    $warna = 'bg-warning';
-                    $label = 'EMERGENCY';
-                } elseif ($kdTriase === 3) {
-                    $warna = 'bg-danger';
-                    $label = 'URGENT';
-                } elseif ($kdTriase === 4) {
-                    $warna = 'bg-danger';
-                    $label = 'FALSE EMERGENCY';
-                } elseif ($kdTriase === 5) {
+                if ($kdTriase === 5) {
                     $warna = 'bg-dark';
                     $label = 'DOA';
+                } elseif ($kdTriase === 4) {
+                    $warna = 'bg-danger';
+                    $label = 'RESUSITASI';
+                } elseif ($kdTriase === 3) {
+                    $warna = 'bg-danger';
+                    $label = 'EMERGENCY';
+                } elseif ($kdTriase === 2) {
+                    $warna = 'bg-warning';
+                    $label = 'URGENT';
+                } elseif ($kdTriase === 1) {
+                    $warna = 'bg-success';
+                    $label = 'FALSE EMERGENCY';
                 } else {
                     $warna = '';
                     $label = '-';
@@ -421,7 +421,7 @@
                 <td colspan="6" style="text-align:center; padding:15px;">
                     <span class="circle {{ $warna }}"></span>
                     <span class="circle-label" style="font-weight:bold;">{{ $label }}</span>
-                </td>
+                </td> [cite: 225]
             </tr>
         </tbody>
     </table>
