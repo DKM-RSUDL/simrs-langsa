@@ -1178,7 +1178,6 @@ class CpptController extends Controller
              // Update anamnesis
             MrAnamnesis::where('kd_pasien', $kunjungan->kd_pasien)
                 ->where('kd_unit', $unitCpptReq)
-                ->where('kd_pasien', $kunjungan->kd_pasien)
                 ->where('urut_masuk', $kunjungan->urut_masuk)
                 // ->where('tgl_masuk', $tgl_masuk)
                 ->where('urut_cppt', $urutCpptReq)
