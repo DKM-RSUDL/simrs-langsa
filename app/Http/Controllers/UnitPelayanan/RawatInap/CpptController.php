@@ -924,15 +924,11 @@ class CpptController extends Controller
 
                 CpptPenyakit::create($diagInsertData);
             }
-
-           
-          
-
              // Store anamnesis
             $lastUrutAnamnesisMax = MrAnamnesis::where('kd_pasien', $kd_pasien)
                 ->where('kd_unit', $kd_unit)
-                ->whereDate('tgl_masuk', $tanggal)
                 ->where('urut_masuk', $urut_masuk)
+                ->whereDate('tgl_masuk', $tgl_masuk)
                 ->orderBy('urut', 'desc')
                 ->first();
 
@@ -942,7 +938,7 @@ class CpptController extends Controller
             $anamnesisInsertData = [
                 'kd_pasien' => $kunjungan->kd_pasien,
                 'kd_unit' => $kunjungan->kd_unit,
-                'tgl_masuk' => $tanggal,
+                'tgl_masuk' => $tgl_masuk,
                 'urut_masuk' => $kunjungan->urut_masuk,
                 'urut_cppt' => $lastUrutTotalCppt,
                 'urut' => $lastUrutAnamnesisMax,
@@ -1180,11 +1176,10 @@ class CpptController extends Controller
             MrAnamnesis::where('kd_pasien', $kd_pasien)
                 ->where('kd_unit', $unitCpptReq)
                 ->where('urut_masuk', $urut_masuk)
-                // ->where('tgl_masuk', $tgl_masuk)
+                ->where('tgl_masuk', $tgl_masuk)
                 ->where('urut_cppt', $urutCpptReq)
                 ->update([
                     'anamnesis' => $request->anamnesis,
-                    'tgl_masuk' => $new_tgl,
                 ]);
 
 
