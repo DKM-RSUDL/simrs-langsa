@@ -89,6 +89,7 @@ use App\Http\Controllers\UnitPelayanan\RawatInap\RincianKonsultasiController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\SiteMarkingController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\SurveilansA1Controller;
 use App\Http\Controllers\UnitPelayanan\RawatInap\SurveilansA2Controller;
+use App\Http\Controllers\UnitPelayanan\RawatInap\TriaseController;
 use App\Http\Controllers\UnitPelayanan\RawatInapController;
 
 Route::prefix('rawat-inap')->group(function () {
@@ -1503,6 +1504,15 @@ Route::prefix('rawat-inap')->group(function () {
                                     Route::get('/print/{id}', 'print')->name('.print');
                                 });
                             });
+                        });
+                    });
+                });
+
+                // TRIASE IGD
+                Route::prefix('triase')->group(function () {
+                    Route::name('.triase')->group(function () {
+                        Route::controller(TriaseController::class)->group(function () {
+                            Route::get('/show', 'show')->name('.show');
                         });
                     });
                 });

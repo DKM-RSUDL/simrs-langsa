@@ -73,25 +73,26 @@
                                                 <div class="col-auto">
                                                     <div class="date-badge">
                                                         <div class="day-number">
-                                                            {{ date('d', strtotime($item->tanggal_create)) }}</div>
+                                                            {{ date('d', strtotime($item->tanggal)) }}</div>
                                                         <div class="day-month">
-                                                            {{ date('M-y', strtotime($item->tanggal_create)) }}</div>
+                                                            {{ date('M-y', strtotime($item->tanggal)) }}</div>
                                                         <div class="day-month">
-                                                            {{ date('H:i', strtotime($item->tanggal_create)) }}</div>
+                                                            {{ date('H:i', strtotime($item->jam)) }}</div>
                                                     </div>
                                                 </div>
 
                                                 <!-- Content -->
                                                 <div class="col">
                                                     <div class="d-flex align-items-center">
-                                                        <div class="avatar">
+                                                        {{-- <div class="avatar">
                                                             {{ strtoupper(substr($item->userCreate->name ?? 'U', 0, 1)) }}
-                                                        </div>
+                                                        </div> --}}
                                                         <div class="flex-grow-1">
                                                             <h6 class="assessment-title mb-1">Transfer Pasien Antar Ruang</h6>
-                                                            <p class="doctor-name">By:
-                                                                {{ str()->title($item->userCreate->name ?? 'Unknown') }}</p>
-                                                            <p class="text-muted">Unit Tujuan: {{ $item->kd_unit_tujuan ?? 'Tidak Diketahui' }}</p>
+                                                            <p class="doctor-name"><strong>By:</strong>
+                                                                {{ ($item->userCreate->karyawan->gelar_depan ?? '') . ' ' . str()->title(($item->userCreate->karyawan->nama ?? '')) . ' ' . ($item->userCreate->karyawan->gelar_belakang ?? '') }}</p>
+                                                            <p class="text-muted m-0"><strong>Unit Asal:</strong> {{ ($item->serahTerima->unitAsal->nama_unit ?? 'Tidak Diketahui') . ' ' . ($item->serahTerima->unitAsal->bagian->bagian ? '(' . $item->serahTerima->unitAsal->bagian->bagian . ')' : '') }}</p>
+                                                            <p class="text-muted"><strong>Unit Tujuan:</strong> {{ ($item->serahTerima->unitTujuan->nama_unit ?? 'Tidak Diketahui') . ' ' . ($item->serahTerima->unitTujuan->bagian->bagian ? '(' . $item->serahTerima->unitTujuan->bagian->bagian . ')' : '') }}</p>
                                                         </div>
                                                     </div>
                                                 </div>

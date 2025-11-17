@@ -54,7 +54,7 @@ class TransferPasienAntarRuang extends Controller
         }
 
         // Query untuk data transfer pasien antar ruang
-        $query = RmeTransferPasienAntarRuang::with('userCreate')
+        $query = RmeTransferPasienAntarRuang::with(['userCreate', 'serahTerima'])
             ->where('kd_pasien', $kd_pasien)
             ->where('kd_unit', $kd_unit)
             ->whereDate('tgl_masuk', $tgl_masuk)
@@ -76,7 +76,12 @@ class TransferPasienAntarRuang extends Controller
         }
 
         // Ambil data dengan pagination, urutkan berdasarkan tanggal
-        $transfers = $query->orderBy('tanggal', 'desc')->paginate(10);
+        $transfers = $query->where(function ($q) {
+            $q->where('to_penunjang', 0)->orWhereNull('to_penunjang');
+        })
+            ->orderBy('tanggal', 'desc')
+            ->orderBy('jam', 'desc')
+            ->paginate(10);
 
         $unit = Unit::where('aktif', 1)->get();
         $unitTujuan = Unit::where('kd_bagian', 1)
@@ -339,6 +344,7 @@ class TransferPasienAntarRuang extends Controller
                 'petugas_menyerahkan'   => $request->petugas_menyerahkan,
                 'tanggal_menyerahkan'   => $request->tanggal_menyerahkan,
                 'jam_menyerahkan'       => $request->jam_menyerahkan,
+                'transfer_id'           => $transfer->id ?? null,
                 'status'                => 1
             ];
 
