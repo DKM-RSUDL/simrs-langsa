@@ -931,8 +931,6 @@ class CpptController extends Controller
              // Store anamnesis
             $lastUrutAnamnesisMax = MrAnamnesis::where('kd_pasien', $kunjungan->kd_pasien)
                 ->where('kd_unit', $kunjungan->kd_unit)
-                ->where('kd_pasien', $kunjungan->kd_pasien)
-                ->where('kd_unit', $kunjungan->kd_unit)
                 ->whereDate('tgl_masuk', $tanggal)
                 ->orderBy('urut', 'desc')
                 ->first();
