@@ -30,26 +30,46 @@
         </div>
     </div>
 
-    {{-- Order / Mutasi Pasien --}}
+    {{-- Order Penunjang --}}
     <div class="accordion-item">
         <h2 class="accordion-header">
             <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
                 data-bs-target="#orderMenu">
-                <i class="bi bi-arrow-left-right me-2"></i> Order / Mutasi Pasien
+                <i class="bi bi-arrow-left-right me-2"></i> Order Penunjang
             </button>
         </h2>
         <div id="orderMenu" class="accordion-collapse collapse" data-bs-parent="#patientMenuAccordion">
+            <div class="accordion-body p-0">
+                <div class="list-group list-group-flush">
+                    <a href="{{ $pelayananUrl }}/order-hd" class="list-group-item list-group-item-action">
+                        Hemodialisa (HD)
+                    </a>
+                    <a href="{{ $pelayananUrl }}/operasi-ibs" class="list-group-item list-group-item-action">
+                        Operasi (IBS)
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {{-- Mutasi/Transfer Pasien --}}
+    <div class="accordion-item">
+        <h2 class="accordion-header">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                data-bs-target="#mutasiMenu">
+                <i class="bi bi-arrow-left-right me-2"></i> Transfer/Mutasi Pasien
+            </button>
+        </h2>
+        <div id="mutasiMenu" class="accordion-collapse collapse" data-bs-parent="#patientMenuAccordion">
             <div class="accordion-body p-0">
                 <div class="list-group list-group-flush">
                     <a href="{{ $pelayananUrl }}/transfer-pasien-antar-ruang"
                         class="list-group-item list-group-item-action">
                         Pindah Ruangan Rawat Inap
                     </a>
-                    <a href="{{ $pelayananUrl }}/order-hd" class="list-group-item list-group-item-action">
-                        Hemodialisa (HD)
-                    </a>
-                    <a href="{{ $pelayananUrl }}/operasi-ibs" class="list-group-item list-group-item-action">
-                        Operasi (IBS)
+                    <a href="#"
+                        class="list-group-item list-group-item-action">
+                        Transfer Ke Penunjang
                     </a>
                 </div>
             </div>

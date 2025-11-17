@@ -145,17 +145,17 @@ class CpptController extends Controller
         $vitalSignData = $this->getVitalSignForCppt($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
         $lastCpptData = $this->getLastCpptData($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
 
-        // get cppt - REFACTORED
+
         $additionalWheres = [
             't.kd_pasien' => $dataMedis->kd_pasien,
             't.kd_unit' => $dataMedis->kd_unit,
-            'cppt.no_transaksi'
-            => $dataMedis->no_transaksi,
+            'cppt.no_transaksi' => $dataMedis->no_transaksi,
             'cppt.kd_kasir' => $dataMedis->kd_kasir,
         ];
 
-        $getCppt = $this->buildCpptQuery($additionalWheres)->get();
-        $cppt = $this->transformCpptData($getCppt, true); // includeNames = true
+     
+        $getCppt = $this->buildCpptQueryForPrint($additionalWheres)->get();
+        $cppt = $this->transformCpptData($getCppt, true);
 
         $pdf = Pdf::loadView('unit-pelayanan.rawat-inap.pelayanan.cppt.print', [
             'dataMedis' => $dataMedis,
@@ -174,6 +174,72 @@ class CpptController extends Controller
 
         return $pdf->stream('CPPT_' . $dataMedis->pasien->nama . '_' . date('YmdHis') . '.pdf');
     }
+    private function buildCpptQueryForPrint($additionalWheres = [])
+    {
+        return Cppt::with(['dtCppt', 'pemberat', 'peringan', 'kualitas', 'frekuensi', 'menjalar', 'jenis', 'userPenanggung'])
+            ->select([
+                'cppt.*',
+                't.kd_pasien',
+                't.kd_unit',
+                'u.nama_unit',
+                'a.anamnesis',
+                'ctl.tindak_lanjut_code',
+                'ctl.tindak_lanjut_name',
+                'ctl.tgl_kontrol_ulang',
+                'ctl.unit_rujuk_internal',
+                'ctl.unit_rawat_inap',
+                'ctl.rs_rujuk',
+                'ctl.rs_rujuk_bagian',
+                'kp.id_konpas',
+                'kf.id_kondisi',
+                'kf.kondisi',
+                'kf.satuan',
+                'kpd.hasil',
+                'p.kd_penyakit',
+                'p.penyakit',
+                'cp.nama_penyakit',
+            ])
+            ->join('transaksi as t', function ($join) {
+                $join->on('cppt.no_transaksi', '=', 't.no_transaksi')
+                    ->on('cppt.kd_kasir', '=', 't.kd_kasir');
+            })
+            ->join('unit as u', 't.kd_unit', '=', 'u.kd_unit')
+            ->leftJoin('mr_anamnesis as a', function ($j) {
+                $j->on('a.kd_pasien', '=', 't.kd_pasien')
+                    ->on('a.kd_unit', '=', 't.kd_unit')
+                    ->on('a.urut_cppt', '=', 'cppt.urut_total');
+            })
+            ->leftJoin('cppt_tindak_lanjut as ctl', function ($j) {
+                $j->on('ctl.no_transaksi', '=', 'cppt.no_transaksi')
+                    ->on('ctl.kd_kasir', '=', 'cppt.kd_kasir')
+                    ->on('ctl.tanggal', '=', 'cppt.tanggal')
+                    ->on('ctl.urut', '=', 'cppt.urut_total');
+            })
+            ->leftJoin('mr_konpas as kp', function ($j) {
+                $j->on('kp.kd_pasien', '=', 't.kd_pasien')
+                    ->on('kp.kd_unit', '=', 't.kd_unit')
+                    ->on('kp.urut_cppt', '=', 'cppt.urut_total');
+            })
+            ->leftJoin('mr_konpasdtl as kpd', 'kpd.id_konpas', '=', 'kp.id_konpas')
+            ->leftJoin('mr_kondisifisik as kf', 'kf.id_kondisi', '=', 'kpd.id_kondisi')
+            ->leftJoin('cppt_penyakit as cp', function ($j) {
+                $j->on('cp.kd_unit', '=', 't.kd_unit')
+                    ->on('cp.no_transaksi', '=', 'cppt.no_transaksi')
+                    ->on('cp.urut_cppt', '=', 'cppt.urut_total');
+            })
+            ->leftJoin('penyakit as p', 'p.kd_penyakit', '=', 'cp.kd_penyakit')
+
+            ->when($additionalWheres, function ($query) use ($additionalWheres) {
+                foreach ($additionalWheres as $column => $value) {
+                    $query->where($column, $value);
+                }
+            })
+            ->orderBy('cppt.tanggal', 'asc')
+            ->orderBy('cppt.jam', 'asc')
+            ->orderBy('kf.urut');
+    }
+
+
 
     public function getCpptAjax(Request $request)
     {
@@ -188,6 +254,7 @@ class CpptController extends Controller
             ];
 
             $getCppt = $this->buildCpptQuery($additionalWheres)->get();
+
             $cppt = $this->transformCpptData($getCppt, false); // includeNames = false
 
 

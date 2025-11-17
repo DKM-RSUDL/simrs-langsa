@@ -216,21 +216,12 @@
                                                 </td>
 
                                                 <td>
-                                                    @if ($radIGD->status_order == 1)
-                                                        <button class="btn btn-sm btn-secondary btn-edit-rad"
-                                                            data-kode="{{ intval($radIGD->kd_order) }}"
-                                                            data-bs-target="#editRadiologiModal"><i
-                                                                class="ti-pencil"></i></button>
-                                                    @else
+                                                    @if ($radIGD->status_order != 1)
                                                         <button class="btn btn-sm btn-primary btn-show-rad"
                                                             data-kode="{{ intval($radIGD->kd_order) }}"
                                                             data-bs-target="#showRadiologiModal"><i
                                                                 class="ti-eye"></i></button>
                                                     @endif
-                                                    <button
-                                                        class="btn btn-sm {{ $radIGD->status_order == 1 ? 'btn-delete-rad' : '' }}"
-                                                        data-kode="{{ intval($radIGD->kd_order) }}"><i
-                                                            class="bi bi-x-circle {{ $radIGD->status_order == 1 ? 'text-danger' : 'text-secondary' }}"></i></button>
                                                 </td>
                                             </tr>
                                         @endforeach

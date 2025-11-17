@@ -60,11 +60,9 @@
                 @include('components.navigation')
 
                 <div>
-                    <form method="POST" 
-                          action="{{ route('show-triase.update', [$dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk, 'id' => $data->id]) }}" 
-                          enctype="multipart/form-data" 
-                          id="triaseForm" 
-                          class="form-readonly">
+                    <form method="POST"
+                        action="{{ route('show-triase.update', [$dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk, 'id' => $data->id]) }}"
+                        enctype="multipart/form-data" id="triaseForm" class="form-readonly">
                         @csrf
                         @method('PUT')
 
@@ -96,7 +94,7 @@
                             <div class="row g-4">
 
                                 {{-- VITAL SIGN --}}
-                               <div class="col-12 vital-sign-section">
+                                <div class="col-12 vital-sign-section">
                                     <div class="card-header border-bottom bg-light">
                                         <p class="m-0 fw-bold">Vital Sign</p>
                                     </div>
@@ -121,7 +119,8 @@
                                             </div>
                                             <div class="col-md-3">
                                                 <label for="respiration" class="form-label">Resp (x/mnt)</label>
-                                                <input type="number" class="form-control" name="respiration" id="respiration"
+                                                <input type="number" class="form-control" name="respiration"
+                                                    id="respiration"
                                                     value="{{ old('respiration', $vitalSign['respiration'] ?? '') }}">
                                             </div>
                                         </div>
@@ -135,22 +134,26 @@
                                             </div>
                                             <div class="col-md-2">
                                                 <label for="spo2_tanpa_o2" class="form-label">SpO2 (tanpa O2)</label>
-                                                <input type="number" class="form-control" name="spo2_tanpa_o2" id="spo2_tanpa_o2"
+                                                <input type="number" class="form-control" name="spo2_tanpa_o2"
+                                                    id="spo2_tanpa_o2"
                                                     value="{{ old('spo2_tanpa_o2', $vitalSign['spo2_tanpa_o2'] ?? '') }}">
                                             </div>
                                             <div class="col-md-2">
                                                 <label for="spo2_dengan_o2" class="form-label">SpO2 (dengan O2)</label>
-                                                <input type="number" class="form-control" name="spo2_dengan_o2" id="spo2_dengan_o2"
+                                                <input type="number" class="form-control" name="spo2_dengan_o2"
+                                                    id="spo2_dengan_o2"
                                                     value="{{ old('spo2_dengan_o2', $vitalSign['spo2_dengan_o2'] ?? '') }}">
                                             </div>
                                             <div class="col-md-3">
                                                 <label for="tinggi_badan" class="form-label">TB (cm)</label>
-                                                <input type="number" class="form-control" name="tinggi_badan" id="tinggi_badan"
+                                                <input type="number" class="form-control" name="tinggi_badan"
+                                                    id="tinggi_badan"
                                                     value="{{ old('tinggi_badan', $vitalSign['tinggi_badan'] ?? '') }}">
                                             </div>
                                             <div class="col-md-3">
                                                 <label for="berat_badan" class="form-label">BB (Kg)</label>
-                                                <input type="number" class="form-control" name="berat_badan" id="berat_badan"
+                                                <input type="number" class="form-control" name="berat_badan"
+                                                    id="berat_badan"
                                                     value="{{ old('berat_badan', $vitalSign['berat_badan'] ?? '') }}">
                                             </div>
                                         </div>
@@ -158,7 +161,7 @@
                                 </div>
                                 {{-- END VITAL SIGN --}}
 
-                                <div class="col-md-6">
+                                <div class="col-md-6 triase-label-section">
                                     <div class="card-header border-bottom">
                                         <p class="m-0 fw-bold">Air Way</p>
                                     </div>
@@ -178,10 +181,8 @@
 
                                         @foreach ($airways as [$label, $class, $id])
                                             <div class="form-check mt-2">
-                                                <input type="checkbox"
-                                                    class="form-check-input {{ $class }}"
-                                                    name="airway[]"
-                                                    value="{{ $label }}"
+                                                <input type="checkbox" class="form-check-input {{ $class }}"
+                                                    name="airway[]" value="{{ $label }}"
                                                     id="{{ $id }}"
                                                     {{ in_array($label, $airwaySelected) ? 'checked' : '' }}>
 
@@ -196,7 +197,7 @@
                                 {{-- END AIRWAY --}}
 
                                 {{-- BREATHING --}}
-                                <div class="col-md-6">
+                                <div class="col-md-6 triase-label-section">
                                     <div class="card-header border-bottom">
                                         <p class="m-0 fw-bold">Breathing</p>
                                     </div>
@@ -217,12 +218,10 @@
 
                                         @foreach ($breathings as [$label, $class, $id])
                                             <div class="form-check mt-2">
-                                                <input type="checkbox"
-                                                    class="form-check-input {{ $class }}"
-                                                    name="breathing[]"
-                                                    value="{{ $label }}"
+                                                <input type="checkbox" class="form-check-input {{ $class }}"
+                                                    name="breathing[]" value="{{ $label }}"
                                                     id="{{ $id }}"
-                                                    @if(in_array($label, $data->triase['breathing'] ?? [])) checked @endif>
+                                                    @if (in_array($label, $data->triase['breathing'] ?? [])) checked @endif>
 
                                                 <label class="form-check-label" for="{{ $id }}">
                                                     {{ $label }}
@@ -235,7 +234,7 @@
                                 {{-- END BREATHING --}}
 
                                 {{-- CIRCULATION --}}
-                                <div class="col-md-6">
+                                <div class="col-md-6 triase-label-section">
                                     <div class="card-header border-bottom">
                                         <p class="m-0 fw-bold">Circulation</p>
                                     </div>
@@ -264,12 +263,10 @@
                                         @foreach ($circulations as [$label, $class])
                                             @php $id = Str::slug($label); @endphp
                                             <div class="form-check mt-2">
-                                                <input type="checkbox"
-                                                    class="form-check-input {{ $class }}"
-                                                    name="circulation[]"
-                                                    value="{{ $label }}"
+                                                <input type="checkbox" class="form-check-input {{ $class }}"
+                                                    name="circulation[]" value="{{ $label }}"
                                                     id="{{ $id }}"
-                                                    @if(in_array($label, $data->triase['circulation'] ?? [])) checked @endif>
+                                                    @if (in_array($label, $data->triase['circulation'] ?? [])) checked @endif>
 
                                                 <label class="form-check-label" for="{{ $id }}">
                                                     {{ $label }}
@@ -282,7 +279,7 @@
                                 {{-- END CIRCULATION --}}
 
                                 {{-- DISABILITY --}}
-                                <div class="col-md-6">
+                                <div class="col-md-6 triase-label-section">
                                     <div class="card-header border-bottom">
                                         <p class="m-0 fw-bold">Disability</p>
                                     </div>
@@ -307,12 +304,10 @@
                                         @foreach ($disabilities as [$label, $class])
                                             @php $id = Str::slug($label); @endphp
                                             <div class="form-check mt-2">
-                                                <input type="checkbox"
-                                                    class="form-check-input {{ $class }}"
-                                                    name="disability[]"
-                                                    value="{{ $label }}"
+                                                <input type="checkbox" class="form-check-input {{ $class }}"
+                                                    name="disability[]" value="{{ $label }}"
                                                     id="{{ $id }}"
-                                                    @if(in_array($label, $data->triase['disability'] ?? [])) checked @endif>
+                                                    @if (in_array($label, $data->triase['disability'] ?? [])) checked @endif>
 
                                                 <label class="form-check-label" for="{{ $id }}">
                                                     {{ $label }}
@@ -340,15 +335,15 @@
                                     <div class="d-flex align-items-center w-100">
                                         <p class="fw-medium text-primary m-0 text-nowrap">Kesimpulan Triase :</p>
                                         <button type="button" id="triaseStatusLabel"
-                                                class="btn ms-3 w-100 {{ $btnClass }}"
-                                                data-bs-toggle="modal" data-bs-target="#kodeTriaseModal">
+                                            class="btn ms-3 w-100 {{ $btnClass }}" data-bs-toggle="modal"
+                                            data-bs-target="#kodeTriaseModal">
                                             {{ $currentTriase ?: 'Belum Ditentukan' }}
                                         </button>
 
                                         <input type="hidden" name="kd_triase" id="kd_triase"
-                                               value="{{ old('kd_triase', $data->kode_triase ?? '') }}">
+                                            value="{{ old('kd_triase', $data->kode_triase ?? '') }}">
                                         <input type="hidden" name="ket_triase" id="ket_triase"
-                                               value="{{ $currentTriase }}">
+                                            value="{{ $currentTriase }}">
                                     </div>
                                 </div>
 
@@ -356,7 +351,7 @@
 
                             <div class="mt-4 d-none text-end" id="editActions">
                                 <x-button-submit />
-                            </div>     
+                            </div>
                         </x-content-card>
                     </form>
                 </div>
@@ -392,105 +387,125 @@
     </div>
     @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.triase.modal')
 
-@push('js')
-@include('unit-pelayanan.gawat-darurat.action-gawat-darurat.triase.manage.index')
-<script>
-    $(document).ready(function () {
+    @push('js')
+        @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.triase.manage.index')
+        <script>
+            $(document).ready(function() {
 
-        const $form = $("#triaseForm");
-        const $btnEdit = $("#btnEdit");
-        const $editActions = $("#editActions");
-        let isEditing = false;
+                $('.triase-label-section .form-check-input').prop('disabled', true);
 
-        // Simpan state awal form
-        const initialFormState = $form.serialize();
+                const $form = $("#triaseForm");
+                const $btnEdit = $("#btnEdit");
+                const $editActions = $("#editActions");
+                let isEditing = false;
 
-        // Kontrol Vital Sign
-        const $vitalInputs = $(".vital-sign-section input, .vital-sign-section select, .vital-sign-section textarea");
+                // Simpan state awal form
+                const initialFormState = $form.serialize();
 
-        function toggleVitalSign(editable) {
-            $vitalInputs.each(function() {
-                const $el = $(this);
-                if (editable) {
-                    $el.prop('disabled', false)
-                       .css({ 'pointer-events': '', 'opacity': '', 'background-color': '' });
-                } else {
-                    $el.prop('disabled', true)
-                       .css({ 'pointer-events': 'none', 'opacity': '0.65', 'background-color': '#f8f9fa' });
-                }
-            });
-        }
+                // Kontrol Vital Sign
+                const $vitalInputs = $(
+                    ".vital-sign-section input, .vital-sign-section select, .vital-sign-section textarea");
 
-        // Awal: Vital Sign disabled
-        toggleVitalSign(false);
-
-        $btnEdit.on("click", function () {
-            isEditing = !isEditing;
-
-            if (isEditing) {
-                // Masuk ke mode edit
-                $form.removeClass("form-readonly");
-                $editActions.removeClass("d-none");
-                $btnEdit.text("Cancel Edit").removeClass("btn-primary").addClass("btn-secondary");
-
-                // Aktifkan Vital Sign
-                toggleVitalSign(true);
-
-            } else {
-                // Keluar mode edit
-                if (initialFormState !== $form.serialize()) {
-                    const modal = new bootstrap.Modal(document.getElementById("modalBatalEdit"));
-                    modal.show();
-
-                    $("#cancelYes").off().on("click", function () {
-                        // Reset form ke state awal
-                        const params = new URLSearchParams(initialFormState);
-                        $form.find("input, select, textarea").each(function () {
-                            const $el = $(this);
-                            const name = $el.attr("name");
-                            if (!name) return;
-
-                            if ($el.is(":checkbox")) {
-                                const values = params.getAll(name);
-                                $el.prop("checked", values.includes($el.val()));
-                            } else {
-                                $el.val(params.get(name) || "");
-                            }
-
-
-                        });
-
-                      $('#triaseStatusLabel')
-                        .removeClass('btn-primary btn-secondary btn-success btn-danger btn-warning btn-info btn-light btn-dark')
-                        .addClass('{{ $triaseColor[$currentTriase] }}');
-
-                        // Kembali ke readonly
-                        $form.addClass("form-readonly");
-                        $editActions.addClass("d-none");
-                        $btnEdit.text("Edit").removeClass("btn-secondary").addClass("btn-primary");
-                        toggleVitalSign(false); // Vital Sign kembali disabled
-
-                        modal.hide();
+                function toggleVitalSign(editable) {
+                    $vitalInputs.each(function() {
+                        const $el = $(this);
+                        if (editable) {
+                            $el.prop('disabled', false)
+                                .css({
+                                    'pointer-events': '',
+                                    'opacity': '',
+                                    'background-color': ''
+                                });
+                        } else {
+                            $el.prop('disabled', true)
+                                .css({
+                                    'pointer-events': 'none',
+                                    'opacity': '0.65',
+                                    'background-color': '#f8f9fa'
+                                });
+                        }
                     });
+                }
 
-                    $("#cancelNo").off().on("click", function () {
-                        isEditing = true;
+                // Awal: Vital Sign disabled
+                toggleVitalSign(false);
+
+                $btnEdit.on("click", function() {
+                    isEditing = !isEditing;
+
+                    if (isEditing) {
+                        // Masuk ke mode edit
                         $form.removeClass("form-readonly");
                         $editActions.removeClass("d-none");
                         $btnEdit.text("Cancel Edit").removeClass("btn-primary").addClass("btn-secondary");
-                        toggleVitalSign(true); // Tetap aktif
-                    });
+                        $('.triase-label-section .form-check-input').prop('disabled', false);
 
-                } else {
-                    // Tidak ada perubahan
-                    $form.addClass("form-readonly");
-                    $editActions.addClass("d-none");
-                    $btnEdit.text("Edit").removeClass("btn-secondary").addClass("btn-primary");
-                    toggleVitalSign(false); // Vital Sign kembali disabled
-                }
-            }
-        });
-    });
-</script>
-@endpush
+                        // Aktifkan Vital Sign
+                        toggleVitalSign(true);
+
+                    } else {
+                        // Keluar mode edit
+                        if (initialFormState !== $form.serialize()) {
+                            const modal = new bootstrap.Modal(document.getElementById("modalBatalEdit"));
+                            modal.show();
+
+                            $("#cancelYes").off().on("click", function() {
+
+                                location.reload();
+
+                                // Reset form ke state awal
+                                const params = new URLSearchParams(initialFormState);
+                                $form.find("input, select, textarea").each(function() {
+                                    const $el = $(this);
+                                    const name = $el.attr("name");
+                                    if (!name) return;
+
+                                    if ($el.is(":checkbox")) {
+                                        const values = params.getAll(name);
+                                        $el.prop("checked", values.includes($el.val()));
+                                    } else {
+                                        $el.val(params.get(name) || "");
+                                    }
+
+
+                                });
+
+                                $('#triaseStatusLabel')
+                                    .removeClass(
+                                        'btn-primary btn-secondary btn-success btn-danger btn-warning btn-info btn-light btn-dark'
+                                    )
+                                    .addClass('{{ $triaseColor[$currentTriase] }}');
+
+                                // Kembali ke readonly
+                                $form.addClass("form-readonly");
+                                $editActions.addClass("d-none");
+                                $btnEdit.text("Edit").removeClass("btn-secondary").addClass(
+                                    "btn-primary");
+                                $('.triase-label-section .form-check-input').prop('disabled', true);
+                                toggleVitalSign(false); // Vital Sign kembali disabled
+
+                                modal.hide();
+                            });
+
+                            $("#cancelNo").off().on("click", function() {
+                                isEditing = true;
+                                $form.removeClass("form-readonly");
+                                $editActions.removeClass("d-none");
+                                $btnEdit.text("Cancel Edit").removeClass("btn-primary").addClass(
+                                    "btn-secondary");
+                                toggleVitalSign(true); // Tetap aktif
+                            });
+
+                        } else {
+                            // Tidak ada perubahan
+                            $form.addClass("form-readonly");
+                            $editActions.addClass("d-none");
+                            $btnEdit.text("Edit").removeClass("btn-secondary").addClass("btn-primary");
+                            toggleVitalSign(false); // Vital Sign kembali disabled
+                        }
+                    }
+                });
+            });
+        </script>
+    @endpush
 @endsection
