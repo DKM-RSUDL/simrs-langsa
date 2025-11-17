@@ -209,6 +209,8 @@ class CpptController extends Controller
             ->leftJoin('mr_anamnesis as a', function ($j) {
                 $j->on('a.kd_pasien', '=', 't.kd_pasien')
                     ->on('a.kd_unit', '=', 't.kd_unit')
+                    ->on('a.tgl_masuk', '=', 't.tgl_transaksi')
+                    ->on('a.urut_masuk', '=', 't.urut_masuk')
                     ->on('a.urut_cppt', '=', 'cppt.urut_total');
             })
             ->leftJoin('cppt_tindak_lanjut as ctl', function ($j) {
@@ -920,21 +922,21 @@ class CpptController extends Controller
 
                 CpptPenyakit::create($diagInsertData);
             }
-             // Store anamnesis
-            $lastUrutAnamnesisMax = MrAnamnesis::where('kd_pasien', $kd_pasien)
-                ->where('kd_unit', $kd_unit)
-                ->where('urut_masuk', $urut_masuk)
-                ->whereDate('tgl_masuk', $tgl_masuk)
+            // Store anamnesis
+            $lastUrutAnamnesisMax = MrAnamnesis::where('kd_pasien', $kunjungan->kd_pasien)
+                ->where('kd_unit', $kunjungan->kd_unit)
+                ->where('urut_masuk', $kunjungan->urut_masuk)
+                ->whereDate('tgl_masuk', $kunjungan->tgl_masuk)
                 ->orderBy('urut', 'desc')
                 ->first();
 
-        
+
             $lastUrutAnamnesisMax = ($lastUrutAnamnesisMax->urut ?? 0) + 1;
 
             $anamnesisInsertData = [
                 'kd_pasien' => $kunjungan->kd_pasien,
                 'kd_unit' => $kunjungan->kd_unit,
-                'tgl_masuk' => $tgl_masuk,
+                'tgl_masuk' => $kunjungan->tgl_masuk,
                 'urut_masuk' => $kunjungan->urut_masuk,
                 'urut_cppt' => $lastUrutTotalCppt,
                 'urut' => $lastUrutAnamnesisMax,
@@ -1100,7 +1102,7 @@ class CpptController extends Controller
 
 
 
-           
+
 
             $konpas = MrKonpas::where('kd_pasien', $kunjungan->kd_pasien)
                 ->where('kd_unit', $unitCpptReq)
@@ -1168,11 +1170,11 @@ class CpptController extends Controller
                 'jam' => date('H:i:s', strtotime($request->jam_masuk_edit))
             ];
 
-             // Update anamnesis
-            MrAnamnesis::where('kd_pasien', $kd_pasien)
-                ->where('kd_unit', $unitCpptReq)
-                ->where('urut_masuk', $urut_masuk)
-                ->where('tgl_masuk', $tgl_masuk)
+            // Update anamnesis
+            MrAnamnesis::where('kd_pasien', $kunjungan->kd_pasien)
+                ->where('kd_unit', $kunjungan->kd_unit)
+                ->whereDate('tgl_masuk', $kunjungan->tgl_masuk)
+                ->where('urut_masuk', $kunjungan->urut_masuk)
                 ->where('urut_cppt', $urutCpptReq)
                 ->update([
                     'anamnesis' => $request->anamnesis,
@@ -1207,7 +1209,6 @@ class CpptController extends Controller
 
                 CpptPenyakit::create($diagInsertData);
             }
-
 
 
             // Save instruksi PPA using private function
@@ -1464,7 +1465,8 @@ class CpptController extends Controller
             ->leftJoin('mr_anamnesis as a', function ($j) {
                 $j->on('a.kd_pasien', '=', 't.kd_pasien')
                     ->on('a.kd_unit', '=', 't.kd_unit')
-                    // ->on('a.tgl_masuk', '=', 'cppt.tanggal')
+                    ->on('a.tgl_masuk', '=', 't.tgl_transaksi')
+                    ->on('a.urut_masuk', '=', 't.urut_masuk')
                     ->on('a.urut_cppt', '=', 'cppt.urut_total');
             })
             // tindak lanjut (KONSISTEN: gunakan urut_total)
