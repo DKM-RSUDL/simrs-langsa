@@ -149,7 +149,8 @@
 
                             <!-- Button "Tambah" di sebelah kanan -->
                             <div class="col-md-3 text-end">
-                                <a href="{{ route('operasi.pelayanan.transfer-pasien.create', [$dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk]) }}" class="btn btn-primary">
+                                <a href="{{ route('operasi.pelayanan.transfer-pasien.create', [$dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk]) }}"
+                                    class="btn btn-primary">
                                     <i class="fas fa-shuffle"></i> Pindah Unit Asal
                                 </a>
                             </div>
@@ -199,19 +200,19 @@
                                                 <!-- Action Buttons -->
                                                 <div class="col-auto">
                                                     <div class="action-buttons">
-                                                        <a href="{{ route('rawat-inap.transfer-pasien-antar-ruang.show', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
+                                                        <a href="{{ route('operasi.pelayanan.transfer-pasien.show', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
                                                             class="btn btn-view btn-sm" title="Lihat">
                                                             <i class="ti-eye"></i> Lihat
                                                         </a>
 
                                                         @if ($item->kd_unit == $dataMedis->kd_unit)
-                                                            <a href="{{ route('rawat-inap.transfer-pasien-antar-ruang.edit', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
+                                                            <a href="{{ route('operasi.pelayanan.transfer-pasien.edit', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
                                                                 class="btn btn-edit btn-sm" title="Edit">
                                                                 <i class="ti-pencil"></i> Edit
                                                             </a>
 
                                                             <form
-                                                                action="{{ route('rawat-inap.transfer-pasien-antar-ruang.destroy', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
+                                                                action="{{ route('operasi.pelayanan.transfer-pasien.destroy', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
                                                                 method="POST" class="delete-form d-inline">
                                                                 @csrf
                                                                 @method('DELETE')

@@ -254,28 +254,14 @@ class TransferPasienController extends Controller
         }
     }
 
-    public function show($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $id)
+    public function show($kd_pasien, $tgl_masuk, $urut_masuk, $id)
     {
         $transfer = RmeTransferPasienAntarRuang::findOrFail($id);
 
-        $dataMedis = $this->baseService->getDataMedis($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
-
+        $dataMedis = $this->baseService->getDataMedis($this->kdUnit, $kd_pasien, $tgl_masuk, $urut_masuk);
         if (!$dataMedis) {
             abort(404, 'Data medis not found');
         }
-
-        // Menghitung umur
-        if ($dataMedis->pasien && $dataMedis->pasien->tgl_lahir) {
-            $dataMedis->pasien->umur = Carbon::parse($dataMedis->pasien->tgl_lahir)->age;
-        } else {
-            $dataMedis->pasien->umur = 'Tidak Diketahui';
-        }
-
-        $unit = Unit::where('aktif', 1)->get();
-        $unitTujuan = Unit::where('kd_bagian', 1)
-            ->where('aktif', 1)
-            ->whereNot('kd_unit', $kd_unit)
-            ->get();
 
         $petugas = HrdKaryawan::where('kd_jenis_tenaga', 2)
             ->where('kd_detail_jenis_tenaga', 1)
@@ -287,31 +273,21 @@ class TransferPasienController extends Controller
         // Decode JSON fields
         $transfer = $this->decodeJsonFields($transfer);
 
-        return view('unit-pelayanan.rawat-inap.pelayanan.transfer-pasien-antar-ruang.show', compact('transfer', 'dataMedis', 'unit', 'unitTujuan', 'petugas', 'dokter', 'alergiPasien'));
+        return view('unit-pelayanan.operasi.pelayanan.transfer.show', compact('transfer', 'dataMedis', 'petugas', 'dokter', 'alergiPasien'));
     }
 
-    public function edit($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $id)
+    public function edit($kd_pasien, $tgl_masuk, $urut_masuk, $id)
     {
-        $transfer = RmeTransferPasienAntarRuang::findOrFail($id);
+        $transfer = RmeTransferPasienAntarRuang::with(['serahTerima'])->where('id', $id)->first();
+        if (!$transfer) {
+            abort(404, 'Data transfer not found');
+        }
 
-        $dataMedis = $this->baseService->getDataMedis($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
+        $dataMedis = $this->baseService->getDataMedis($this->kdUnit, $kd_pasien, $tgl_masuk, $urut_masuk);
 
         if (!$dataMedis) {
             abort(404, 'Data medis not found');
         }
-
-        // Menghitung umur
-        if ($dataMedis->pasien && $dataMedis->pasien->tgl_lahir) {
-            $dataMedis->pasien->umur = Carbon::parse($dataMedis->pasien->tgl_lahir)->age;
-        } else {
-            $dataMedis->pasien->umur = 'Tidak Diketahui';
-        }
-
-        $unit = Unit::where('aktif', 1)->get();
-        $unitTujuan = Unit::where('kd_bagian', 1)
-            ->where('aktif', 1)
-            ->whereNot('kd_unit', $kd_unit)
-            ->get();
 
         $petugas = HrdKaryawan::where('kd_jenis_tenaga', 2)
             ->where('kd_detail_jenis_tenaga', 1)
@@ -323,13 +299,14 @@ class TransferPasienController extends Controller
         // Decode JSON fields
         $transfer = $this->decodeJsonFields($transfer);
 
-        return view('unit-pelayanan.rawat-inap.pelayanan.transfer-pasien-antar-ruang.edit', compact('transfer', 'dataMedis', 'unit', 'unitTujuan', 'petugas', 'dokter', 'alergiPasien'));
+        return view('unit-pelayanan.operasi.pelayanan.transfer.edit', compact('transfer', 'dataMedis', 'petugas', 'dokter', 'alergiPasien'));
     }
 
-    public function update(Request $request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $id)
+    public function update(Request $request, $kd_pasien, $tgl_masuk, $urut_masuk, $id)
     {
+        DB::beginTransaction();
+
         try {
-            DB::beginTransaction();
 
             $transfer = RmeTransferPasienAntarRuang::findOrFail($id);
 
@@ -337,7 +314,7 @@ class TransferPasienController extends Controller
             $validated = $this->validateTransferData($request);
 
             // Prepare data untuk update
-            $transferData = $this->prepareTransferData($validated, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, true);
+            $transferData = $this->prepareTransferData($validated, $this->kdUnit, $kd_pasien, $tgl_masuk, $urut_masuk, true);
 
             // Update data
             $transfer->update($transferData);
@@ -365,12 +342,10 @@ class TransferPasienController extends Controller
 
             DB::commit();
 
-            return redirect()->route('rawat-inap.transfer-pasien-antar-ruang.index', [
-                $kd_unit,
+            return redirect()->route('operasi.pelayanan.transfer-pasien.index', [
                 $kd_pasien,
                 $tgl_masuk,
                 $urut_masuk,
-                $transfer->id
             ])->with('success', 'Data transfer pasien berhasil diperbarui.');
         } catch (ValidationException $e) {
             DB::rollback();
@@ -381,14 +356,13 @@ class TransferPasienController extends Controller
         }
     }
 
-    public function destroy($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $id)
+    public function destroy($kd_pasien, $tgl_masuk, $urut_masuk, $id)
     {
         try {
             $transfer = RmeTransferPasienAntarRuang::findOrFail($id);
             $transfer->delete();
 
-            return redirect()->route('rawat-inap.transfer-pasien-antar-ruang.index', [
-                $kd_unit,
+            return redirect()->route('operasi.pelayanan.transfer-pasien.index', [
                 $kd_pasien,
                 $tgl_masuk,
                 $urut_masuk
@@ -405,12 +379,12 @@ class TransferPasienController extends Controller
     {
         return $request->validate([
             // Unit dan Kamar
-            'kd_unit_tujuan' => 'required|string',
+            'kd_unit_tujuan' => 'nullable|string',
 
             // Petugas yang menyerahkan
-            'petugas_menyerahkan' => 'required|string',
-            'tanggal_menyerahkan' => 'required|date',
-            'jam_menyerahkan' => 'required',
+            'petugas_menyerahkan' => 'nullable|string',
+            'tanggal_menyerahkan' => 'nullable|date',
+            'jam_menyerahkan' => 'nullable',
 
             // Informasi Medis
             'dokter_merawat' => 'nullable|string',
