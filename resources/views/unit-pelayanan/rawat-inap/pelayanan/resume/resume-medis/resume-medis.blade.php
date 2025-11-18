@@ -53,7 +53,7 @@
                     <th>Tanggal Masuk</th>
                     <th>Tanggal Keluar</th>
                     <th>LOS</th>
-                    <th>Kinik/Ruang</th>
+                    {{-- <th>Kinik/Ruang</th> --}}
                     <th>Aksi</th>
                 </tr>
             </thead>
@@ -69,14 +69,23 @@
                             {{ $dataMedis->tgl_keluar ? \Carbon\Carbon::parse($dataMedis->tgl_keluar)->format('Y-m-d') : '-' }}
                         </td>
                         <td>-</td>
-                        <td>{{ $dataMedis->unit->nama_unit }}</td>
+                        {{-- <td>{{ $dataMedis->unit->nama_unit }}</td> --}}
                         <td>
-                            @if ($post->status == 0)
+                            {{-- @if ($post->status == 0)
                                 <a href="javascript:void(0)" class="btn btn-sm btn-success mb-2 btn-edit-resume"
                                     data-id="{{ $post->id }}">Validasi</a>
-                            @elseif ($post->status == 1)
+                            @elseif ($post->status == 1)s
                                 <a href="javascript:void(0)" class="btn btn-sm btn-info mb-2 btn-view-resume"
                                     data-id="{{ $post->id }}">Lihat</a>
+                            @endif --}}
+
+
+                            @if ($post->status == 0)
+                                <a href="{{ route('rawat-inap.rawat-inap-resume.detail', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, encrypt($post->id)]) }}"
+                                    class="btn btn-sm btn-success mb-2">Validasi</a>
+                            @elseif ($post->status == 1)
+                                <a href="{{ route('rawat-inap.rawat-inap-resume.detail', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, encrypt($post->id)]) }}"
+                                    class="btn btn-sm btn-info mb-2">Lihat</a>
                             @endif
                         </td>
                     </tr>
@@ -147,4 +156,3 @@
         });
     </script>
 @endpush
-

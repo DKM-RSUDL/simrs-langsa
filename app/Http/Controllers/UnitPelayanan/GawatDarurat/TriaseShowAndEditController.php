@@ -4,7 +4,6 @@ namespace App\Http\Controllers\UnitPelayanan\GawatDarurat;
 
 use App\Models\DataTriase;
 use App\Models\Kunjungan;
-use App\Services\AsesmenService;
 use Exception;
 use App\Services\BaseService;
 use Illuminate\Http\Request;
@@ -14,14 +13,13 @@ class TriaseShowAndEditController extends Controller
 {
     protected $baseService;
     protected $kdUnit;
-    protected $asesmenService;
-    protected $IGDservice;
+
     public function __construct()
     {
         $this->baseService = new BaseService();
         $this->kdUnit = 3; // Gawat Darurat
-        $this->asesmenService = new AsesmenService();
     }
+
     public function index($kd_pasien, $tgl_masuk, $urut_masuk)
     {
         $dataMedis = $this->baseService->getDataMedis(
@@ -38,7 +36,7 @@ class TriaseShowAndEditController extends Controller
             abort(404, 'Data triase not found');
         }
 
-        $vitalSign = $this->asesmenService->getVitalSignData($dataMedis->kd_kasir, $dataMedis->no_transaksi);
+        $vitalSign = json_decode($data->vital_sign, true);
         $data->triase = json_decode($data->triase, true);
 
 
@@ -110,7 +108,7 @@ class TriaseShowAndEditController extends Controller
         $triase->update([
             'vital_sign'   => json_encode($vitalSign),
             'triase'       => json_encode($abcdn),
-            'kd_triase' => $request->kd_triase,
+            'kode_triase' => $request->kd_triase,
             'hasil_triase' => $request->ket_triase,
         ]);
 
@@ -129,5 +127,3 @@ class TriaseShowAndEditController extends Controller
         }
     }
 }
-
-

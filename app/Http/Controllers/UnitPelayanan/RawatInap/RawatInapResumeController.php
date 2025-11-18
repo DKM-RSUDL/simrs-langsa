@@ -7,7 +7,11 @@ use App\Models\Dokter;
 use App\Models\DokterKlinik;
 use App\Models\ICD9Baru;
 use App\Models\Kunjungan;
+use App\Models\ListTindakanPasien;
+use App\Models\MrPenyakit;
 use App\Models\Penyakit;
+use App\Models\RmeAsesmen;
+use App\Models\RmeAsesmenPemeriksaanFisik;
 use App\Models\RMEResume;
 use App\Models\RmeResumeDtl;
 use App\Models\SegalaOrder;
@@ -19,31 +23,24 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use App\Services\AsesmenService;
-
+use App\Services\BaseService;
+use Barryvdh\DomPDF\Facade\Pdf;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class RawatInapResumeController extends Controller
 {
     protected $asesmenService;
+    private $baseService;
     public function __construct()
     {
         $this->middleware('can:read unit-pelayanan/rawat-inap');
         $this->asesmenService = new AsesmenService();
+        $this->baseService = new BaseService();
     }
 
     public function index(Request $request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
     {
-        $dataMedis = Kunjungan::with(['pasien.golonganDarah', 'dokter', 'customer', 'unit'])
-            ->join('transaksi as t', function ($join) {
-                $join->on('kunjungan.kd_pasien', '=', 't.kd_pasien');
-                $join->on('kunjungan.kd_unit', '=', 't.kd_unit');
-                $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
-                $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
-            })
-            ->where('kunjungan.kd_pasien', $kd_pasien)
-            ->where('kunjungan.kd_unit', $kd_unit)
-            ->where('kunjungan.urut_masuk', $urut_masuk)
-            ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
-            ->first();
+        $dataMedis = $this->baseService->getDataMedis($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
 
 
         if (!$dataMedis) {
@@ -162,7 +159,7 @@ class RawatInapResumeController extends Controller
         $kodeICD9 = ICD9Baru::all();
 
         // Mengambil data obat
-        $riwayatObatHariIni = $this->getRiwayatObatHariIni($kd_pasien, $tgl_masuk);
+        $riwayatObatHariIni = $this->getRiwayatObatHariIni($dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk);
 
         // unit palayanan
         $unitKonsul = Unit::where('kd_bagian', 2)
@@ -196,6 +193,108 @@ class RawatInapResumeController extends Controller
         );
     }
 
+    public function detail($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $idHash)
+    {
+        $dataMedis = $this->baseService->getDataMedis($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
+
+        if (!$dataMedis) {
+            abort(404, 'Data not found');
+        }
+
+        // ambil data Resume
+        $dataResume = RMEResume::where('kd_pasien', $dataMedis->kd_pasien)
+            ->whereDate('tgl_masuk', $dataMedis->tgl_masuk)
+            ->where('urut_masuk', $dataMedis->urut_masuk)
+            ->where('kd_unit', $dataMedis->kd_unit)
+            ->orderBy('tgl_masuk', 'desc')
+            ->first();
+
+        if (!$dataResume) {
+            abort(404, 'Data resume not found');
+        }
+
+        // Mengambil data hasil pemeriksaan laboratorium
+        $dataLabor = SegalaOrder::with(['details', 'details.produk', 'produk.labHasil'])
+            ->where('kd_pasien', $dataMedis->kd_pasien)
+            ->whereDate('tgl_masuk', $dataMedis->tgl_masuk)
+            ->where('urut_masuk', $dataMedis->urut_masuk)
+            ->where('kd_unit', $dataMedis->kd_unit)
+            ->where('kategori', 'LB')
+            // ->whereHas('details.produk', function ($query) {
+            //     $query->where('kategori', 'LB');
+            // })
+            ->orderBy('tgl_order', 'desc')
+            ->get();
+
+        // Transform lab results
+        $dataLabor->transform(function ($item) {
+            foreach ($item->details as $detail) {
+                $labResults = $this->getLabData(
+                    $item->kd_order,
+                    $item->kd_pasien,
+                    $item->tgl_masuk,
+                    $item->kd_unit,
+                    $item->urut_masuk
+                );
+                $detail->labResults = $labResults;
+            }
+            return $item;
+        });
+
+        // Mengambil data hasil pemeriksaan radiologi
+        $dataRadiologi = SegalaOrder::with(['details.produk'])
+            ->where('kd_pasien', $dataMedis->kd_pasien)
+            ->whereDate('tgl_masuk', $dataMedis->tgl_masuk)
+            ->where('urut_masuk', $dataMedis->urut_masuk)
+            ->where('kd_unit', $dataMedis->kd_unit)
+            ->whereHas('details.produk', function ($query) {
+                $query->where('kategori', 'RD');
+            })
+            ->orderBy('tgl_order', 'desc')
+            ->get();
+
+        // Mengambil data obat
+        $riwayatObatHariIni = $this->getRiwayatObatHariIni($dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk);
+        $resepPulang = $this->getObatPulang($dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk);
+
+        // tindakan
+        $tindakan = ListTindakanPasien::with(['produk'])
+            ->where('kd_pasien', $dataMedis->kd_pasien)
+            ->where('kd_unit', $dataMedis->kd_unit)
+            ->whereDate('tgl_masuk', date('Y-m-d', strtotime($dataMedis->tgl_masuk)))
+            ->where('urut_masuk', $dataMedis->urut_masuk)
+            ->get();
+
+        // get last ttv
+        $vitalSign = $this->asesmenService->getVitalSignData($dataMedis->kd_kasir, $dataMedis->no_transaksi);
+
+        // Kode ICD 10 (Koder)
+        $kodeICD = Penyakit::all();
+        // Kode ICD-9 CM (Koder)
+        $kodeICD9 = ICD9Baru::all();
+        // unit palayanan
+        $unitKonsul = Unit::where('kd_bagian', 2)
+            ->where('aktif', 1)
+            ->get();
+
+        return view(
+            'unit-pelayanan.rawat-inap.pelayanan.resume.resume-medis.detail',
+            compact(
+                'dataMedis',
+                'dataResume',
+                'dataLabor',
+                'dataRadiologi',
+                'riwayatObatHariIni',
+                'vitalSign',
+                'kodeICD',
+                'kodeICD9',
+                'unitKonsul',
+                'resepPulang',
+                'tindakan'
+            )
+        );
+    }
+
     public function update(Request $request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $id)
     {
         DB::beginTransaction();
@@ -203,11 +302,14 @@ class RawatInapResumeController extends Controller
 
             $validator = Validator::make($request->all(), [
                 'anamnesis' => 'required|string',
-                'pemeriksaan_penunjang' => 'required|string',
+                'pemeriksaan_penunjang' => 'nullable|string',
                 'diagnosis' => 'required|json',
-                'icd_10' => 'required|json',
+                'penyakit' => 'required|json',
+                // 'icd_10' => 'required|json',
                 'icd_9' => 'required|json',
-                'alergi' => 'nullable|json',
+                // 'alergi' => 'nullable|json',
+
+                // RmeResumeDtl
                 'tindak_lanjut_code' => 'required',
                 'tindak_lanjut_name' => 'required',
                 'tgl_kontrol_ulang' => 'nullable|string',
@@ -225,9 +327,12 @@ class RawatInapResumeController extends Controller
                 ], 422);
             }
 
-            $resume = RMEResume::where('id', $id)
-                ->where('kd_pasien', $kd_pasien)
-                ->first();
+            // get data medis
+            $dataMedis = $this->baseService->getDataMedis($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
+            if (!$dataMedis) throw new Exception('Data kunjungan tidak ditemukan');
+
+            $resume = RMEResume::find($id);
+            if (empty($resume)) throw new Exception('Data resume tidak ditemukan');
 
             // newline
             $cleanArray = function ($array) {
@@ -236,23 +341,16 @@ class RawatInapResumeController extends Controller
                 }, $array);
             };
 
-            if (!$resume) {
-                DB::rollBack();
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Data resume tidak ditemukan'
-                ], 404);
-            }
-
             // Data baru
             $newDiagnosis = json_decode($request->diagnosis, true);
-            $newIcd10 = json_decode($request->icd_10, true);
+            // $newIcd10 = json_decode($request->icd_10, true);
             $newIcd9 = json_decode($request->icd_9, true);
             $newAlergi = json_decode($request->alergi, true);
 
             // Bersihkan data newline
             $newDiagnosis = $cleanArray($newDiagnosis);
-            $newIcd10 = $cleanArray($newIcd10);
+            $penyakit = json_decode($request->penyakit, true);
+            // $newIcd10 = $cleanArray($newIcd10);
             $newIcd9 = $cleanArray($newIcd9);
             $newAlergi = $cleanArray($newAlergi);
 
@@ -260,9 +358,11 @@ class RawatInapResumeController extends Controller
                 'anamnesis' => trim($request->anamnesis),
                 'pemeriksaan_penunjang' => trim($request->pemeriksaan_penunjang),
                 'diagnosis' => $newDiagnosis,
-                'icd_10' => $newIcd10,
+                'icd_10' => $penyakit,
                 'icd_9' => $newIcd9,
                 'alergi' => $newAlergi,
+                'anjuran_diet' => $request->anjuran_diet,
+                'anjuran_edukasi' => $request->anjuran_edukasi,
                 // 'status' => 1,
                 'user_validasi' => Auth::id()
             ]);
@@ -293,6 +393,33 @@ class RawatInapResumeController extends Controller
                 $resumeDtlData
             );
 
+            // delete mr_penyakit
+            MrPenyakit::where('kd_pasien', $dataMedis->kd_pasien)
+                ->whereDate('tgl_masuk', $dataMedis->tgl_masuk)
+                ->where('urut_masuk', $dataMedis->urut_masuk)
+                ->where('kd_unit', $dataMedis->kd_unit)
+                ->delete();
+
+            // store data ke mr_penyakit
+            $urutPenyakit = 0;
+
+            foreach ($penyakit as $penyakitItem) {
+                MrPenyakit::create([
+                    'kd_penyakit' => $penyakitItem['kd_penyakit'],
+                    'kd_pasien' => $dataMedis->kd_pasien,
+                    'kd_unit' => $dataMedis->kd_unit,
+                    'tgl_masuk' => $dataMedis->tgl_masuk,
+                    'urut_masuk' => $dataMedis->urut_masuk,
+                    'urut' => $urutPenyakit,
+                    'stat_diag' => $penyakitItem['stat_diag'],
+                    'kasus' => $penyakitItem['kasus'],
+                    'tindakan' => 99,
+                    'perawatan' => 99,
+                ]);
+
+                $urutPenyakit++;
+            }
+
             DB::commit();
 
             return response()->json([
@@ -305,7 +432,7 @@ class RawatInapResumeController extends Controller
 
             return response()->json([
                 'success' => false,
-                'message' => 'Terjadi kesalahan saat memperbarui data: ' . $e->getMessage()
+                'message' => $e->getMessage()
             ], 500);
         }
     }
@@ -350,17 +477,148 @@ class RawatInapResumeController extends Controller
     }
 
 
-    private function getRiwayatObatHariIni($kd_pasien, $tgl_masuk)
+    public function pdf($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $idEncrypt)
     {
-        $today = Carbon::today()->toDateString();
+        $resumeId = decrypt($idEncrypt);
+        $resume = RMEResume::with(['pasien', 'rmeResumeDet', 'unit'])
+            ->where('id', $resumeId)
+            ->first();
 
+        $dataMedis = $this->baseService->getDataMedis($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
+
+        if (!$dataMedis) {
+            abort(404, 'Data not found');
+        }
+
+        if (empty($resume)) return back()->with('error', 'Gagal menemukan data resume !');
+
+        // get last ttv
+        $vitalSign = $this->asesmenService->getVitalSignData($dataMedis->kd_kasir, $dataMedis->no_transaksi);
+
+        $sistole = $vitalSign->sistole ?? '-';
+        $distole = $vitalSign->diastole ?? '-';
+        $tdKonpas = "TD : $sistole/$distole mmHg";
+
+        $rrKonpas = $vitalSign->respiration ?? '-';
+        $rr = "RR : $rrKonpas x/mnt";
+
+        $nadiKonpas = $vitalSign->nadi ?? '-';
+        $resp = "Nadi : $nadiKonpas x/mnt";
+
+        $tempKonpas = $vitalSign->suhu ?? '-';
+        $temp = "Suhu : $tempKonpas C";
+
+        $tbKonpas = $vitalSign->tinggi_badan ?? '-';
+        $tb = "TB : $tbKonpas cm";
+
+        $bbKonpas = $vitalSign->berat_badan ?? '-';
+        $bb = "BB : $bbKonpas kg";
+
+        $hasilKonpas = "$tdKonpas, $rr, $resp, $temp, $tb, $bb";
+
+        $resepRawat = $this->getRiwayatObatHariIni($dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk);
+        $resepPulang = $this->getObatPulang($dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk);
+
+        $labor = SegalaOrder::with(['details'])
+            ->where('kd_pasien', $dataMedis->kd_pasien)
+            ->where('kd_unit', $dataMedis->kd_unit)
+            ->whereDate('tgl_masuk', date('Y-m-d', strtotime($dataMedis->tgl_masuk)))
+            ->where('urut_masuk', $dataMedis->urut_masuk)
+            ->where('kategori', 'LB')
+            ->get();
+
+        $radiologi = SegalaOrder::with(['details'])
+            ->where('kd_pasien', $dataMedis->kd_pasien)
+            ->where('kd_unit', $dataMedis->kd_unit)
+            ->whereDate('tgl_masuk', date('Y-m-d', strtotime($dataMedis->tgl_masuk)))
+            ->where('urut_masuk', $dataMedis->urut_masuk)
+            ->where('kategori', 'RD')
+            ->get();
+
+        $tindakan = ListTindakanPasien::with(['produk'])
+            ->where('kd_pasien', $dataMedis->kd_pasien)
+            ->where('kd_unit', $dataMedis->kd_unit)
+            ->whereDate('tgl_masuk', date('Y-m-d', strtotime($dataMedis->tgl_masuk)))
+            ->where('urut_masuk', $dataMedis->urut_masuk)
+            ->get();
+
+
+        $lastAsesmen = RmeAsesmen::with(['pemeriksaanFisik'])
+            ->where('kd_pasien', $dataMedis->kd_pasien)
+            ->where('kd_unit', $dataMedis->kd_unit)
+            ->whereDate('tgl_masuk', date('Y-m-d', strtotime($dataMedis->tgl_masuk)))
+            ->where('urut_masuk', $dataMedis->urut_masuk)
+            ->where('kategori', 1)
+            ->where('sub_kategori', 1)
+            ->first();
+
+        $pemeriksaanFisik = RmeAsesmenPemeriksaanFisik::with(['itemFisik'])
+            ->where('id_asesmen', ($lastAsesmen->id ?? 0))
+            ->where('is_normal', 0)
+            ->get();
+
+        $qrCode = base64_encode(QrCode::format('png')->size(100)->errorCorrection('H')->generate($dataMedis->dokter->nama_lengkap));
+
+        $pdf = Pdf::loadView('unit-pelayanan.rawat-inap.pelayanan.resume.resume-medis.print', compact(
+            'resume',
+            'dataMedis',
+            'hasilKonpas',
+            'labor',
+            'radiologi',
+            'tindakan',
+            'pemeriksaanFisik',
+            'resepRawat',
+            'resepPulang',
+            'qrCode'
+        ))
+            ->setPaper('a4', 'potrait');
+        return $pdf->stream('resume_' . $resume->kd_pasien . '_' . $resume->tgl_konsul . '.pdf');
+    }
+
+    private function getRiwayatObatHariIni($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
+    {
         return DB::table('MR_RESEP')
             ->join('DOKTER', 'MR_RESEP.KD_DOKTER', '=', 'DOKTER.KD_DOKTER')
             ->leftJoin('MR_RESEPDTL', 'MR_RESEP.ID_MRRESEP', '=', 'MR_RESEPDTL.ID_MRRESEP')
             ->leftJoin('APT_OBAT', 'MR_RESEPDTL.KD_PRD', '=', 'APT_OBAT.KD_PRD')
             ->leftJoin('APT_SATUAN', 'APT_OBAT.KD_SATUAN', '=', 'APT_SATUAN.KD_SATUAN')
             ->where('MR_RESEP.KD_PASIEN', $kd_pasien)
-            ->whereDate('MR_RESEP.TGL_ORDER', $today)
+            ->whereDate('MR_RESEP.tgl_masuk', $tgl_masuk)
+            ->where('MR_RESEP.urut_masuk', $urut_masuk)
+            ->where('MR_RESEP.kd_unit', $kd_unit)
+            ->where(function ($query) {
+                $query->where('MR_RESEP.RESEP_PULANG', '!=', 1)
+                    ->orWhereNull('MR_RESEP.RESEP_PULANG');
+            })
+            ->select(
+                'MR_RESEP.TGL_ORDER',
+                'DOKTER.NAMA as NAMA_DOKTER',
+                'MR_RESEP.ID_MRRESEP',
+                'MR_RESEP.STATUS',
+                'MR_RESEPDTL.CARA_PAKAI',
+                'MR_RESEPDTL.JUMLAH',
+                'MR_RESEPDTL.KET',
+                'MR_RESEPDTL.JUMLAH_TAKARAN',
+                'MR_RESEPDTL.SATUAN_TAKARAN',
+                'APT_OBAT.NAMA_OBAT'
+            )
+            ->distinct()
+            ->orderBy('MR_RESEP.TGL_ORDER', 'desc')
+            ->get();
+    }
+
+    private function getObatPulang($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
+    {
+        return DB::table('MR_RESEP')
+            ->join('DOKTER', 'MR_RESEP.KD_DOKTER', '=', 'DOKTER.KD_DOKTER')
+            ->leftJoin('MR_RESEPDTL', 'MR_RESEP.ID_MRRESEP', '=', 'MR_RESEPDTL.ID_MRRESEP')
+            ->leftJoin('APT_OBAT', 'MR_RESEPDTL.KD_PRD', '=', 'APT_OBAT.KD_PRD')
+            ->leftJoin('APT_SATUAN', 'APT_OBAT.KD_SATUAN', '=', 'APT_SATUAN.KD_SATUAN')
+            ->where('MR_RESEP.KD_PASIEN', $kd_pasien)
+            ->whereDate('MR_RESEP.tgl_masuk', $tgl_masuk)
+            ->where('MR_RESEP.urut_masuk', $urut_masuk)
+            ->where('MR_RESEP.kd_unit', $kd_unit)
+            ->where('MR_RESEP.RESEP_PULANG', 1)
             ->select(
                 'MR_RESEP.TGL_ORDER',
                 'DOKTER.NAMA as NAMA_DOKTER',

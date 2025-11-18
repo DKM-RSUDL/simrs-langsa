@@ -253,7 +253,7 @@ class FarmasiController extends Controller
                 'URUT_MASUK' => $kunjungan->urut_masuk,
                 'KD_DOKTER' => $validatedData['kd_dokter'],
                 'ID_MRRESEP' => $ID_MRRESEP,
-                'CAT_RACIKAN' => $validatedData['cat_racikan'] ?? null,
+                'CAT_RACIKAN' => $validatedData['cat_racikan'] ?? '',
                 'TGL_ORDER' => $tglOrder,
                 'JAM_ORDER' => $jamOrder,
                 'STATUS' => '0', // varchar(50)

@@ -51,12 +51,8 @@
                                         <span><i class="bi bi-person-badge me-1"></i>
                                             {{ auth()->user()->roles[0]->name }}</span>
                                     @endif
-                                    @if (isset(auth()->user()->profile->no_hp))
-                                        <span><i class="bi bi-telephone me-1"></i>
-                                            {{ auth()->user()->profile->no_hp }}</span>
-                                    @endif
-                                    @if (isset(auth()->user()->email))
-                                        <span><i class="bi bi-envelope me-1"></i> {{ auth()->user()->email }}</span>
+                                    @if (isset(auth()->user()->karyawan->email))
+                                        <span><i class="bi bi-envelope me-1"></i> {{ auth()->user()->karyawan->email }}</span>
                                     @endif
                                 </div>
                             </div>
@@ -104,7 +100,8 @@
             // Determine if current user is an admin (allow admins to see everything)
             $isAdmin = false;
             if (auth()->check()) {
-                $roleName = optional(optional(auth()->user())->roles[0])->name;
+                // $roleName = optional(optional(auth()->user())->roles[0])->name;
+                $roleName = isset(auth()->user()->roles[0]->name) ? auth()->user()->roles[0]->name : null;
                 $isAdmin = $roleName && in_array(strtolower($roleName), ['admin', 'administrator']);
             }
 

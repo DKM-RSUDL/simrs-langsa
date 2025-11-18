@@ -353,7 +353,7 @@ class FarmasiController extends Controller
                 'URUT_MASUK' => $kunjungan->urut_masuk,
                 'KD_DOKTER' => $validatedData['kd_dokter'],
                 'ID_MRRESEP' => $ID_MRRESEP,
-                'CAT_RACIKAN' => $validatedData['cat_racikan'] ?? null,
+                'CAT_RACIKAN' => $validatedData['cat_racikan'] ?? '',
                 'TGL_ORDER' => $tglOrder,
                 'JAM_ORDER' => $jamOrder,
                 'STATUS' => '0', // varchar(50)
@@ -910,7 +910,7 @@ class FarmasiController extends Controller
         $validator = Validator::make($request->all(), [
             'nama_obat' => 'required|string|max:255',
             'frekuensi' => 'required|string|max:255',
-            'keterangan' => 'required|string|in:Sebelum Makan,Sesudah Makan,Saat Makan',
+            'keterangan' => 'nullable|string|max:255',
             'dosis' => 'required|string|max:255',
             'tindak_lanjut' => 'required|string|in:Lanjut aturan pakai sama,Lanjut aturan pakai berubah,Stop',
             'perubahanpakai' => 'nullable|string|max:255',
@@ -990,7 +990,7 @@ class FarmasiController extends Controller
         $validator = Validator::make($request->all(), [
             'nama_obat' => 'required|string|max:255',
             'frekuensi' => 'required|string|max:255',
-            'keterangan' => 'required|string|in:Sebelum Makan,Sesudah Makan,Saat Makan',
+            'keterangan' => 'nullable|string|max:255',
             'dosis' => 'required|string|max:255',
             'tindak_lanjut' => 'required|string|in:Lanjut aturan pakai sama,Lanjut aturan pakai berubah,Stop',
             'perubahanpakai' => 'nullable|string|max:255',

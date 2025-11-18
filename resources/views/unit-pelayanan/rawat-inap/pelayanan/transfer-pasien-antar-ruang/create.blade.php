@@ -95,6 +95,24 @@
         ];
         $pakaianFields = ['pakaian_atas', 'pakaian_tubuh', 'pakaian_bawah'];
         $gerakFields = ['jalan_kaki', 'kursi_roda_kemandirian'];
+
+        // form action
+        $formAction = route('rawat-inap.transfer-pasien-antar-ruang.store', [
+            $dataMedis->kd_unit,
+            $dataMedis->kd_pasien,
+            $dataMedis->tgl_masuk,
+            $dataMedis->urut_masuk,
+        ]);
+
+        if ($jenisStore == 7) {
+            $formAction = route('rawat-inap.transfer-pasien-antar-ruang.penunjang.store', [
+                $dataMedis->kd_unit,
+                $dataMedis->kd_pasien,
+                $dataMedis->tgl_masuk,
+                $dataMedis->urut_masuk,
+            ]);
+        }
+
     @endphp
 
 
@@ -125,9 +143,7 @@
                 </div>
             @endif
 
-            <form
-                action="{{ route('rawat-inap.transfer-pasien-antar-ruang.store', [$dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk]) }}"
-                method="post">
+            <form action="{{ $formAction }}" method="post">
                 @csrf
 
                 <!-- Informasi Dasar Transfer -->
@@ -167,16 +183,19 @@
                             </div>
 
                             <!-- Kamar -->
-                            <div class="form-group mt-3">
-                                <label for="no_kamar" class="form-label">Kamar <span class="text-danger">*</span></label>
-                                <select name="no_kamar" id="no_kamar" class="form-select select2" required>
-                                    <option value="">--Pilih Kamar--</option>
-                                </select>
-                                @error('no_kamar')
-                                    <div class="invalid-feedback d-block">{{ $message }}</div>
-                                @enderror
-                                <small class="form-text text-muted">Pilih unit tujuan terlebih dahulu</small>
-                            </div>
+                            @if ($jenisStore != 7)
+                                <div class="form-group mt-3">
+                                    <label for="no_kamar" class="form-label">Kamar <span
+                                            class="text-danger">*</span></label>
+                                    <select name="no_kamar" id="no_kamar" class="form-select select2" required>
+                                        <option value="">--Pilih Kamar--</option>
+                                    </select>
+                                    @error('no_kamar')
+                                        <div class="invalid-feedback d-block">{{ $message }}</div>
+                                    @enderror
+                                    <small class="form-text text-muted">Pilih unit tujuan terlebih dahulu</small>
+                                </div>
+                            @endif
 
                             <!-- Loading indicator -->
                             <div id="loading-indicator" class="text-center mt-2" style="display: none;">
@@ -1255,8 +1274,8 @@
                     <div class="section-content">
 
                         <!-- Riwayat Pemberian Obat akan digabungkan ke tabel terapi (tidak membuat tabel baru).
-                                             Server memberikan $riwayatObat; kita akan memasukkannya ke dataObat di JS
-                                             hanya jika entry berada dalam 24 jam terakhir. -->
+                                                                                                                         Server memberikan $riwayatObat; kita akan memasukkannya ke dataObat di JS
+                                                                                                                         hanya jika entry berada dalam 24 jam terakhir. -->
                         <input type="hidden" id="riwayatObatJson" value='@json($riwayatObat ?? [])'>
 
                         <!-- Button Tambah Terapi -->
@@ -1738,6 +1757,9 @@
         $(document).ready(function() {
             // Event listener untuk perubahan unit tujuan
             $('#kd_unit_tujuan').change(function(e) {
+
+                if ({{ $jenisStore }} == 7) return false;
+
                 let $this = $(this);
                 let kdUnit = $this.val();
 
@@ -1809,19 +1831,6 @@
                     }
                 });
             });
-
-            // Initialize select2 jika ada
-            if ($.fn.select2) {
-                $('#kd_unit_tujuan').select2({
-                    placeholder: '--Pilih--',
-                    allowClear: true
-                });
-
-                $('#no_kamar').select2({
-                    placeholder: '--Pilih Kamar--',
-                    allowClear: true
-                });
-            }
         });
 
         /**

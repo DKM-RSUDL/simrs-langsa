@@ -89,6 +89,7 @@ use App\Http\Controllers\UnitPelayanan\RawatInap\RincianKonsultasiController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\SiteMarkingController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\SurveilansA1Controller;
 use App\Http\Controllers\UnitPelayanan\RawatInap\SurveilansA2Controller;
+use App\Http\Controllers\UnitPelayanan\RawatInap\TriaseController;
 use App\Http\Controllers\UnitPelayanan\RawatInapController;
 
 Route::prefix('rawat-inap')->group(function () {
@@ -444,8 +445,10 @@ Route::prefix('rawat-inap')->group(function () {
                     Route::name('.rawat-inap-resume')->group(function () {
                         Route::controller(RawatInapResumeController::class)->group(function () {
                             Route::get('/', 'index')->name('.index');
+                            Route::get('/{data}/detail', 'detail')->name('.detail');
                             Route::post('/validasi', 'validasiResume')->name('.validasi');
                             Route::put('/{id}', 'update')->name('.update');
+                            Route::get('/{data}/pdf', 'pdf')->name('.pdf');
                         });
                     });
                 });
@@ -1323,6 +1326,16 @@ Route::prefix('rawat-inap')->group(function () {
                 Route::prefix('transfer-pasien-antar-ruang')->group(function () {
                     Route::name('.transfer-pasien-antar-ruang')->group(function () {
                         Route::controller(RawatInapTransferPasienAntarRuang::class)->group(function () {
+
+                            //transfer to penunjang
+                            Route::prefix('penunjang')->group(function () {
+                                Route::name('.penunjang')->group(function () {
+                                    Route::get('/', 'transferPenunjang')->name('.index');
+                                    Route::post('/', 'storeTransferPenunjang')->name('.store');
+                                });
+                            });
+
+
                             Route::get('/', 'index')->name('.index');
                             Route::post('/', 'store')->name('.store');
                             Route::get('/create', 'create')->name('.create');
@@ -1501,6 +1514,16 @@ Route::prefix('rawat-inap')->group(function () {
                                     Route::get('/print/{id}', 'print')->name('.print');
                                 });
                             });
+                        });
+                    });
+                });
+
+                // TRIASE IGD
+                Route::prefix('triase')->group(function () {
+                    Route::name('.triase')->group(function () {
+                        Route::controller(TriaseController::class)->group(function () {
+                            Route::get('/show', 'show')->name('.show');
+                            Route::get('/print-pdf', 'printPDF')->name('.print-pdf');
                         });
                     });
                 });

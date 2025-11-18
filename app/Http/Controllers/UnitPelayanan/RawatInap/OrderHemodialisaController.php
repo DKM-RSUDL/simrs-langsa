@@ -56,21 +56,21 @@ class OrderHemodialisaController extends Controller
             if ($orderAktif > 0) throw new Exception('Terdapat order hemodialisa aktif pada pasien ini !');
 
             // store rme_serah_terima
-            $serahTerima = new RmeSerahTerima();
-            $serahTerima->kd_pasien = $kd_pasien;
-            $serahTerima->tgl_masuk = $tgl_masuk;
-            $serahTerima->urut_masuk = $urut_masuk;
-            $serahTerima->kd_unit_asal = $kd_unit;
-            $serahTerima->kd_unit_tujuan = 72;
-            $serahTerima->subjective = $request->subjective;
-            $serahTerima->background = $request->background;
-            $serahTerima->assessment = $request->assessment;
-            $serahTerima->recomendation = $request->recomendation;
-            $serahTerima->tanggal_menyerahkan = $request->tanggal_menyerahkan;
-            $serahTerima->jam_menyerahkan = $request->jam_menyerahkan;
-            $serahTerima->petugas_menyerahkan = $request->petugas_menyerahkan;
-            $serahTerima->status = 1;
-            $serahTerima->save();
+            // $serahTerima = new RmeSerahTerima();
+            // $serahTerima->kd_pasien = $kd_pasien;
+            // $serahTerima->tgl_masuk = $tgl_masuk;
+            // $serahTerima->urut_masuk = $urut_masuk;
+            // $serahTerima->kd_unit_asal = $kd_unit;
+            // $serahTerima->kd_unit_tujuan = 72;
+            // $serahTerima->subjective = $request->subjective;
+            // $serahTerima->background = $request->background;
+            // $serahTerima->assessment = $request->assessment;
+            // $serahTerima->recomendation = $request->recomendation;
+            // $serahTerima->tanggal_menyerahkan = $request->tanggal_menyerahkan;
+            // $serahTerima->jam_menyerahkan = $request->jam_menyerahkan;
+            // $serahTerima->petugas_menyerahkan = $request->petugas_menyerahkan;
+            // $serahTerima->status = 1;
+            // $serahTerima->save();
 
             // store order_hd
             $orderData = [
@@ -80,7 +80,7 @@ class OrderHemodialisaController extends Controller
                 'tgl_order' => $request->tanggal_menyerahkan,
                 'jam_order' => $request->jam_menyerahkan,
                 'status'    => 0,
-                'id_serah_terima' => $serahTerima->id,
+                // 'id_serah_terima' => $serahTerima->id,
             ];
 
             OrderHD::create($orderData);
