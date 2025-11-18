@@ -168,8 +168,12 @@ class UpdatePasienController extends Controller
                     'kelas' => $request->kelas_tanggung,
                 ]);
 
+
             // 2. Update jenis peserta dan kelas tanggung peserta di tabel SjpKunjungan
             SjpKunjungan::where('kd_pasien', $request->kd_pasien_asli)
+                ->where('kd_unit', 3)
+                ->where('tgl_masuk', $tgl_masuk)
+                ->where('urut_masuk', $urut_masuk)
                 ->update([
                     'jns_peserta' => $request->jenis_peserta,
                     'kls_tanggung' => $request->kelas_tanggung,

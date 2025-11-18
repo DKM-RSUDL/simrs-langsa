@@ -168,6 +168,10 @@ class BpjsService
     public function vclaim($no_bpjs)
     {
         try {
+            // Get date today in UTC format Y-m-d
+            date_default_timezone_set('UTC');
+            $today = date('Y-m-d');
+
             // get kredensial
             $kredensial = $this->getKredensial();
             if (empty($kredensial)) throw new Exception('Kredensial BPJS tidak ditemukan.');
@@ -175,7 +179,7 @@ class BpjsService
             $headers = $this->generateHeaders($kredensial->cons_id, $kredensial->secret_key, $kredensial->userkey_icare);
 
             // Get data from VClaim BPJS
-            $response = Http::withHeaders($headers)->get("$kredensial->url_vclaim/Peserta/nokartu/$no_bpjs/tglSEP/2025-11-14");
+            $response = Http::withHeaders($headers)->get("$kredensial->url_vclaim/Peserta/nokartu/$no_bpjs/tglSEP/$today");
             $result = $response->json();
 
             // check response
