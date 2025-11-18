@@ -25,8 +25,8 @@
                 </div>
             </div>
         </a>
-        
-        <a href="{{ route('rawat-inap.unit.pending', $unit->kd_unit) }}" class="text-decoration-none col-12 col-md-4">
+
+        {{-- <a href="{{ route('rawat-inap.unit.pending', $unit->kd_unit) }}" class="text-decoration-none col-12 col-md-4">
             <div class="rounded bg-warning text-white">
                 <div class="card-body d-flex align-items-center gap-3 px-3">
                     <img src="{{ asset('assets/img/icons/Sick.png') }}" alt="Icon" width="36" height="36">
@@ -36,7 +36,7 @@
                     </div>
                 </div>
             </div>
-        </a>
+        </a> --}}
 
         {{-- Selesai --}}
         <a href="{{ route('rawat-inap.unit.selesai', $unit->kd_unit) }}" class="text-decoration-none col-12 col-md-4">
