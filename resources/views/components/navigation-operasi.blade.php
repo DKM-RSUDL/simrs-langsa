@@ -49,6 +49,15 @@
                 $dataMedis->urut_masuk,
             ]),
         ],
+        [
+            'icon' => 'check.svg',
+            'label' => 'Transfer Pasien',
+            'link' => route('operasi.pelayanan.transfer-pasien.index', [
+                $dataMedis->kd_pasien,
+                $tglMasukData,
+                $dataMedis->urut_masuk,
+            ]),
+        ],
         // [
         //     'icon' => 'agree.png',
         //     'label' => 'Konsultasi',
