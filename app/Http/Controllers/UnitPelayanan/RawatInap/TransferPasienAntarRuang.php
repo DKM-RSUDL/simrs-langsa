@@ -316,6 +316,7 @@ class TransferPasienAntarRuang extends Controller
 
     public function show($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $id)
     {
+       
         $transfer = RmeTransferPasienAntarRuang::findOrFail($id);
 
         $dataMedis = $this->baseService->getDataMedis($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);

@@ -4,13 +4,16 @@ namespace App\Http\Controllers\UnitPelayanan;
 
 use App\Http\Controllers\Controller;
 use App\Models\DetailTransaksi;
+use App\Models\Dokter;
 use App\Models\DokterKlinik;
 use App\Models\HrdKaryawan;
 use App\Models\Kunjungan;
 use App\Models\OrderHD;
 use App\Models\Produk;
 use App\Models\RmeSerahTerima;
+use App\Models\RmeTransferPasienAntarRuang;
 use App\Models\Transaksi;
+use App\Models\Unit;
 use App\Services\BaseService;
 use Carbon\Carbon;
 use Exception;
@@ -198,15 +201,38 @@ class HemodialisaController extends Controller
     public function terimaOrder($idEncrypt)
     {
         $id = decrypt($idEncrypt);
-
         // cek order
         $order = OrderHD::find($id);
         if (empty($order)) return back()->with('error', 'Order tidak ditemukan');
 
         // get kunjungan asal
         $dataMedis = $this->baseService->getDataMedisbyTransaksi($order->kd_kasir_asal, $order->no_transaksi_asal);
+
         if (empty($dataMedis)) return back()->with('error', 'data kunjungan asal tidak ditemukan');
 
+
+        $transfer = RmeTransferPasienAntarRuang::with(['serahTerima'])
+        ->whereHas('serahTerima',function($q){
+            $q->where('kd_unit_tujuan',$this->kdUnitDef_);
+        })
+         ->where('kd_pasien',$dataMedis->kd_pasien)
+         ->where('kd_unit',$dataMedis->kd_unit)
+         ->where('tgl_masuk',$dataMedis->tgl_masuk)
+         ->where('urut_masuk',$dataMedis->urut_masuk)
+         ->orderBy('id','desc')
+         ->first();
+   
+        $unit = Unit::where('aktif', 1)->get();
+        $unitTujuan = Unit::where('kd_bagian', 1)
+            ->where('aktif', 1)
+            ->whereNot('kd_unit', $dataMedis->kd_unit)
+            ->get();
+
+        $petugas = HrdKaryawan::where('kd_jenis_tenaga', 2)
+            ->where('kd_detail_jenis_tenaga', 1)
+            ->where('status_peg', 1)
+            ->get();
+       
         // get data serah terima
         $serahTerima = RmeSerahTerima::find($order->id_serah_terima);
 
@@ -215,6 +241,9 @@ class HemodialisaController extends Controller
             ->where('status_peg', 1)
             ->where('kd_karyawan', '!=', Auth::user()->kd_karyawan)
             ->get();
+
+        $dokterAll = Dokter::where('status', 1)
+        ->orderBy('nama_lengkap', 'asc')->get();
 
         $dokter = DokterKlinik::with(['dokter', 'unit'])
             ->where('kd_unit', 215)
@@ -255,12 +284,14 @@ class HemodialisaController extends Controller
             ->distinct()
             ->get();
 
-        return view('unit-pelayanan.hemodialisa.pelayanan.order.terima.index', compact('dataMedis', 'order', 'serahTerima', 'petugas', 'produk', 'dokter'));
+        return view('unit-pelayanan.hemodialisa.pelayanan.order.terima.index', compact('dataMedis', 'order', 'serahTerima', 'petugas', 'produk', 'dokter','transfer','dokterAll'));
     }
 
     public function storeTerimaOrder(Request $request, $idEncrypt)
     {
         $id = decrypt($idEncrypt);
+
+       
 
         // cek order
         $order = OrderHD::find($id);
