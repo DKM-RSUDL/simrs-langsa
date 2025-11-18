@@ -109,6 +109,9 @@ Route::middleware('ssoToken')->group(function () {
             Route::controller(BpjsController::class)->group(function () {
                 Route::post('/icare', 'icare')->name('.icare');
             });
+            Route::controller(BpjsController::class)->group(function () {
+                Route::get('/vclaim/{identifier}', 'vclaim')->name('.vclaim');
+            });
         });
     });
 });
