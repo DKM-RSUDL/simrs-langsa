@@ -23,19 +23,6 @@
             padding: 0;
         }
 
-        .logo-cell {
-            width: 80px;
-            text-align: center;
-            vertical-align: middle;
-            padding-left: 30px;
-        }
-
-        .logo-cell img {
-            width: 80px;
-            height: auto;
-            margin-top: 0;
-        }
-
         .checkbox {
             display: inline-block;
             width: 14px;
@@ -57,7 +44,7 @@
             background-color: #f0f0f0;
             padding: 0;
             position: relative;
-            /* penting agar igd-box bisa absolute di dalamnya */
+
         }
 
         .td-left {
@@ -75,7 +62,6 @@
         .td-right {
             width: 20%;
             position: relative;
-            /* supaya igd-box bisa nempel ke kanan sel ini */
             padding: 0;
         }
 
@@ -118,7 +104,7 @@
         }
 
         .brand-logo {
-            width: 70px;
+            width: 60px;
             height: auto;
             margin-right: 2px;
         }
@@ -254,10 +240,9 @@
                 <td class="td-left">
                     <table class="brand-table">
                         <tr>
-                            <td class="va-middle">
-                                <img src="{{ public_path('assets/img/Logo-RSUD-Langsa-1.png') }}" alt="Logo RSUD Langsa"
-                                    class="brand-logo">
-                            </td>
+                            <td class="va-middle"><img
+                                    src="data:image/png;base64,{{ base64_encode(file_get_contents(public_path('assets/img/Logo-RSUD-Langsa-1.png'))) }}"
+                                    alt="Logo" class="brand-logo"></td>
                             <td class="va-middle">
                                 <p class="brand-name">RSUD Langsa</p>
                                 <p class="brand-info">Jl. Jend. A. Yani No.1 Kota Langsa</p>
@@ -282,11 +267,16 @@
         </table>
     </header>
 
+    {{-- =============================================== --}}
+    {{-- AMBIL DATA TRIASE DAN DOKTER --}}
+    {{-- =============================================== --}}
+
     @php
         use App\Models\Dokter;
-        $dataTriase = json_decode($triase->triase ?? '{}', true);
+        $dataTriase = $triase->triase ?? [];
         $dokterNama = \App\Models\Dokter::where('kd_dokter', $triase->dokter_triase)->value('nama_lengkap');
     @endphp
+
 
     {{-- DATA PASIEN --}}
     <table class="info-table">
@@ -326,14 +316,15 @@
             </td>
         </tr>
     </table>
-
-    {{-- PEMERIKSAAN TRIASE --}}
-    <h3 style="text-align:center; margin: 20px 0;">PEMERIKSAAN TRIASE (DOKTER)</h3>
+    {{-- =============================================== --}}
+    {{-- PEMERIKSAAN TRIASE (DOKTER) --}}
+    {{-- =============================================== --}}
+    <h3 style="text-align:center; margin-bottom: 10px;">PEMERIKSAAN TRIASE (DOKTER)</h3>
 
     <table class="triage-table">
         <tbody>
             <tr>
-                <td><strong>JALAN NAFAS</strong></td>
+                <td style="width: 20%"><strong>JALAN NAFAS</strong></td>
                 <td colspan="5">
                     @if (isset($dataTriase['air_way']))
                         <ul style="margin: 0; padding-left: 20px;">
@@ -391,7 +382,6 @@
                     @endif
                 </td>
             </tr>
-
             @php
                 $kdTriase = (int) ($triase->kode_triase ?? 0);
                 $warna = '';
@@ -421,7 +411,7 @@
                 <td colspan="6" style="text-align:center; padding:15px;">
                     <span class="circle {{ $warna }}"></span>
                     <span class="circle-label" style="font-weight:bold;">{{ $label }}</span>
-                </td> [cite: 225]
+                </td>
             </tr>
         </tbody>
     </table>

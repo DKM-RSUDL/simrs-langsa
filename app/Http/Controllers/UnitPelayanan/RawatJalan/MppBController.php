@@ -166,6 +166,7 @@ class MppBController extends Controller
     {
         // Process Dokter Tambahan array
         $dokterTambahanArray = [];
+      
         if ($request->has('dokter_tambahan') && is_array($request->dokter_tambahan)) {
             $dokterTambahanArray = array_filter($request->dokter_tambahan, function ($value) {
                 return !empty($value);

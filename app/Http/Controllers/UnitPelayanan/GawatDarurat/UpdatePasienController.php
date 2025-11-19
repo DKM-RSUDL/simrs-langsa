@@ -4,6 +4,7 @@ namespace App\Http\Controllers\UnitPelayanan\GawatDarurat;
 
 use App\Http\Controllers\Controller;
 use App\Models\AptBarangOut;
+use App\Models\Customer;
 use App\Models\DataTriase;
 use App\Models\HrdKaryawan;
 use App\Models\Konsultasi;
@@ -48,12 +49,11 @@ class UpdatePasienController extends Controller
             ->where('kunjungan.urut_masuk', $urut_masuk)
             ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
             ->first();
-
         $unit = Unit::where('aktif', 1)->get();
         $unitTujuan = Unit::where('kd_bagian', 1)->where('aktif', 1)->get();
+        $penanggungAsuransi = Customer::all(['kd_customer', 'customer']);
 
-
-        return view('unit-pelayanan.gawat-darurat.action-gawat-darurat.ubah-pasien.index', compact('dataMedis', 'unit', 'unitTujuan'));
+        return view('unit-pelayanan.gawat-darurat.action-gawat-darurat.ubah-pasien.index', compact('dataMedis', 'unit', 'unitTujuan', 'penanggungAsuransi'));
     }
 
 
@@ -111,7 +111,7 @@ class UpdatePasienController extends Controller
                     'kd_pasien' => $kd_pasien_baru,
                     'urut_masuk' => $new_urut_masuk,
                     'triase_proses' => 0,
-
+                    'kd_customer' => $request->kd_customer, // Update kd_customer (penanggungAsuransi)
                 ]);
 
             // 2. Update Transaksi table
@@ -159,7 +159,26 @@ class UpdatePasienController extends Controller
                     );
             }
 
-            // Update Pendukung
+            /** Update Pendukung */
+
+            // 1. Update jenis peserta dan kelas tanggung peserta di tabel Pasien
+            Pasien::where('kd_pasien', $request->kd_pasien_asli)
+                ->update([
+                    'jns_peserta' => $request->jenis_peserta,
+                    'kelas' => $request->kelas_tanggung,
+                ]);
+
+
+            // 2. Update jenis peserta dan kelas tanggung peserta di tabel SjpKunjungan
+            SjpKunjungan::where('kd_pasien', $request->kd_pasien_asli)
+                ->where('kd_unit', 3)
+                ->where('tgl_masuk', $tgl_masuk)
+                ->where('urut_masuk', $urut_masuk)
+                ->update([
+                    'jns_peserta' => $request->jenis_peserta,
+                    'kls_tanggung' => $request->kelas_tanggung,
+                ]);
+
             Kunjungan::where('kd_pasien', $kd_pasien_lama)
                 ->update([
                     'kd_pasien' => $kd_pasien_baru,

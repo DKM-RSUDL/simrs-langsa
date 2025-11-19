@@ -4,9 +4,11 @@ namespace App\Http\Controllers\UnitPelayanan;
 
 use App\Http\Controllers\Controller;
 use App\Models\DetailTransaksi;
+use App\Models\Dokter;
 use App\Models\DokterAnastesi;
 use App\Models\DokterKlinik;
 use App\Models\DokterPenunjang;
+use App\Models\HrdKaryawan;
 use App\Models\Kamar;
 use App\Models\KlasProduk;
 use App\Models\Kunjungan;
@@ -15,6 +17,7 @@ use App\Models\Operasi\OkJadwalDr;
 use App\Models\Operasi\OkJadwalPs;
 use App\Models\OrderOK;
 use App\Models\Produk;
+use App\Models\RmeTransferPasienAntarRuang;
 use App\Models\Spesialisasi;
 use App\Models\Transaksi;
 use App\Models\UnitAsal;
@@ -224,13 +227,37 @@ class OperasiController extends Controller
         $dokters = $this->getDokters();
         $dokterAnastesi = DokterAnastesi::with(['dokter:kd_dokter,nama_lengkap'])->where('aktif', 1)->get();
 
-        $operasi = OrderOK::where('kd_kasir', $kd_kasir)->where('no_transaksi', $no_transaksi)
-            ->whereDate('tgl_jadwal', $tanggal_op)
+        $operasi = OrderOK::where('kd_kasir', $dataMedis->kd_kasir)->where('no_transaksi', $dataMedis->no_transaksi)
+            ->whereDate('tgl_op', $tanggal_op)
             ->where('jam_op', $jam_op)
             ->where('status', 0)
             ->first();
+        
+     
+        if (empty($operasi)) return back()->with('error', 'data Order Operasi tidak ditemukan');
 
-        return view('unit-pelayanan.operasi.pelayanan.order.terima.edit', compact('operasi', 'dataMedis', 'products', 'kamarOperasi', 'dokters', 'dokterAnastesi'));
+
+        $transfer = RmeTransferPasienAntarRuang::with(['serahTerima'])
+        ->whereHas('serahTerima',function($q){
+            $q->where('kd_unit_tujuan',$this->kdUnitDef_);
+        })
+         ->where('kd_pasien',$dataMedis->kd_pasien)
+         ->where('kd_unit',$dataMedis->kd_unit)
+         ->where('tgl_masuk',$dataMedis->tgl_masuk)
+         ->where('urut_masuk',$dataMedis->urut_masuk)
+         ->orderBy('id','desc')
+         ->first();
+
+         $petugas = HrdKaryawan::where('kd_jenis_tenaga', 2)
+            ->where('kd_detail_jenis_tenaga', 1)
+            ->where('status_peg', 1)
+            ->where('kd_karyawan', '!=', Auth::user()->kd_karyawan)
+            ->get();
+
+         $dokterAll = Dokter::where('status', 1)
+        ->orderBy('nama_lengkap', 'asc')->get();
+
+        return view('unit-pelayanan.operasi.pelayanan.order.terima.edit', compact('operasi', 'dataMedis', 'products', 'kamarOperasi', 'dokters', 'dokterAnastesi','transfer','dokterAll','petugas'));
     }
 
     private function mappingDataByKdKasir($kd_kasir)
@@ -337,12 +364,12 @@ class OperasiController extends Controller
             $nginap = $this->baseService->getNginapData($dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk);
 
             $order = OrderOK::where('kd_kasir', $kd_kasir)->where('no_transaksi', $no_transaksi)
-                ->whereDate('tgl_jadwal', $tanggal_op)
+                ->whereDate('tgl_op', $tanggal_op)
                 ->where('jam_op', $jam_op)
                 ->first();
 
-            if ($order->status) throw new Exception('Order sudah diproses sebelumnya.');
             if (!$order) throw new Exception('Order tidak ditemukan.');
+            if ($order->status) throw new Exception('Order sudah diproses sebelumnya.');
 
             // mapping data kd kasir
             $mappingData = $this->mappingDataByKdKasir($kd_kasir);

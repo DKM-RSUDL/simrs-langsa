@@ -65,11 +65,7 @@
                 <div class="list-group list-group-flush">
                     <a href="{{ $pelayananUrl }}/transfer-pasien-antar-ruang"
                         class="list-group-item list-group-item-action">
-                        Pindah Ruangan Rawat Inap
-                    </a>
-                    <a href="#"
-                        class="list-group-item list-group-item-action">
-                        Transfer Ke Penunjang
+                        Pindah Ruangan
                     </a>
                 </div>
             </div>
@@ -259,6 +255,17 @@
                             target="_blank" class="list-group-item list-group-item-action">
                             CPPT
                         </a>
+                        @if (isset($dataMedis) && $dataMedis)
+                            <a href="{{ route('rawat-inap.triase.print-pdf', [
+                                'kd_unit' => $dataMedis?->kd_unit ?? '',
+                                'kd_pasien' => $dataMedis?->kd_pasien ?? '',
+                                'tgl_masuk' => $dataMedis?->tgl_masuk ?? '',
+                                'urut_masuk' => $dataMedis?->urut_masuk ?? '',
+                            ]) }}"
+                                target="_blank" class="list-group-item list-group-item-action">
+                                Triase
+                            </a>
+                        @endif
                     @endif
                 </div>
             </div>

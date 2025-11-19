@@ -149,35 +149,10 @@
 
                             <!-- Button "Tambah" di sebelah kanan -->
                             <div class="col-md-3 text-end">
-                                <div class="dropdown">
-                                    <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton"
-                                        data-bs-toggle="dropdown" aria-expanded="false">
-                                        <i class="fas fa-plus me-2"></i> Pindah
-                                    </button>
-                                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton">
-                                        <li class="bg-light">
-                                            <h6 class="dropdown-header"><i class="fas fa-user-nurse me-2"></i>Rawat
-                                                Inap</h6>
-                                        </li>
-                                        <li><a class="custom__dropdown__item"
-                                                href="{{ route('rawat-inap.transfer-pasien-antar-ruang.create', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}">Ruang
-                                                Rawat</a>
-                                        </li>
-
-                                        <li>
-                                            <hr class="dropdown-divider">
-                                        </li>
-
-
-                                        <li class="bg-light">
-                                            <h6 class="dropdown-header"><i class="fas fa-stethoscope me-2"></i>Penunjang
-                                            </h6>
-                                        </li>
-
-                                        <li><a class="custom__dropdown__item" href="{{ route('rawat-inap.transfer-pasien-antar-ruang.penunjang.index', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}">Transfer Penunjang</a>
-                                        </li>
-                                    </ul>
-                                </div>
+                                <a href="{{ route('operasi.pelayanan.transfer-pasien.create', [$dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk]) }}"
+                                    class="btn btn-primary">
+                                    <i class="fas fa-shuffle"></i> Pindah Unit Asal
+                                </a>
                             </div>
                         </div>
 
@@ -225,26 +200,28 @@
                                                 <!-- Action Buttons -->
                                                 <div class="col-auto">
                                                     <div class="action-buttons">
-                                                        <a href="{{ route('rawat-inap.transfer-pasien-antar-ruang.show', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
+                                                        <a href="{{ route('operasi.pelayanan.transfer-pasien.show', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
                                                             class="btn btn-view btn-sm" title="Lihat">
                                                             <i class="ti-eye"></i> Lihat
                                                         </a>
 
-                                                        <a href="{{ route('rawat-inap.transfer-pasien-antar-ruang.edit', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
-                                                            class="btn btn-edit btn-sm" title="Edit">
-                                                            <i class="ti-pencil"></i> Edit
-                                                        </a>
+                                                        @if ($item->kd_unit == $dataMedis->kd_unit)
+                                                            <a href="{{ route('operasi.pelayanan.transfer-pasien.edit', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
+                                                                class="btn btn-edit btn-sm" title="Edit">
+                                                                <i class="ti-pencil"></i> Edit
+                                                            </a>
 
-                                                        <form
-                                                            action="{{ route('rawat-inap.transfer-pasien-antar-ruang.destroy', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
-                                                            method="POST" class="delete-form d-inline">
-                                                            @csrf
-                                                            @method('DELETE')
-                                                            <button type="submit" class="btn btn-danger btn-sm"
-                                                                title="Hapus">
-                                                                <i class="ti-trash"></i>
-                                                            </button>
-                                                        </form>
+                                                            <form
+                                                                action="{{ route('operasi.pelayanan.transfer-pasien.destroy', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
+                                                                method="POST" class="delete-form d-inline">
+                                                                @csrf
+                                                                @method('DELETE')
+                                                                <button type="submit" class="btn btn-danger btn-sm"
+                                                                    title="Hapus">
+                                                                    <i class="ti-trash"></i>
+                                                                </button>
+                                                            </form>
+                                                        @endif
                                                     </div>
                                                 </div>
                                             </div>

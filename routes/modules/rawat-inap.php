@@ -1326,6 +1326,16 @@ Route::prefix('rawat-inap')->group(function () {
                 Route::prefix('transfer-pasien-antar-ruang')->group(function () {
                     Route::name('.transfer-pasien-antar-ruang')->group(function () {
                         Route::controller(RawatInapTransferPasienAntarRuang::class)->group(function () {
+
+                            //transfer to penunjang
+                            Route::prefix('penunjang')->group(function () {
+                                Route::name('.penunjang')->group(function () {
+                                    Route::get('/', 'transferPenunjang')->name('.index');
+                                    Route::post('/', 'storeTransferPenunjang')->name('.store');
+                                });
+                            });
+
+
                             Route::get('/', 'index')->name('.index');
                             Route::post('/', 'store')->name('.store');
                             Route::get('/create', 'create')->name('.create');
@@ -1513,6 +1523,7 @@ Route::prefix('rawat-inap')->group(function () {
                     Route::name('.triase')->group(function () {
                         Route::controller(TriaseController::class)->group(function () {
                             Route::get('/show', 'show')->name('.show');
+                            Route::get('/print-pdf', 'printPDF')->name('.print-pdf');
                         });
                     });
                 });
