@@ -233,7 +233,9 @@ class TransferPasienController extends Controller
                 'tanggal_menyerahkan'   => $request->tanggal_menyerahkan,
                 'jam_menyerahkan'       => $request->jam_menyerahkan,
                 'transfer_id'           => $transfer->id ?? null,
-                'status'                => 1
+                'status'                => 1,
+                'kd_kasir_asal'         => $dataMedis->kd_kasir,
+                'no_transaksi_asal'     => $dataMedis->no_transaksi
             ];
 
             RmeSerahTerima::create($handOverData);
