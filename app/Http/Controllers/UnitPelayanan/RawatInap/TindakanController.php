@@ -454,13 +454,15 @@ class TindakanController extends Controller
             ->where('kunjungan.urut_masuk', $urut_masuk)
             ->first();
 
-
-        $tindakan = ListTindakanPasien::with(['produk', 'ppa', 'unit'])
+        // Gabungkan tindakan Rawat Inap dan IGD
+        $tindakanRawatInap = ListTindakanPasien::with(['produk', 'ppa', 'unit'])
             ->where('kd_pasien', $kd_pasien)
             ->where('tgl_masuk', $tgl_masuk)
             ->where('kd_unit', $dataMedis->kd_unit)
             ->where('urut_masuk', (int)$dataMedis->urut_masuk)
             ->get();
+
+        $tindakanIGD = $this->getTindakanIGD($dataMedis);
 
         if (!$dataMedis) {
             abort(404, 'Data not found');
@@ -482,7 +484,8 @@ class TindakanController extends Controller
 
         $pdf = Pdf::loadView('unit-pelayanan.rawat-inap.pelayanan.tindakan.print', compact(
             'dataMedis',
-            'tindakan',
+            'tindakanRawatInap',
+            'tindakanIGD',
             'resume',
             'sjp'
         ));
