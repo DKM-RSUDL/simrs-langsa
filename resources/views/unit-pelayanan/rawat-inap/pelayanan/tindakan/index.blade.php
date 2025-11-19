@@ -167,14 +167,13 @@
                             @php $asal = 'IGD'; @endphp
                             @foreach ($tindakanIGD as $tdk)
                                 <tr>
-                                    <td>{{ \Carbon\Carbon::parse($tdk->tgl_tindakan)->format('d M Y') }}
-                                        {{ \Carbon\Carbon::parse($tdk->jam_tindakan)->format('H:i') }}</td>
+                                    <td>{{ carbon_parse($tdk->tgl_tindakan, null, 'd M Y') }}
+                                        {{ carbon_parse($tdk->jam_tindakan, null, 'H:i') }}</td>
                                     <td>
                                         <span class="text-primary fw-bold text-decoration-underline">
                                             {{ $tdk->produk->deskripsi }}
                                         </span>
                                     </td>
-                                    {{-- <td>{{ $tdk->unit->nama_unit }} / {{ $tdk->produk->klas->klasifikasi }}</td> --}}
                                     <td>{{ $tdk->ppa->nama_lengkap }}</td>
                                     <td>{{ $tdk->keterangan }}</td>
                                     <td>
@@ -201,8 +200,8 @@
                             @php $asal = 'Rawat Inap'; @endphp
                             @foreach ($tindakanRawatInap as $tdk)
                                 <tr>
-                                    <td>{{ \Carbon\Carbon::parse($tdk->tgl_tindakan)->format('d M Y') }}
-                                        {{ \Carbon\Carbon::parse($tdk->jam_tindakan)->format('H:i') }}</td>
+                                    <td>{{ carbon_parse($tdk->tgl_tindakan, null, 'd M Y') }}
+                                        {{ carbon_parse($tdk->jam_tindakan, null, 'H:i') }}</td>
                                     <td>
                                         <span class="text-primary fw-bold text-decoration-underline">
                                             {{ $tdk->produk->deskripsi }}
