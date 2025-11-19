@@ -3,14 +3,13 @@
 namespace App\Http\Controllers\UnitPelayanan\RawatInap;
 
 use App\Http\Controllers\Controller;
+use App\Models\AsalIGD;
 use App\Models\DetailTransaksi;
 use App\Models\DokterInap;
-use App\Models\DokterKlinik;
 use App\Models\Kunjungan;
 use App\Models\ListTindakanPasien;
 use App\Models\Produk;
 use App\Models\RMEResume;
-use App\Models\RmeResumeDtl;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
@@ -77,7 +76,9 @@ class TindakanController extends Controller
         $startDate = $request->input('start_date');
         $endDate = $request->input('end_date');
         $search = $request->input('search');
-        $tindakan = ListTindakanPasien::with(['produk', 'ppa', 'unit'])
+
+        // Query tindakan untuk Rawat Inap
+        $tindakanRawatInap = ListTindakanPasien::with(['produk', 'ppa', 'unit'])
             // filter data per periode to anas
             ->when($periode && $periode !== 'semua', function ($query) use ($periode) {
                 $now = now();
@@ -125,7 +126,8 @@ class TindakanController extends Controller
             })
             ->get();
 
-
+        // Gabungkan dengan tindakan dari IGD jika ada asal IGD
+        $tindakanIGD = $this->getTindakanIGD($dataMedis);
         $dokter = DokterInap::with(['dokter', 'unit'])
             ->where('kd_unit', '1001')
             ->whereRelation('dokter', 'status', 1)
@@ -136,7 +138,8 @@ class TindakanController extends Controller
             'dataMedis',
             'dokter',
             'produk',
-            'tindakan'
+            'tindakanRawatInap',
+            'tindakanIGD'
         ));
     }
 
@@ -265,18 +268,12 @@ class TindakanController extends Controller
                     'dt.tgl_berlaku',
                     'dt.harga',
                 ])
-                ->join('detail_transaksi as dt', function ($join) {
-                    $join->on('dt.tgl_transaksi', '=', 'list_tindakan_pasien.tgl_masuk')
-                        ->on('dt.kd_unit', '=', 'list_tindakan_pasien.kd_unit')
+                ->join('detail_transaksi as dt', function ($join) use ($request) {
+                    $join->on('dt.no_transaksi', '=', DB::raw("'{$request->no_transaksi}'"))
                         ->on('dt.kd_produk', '=', 'list_tindakan_pasien.kd_produk');
                 })
-                ->where('list_tindakan_pasien.kd_pasien', $kd_pasien)
-                ->where('list_tindakan_pasien.kd_unit', $kd_unit)
-                ->where('list_tindakan_pasien.tgl_masuk', $tgl_masuk)
-                ->where('list_tindakan_pasien.urut_masuk', $urut_masuk)
-                ->where('list_tindakan_pasien.urut_list', $request->urut_list)
                 ->where('list_tindakan_pasien.kd_produk', $request->kd_produk)
-                ->where('dt.no_transaksi', $request->no_transaksi)
+                ->where('list_tindakan_pasien.urut_list', $request->urut_list)
                 ->first();
 
             if (empty($tindakan)) {
@@ -493,5 +490,74 @@ class TindakanController extends Controller
         $pdf->setPaper('a4', 'portrait');
 
         return $pdf->stream('daftar-tindakan-' . $dataMedis->pasien->nama_pasien . '.pdf');
+    }
+
+    // Private Function
+    private function getDataIGD($dataMedis)
+    {
+        $dataLabor = [];
+
+        // GET ASAL IGD
+        $asalIGD = AsalIGD::where('kd_kasir', $dataMedis->kd_kasir)->where('no_transaksi', $dataMedis->no_transaksi)->first();
+
+        if (!empty($asalIGD)) {
+            $kunjunganIGD = $this->baseService->getDataMedisbyTransaksi($asalIGD->kd_kasir_asal, $asalIGD->no_transaksi_asal);
+
+            // Get main data
+            $dataLabor = SegalaOrder::with(['details', 'laplisitempemeriksaan', 'dokter', 'produk', 'unit'])
+                ->where('kategori', 'LB')
+                ->where('kd_pasien', $kunjunganIGD->kd_pasien)
+                ->where('tgl_masuk', $kunjunganIGD->tgl_transaksi)
+                ->where('urut_masuk', $kunjunganIGD->urut_masuk)
+                ->where('kd_unit', $kunjunganIGD->kd_unit)
+                ->orderBy('tgl_order', 'desc')
+                ->paginate(10);
+
+            // Transform the data to include lab results
+            $dataLabor->getCollection()->transform(function ($item) {
+                $labResults = $this->getLabData(
+                    $item->kd_order,
+                    $item->kd_pasien,
+                    $item->tgl_masuk,
+                    $item->kd_unit,
+                    $item->urut_masuk
+                );
+
+                $item->labResults = $labResults;
+                return $item;
+            });
+        }
+
+        return $dataLabor;
+    }
+
+    // Fungsi baru untuk mengambil tindakan dari IGD jika ada asal IGD
+    private function getTindakanIGD($dataMedis)
+    {
+        $tindakanIGD = collect(); // Koleksi kosong sebagai default
+
+        // Cek asal IGD
+        $asalIGD = AsalIGD::where('kd_kasir', $dataMedis->kd_kasir)->where('no_transaksi', $dataMedis->no_transaksi)->first();
+
+        if (!empty($asalIGD)) {
+            // Dapatkan kunjungan IGD
+            $kunjunganIGD = $this->baseService->getDataMedisbyTransaksi($asalIGD->kd_kasir_asal, $asalIGD->no_transaksi_asal);
+
+            if ($kunjunganIGD) {
+                // Ambil tindakan dari unit IGD (kd_unit = 3)
+                $tindakanIGD = ListTindakanPasien::with(['produk', 'ppa', 'unit'])
+                    ->where('kd_pasien', $kunjunganIGD->kd_pasien)
+                    ->where('kd_unit', 3) // Unit Gawat Darurat
+                    ->where('tgl_masuk', $kunjunganIGD->tgl_transaksi)
+                    ->where('urut_masuk', $kunjunganIGD->urut_masuk)
+                    ->get()
+                    ->map(function ($item) use ($kunjunganIGD) {
+                        $item->no_transaksi = $kunjunganIGD->no_transaksi;
+                        return $item;
+                    });
+            }
+        }
+
+        return $tindakanIGD;
     }
 }
