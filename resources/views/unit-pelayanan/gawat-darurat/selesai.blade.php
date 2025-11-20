@@ -129,10 +129,20 @@
                 </div>
                 {{-- End Header --}}
             </div>
+
+            <div class="col-12 mt-3 d-flex justify-content-end">
+                <div class="input-group" style="width: fit-content;">
+                    <input type="text" id="tanggal_filter" class="date form-control" placeholder="Filter Tanggal"
+                        value="{{ date('Y-m-d') }}" readonly>
+                    <span class="input-group-text" id="tanggal_filter">
+                        <i class="fas fa-search"></i>
+                    </span>
+                </div>
+            </div>
         </div>
 
         <div class="row mt-3">
-            <div class="col-md-12">
+            <div class="col-12">
                 <div class="table-responsive text-left">
                     <table class="table table-bordered dataTable" id="rawatDaruratTable">
                         <thead>
@@ -197,7 +207,7 @@
 
 @push('js')
     <script>
-        var gawatDaruratIndexUrl = "{{ route('gawat-darurat.index') }}";
+        var gawatDaruratIndexUrl = "{{ route('gawat-darurat.selesai') }}";
         var medisGawatDaruratIndexUrl = "{{ url('unit-pelayanan/gawat-darurat/pelayanan/') }}/";
 
         $(document).ready(function() {
@@ -207,7 +217,7 @@
                 ajax: {
                     url: gawatDaruratIndexUrl,
                     data: function(d) {
-                        d.dokter = $('#dokterSelect').val();
+                        d.tanggal_filter = $('#tanggal_filter').val();
                     }
                 },
                 columns: [{
@@ -319,7 +329,7 @@
             });
 
             // Filter dokter
-            $('#dokterSelect').on('change', function() {
+            $('#tanggal_filter').on('change', function() {
                 $('#rawatDaruratTable').DataTable().ajax.reload();
             });
         });
