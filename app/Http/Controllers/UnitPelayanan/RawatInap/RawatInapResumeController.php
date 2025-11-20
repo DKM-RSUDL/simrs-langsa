@@ -388,6 +388,7 @@ class RawatInapResumeController extends Controller
 
             $resume->update([
                 'anamnesis' => trim($request->anamnesis),
+                'pemeriksaan_fisik' => trim($request->pemeriksaan_fisik),
                 'pemeriksaan_penunjang' => trim($request->pemeriksaan_penunjang),
                 'diagnosis' => $newDiagnosis,
                 'icd_10' => $penyakit,
