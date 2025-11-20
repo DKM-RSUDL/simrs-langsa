@@ -367,18 +367,18 @@ if (!function_exists('countPendingPatientRanap')) {
     function countPendingPatientRanap($kd_unit)
     {
 
-        $cacheKey = "count_pending_ranap_$kd_unit";
+        // $cacheKey = "count_pending_ranap_$kd_unit";
 
-        $result = Cache::remember($cacheKey, 300, function () use ($kd_unit) {
+        // $result = Cache::remember($cacheKey, 300, function () use ($kd_unit) {
 
             $count = RmeSerahTerima::where('kd_unit_tujuan', $kd_unit)
                 ->where('status', 1)
                 ->count();
 
             return $count;
-        });
+        // });
 
-        return $result;
+        // return $result;
     }
 }
 

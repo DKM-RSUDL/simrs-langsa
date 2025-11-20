@@ -466,6 +466,8 @@ class RawatInapController extends Controller
             ->first()
             ->sisa ?? 0;
 
+        if ($sisaBed < 1) throw new Exception('Kamar penuh, tidak dapat melakukan serah terima pasien !');
+
 
         // get antrian terakhir
         $getLastAntrianToday = Kunjungan::select('antrian')
@@ -708,6 +710,26 @@ class RawatInapController extends Controller
 
         // update keterangan status kunjungan ranap
         $this->baseService->updateKetKunjungan('02', $formattedTransactionNumber, 'Aktif', 1);
+        // update keterangan status kunjungan IGD
+        $this->baseService->updateKetKunjungan($dataMedisAsal->kd_kasir, $dataMedisAsal->no_transaksi, 'Ranap', 0);
+    }
+
+    // proses antar ranap
+    private function storeProsesAntarRanap($serahTerima)
+    {
+        $dataMedisAsal = $this->baseService->getDataMedisbyTransaksi($serahTerima->kd_kasir_asal, $serahTerima->no_transaksi_asal);
+        if (empty($dataMedisAsal)) throw new Exception('Data Medis Asal tidak ditemukan !');
+
+        // update status inap kunjungan jadi aktif
+        Kunjungan::where('kd_pasien', $dataMedisAsal->kd_pasien)
+            ->where('kd_unit', $dataMedisAsal->kd_unit)
+            ->where('urut_masuk', $dataMedisAsal->urut_masuk)
+            ->whereDate('tgl_masuk', $dataMedisAsal->tgl_masuk)
+            ->update(['status_inap' => 1]);
+
+
+        // update keterangan status kunjungan ranap
+        $this->baseService->updateKetKunjungan($dataMedisAsal->kd_kasir, $dataMedisAsal->no_transaksi, 'Aktif', 1);
     }
 
     public function serahTerimaPasienCreate($kd_unit, $idHash, Request $request)
@@ -740,6 +762,13 @@ class RawatInapController extends Controller
 
             if ($transferFormReady) {
                 $this->storeKunjunganBaru($serahTerima);
+            } else if (!$transferFormReady && !empty($serahTerima->transfer)) {
+
+                if (!$serahTerima->transfer->to_penunjang) {
+                    $this->storeProsesAntarRanap($serahTerima);
+                } else {
+                    throw new Exception('Maaf, transfer dari penunjang belum dapat diproses saat ini. Silakan hubungi bagian IT untuk penanganan lebih lanjut.');
+                }
             } else {
                 throw new Exception('Maaf, transfer selain dari IGD belum dapat diproses saat ini. Silakan hubungi bagian IT untuk penanganan lebih lanjut.');
             }
@@ -754,12 +783,6 @@ class RawatInapController extends Controller
             ];
 
             RmeSerahTerima::where('id', $serahTerima->id)->update($data);
-
-            // update keterangan status kunjungan IGD
-            $kunjunganAsal = $this->baseService->getDataMedisbyTransaksi($serahTerima->kd_kasir_asal, $serahTerima->no_transaksi_asal);
-
-            if (empty($kunjunganAsal)) throw new Exception('Data Asal tidak ditemukan !');
-            $this->baseService->updateKetKunjungan($kunjunganAsal->kd_kasir, $kunjunganAsal->no_transaksi, 'Ranap', 0);
 
             DB::commit();
             return to_route('rawat-inap.unit.pending', [$serahTerima->kd_unit_tujuan])->with('success', 'Pasien berhasil di terima !');

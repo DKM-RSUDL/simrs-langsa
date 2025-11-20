@@ -523,6 +523,7 @@ class TransferPasienController extends Controller
             'diet' => $validated['diet'] ?? null,
             'rencana_perawatan' => $validated['rencana_perawatan'] ?? null,
             'derajat_pasien' => $validated['derajat_pasien'],
+            'to_penunjang' => 1
         ];
 
         // Handle JSON fields
