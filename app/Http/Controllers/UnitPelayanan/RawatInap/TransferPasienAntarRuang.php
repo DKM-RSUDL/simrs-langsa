@@ -284,7 +284,9 @@ class TransferPasienAntarRuang extends Controller
                 'tanggal_menyerahkan'   => $request->tanggal_menyerahkan,
                 'jam_menyerahkan'       => $request->jam_menyerahkan,
                 'transfer_id'           => $transfer->id ?? null,
-                'status'                => 1
+                'status'                => 1,
+                'kd_kasir_asal'         => $dataMedis->kd_kasir,
+                'no_transaksi_asal'     => $dataMedis->no_transaksi
             ];
 
             // update status inap kunjungan = 0
@@ -316,7 +318,7 @@ class TransferPasienAntarRuang extends Controller
 
     public function show($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $id)
     {
-       
+
         $transfer = RmeTransferPasienAntarRuang::findOrFail($id);
 
         $dataMedis = $this->baseService->getDataMedis($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
@@ -970,7 +972,9 @@ class TransferPasienAntarRuang extends Controller
                 'tanggal_menyerahkan'   => $request->tanggal_menyerahkan,
                 'jam_menyerahkan'       => $request->jam_menyerahkan,
                 'transfer_id'           => $transfer->id ?? null,
-                'status'                => 1
+                'status'                => 1,
+                'kd_kasir_asal'         => $dataMedis->kd_kasir,
+                'no_transaksi_asal'     => $dataMedis->no_transaksi
             ];
 
             RmeSerahTerima::create($handOverData);

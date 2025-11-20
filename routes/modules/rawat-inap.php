@@ -104,6 +104,17 @@ Route::prefix('rawat-inap')->group(function () {
                 Route::get('/aktif', [RawatInapController::class, 'unitPelayanan'])->name('.aktif');
                 Route::get('/selesai', [RawatInapController::class, 'selesai'])->name('.selesai');
                 Route::get('/pending', [RawatInapController::class, 'pending'])->name('.pending');
+
+
+                // Hand Over Pasien
+                Route::prefix('serah-terima')->group(function () {
+                    Route::name('.serah-terima')->group(function () {
+                        Route::controller(RawatInapController::class)->group(function () {
+                            Route::get('/{data}', 'serahTerimaPasien');
+                            Route::put('/{data}', 'serahTerimaPasienCreate')->name('.store');
+                        });
+                    });
+                });
             });
 
             // Pelayanan
@@ -737,15 +748,15 @@ Route::prefix('rawat-inap')->group(function () {
                     });
                 });
 
-                // Hand Over Pasien
-                Route::prefix('serah-terima')->group(function () {
-                    Route::name('.serah-terima')->group(function () {
-                        Route::controller(RawatInapController::class)->group(function () {
-                            Route::get('/', 'serahTerimaPasien');
-                            Route::put('/{data}', 'serahTerimaPasienCreate')->name('.store');
-                        });
-                    });
-                });
+                // // Hand Over Pasien
+                // Route::prefix('serah-terima')->group(function () {
+                //     Route::name('.serah-terima')->group(function () {
+                //         Route::controller(RawatInapController::class)->group(function () {
+                //             Route::get('/', 'serahTerimaPasien');
+                //             Route::put('/{data}', 'serahTerimaPasienCreate')->name('.store');
+                //         });
+                //     });
+                // });
 
                 // Intake Output Cairan
                 Route::prefix('intake-cairan')->group(function () {

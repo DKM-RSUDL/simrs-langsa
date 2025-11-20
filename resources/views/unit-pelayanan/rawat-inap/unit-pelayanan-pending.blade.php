@@ -104,13 +104,10 @@
                             <tr>
                                 <th width="100px">Aksi</th>
                                 <th>Pasien</th>
-                                <th>No RM / Tgl Masuk</th>
+                                <th>No RM / Tgl Diserahkan</th>
                                 <th>DPJP</th>
-                                <th>Alamat</th>
-                                <th>Jaminan</th>
-                                <th>Status Pelayanan</th>
-                                <th>Keterangan</th>
-                                <th>Tindak Lanjut</th>
+                                <th>Kamar</th>
+                                <th>Unit/Ruang Asal</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -146,7 +143,7 @@
                                             <i class="bi bi-three-dots"></i>
                                         </button>
                                         <ul class="dropdown-menu shadow-lg">
-                                            <li><a class="dropdown-item m-1" href="${pelayananUrl + row.kd_unit + '/pelayanan/' + row.kd_pasien + '/' + row.tgl_masuk + '/' + row.urut_masuk + '/serah-terima'}">Serah Terima / Handover</a></li>
+                                            <li><a class="dropdown-item m-1" href="${pelayananUrl + row.kd_unit_tujuan + '/serah-terima/' + row.id}">Serah Terima / Handover</a></li>
                                             <li><a class="dropdown-item m-1" href="#">Batalkan Serah Terima</a></li>
                                         </ul>
                                     </div>
@@ -183,7 +180,7 @@
                             return `
                                 <div class="rm-reg">
                                     RM: ${row.kd_pasien ? row.kd_pasien : 'N/A'}<br>
-                                    Tgl: ${row.tgl_masuk ? row.tgl_masuk : 'N/A'}
+                                    Tgl: ${row.waktu_menyerahkan ? row.waktu_menyerahkan : 'N/A'}
                                 </div>
                             `;
                         },
@@ -195,28 +192,13 @@
                         defaultContent: ''
                     },
                     {
-                        data: 'alamat',
-                        name: 'alamat',
+                        data: 'kamar.nama_kamar',
+                        name: '',
                         defaultContent: ''
                     },
                     {
-                        data: 'jaminan',
-                        name: 'jaminan',
-                        defaultContent: ''
-                    },
-                    {
-                        data: 'status_pelayanan',
-                        name: 'status_pelayanan',
-                        defaultContent: ''
-                    },
-                    {
-                        data: 'keterangan',
-                        name: 'keterangan',
-                        defaultContent: ''
-                    },
-                    {
-                        data: 'tindak_lanjut',
-                        name: 'tindak_lanjut',
+                        data: 'unit_asal.nama_unit',
+                        name: '',
                         defaultContent: ''
                     },
                 ],

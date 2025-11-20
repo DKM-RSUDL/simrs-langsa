@@ -4,6 +4,7 @@ use App\Models\Kunjungan;
 use App\Models\Navigation;
 use App\Models\OrderHD;
 use App\Models\RmeMasterTindakLanjut;
+use App\Models\RmeSerahTerima;
 use App\Models\Role;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Cache;
@@ -366,41 +367,18 @@ if (!function_exists('countPendingPatientRanap')) {
     function countPendingPatientRanap($kd_unit)
     {
 
-        $cacheKey = "count_pending_ranap_$kd_unit";
+        // $cacheKey = "count_pending_ranap_$kd_unit";
 
-        $result = Cache::remember($cacheKey, 300, function () use ($kd_unit) {
+        // $result = Cache::remember($cacheKey, 300, function () use ($kd_unit) {
 
-            $count = Kunjungan::join('transaksi as t', function ($join) {
-                $join->on('kunjungan.kd_pasien', '=', 't.kd_pasien');
-                $join->on('kunjungan.kd_unit', '=', 't.kd_unit');
-                $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
-                $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
-            })
-                ->join('nginap', function ($q) {
-                    $q->on('kunjungan.kd_pasien', 'nginap.kd_pasien');
-                    $q->on('kunjungan.kd_unit', 'nginap.kd_unit');
-                    $q->on('kunjungan.tgl_masuk', 'nginap.tgl_masuk');
-                    $q->on('kunjungan.urut_masuk', 'nginap.urut_masuk');
-                })
-                ->join('rme_serah_terima as st', function ($q) {
-                    $q->on('kunjungan.kd_pasien', '=', 'st.kd_pasien');
-                    $q->on('kunjungan.tgl_masuk', '=', 'st.tgl_masuk');
-                    $q->on('kunjungan.urut_masuk', '=', 'st.urut_masuk_tujuan');
-                    $q->on('nginap.kd_unit_kamar', '=', 'st.kd_unit_tujuan');
-                })
-
-                ->whereRaw('nginap.kd_unit = t.kd_unit')
-                ->where('nginap.kd_unit_kamar', $kd_unit)
-                ->where('nginap.akhir', 1)
-                ->where('st.status', 1)
-                ->whereYear('kunjungan.tgl_masuk', '>=', 2025)
-                // ->where('kunjungan.status_inap', 0)
+            $count = RmeSerahTerima::where('kd_unit_tujuan', $kd_unit)
+                ->where('status', 1)
                 ->count();
 
             return $count;
-        });
+        // });
 
-        return $result;
+        // return $result;
     }
 }
 
