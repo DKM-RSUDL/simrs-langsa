@@ -159,7 +159,7 @@
 
                                         <label class="ms-3">HB</label>
                                         <div class="input-group mb-3">
-                                            <input type="number" name="HB" class="form-control"
+                                            <input type="text" name="HB" class="form-control"
                                                 value="{{ $permintaanDarah->hb }}" required>
                                             <span class="input-group-text" id="basic-addon1">g</span>
                                         </div>
