@@ -195,6 +195,7 @@ Route::prefix('operasi')->group(function () {
                             Route::post('/', 'store')->name('.store');
                             Route::get('/edit/{data}', 'edit')->name('.edit');
                             Route::put('/{data}', 'update')->name('.update');
+                            Route::delete('/{data}', 'destroy')->name('.destroy');
                             Route::get('/{data}', 'show')->name('.show');
                         });
                     });

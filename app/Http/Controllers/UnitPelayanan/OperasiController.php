@@ -17,6 +17,7 @@ use App\Models\Operasi\OkJadwalDr;
 use App\Models\Operasi\OkJadwalPs;
 use App\Models\OrderOK;
 use App\Models\Produk;
+use App\Models\RmeSerahTerima;
 use App\Models\RmeTransferPasienAntarRuang;
 use App\Models\Spesialisasi;
 use App\Models\Transaksi;
@@ -232,8 +233,8 @@ class OperasiController extends Controller
             ->where('jam_op', $jam_op)
             ->where('status', 0)
             ->first();
-        
-     
+
+
         if (empty($operasi)) return back()->with('error', 'data Order Operasi tidak ditemukan');
 
 
@@ -623,6 +624,22 @@ class OperasiController extends Controller
                     'kd_kasir_ok' => $mappingData['kd_kasir'],
                     'no_transaksi_ok' => $formattedTransactionNumber,
                 ]);
+
+
+            // update serah terima jika ada (sederhanakan dengan null-safe update)
+            if (!empty($request->transfer_id)) {
+                $transferPasien = RmeTransferPasienAntarRuang::with('serahTerima')
+                    ->find($request->transfer_id);
+
+                if ($transferPasien && $transferPasien->serahTerima) {
+                    $transferPasien->serahTerima->update([
+                        'petugas_terima' => Auth::user()->kd_karyawan,
+                        'tanggal_terima' => date('Y-m-d'),
+                        'jam_terima' => date('H:i:s'),
+                        'status' => 2,
+                    ]);
+                }
+            }
 
             DB::commit();
             return to_route('operasi.pelayanan', [$dataMedis->kd_pasien, $request->tanggal_registrasi, $urut_masuk])->with('success', 'Order operasi berhasil diterima dan diproses.');

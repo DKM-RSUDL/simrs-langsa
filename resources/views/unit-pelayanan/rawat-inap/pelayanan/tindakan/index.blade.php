@@ -159,35 +159,76 @@
                                 <th>PPA</th>
                                 <th>Keterangan</th>
                                 <th>Gambar</th>
+                                <th>Asal</th>
                                 <th>Aksi</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($tindakan as $tdk)
+                            @php $asal = 'IGD'; @endphp
+                            @foreach ($tindakanIGD as $tdk)
                                 <tr>
-                                    <td>{{ \Carbon\Carbon::parse($tdk->tgl_tindakan)->format('d M Y') }}
-                                        {{ \Carbon\Carbon::parse($tdk->jam_tindakan)->format('H:i') }}</td>
+                                    <td>{{ carbon_parse($tdk->tgl_tindakan, null, 'd M Y') }}
+                                        {{ carbon_parse($tdk->jam_tindakan, null, 'H:i') }}</td>
                                     <td>
                                         <span class="text-primary fw-bold text-decoration-underline">
                                             {{ $tdk->produk->deskripsi }}
                                         </span>
                                     </td>
-                                    {{-- <td>{{ $tdk->unit->nama_unit }} / {{ $tdk->produk->klas->klasifikasi }}</td> --}}
                                     <td>{{ $tdk->ppa->nama_lengkap }}</td>
                                     <td>{{ $tdk->keterangan }}</td>
                                     <td>
                                         <img src="{{ asset("storage/$tdk->gambar") }}" alt="" width="50">
                                     </td>
+                                    <td>{{ $asal }}</td>
                                     <td>
                                         <button class="btn btn-sm btn-success btn-show-tindakan"
                                             data-bs-target="#showTindakanModal" data-produk="{{ $tdk->kd_produk }}"
-                                            data-urut="{{ $tdk->urut_list }}"><i class="bi bi-eye"></i></button>
-                                        <button class="btn btn-sm btn-warning btn-edit-tindakan"
-                                            data-bs-target="#editTindakanModal" data-produk="{{ $tdk->kd_produk }}"
-                                            data-urut="{{ $tdk->urut_list }}"><i class="bi bi-pencil-square"></i></button>
-                                        <button class="btn btn-sm btn-delete-tindakan" data-produk="{{ $tdk->kd_produk }}"
-                                            data-urut="{{ $tdk->urut_list }}"><i
-                                                class="bi bi-x-circle-fill text-danger"></i></button>
+                                            data-urut="{{ $tdk->urut_list }}"
+                                            data-no_transaksi="{{ $tdk->no_transaksi }}"><i class="bi bi-eye"></i></button>
+                                        @if ($asal == 'Rawat Inap')
+                                            <button class="btn btn-sm btn-warning btn-edit-tindakan"
+                                                data-bs-target="#editTindakanModal" data-produk="{{ $tdk->kd_produk }}"
+                                                data-urut="{{ $tdk->urut_list }}"><i
+                                                    class="bi bi-pencil-square"></i></button>
+                                            <button class="btn btn-sm btn-delete-tindakan"
+                                                data-produk="{{ $tdk->kd_produk }}" data-urut="{{ $tdk->urut_list }}"><i
+                                                    class="bi bi-x-circle-fill text-danger"></i></button>
+                                        @endif
+                                    </td>
+                                </tr>
+                            @endforeach
+                            @php $asal = 'Rawat Inap'; @endphp
+                            @foreach ($tindakanRawatInap as $tdk)
+                                <tr>
+                                    <td>{{ carbon_parse($tdk->tgl_tindakan, null, 'd M Y') }}
+                                        {{ carbon_parse($tdk->jam_tindakan, null, 'H:i') }}</td>
+                                    <td>
+                                        <span class="text-primary fw-bold text-decoration-underline">
+                                            {{ $tdk->produk->deskripsi }}
+                                        </span>
+                                    </td>
+                                    {{-- <td>{{ $tdk->unit->nama_unit }} / {{ $tdk->produk->klas->klas->klasifikasi }}</td> --}}
+                                    <td>{{ $tdk->ppa->nama_lengkap }}</td>
+                                    <td>{{ $tdk->keterangan }}</td>
+                                    <td>
+                                        <img src="{{ asset("storage/$tdk->gambar") }}" alt="" width="50">
+                                    </td>
+                                    <td>{{ $asal }}</td>
+                                    <td>
+                                        <button class="btn btn-sm btn-success btn-show-tindakan"
+                                            data-bs-target="#showTindakanModal" data-produk="{{ $tdk->kd_produk }}"
+                                            data-urut="{{ $tdk->urut_list }}"
+                                            data-no_transaksi="{{ $dataMedis->no_transaksi }}"><i
+                                                class="bi bi-eye"></i></button>
+                                        @if ($asal == 'Rawat Inap')
+                                            <button class="btn btn-sm btn-warning btn-edit-tindakan"
+                                                data-bs-target="#editTindakanModal" data-produk="{{ $tdk->kd_produk }}"
+                                                data-urut="{{ $tdk->urut_list }}"><i
+                                                    class="bi bi-pencil-square"></i></button>
+                                            <button class="btn btn-sm btn-delete-tindakan"
+                                                data-produk="{{ $tdk->kd_produk }}" data-urut="{{ $tdk->urut_list }}"><i
+                                                    class="bi bi-x-circle-fill text-danger"></i></button>
+                                        @endif
                                     </td>
                                 </tr>
                             @endforeach
@@ -453,7 +494,7 @@
                     "_token": "{{ csrf_token() }}",
                     "kd_produk": kdProduk,
                     "urut_list": urut,
-                    "no_transaksi": "{{ $dataMedis->no_transaksi }}"
+                    "no_transaksi": $this.data('no_transaksi')
                 },
                 dataType: "json",
                 beforeSend: function() {
