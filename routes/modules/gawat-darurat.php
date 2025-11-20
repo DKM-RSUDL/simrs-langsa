@@ -50,6 +50,7 @@ use App\Http\Controllers\UnitPelayanan\GawatDarurat\UpdatePasienController;
 
 Route::prefix('gawat-darurat')->group(function () {
     Route::get('/', [GawatDaruratController::class, 'index'])->name('gawat-darurat.index');
+    Route::get('/selesai', [GawatDaruratController::class, 'selesai'])->name('gawat-darurat.selesai');
     Route::get('/triase', [GawatDaruratController::class, 'triaseIndex'])->name('gawat-darurat.triase');
     Route::post('/store-triase', [GawatDaruratController::class, 'storeTriase'])->name('gawat-darurat.store-triase');
     Route::post('/get-patient-bynik-ajax', [GawatDaruratController::class, 'getPatientByNikAjax'])->name('gawat-darurat.get-patient-bynik-ajax');
@@ -60,7 +61,7 @@ Route::prefix('gawat-darurat')->group(function () {
     Route::get('/triase/{kd_pasien}/{tgl_masuk}/print-pdf', [GawatDaruratController::class, 'generatePDF'])
         ->name('gawat-darurat.triase.printPDF');
     Route::prefix('pelayanan')->group(function () {
-        
+
         Route::prefix('/{kd_pasien}/{tgl_masuk}')->group(function () {
             // Update Pasien
             Route::prefix('{urut_masuk}/ubah-pasien')->group(function () {
@@ -72,7 +73,7 @@ Route::prefix('gawat-darurat')->group(function () {
                 });
             });
 
-           
+
 
             // general consent
             Route::prefix('{urut_masuk}/general-consent')->group(function () {
@@ -200,15 +201,15 @@ Route::prefix('gawat-darurat')->group(function () {
                 });
             });
 
-         
-            Route::prefix('{urut_masuk}/show-triase')->group(function(){
-                Route::name('show-triase')->group(callback: function(){
-                    Route::controller(GawatDaruratTriaseShowAndEditController::class)->group(function(){
-                           Route::get('/', 'index')->name('.index');
-                           Route::put('/','update')->name('.update');
+
+            Route::prefix('{urut_masuk}/show-triase')->group(function () {
+                Route::name('show-triase')->group(callback: function () {
+                    Route::controller(GawatDaruratTriaseShowAndEditController::class)->group(function () {
+                        Route::get('/', 'index')->name('.index');
+                        Route::put('/', 'update')->name('.update');
                     });
                 });
-             });
+            });
 
             // Route::prefix('{urut_masuk}/asesmen')->group(function () {
             Route::prefix('{urut_masuk}/asesmen')->group(function () {
