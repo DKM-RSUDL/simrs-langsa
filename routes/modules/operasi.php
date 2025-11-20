@@ -44,6 +44,7 @@ Route::prefix('operasi')->group(function () {
                                     Route::name('.medis')->group(function () {
                                         Route::controller(PraAnestesiMedisController::class)->group(function () {
                                             Route::get('/create', 'create')->name('.create');
+                                            Route::get('/print/{id}', 'print')->name('.print');
                                             Route::get('/edit/{data}', 'edit')->name('.edit');
                                             Route::post('/', 'store')->name('.store');
                                             Route::put('/{data}', 'update')->name('.update');
@@ -56,6 +57,7 @@ Route::prefix('operasi')->group(function () {
                                     Route::name('.perawat')->group(function () {
                                         Route::controller(PraAnestesiPerawatController::class)->group(function () {
                                             Route::get('/create', 'create')->name('.create');
+                                            Route::get('/print/{id}', 'print')->name('.print');
                                             Route::post('/', 'store')->name('.store');
                                             Route::get('/edit/{data}', 'edit')->name('.edit');
                                             Route::put('/{data}', 'update')->name('.update');

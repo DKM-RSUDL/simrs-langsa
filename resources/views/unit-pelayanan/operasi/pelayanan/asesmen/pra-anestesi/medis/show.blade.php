@@ -14,8 +14,7 @@
                 <x-button-previous />
                 @include('components.page-header', [
                     'title' => 'Rincian Pra Operasi Medis',
-                    'description' =>
-                        'Rincian data pra operasi medis.',
+                    'description' => 'Rincian data pra operasi medis.',
                 ])
 
                 <div class="section-separator" id="dataMasuk">
@@ -74,7 +73,7 @@
                         <input type="date" name="tgl_tindakan" id="tgl_tindakan" class="form-control me-3"
                             value="{{ date('Y-m-d', strtotime($asesmen->praOperatifMedis->waktu_tindakan)) }}" disabled>
                         <input type="time" name="jam_tindakan" id="jam_tindakan" class="form-control"
-                            value="{{ date('H:i', strtotime($asesmen->praOperatifMedis->waktu_tindakan)) }}" disabled>
+                            value="{{ date('H:i', strtotime($asesmen->praOperatifMedis->jam_tindakan)) }}" disabled>
                     </div>
 
                     <div class="form-group">

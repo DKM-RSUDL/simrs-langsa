@@ -11,6 +11,7 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class PraAnestesiMedisController extends Controller
 {
@@ -189,6 +190,61 @@ class PraAnestesiMedisController extends Controller
             $asesmen = OkAsesmen::find($id);
 
             return view('unit-pelayanan.operasi.pelayanan.asesmen.pra-anestesi.medis.show', compact('dataMedis', 'asesmen'));
+        } catch (Exception $e) {
+            return back()->with('error', $e->getMessage());
+        }
+    }
+
+    public function print($kd_pasien, $tgl_masuk, $urut_masuk, $id)
+    {
+        
+        try {
+            // Logika Get Data Medis dan Hitung Umur (Sama seperti fungsi show)
+            $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
+                ->join('transaksi as t', function ($join) {
+                    $join->on('kunjungan.kd_pasien', '=', 't.kd_pasien');
+                    $join->on('kunjungan.kd_unit', '=', 't.kd_unit');
+                    $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
+                    $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
+                })
+                ->where('kunjungan.kd_pasien', $kd_pasien)
+                ->where('kunjungan.kd_unit', 71)
+                ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
+                ->where('kunjungan.urut_masuk', $urut_masuk)
+                ->first();
+
+            if (!$dataMedis) {
+                abort(404, 'Data not found');
+            }
+
+            if ($dataMedis->pasien && $dataMedis->pasien->tgl_lahir) {
+                $dataMedis->pasien->umur = Carbon::parse($dataMedis->pasien->tgl_lahir)->age;
+            } else {
+                $dataMedis->pasien->umur = 'Tidak Diketahui';
+            }
+
+            // 1. Ambil Asesmen (Parent ID)
+            $asesmen = OkAsesmen::find($id);
+
+            if (!$asesmen) {
+                abort(404, 'Asesmen tidak ditemukan');
+            }
+
+            // 2. Ambil Data Pra Anestesi Medis (Child Record)
+            $praAnestesi = OkPraOperasiMedis::where('id_asesmen', $asesmen->id)->first();
+
+            if (!$praAnestesi) {
+                abort(404, 'Data Pra Anestesi Medis tidak ditemukan');
+            }
+
+            // 3. Render PDF (Gunakan DomPDF/Facade)
+            $pdf = Pdf::loadView(
+                'unit-pelayanan.operasi.pelayanan.asesmen.pra-anestesi.medis.print',
+                compact('dataMedis', 'asesmen', 'praAnestesi')
+            );
+
+            $fileName = 'Pra-Anestesi-Medis-' . ($dataMedis->pasien->kd_pasien ?? 'Unknown') . '-' . $id . '.pdf';
+            return $pdf->stream($fileName);
         } catch (Exception $e) {
             return back()->with('error', $e->getMessage());
         }

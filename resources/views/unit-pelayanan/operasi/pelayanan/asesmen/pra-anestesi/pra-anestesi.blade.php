@@ -146,7 +146,7 @@
                     </div>
                 </div>
 
-                <!-- Action Buttons -->
+                <!-- Action Buttons Medis -->
                 <div class="d-flex gap-2">
                     @if ($item->kategori == 1)
                         <a href="{{ route('operasi.pelayanan.asesmen.pra-anestesi.medis.show', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
@@ -160,8 +160,17 @@
                             <i class="fas fa-edit"></i>
                             Edit
                         </a>
+                        <a href="{{ route('operasi.pelayanan.asesmen.pra-anestesi.medis.print', [
+                            $dataMedis->kd_pasien, // <--- KOMANYA DI SINI
+                            date('Y-m-d', strtotime($dataMedis->tgl_masuk)),
+                            $dataMedis->urut_masuk,
+                            $item->id,
+                        ]) }}"
+                            target="_blank" class="btn btn-primary btn-sm px-3">
+                            <i class="fas fa-print"></i> Print
+                        </a>
                     @endif
-
+                    <!-- Action Buttons Perawat -->
                     @if ($item->kategori == 2)
                         <a href="{{ route('operasi.pelayanan.asesmen.pra-anestesi.perawat.show', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
                             class="btn btn-info btn-sm px-3">
@@ -174,8 +183,17 @@
                             <i class="fas fa-edit"></i>
                             Edit
                         </a>
+                        <a href="{{ route('operasi.pelayanan.asesmen.pra-anestesi.perawat.print', [
+                            $dataMedis->kd_pasien,
+                            date('Y-m-d', strtotime($dataMedis->tgl_masuk)),
+                            $dataMedis->urut_masuk,
+                            $item->id,
+                        ]) }}"
+                            target="_blank" class="btn btn-primary btn-sm px-3">
+                            <i class="fas fa-print"></i> Print
+                        </a>
                     @endif
-
+                    <!-- Action Buttons edukasi -->
                     @if ($item->kategori == 3)
                         <a href="{{ route('operasi.pelayanan.asesmen.pra-anestesi.edukasi.show', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
                             class="btn btn-info btn-sm px-3">
@@ -186,7 +204,7 @@
                         <a href="{{ route('operasi.pelayanan.asesmen.pra-anestesi.edukasi.edit', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
                             class="btn btn-sm btn-secondary">
                             <i class="fas fa-edit"></i>
-                            Edit
+                            Editt
                         </a>
                     @endif
                 </div>
