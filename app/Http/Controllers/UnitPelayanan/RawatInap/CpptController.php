@@ -1033,7 +1033,7 @@ class CpptController extends Controller
 
             // Create resume using private function
             $resumeData = [
-                'anamnesis'             => $request->anamnesis,
+                // 'anamnesis'             => $request->anamnesis,
             ];
 
             if ($tipe_cppt == 1) {
@@ -1108,9 +1108,6 @@ class CpptController extends Controller
             $urutCpptReq = $request->urut_total_cppt;
             $unitCpptReq = $request->unit_cppt;
             $noTransaksiCpptReq = $request->no_transaksi;
-
-
-
 
 
             $konpas = MrKonpas::where('kd_pasien', $kunjungan->kd_pasien)
@@ -1230,7 +1227,7 @@ class CpptController extends Controller
 
             // Create resume using private function
             $resumeData = [
-                'anamnesis'             => $request->anamnesis,
+                // 'anamnesis'             => $request->anamnesis,
             ];
 
             $tipe_cppt = $this->getTipeCpptByUser($cppt->tipe_cppt);
