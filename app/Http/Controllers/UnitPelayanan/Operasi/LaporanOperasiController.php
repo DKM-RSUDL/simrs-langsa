@@ -9,6 +9,7 @@ use App\Models\OkAsesmen;
 use App\Models\OkPraOperasiMedis;
 use App\Models\OkJenisAnastesi;
 use App\Models\DokterAnastesi;
+use App\Models\OkJenisOP;
 use App\Models\OkLaporanOperasi;
 use App\Models\Perawat;
 use Carbon\Carbon;
@@ -16,6 +17,7 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class LaporanOperasiController extends Controller
 {
@@ -316,5 +318,61 @@ class LaporanOperasiController extends Controller
         }
 
         return view('unit-pelayanan.operasi.pelayanan.laporan-operatif.show', compact('dataMedis', 'jenisAnastesi', 'dokterAnastesi', 'dokter', 'perawat', 'laporan'));
+    }
+
+    public function print($kd_pasien, $tgl_masuk, $urut_masuk, $id)
+    {
+        // 1. Logika Pengambilan Data (Sama seperti sebelumnya)
+        $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
+            ->join('transaksi as t', function ($join) {
+                $join->on('kunjungan.kd_pasien', '=', 't.kd_pasien');
+                $join->on('kunjungan.kd_unit', '=', 't.kd_unit');
+                $join->on(
+                    'kunjungan.tgl_masuk',
+                    '=',
+                    't.tgl_transaksi'
+                );
+                $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
+            })
+            ->where('kunjungan.kd_pasien', $kd_pasien)
+            ->where('kunjungan.kd_unit', 71)
+            ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
+            ->where('kunjungan.urut_masuk', $urut_masuk)
+            ->first();
+        if (!$dataMedis) {
+            abort(404, 'Data not found');
+        }
+
+        $jenisAnastesi = OkJenisAnastesi::all();
+
+        if ($dataMedis->pasien && $dataMedis->pasien->tgl_lahir) {
+            $dataMedis->pasien->umur = Carbon::parse($dataMedis->pasien->tgl_lahir)->age;
+        } else {
+            $dataMedis->pasien->umur = 'Tidak Diketahui';
+        }
+
+        $laporan = OkLaporanOperasi::findOrFail($id);
+
+        if ($laporan->kd_kasir !== $dataMedis->kd_kasir || $laporan->no_transaksi !== $dataMedis->no_transaksi) {
+            abort(404, 'Laporan tidak ditemukan untuk kunjungan ini');
+        }
+
+        $laporan->dokterBedah = \App\Models\Dokter::where('kd_dokter', $laporan->kd_dokter_bedah)->value('nama_lengkap');
+        $laporan->dokterAnastesi = \App\Models\Dokter::where('kd_dokter', $laporan->kd_dokter_anastesi)->value('nama_lengkap');
+        $laporan->penataAnastesi = \App\Models\Perawat::where('kd_perawat', $laporan->kd_penata_anastesi)->value('nama'); // Menggunakan 'nama'
+
+
+        $pasien = $dataMedis->pasien ?? (object) [];
+        $kunjungan = $dataMedis;
+
+        $pdf = Pdf::loadView(
+            'unit-pelayanan.operasi.pelayanan.laporan-operatif.print',
+            compact('dataMedis', 'laporan', 'pasien', 'kunjungan', 'jenisAnastesi')
+        );
+
+        $fileName = 'Laporan-Operasi-' . ($pasien->kd_pasien ?? 'Unknown') . '-' . $id . '.pdf';
+
+
+        return $pdf->stream($fileName);
     }
 }
