@@ -21,6 +21,7 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
 class RawatInapLabPatologiKlinikController extends Controller
@@ -628,20 +629,22 @@ class RawatInapLabPatologiKlinikController extends Controller
         }
 
         $no_transaksi = $request->no_transaksi;
+
+        // Cek apakah labor ini dari IGD atau Rawat Inap menggunakan UnitAsal
         $unitAsal = UnitAsal::where('no_transaksi_asal', $no_transaksi)->first();
 
-        if (empty($unitAsal)) {
-            return response()->json([
-                'status'    => 'error',
-                'message'   => 'Data tidak ditemukan !',
-                'data'      => []
-            ]);
-        }
-
-        $otoritas = Otoritas::where('no_transaksi', $unitAsal->no_transaksi)
-            ->where('kd_kasir', $unitAsal->kd_kasir)
-            ->where('kd_pasien', $kd_pasien)
-            ->where('status', 1)
+        // Cari Otoritas - gunakan no_transaksi RANAP jika ada mapping, atau langsung dari request
+        $otoritas = Otoritas::where('status', 1)
+            ->where(function ($query) use ($no_transaksi, $unitAsal) {
+                if (!empty($unitAsal)) {
+                    // Labor dari IGD - gunakan no_transaksi RANAP (hasil mapping)
+                    $query->where('no_transaksi', $unitAsal->no_transaksi)
+                        ->where('kd_kasir', $unitAsal->kd_kasir);
+                } else {
+                    // Labor dari RANAP langsung
+                    $query->where('no_transaksi', $no_transaksi);
+                }
+            })
             ->first();
 
         if (empty($otoritas)) {
@@ -667,5 +670,111 @@ class RawatInapLabPatologiKlinikController extends Controller
                 'file_url'  => "https://e-rsudlangsa.id/dokumen/lab_pk/$otoritas->file"
             ]
         ]);
+    }
+
+    public function printAll(Request $request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
+    {
+        try {
+            // Ambil data pasien RANAP langsung dari parameter
+            $dataMedis = $this->baseService->getDataMedis($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
+
+            if (empty($dataMedis)) {
+                return response()->json([
+                    'status'    => 'error',
+                    'message'   => 'Data pasien tidak ditemukan !',
+                    'data'      => []
+                ]);
+            }
+
+            // Cek apakah pasien dari IGD
+            $asalIGD = AsalIGD::where('kd_kasir', $dataMedis->kd_kasir)
+                ->where('no_transaksi', $dataMedis->no_transaksi)
+                ->first();
+
+            // Dapatkan data kunjungan IGD jika pasien dari IGD
+            $kunjunganIGD = null;
+            if (!empty($asalIGD)) {
+                $kunjunganIGD = $this->baseService->getDataMedisbyTransaksi(
+                    $asalIGD->kd_kasir_asal,
+                    $asalIGD->no_transaksi_asal
+                );
+            }
+
+            // Query labor dengan orWhere - ambil dari RANAP atau IGD
+            $labor = SegalaOrder::where('kategori', 'LB')
+                ->where('kd_pasien', $dataMedis->kd_pasien)
+                ->where(function ($query) use ($dataMedis, $kunjunganIGD) {
+                    // Labor dari RANAP langsung
+                    $query->where(function ($q) use ($dataMedis) {
+                        $q->where('kd_unit', $dataMedis->kd_unit)
+                            ->where('tgl_masuk', $dataMedis->tgl_masuk)
+                            ->where('urut_masuk', $dataMedis->urut_masuk);
+                    });
+
+                    // Atau labor dari IGD (jika ada)
+                    if (!empty($kunjunganIGD)) {
+                        $query->orWhere(function ($q) use ($kunjunganIGD) {
+                            $q->where('kd_unit', $kunjunganIGD->kd_unit)
+                                ->where('tgl_masuk', $kunjunganIGD->tgl_transaksi)
+                                ->where('urut_masuk', $kunjunganIGD->urut_masuk);
+                        });
+                    }
+                })
+                ->get();
+
+            // Proses setiap labor untuk mendapatkan file
+            $laborFiles = [];
+            foreach ($labor as $item) {
+                // Cek apakah labor ini dari IGD yang perlu mapping
+                $unitAsal = UnitAsal::where('no_transaksi_asal', $item->no_transaksi)->first();
+
+                // Cari Otoritas dengan conditional query
+                $otoritas = Otoritas::where('status', 1)
+                    ->where(function ($query) use ($item, $unitAsal) {
+                        if (!empty($unitAsal)) {
+                            // Labor dari IGD - gunakan no_transaksi RANAP (hasil mapping)
+                            $query->where('no_transaksi', $unitAsal->no_transaksi)
+                                ->where('kd_kasir', $unitAsal->kd_kasir);
+                        } else {
+                            // Labor dari RANAP langsung
+                            $query->where('no_transaksi', $item->no_transaksi);
+                        }
+                    })
+                    ->first();
+
+                // Tambahkan ke list jika ada file
+                if ($otoritas && !empty($otoritas->file)) {
+                    $laborFiles[] = [
+                        'source' => $item->kd_unit == 3 ? 'IGD' : 'RANAP',
+                        'kd_order' => $item->kd_order,
+                        'tgl_order' => $item->tgl_order,
+                        'file_url' => "https://e-rsudlangsa.id/dokumen/lab_pk/$otoritas->file"
+                    ];
+                }
+            }
+
+            if (empty($laborFiles)) {
+                return response()->json([
+                    'status'    => 'error',
+                    'message'   => 'Tidak ada hasil laboratorium yang ditemukan !',
+                    'data'      => []
+                ]);
+            }
+
+            return response()->json([
+                'status'    => 'success',
+                'message'   => 'OK',
+                'data'      => [
+                    'count' => count($laborFiles),
+                    'files' => $laborFiles
+                ]
+            ]);
+        } catch (Exception $e) {
+            return response()->json([
+                'status'    => 'error',
+                'message'   => 'Terjadi kesalahan: ' . $e->getMessage(),
+                'data'      => []
+            ], 500);
+        }
     }
 }

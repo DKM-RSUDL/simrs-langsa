@@ -234,12 +234,11 @@
         <div id="daftarPrintMenuRanap" class="accordion-collapse collapse" data-bs-parent="#patientMenuAccordion">
             <div class="accordion-body p-0">
                 <div class="list-group list-group-flush">
-                    <a href="#" class="list-group-item list-group-item-action btn-print-labor"
-                        data-kasir="{{ $dataMedis->kd_kasir ?? '' }}"
-                        data-transaksi="{{ $dataMedis->no_transaksi ?? '' }}"
+                    <a href="#" class="list-group-item list-group-item-action btn-print-all-labor"
                         data-pasien="{{ $dataMedis->kd_pasien ?? '' }}"
-                        data-tglmasuk="{{ $dataMedis->tgl_masuk ?? '' }}">
-                        Laboratorium
+                        data-tglmasuk="{{ $dataMedis->tgl_masuk ?? '' }}"
+                        data-unit="{{ $dataMedis->kd_unit ?? '' }}" data-urut="{{ $dataMedis->urut_masuk ?? '' }}">
+                        <i class="bi bi-printer me-2"></i> Laboratorium
                     </a>
                     <a href="{{ route('rawat-inap.tindakan.print-pdf', [$dataMedis?->kd_unit ?? '', $dataMedis?->kd_pasien ?? '', $dataMedis?->tgl_masuk ?? '', $dataMedis?->urut_masuk ?? '']) }}"
                         target="_blank" class="list-group-item list-group-item-action">
@@ -275,6 +274,7 @@
 
 @push('js')
     <script>
+        // Print Single Labor (dari modal)
         $(document).on('click', '.btn-print-labor', function() {
             let $this = $(this);
             let kasir = $this.data('kasir');
@@ -327,6 +327,92 @@
                     Swal.fire({
                         title: "Error",
                         text: "Internal server error !",
+                        icon: "error",
+                    });
+                }
+            });
+        });
+
+        // Print All Labor (dari menu)
+        $(document).on('click', '.btn-print-all-labor', function(e) {
+            e.preventDefault();
+            let $this = $(this);
+            let pasien = $this.data('pasien');
+            let tglmasuk = $this.data('tglmasuk');
+            let unit = $this.data('unit');
+            let urut = $this.data('urut');
+
+            if (!pasien || !tglmasuk || !unit || !urut) {
+                Swal.fire({
+                    title: "Error",
+                    text: "Data pasien tidak lengkap!",
+                    icon: "error",
+                });
+                return false;
+            }
+
+            let originalText = $this.html();
+
+            // Format tgl_masuk menjadi Y-m-d jika masih dalam format datetime
+            let tglFormatted = tglmasuk.split(' ')[0];
+
+            $.ajax({
+                type: "post",
+                url: `/unit-pelayanan/rawat-inap/unit/${unit}/pelayanan/${pasien}/${tglFormatted}/${urut}/lab-patologi-klinik/print-all`,
+                data: {
+                    _token: "{{ csrf_token() }}"
+                },
+                dataType: "json",
+                beforeSend: function() {
+                    $this.html(
+                        '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading...'
+                    );
+                    $this.prop('disabled', true);
+                },
+                success: function(res) {
+                    let status = res.status;
+                    let msg = res.message;
+                    let data = res.data;
+
+                    if (status == 'error') {
+                        Swal.fire({
+                            title: "Error",
+                            text: msg,
+                            icon: "error",
+                        });
+                        return false;
+                    }
+
+                    // Buka semua file laboratorium di tab baru
+                    if (data.files && data.files.length > 0) {
+                        Swal.fire({
+                            title: "Berhasil!",
+                            text: `Membuka ${data.count} hasil laboratorium...`,
+                            icon: "success",
+                            timer: 2000,
+                            showConfirmButton: false
+                        });
+
+                        // Buka setiap file dengan delay agar tidak di-block browser
+                        data.files.forEach((file, index) => {
+                            setTimeout(() => {
+                                window.open(file.file_url, '_blank');
+                            }, index * 300); // delay 300ms antar file
+                        });
+                    }
+                },
+                complete: function() {
+                    $this.html(originalText);
+                    $this.prop('disabled', false);
+                },
+                error: function(xhr) {
+                    let errorMsg = "Internal server error!";
+                    if (xhr.responseJSON && xhr.responseJSON.message) {
+                        errorMsg = xhr.responseJSON.message;
+                    }
+                    Swal.fire({
+                        title: "Error",
+                        text: errorMsg,
                         icon: "error",
                     });
                 }
