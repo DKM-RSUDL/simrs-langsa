@@ -259,12 +259,13 @@
     </table>
 
     {{-- INFORMASI PASIEN --}}
+    {{-- INFORMASI PASIEN --}}
     <table class="patient-table">
         <tr>
             <th>No. RM</th>
             <td>{{ $dataMedis->pasien->kd_pasien ?? '-' }}</td>
-            <th>Tgl. Masuk</th>
-            <td>{{ carbon_parse($dataMedis->tgl_masuk, null, 'd M Y') }}</td>
+            <th>Jenis Kelamin</th>
+            <td>{{ $dataMedis->pasien->jenis_kelamin == 1 ? 'Laki-Laki' : 'Wanita' }}</td>
         </tr>
         <tr>
             <th>Nama Pasien</th>

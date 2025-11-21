@@ -194,8 +194,8 @@
         <tr>
             <th>No. RM</th>
             <td>{{ $dataMedis->pasien->kd_pasien ?? '-' }}</td>
-            <th>Tgl. Masuk</th>
-            <td>{{ carbon_parse($dataMedis->tgl_masuk, null, 'd M Y') }}</td>
+            <th>Jenis Kelamin</th>
+            <td>{{ $dataMedis->pasien->jenis_kelamin == 1 ? 'Laki-Laki' : 'Wanita' }}</td>
         </tr>
         <tr>
             <th>Nama Pasien</th>
@@ -205,16 +205,12 @@
         </tr>
     </table>
 
-    {{-- ======================================================= --}}
-    {{-- ISI ASESMEN --}}
-    {{-- ======================================================= --}}
-
     {{-- SECTION 1: DATA MASUK --}}
     <div class="section-title">1. Data Masuk</div>
     <div class="form-row">
         <div class="form-label">Tanggal dan Jam Masuk Operasi</div>
         <div class="form-value">
-            {{ date('d-m-Y', strtotime($asesmen->praOperatifMedis->tgl_op)) ?? '-' }} Pukul
+            : {{ date('d-m-Y', strtotime($asesmen->praOperatifMedis->tgl_op)) ?? '-' }} Pukul
             {{ date('H:i', strtotime($asesmen->praOperatifMedis->tgl_op)) ?? '-' }} WIB
         </div>
     </div>
@@ -223,66 +219,59 @@
     <div class="section-title">2. Diagnosa Pra Operatif</div>
     <div class="form-row">
         <div class="form-label">Diagnosis Pra Operatif</div>
-        <div class="form-value">
-            <span class="textarea-value">{{ $pra->diagnosa_pra_operasi ?? '-' }}</span>
-        </div>
+        <div class="form-value">: {{ $pra->diagnosa_pra_operasi ?? '-' }}</div>
     </div>
 
     <div class="form-row">
         <div class="form-label">Timing Tindakan</div>
-        <div class="form-value">
-            <span class="textarea-value">{{ $pra->timing_tindakan ?? '-' }}</span>
-        </div>
+        <div class="form-value">: {{ $pra->timing_tindakan ?? '-' }}</div>
     </div>
 
     <div class="form-row">
         <div class="form-label">Indikasi Tindakan</div>
-        <div class="form-value">
-            <span class="textarea-value">{{ $pra->indikasi_tindakan ?? '-' }}</span>
-        </div>
+        <div class="form-value">: {{ $pra->indikasi_tindakan ?? '-' }}</div>
     </div>
+
 
     {{-- SECTION 3: RENCANA TINDAKAN DAN PROSEDUR --}}
     <div class="section-title">3. Rencana Tindakan dan Prosedur</div>
+
     <div class="form-row">
         <div class="form-label">Rencana Tindakan</div>
-        <div class="form-value">
-            <span class="textarea-value">{{ $pra->rencana_tindakan ?? '-' }}</span>
-        </div>
+        <div class="form-value">: {{ $pra->rencana_tindakan ?? '-' }}</div>
     </div>
 
     <div class="form-row">
         <div class="form-label">Prosedur Tindakan</div>
-        <div class="form-value">
-            <span class="textarea-value">{{ $pra->prosedur_tindakan ?? '-' }}</span>
-        </div>
+        <div class="form-value">: {{ $pra->prosedur_tindakan ?? '-' }}</div>
     </div>
+
 
     {{-- SECTION 4: TIMING DAN ALTERNATIF TINDAKAN --}}
     <div class="section-title">4. Timing dan Alternatif Tindakan</div>
+
     <div class="form-row">
         <div class="form-label">Waktu Tindakan</div>
         <div class="form-value">
-            {{ date('d-m-Y', strtotime($pra->waktu_tindakan)) ?? '-' }} Pukul
-            {{ date('H:i', strtotime($pra->jam_tindakan)) ?? '-' }} WIB
+            : {{ date('d-m-Y', strtotime($pra->waktu_tindakan)) ?? '-' }}
+            Pukul {{ date('H:i', strtotime($pra->jam_tindakan)) ?? '-' }} WIB
         </div>
     </div>
 
     <div class="form-row">
         <div class="form-label">Alternatif Lain</div>
-        <div class="form-value">
-            <span class="textarea-value">{{ $pra->alternatif_lain ?? '-' }}</span>
-        </div>
+        <div class="form-value">: {{ $pra->alternatif_lain ?? '-' }}</div>
     </div>
+
 
     {{-- SECTION 5: RISIKO DAN PEMANTAUAN --}}
     <div class="section-title">5. Risiko dan Pemantauan</div>
+
     <div class="form-row">
-        <div class="form-label">Risiko/Komplikasi</div>
-        <div class="form-value">
-            <span class="textarea-value">{{ $pra->resiko ?? '-' }}</span>
-        </div>
+        <div class="form-label">Risiko / Komplikasi</div>
+        <div class="form-value">: {{ $pra->resiko ?? '-' }}</div>
     </div>
+
 </body>
 
 </html>
