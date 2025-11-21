@@ -129,6 +129,14 @@
                 </div>
                 {{-- End Header --}}
             </div>
+
+            <div class="col-12 mt-3 d-flex justify-content-end">
+                @canany(['is-admin', 'is-dokter-umum'])
+                    <a href="{{ route('gawat-darurat.triase') }}" class="btn btn-primary d-flex align-items-center gap-2">
+                        <i class="ti-plus"></i> Tambah
+                    </a>
+                @endcanany
+            </div>
         </div>
 
         <div class="row mt-3">

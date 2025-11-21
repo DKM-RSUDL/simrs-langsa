@@ -71,7 +71,7 @@ class SegalaOrder extends Model
 
     public function produk()
     {
-        return $this->belongsTo(produk::class, 'kd_produk', 'kp_produk');
+        return $this->belongsTo(Produk::class, 'kd_produk', 'kp_produk');
     }
 
     public function unit()
