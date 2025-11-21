@@ -5,6 +5,8 @@
 ])
 
 <div {{ $attributes->merge(['class' => 'card h-auto sticky-top', 'style' => 'top:1rem; z-index: 0;']) }}>
+    <span class="bagian-info w-min rounded-t-none badge bg-primary shadow-sm">
+        {{ $dataMedis->unit->bagian->bagian ?? '-' }}</span>
     <div class="card-body">
         <div class="position-absolute top-0 end-0 p-3 d-flex flex-column align-items-center gap-1">
             <span class="d-block rounded-circle bg-danger" style="width:8px;height:8px;"></span>
@@ -37,11 +39,7 @@
                 <div class="small text-body-secondary mb-2">
                     {{ !empty($dataMedis->pasien->tgl_lahir) ? hitungUmur($dataMedis->pasien->tgl_lahir) : 'Tidak Diketahui' }}
                     Thn
-                    (
-                    {{ $dataMedis->pasien->tgl_lahir
-                        ? \Carbon\Carbon::parse($dataMedis->pasien->tgl_lahir)->format('d/m/Y')
-                        : 'Tidak Diketahui' }}
-                    )
+                    ({{ $dataMedis->pasien->tgl_lahir ? \Carbon\Carbon::parse($dataMedis->pasien->tgl_lahir)->format('d/m/Y') : 'Tidak Diketahui' }})
                 </div>
 
                 <div class="d-flex flex-column gap-1">
@@ -56,49 +54,77 @@
                         </span>
                     </div>
 
-                    <div class="d-inline-flex align-items-start gap-2">
-                        <i class="bi bi-hospital"></i>
-                        <span>
-                            {{ $dataMedis->unit->bagian->bagian ?? '-' }}
-                            @php
-                                $isRanap = $dataMedis?->unit?->kd_bagian == 1;
-                                $namaUnit = null;
+                    {{-- BAGIAN UNIT & RUANGAN (YANG DIUBAH) --}}
+                    @php
+                        $isRanap = $dataMedis?->unit?->kd_bagian == 1;
+                        $namaUnit = null;
+                        $unitUrl = null;
 
-                                if ($isRanap) {
-                                    $nginap = \App\Models\Nginap::join(
-                                        'unit as u',
-                                        'nginap.kd_unit_kamar',
-                                        '=',
-                                        'u.kd_unit',
-                                    )
-                                        ->where('nginap.kd_pasien', $dataMedis->kd_pasien ?? null)
-                                        ->where('nginap.kd_unit', $dataMedis->kd_unit ?? null)
-                                        ->where('nginap.tgl_masuk', $dataMedis->tgl_masuk ?? null)
-                                        ->where('nginap.urut_masuk', $dataMedis->urut_masuk ?? null)
-                                        ->where('nginap.akhir', 1)
-                                        ->first();
+                        if ($isRanap) {
+                            $nginap = \App\Models\Nginap::join('unit as u', 'nginap.kd_unit_kamar', '=', 'u.kd_unit')
+                                ->where('nginap.kd_pasien', $dataMedis->kd_pasien ?? null)
+                                ->where('nginap.kd_unit', $dataMedis->kd_unit ?? null)
+                                ->where('nginap.tgl_masuk', $dataMedis->tgl_masuk ?? null)
+                                ->where('nginap.urut_masuk', $dataMedis->urut_masuk ?? null)
+                                ->where('nginap.akhir', 1)
+                                ->first();
 
-                                    $namaUnit = $nginap->nama_unit ?? null;
-                                } else {
-                                    $namaUnit = $dataMedis->unit->nama_unit ?? null;
-                                }
-                            @endphp
-                            ({{ $namaUnit ?? '-' }})
-                        </span>
+                            $namaUnit = $nginap->nama_unit ?? null;
+                        } else {
+                            $namaUnit = $dataMedis->unit->nama_unit ?? null;
+                        }
+
+                        $kdBagian = $dataMedis->unit->kd_bagian ?? null;
+                        switch ($kdBagian) {
+                            case 1:
+                                $unitUrl = url('unit-pelayanan/rawat-inap/unit/' . $dataMedis->kd_unit);
+                                break;
+                            case 2:
+                                $unitUrl = url('unit-pelayanan/rawat-jalan/unit/' . $dataMedis->kd_unit);
+                                break;
+                            case 3:
+                                $unitUrl = url('unit-pelayanan/gawat-darurat');
+                                break;
+                            case 72:
+                                $unitUrl = url('unit-pelayanan/hemodialisa');
+                                break;
+                            case 74:
+                                $unitUrl = url('unit-pelayanan/rehab-medis');
+                                break;
+                            case 71:
+                                $unitUrl = url('unit-pelayanan/operasi');
+                                break;
+                        }
+                    @endphp
+
+                    {{-- Unit Info Card --}}
+                    <div class="unit-info-box mt-2 position-relative">
+                        @if ($namaUnit && $unitUrl)
+                            <a href="{{ $unitUrl }}" class="d-inline-flex align-items-start text-decoration-none gap-2"
+                                title="Lihat {{ $namaUnit }}">
+                                <i class="bi bi-hospital"></i>
+                                <span>{{ $namaUnit }}</span>
+                            </a>
+                        @elseif ($namaUnit)
+                            <a href="{{ $unitUrl }}" class="d-inline-flex align-items-start text-decoration-none gap-2"
+                                title="Lihat {{ $namaUnit }}">
+                                <i class="bi bi-hospital"></i>
+                                <span>{{ $namaUnit }}</span>
+                            </a>
+                        @else
+                            <span class="text-muted small">-</span>
+                        @endif
                     </div>
                 </div>
             </div>
         </div>
 
         {{-- CHECK BUTTON I-CARE --}}
-
         @if (in_array($dataMedis->unit->kd_bagian ?? null, [2, 3]))
             <div class="pt-3">
-                {{-- <form action="{{ route('rawat-jalan.pelayanan.icare', [$dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk]) }}" method="get"> --}}
                 <button class="btn btn-warning w-100" id="btnIcare" type="button">
                     <i class="bi bi-info-circle me-2"></i> I-Care
                 </button>
-                {{-- </form> --}}
             </div>
         @endif
     </div>
@@ -106,23 +132,20 @@
     {{-- Card Footer - Tombol Menu & Offcanvas --}}
     @if ($showMenu && $dataMedis)
         @php
-            // Deteksi kode bagian dari unit
             $kdBagian = $dataMedis->unit->kd_bagian ?? null;
-
-            // Generate base URL untuk pelayanan berdasarkan kd_bagian
             $baseSegment = '';
 
             switch ($kdBagian) {
-                case 1: // Rawat Inap - PAKAI /unit/
+                case 1:
                     $baseSegment = 'rawat-inap/unit/' . $dataMedis->kd_unit;
                     break;
-                case 2: // Rawat Jalan - PAKAI /unit/
+                case 2:
                     $baseSegment = 'rawat-jalan/unit/' . $dataMedis->kd_unit;
                     break;
-                case 3: // Rawat Darurat (IGD) - TIDAK PAKAI /unit/
+                case 3:
                     $baseSegment = 'gawat-darurat';
                     break;
-                case 72: // Hemodialisa - TIDAK PAKAI /unit/
+                case 72:
                     $baseSegment = 'hemodialisa';
                     break;
                 default:
@@ -154,6 +177,7 @@
         @endif
     @endif
 </div>
+
 {{-- Offcanvas untuk Menu --}}
 <div class="offcanvas offcanvas-end" style="width: 280px; z-index: 99999;" tabindex="-1" id="patientMenuOffcanvas"
     aria-labelledby="patientMenuOffcanvasLabel">
@@ -164,25 +188,20 @@
         <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
     </div>
     <div class="offcanvas-body p-0">
-        {{-- Load menu component berdasarkan kd_bagian --}}
         @switch($kdBagian)
             @case(1)
-                {{-- Rawat Inap --}}
                 <x-patient-menus.rawat-inap :pelayananUrl="$pelayananUrl" :dataMedis="$dataMedis" />
             @break
 
             @case(2)
-                {{-- Rawat Jalan --}}
                 <x-patient-menus.rawat-jalan :pelayananUrl="$pelayananUrl" :dataMedis="$dataMedis" />
             @break
 
             @case(3)
-                {{-- Gawat Darurat --}}
                 <x-patient-menus.gawat-darurat :pelayananUrl="$pelayananUrl" :dataMedis="$dataMedis" />
             @break
 
             @case(72)
-                {{-- Hemodialisa --}}
                 <x-patient-menus.hemodialisa :pelayananUrl="$pelayananUrl" />
             @break
 
@@ -194,7 +213,7 @@
     </div>
 </div>
 
-{{-- Modal Foto Triase --}}
+{{-- Modal Foto Triase (tetap sama) --}}
 <div class="modal fade" id="fotoTriaseModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
     aria-labelledby="fotoTriaseModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-md">
@@ -206,7 +225,6 @@
             <form action="#" method="post" enctype="multipart/form-data">
                 @csrf
                 @method('put')
-
                 <div class="modal-body">
                     <input type="hidden" name="triase_id" id="triase_id">
                     <div class="form-group mb-3">
@@ -231,27 +249,29 @@
     </div>
 </div>
 
+@push('css')
+    <style>
+        .bagian-info {
+            border-top-right-radius: 0 !important;
+            border-bottom-left-radius: 0 !important;
+        }
+    </style>
+@endpush
+
 @push('js')
     <script>
         $(document).ready(function() {
-            // Handler untuk tombol foto triase
             $(document).on('click', '.btn-foto-triase', function(e) {
                 e.preventDefault();
-
                 let $this = $(this);
                 let kdKasir = $this.data('kasir');
                 let noTrx = $this.data('transaksi');
 
-                // Validasi data tersedia
                 if (!kdKasir || !noTrx || kdKasir === '' || noTrx === '') {
                     Swal.fire({
                         title: 'Perhatian!',
                         html: 'Data kasir atau transaksi tidak tersedia.<br>Silakan refresh halaman atau hubungi administrator.',
                         icon: 'warning'
-                    });
-                    console.error('Data tidak lengkap:', {
-                        kdKasir,
-                        noTrx
                     });
                     return;
                 }
@@ -269,41 +289,31 @@
                             title: 'Memuat...',
                             text: 'Sedang mengambil data triase',
                             allowOutsideClick: false,
-                            didOpen: () => {
-                                Swal.showLoading()
-                            }
+                            didOpen: () => Swal.showLoading()
                         });
                     },
                     success: function(res) {
                         Swal.close();
-
                         if (res.status === 'success' && res.data) {
                             let data = res.data;
                             let kunjungan = data.kunjungan;
                             let triase = data.triase;
 
-                            // Set nama pasien
                             $('#fotoTriaseModal #nama_pasien_triase').val(kunjungan.pasien
                                 .nama);
                             $('#fotoTriaseModal #triase_id').val(kunjungan.triase_id);
 
-                            // Set action form
                             let action =
                                 "{{ route('gawat-darurat.ubah-foto-triase', [':kdKasir', ':noTrx']) }}"
                                 .replace(':kdKasir', kunjungan.kd_kasir)
                                 .replace(':noTrx', kunjungan.no_transaksi);
-
                             $('#fotoTriaseModal form').attr('action', action);
 
-                            // Set foto pasien
                             let img = "{{ asset('assets/images/avatar1.png') }}";
                             if (triase && triase.foto_pasien) {
                                 img = "{{ asset('storage/') }}/" + triase.foto_pasien;
                             }
-
                             $('#fotoTriaseModal img').attr('src', img);
-
-                            // Tampilkan modal
                             $('#fotoTriaseModal').modal('show');
                         } else {
                             Swal.fire({
@@ -315,15 +325,10 @@
                     },
                     error: function(xhr) {
                         let errorMsg = 'Terjadi kesalahan pada server';
-
-                        if (xhr.responseJSON && xhr.responseJSON.message) {
-                            errorMsg = xhr.responseJSON.message;
-                        } else if (xhr.status === 404) {
-                            errorMsg = 'Data triase tidak ditemukan';
-                        } else if (xhr.status === 500) {
-                            errorMsg = 'Internal Server Error';
-                        }
-
+                        if (xhr.responseJSON && xhr.responseJSON.message) errorMsg = xhr
+                            .responseJSON.message;
+                        else if (xhr.status === 404) errorMsg = 'Data triase tidak ditemukan';
+                        else if (xhr.status === 500) errorMsg = 'Internal Server Error';
                         Swal.fire({
                             title: 'Error!',
                             text: errorMsg,
@@ -332,51 +337,39 @@
                     }
                 });
             });
-        });
 
-        $('#btnIcare').click(function() {
-            let $this = $(this);
-            let kd_unit = "{{ $dataMedis->kd_unit }}";
-            let kd_pasien = "{{ $dataMedis->kd_pasien }}";
-            let tgl_masuk = "{{ date('Y-m-d', strtotime($dataMedis->tgl_masuk)) }}";
-            let urut_masuk = "{{ $dataMedis->urut_masuk }}";
-
-            $.ajax({
-                type: "POST",
-                url: "{{ route('bpjs.icare') }}",
-                data: {
-                    '_token': "{{ csrf_token() }}",
-                    'kd_unit': kd_unit,
-                    'kd_pasien': kd_pasien,
-                    'tgl_masuk': tgl_masuk,
-                    'urut_masuk': urut_masuk,
-                },
-                dataType: "json",
-                beforeSend: function() {
-                    $this.prop('disabled', true);
-                    $this.text('Memproses');
-                },
-                success: function(res) {
-                    let status = res.status;
-                    let msg = res.message;
-                    let data = res.data;
-
-                    if (status == 'error') {
-                        showToast('error', msg);
-                        return false;
+            $('#btnIcare').click(function() {
+                let $this = $(this);
+                $.ajax({
+                    type: "POST",
+                    url: "{{ route('bpjs.icare') }}",
+                    data: {
+                        '_token': "{{ csrf_token() }}",
+                        'kd_unit': "{{ $dataMedis->kd_unit }}",
+                        'kd_pasien': "{{ $dataMedis->kd_pasien }}",
+                        'tgl_masuk': "{{ date('Y-m-d', strtotime($dataMedis->tgl_masuk)) }}",
+                        'urut_masuk': "{{ $dataMedis->urut_masuk }}",
+                    },
+                    dataType: "json",
+                    beforeSend: function() {
+                        $this.prop('disabled', true).text('Memproses');
+                    },
+                    success: function(res) {
+                        if (res.status == 'error') {
+                            showToast('error', res.message);
+                            return false;
+                        }
+                        window.open(res.data, "_blank");
+                    },
+                    error: function() {
+                        $this.prop('disabled', true).html(
+                            '<i class="bi bi-info-circle me-2"></i> I-Care');
+                    },
+                    complete: function() {
+                        $this.prop('disabled', false).html(
+                            '<i class="bi bi-info-circle me-2"></i> I-Care');
                     }
-
-                    window.open(data, "_blank");
-
-                },
-                error: function() {
-                    $this.prop('disabled', true);
-                    $this.html('<i class="bi bi-info-circle me-2"></i> I-Care');
-                },
-                complete: function() {
-                    $this.prop('disabled', false);
-                    $this.html('<i class="bi bi-info-circle me-2"></i> I-Care');
-                }
+                });
             });
         });
     </script>
