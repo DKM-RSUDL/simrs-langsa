@@ -943,7 +943,17 @@ class CpptController extends Controller
                 'dd' => '',
             ];
 
-            MrAnamnesis::create($anamnesisInsertData);
+            // Use updateOrCreate to avoid duplicate anamnesis rows for the same composite key
+            $anamnesisMatch = [
+                'kd_pasien' => $anamnesisInsertData['kd_pasien'],
+                'kd_unit' => $anamnesisInsertData['kd_unit'],
+                'tgl_masuk' => $anamnesisInsertData['tgl_masuk'],
+                'urut_masuk' => $anamnesisInsertData['urut_masuk'],
+                'urut_cppt' => $anamnesisInsertData['urut_cppt'],
+                'urut' => $anamnesisInsertData['urut'],
+            ];
+
+            MrAnamnesis::updateOrCreate($anamnesisMatch, $anamnesisInsertData);
 
             // Insert data to mr_konpas
             $konpasMax = MrKonpas::select(['id_konpas'])
@@ -1023,7 +1033,7 @@ class CpptController extends Controller
 
             // Create resume using private function
             $resumeData = [
-                'anamnesis'             => $request->anamnesis,
+                // 'anamnesis'             => $request->anamnesis,
             ];
 
             if ($tipe_cppt == 1) {
@@ -1100,9 +1110,6 @@ class CpptController extends Controller
             $noTransaksiCpptReq = $request->no_transaksi;
 
 
-
-
-
             $konpas = MrKonpas::where('kd_pasien', $kunjungan->kd_pasien)
                 ->where('kd_unit', $unitCpptReq)
                 // ->where('tgl_masuk', $tgl_masuk)
@@ -1169,17 +1176,22 @@ class CpptController extends Controller
                 'jam' => date('H:i:s', strtotime($request->jam_masuk_edit))
             ];
 
+            // Use updateOrCreate to avoid duplicate anamnesis rows for the same composite key
+            $anamnesisMatch = [
+                'kd_pasien' => $kunjungan->kd_pasien,
+                'kd_unit' => $kunjungan->kd_unit,
+                'tgl_masuk' => $kunjungan->tgl_masuk,
+                'urut_masuk' => $kunjungan->urut_masuk,
+                'urut_cppt' => $urutCpptReq,
+            ];
+
             // Update anamnesis
-            MrAnamnesis::where('kd_pasien', $kunjungan->kd_pasien)
-                ->where('kd_unit', $kunjungan->kd_unit)
-                ->whereDate('tgl_masuk', $kunjungan->tgl_masuk)
-                ->where('urut_masuk', $kunjungan->urut_masuk)
-                ->where('urut_cppt', $urutCpptReq)
-                ->update([
+            MrAnamnesis::updateOrCreate(
+                $anamnesisMatch,
+                [
                     'anamnesis' => $request->anamnesis,
-                ]);
-
-
+                ]
+            );
 
             Cppt::where('no_transaksi', $kunjungan->no_transaksi)
                 ->where('kd_kasir', $kunjungan->kd_kasir)
@@ -1215,7 +1227,7 @@ class CpptController extends Controller
 
             // Create resume using private function
             $resumeData = [
-                'anamnesis'             => $request->anamnesis,
+                // 'anamnesis'             => $request->anamnesis,
             ];
 
             $tipe_cppt = $this->getTipeCpptByUser($cppt->tipe_cppt);

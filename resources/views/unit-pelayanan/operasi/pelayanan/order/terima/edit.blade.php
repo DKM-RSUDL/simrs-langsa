@@ -19,6 +19,9 @@
                 action="{{ route('operasi.terima-order.store', [$operasi->kd_kasir, $operasi->no_transaksi, $operasi->tgl_op, $operasi->jam_op]) }}"
                 method="POST">
                 @csrf
+
+                <input type="hidden" name="transfer_id" value="{{ $transfer->id ?? '' }}">
+
                 <div class="row">
                     <div class="col-md-5">
                         <div class="mb-3">
@@ -1505,7 +1508,7 @@
 
 
 
-   
+
     $(document).ready(function () {
         const oldRaw = @json(old('terapi_data', $transfer->terapi_data ?? []));
         let dataObat = [];

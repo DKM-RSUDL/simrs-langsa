@@ -96,8 +96,8 @@
     </div>
 </div>
 
-@include('unit-pelayanan.rawat-inap.pelayanan.resume.resume-medis.components.modal-create')
-@include('unit-pelayanan.rawat-inap.pelayanan.resume.resume-medis.components.modal-view-resume')
+{{-- @include('unit-pelayanan.rawat-inap.pelayanan.resume.resume-medis.components.modal-create')
+@include('unit-pelayanan.rawat-inap.pelayanan.resume.resume-medis.components.modal-view-resume') --}}
 
 @push('js')
     <script type="text/javascript">

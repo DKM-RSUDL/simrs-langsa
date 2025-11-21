@@ -112,6 +112,10 @@
         footer div .identity-num {
             margin: 0;
         }
+
+        .multiline {
+            white-space: pre-line !important;
+        }
     </style>
 </head>
 
@@ -187,12 +191,14 @@
             </tr>
             <tr>
                 <th>Anamnesis</th>
-                <td>{{ $resume->anamnesis }}</td>
+                <td class="multiline">{{ $resume->anamnesis }}</td>
             </tr>
             <tr>
                 <th>Hasil Pemeriksaan Fisik</th>
                 <td>
                     {{ $hasilKonpas }}
+
+                    <p class="multiline">{{ $resume->pemeriksaan_fisik }}</p>
 
                     @if (!empty($pemeriksaanFisik))
                         <br>
@@ -295,11 +301,11 @@
             </tr>
             <tr>
                 <th>Diet</th>
-                <td>{{ $resume->anjuran_diet }}</td>
+                <td class="multiline">{{ $resume->anjuran_diet }}</td>
             </tr>
             <tr>
                 <th>Edukasi</th>
-                <td>{{ $resume->anjuran_edukasi }}</td>
+                <td class="multiline">{{ $resume->anjuran_edukasi }}</td>
             </tr>
             <tr class="table-section-title">
                 <th colspan="2">Tindak lanjut</th>
