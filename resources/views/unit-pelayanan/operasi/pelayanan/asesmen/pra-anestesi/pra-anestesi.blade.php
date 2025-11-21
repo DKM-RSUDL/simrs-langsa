@@ -206,6 +206,15 @@
                             <i class="fas fa-edit"></i>
                             Editt
                         </a>
+                        <a href="{{ route('operasi.pelayanan.asesmen.pra-anestesi.edukasi.print', [
+                            $dataMedis->kd_pasien,
+                            date('Y-m-d', strtotime($dataMedis->tgl_masuk)),
+                            $dataMedis->urut_masuk,
+                            $item->id,
+                        ]) }}"
+                            target="_blank" class="btn btn-primary btn-sm px-3">
+                            <i class="fas fa-print"></i> Print
+                        </a>
                     @endif
                 </div>
             </li>
