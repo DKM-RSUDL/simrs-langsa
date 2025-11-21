@@ -41,19 +41,37 @@ class TransferPasienAntarRuang extends Controller
             abort(404, 'Data not found');
         }
 
-        // Menghitung umur berdasarkan tgl_lahir jika ada
-        if ($dataMedis->pasien && $dataMedis->pasien->tgl_lahir) {
-            $dataMedis->pasien->umur = Carbon::parse($dataMedis->pasien->tgl_lahir)->age;
-        } else {
-            $dataMedis->pasien->umur = 'Tidak Diketahui';
-        }
+        // get all nginap data
+        $nginapAll = $this->baseService->getAllNginapData($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
+        $nginapListUnit = $nginapAll->pluck('kd_unit_kamar')->toArray() ?? [];
 
         // Query untuk data transfer pasien antar ruang
         $query = RmeTransferPasienAntarRuang::with(['userCreate', 'serahTerima'])
             ->where('kd_pasien', $kd_pasien)
-            ->where('kd_unit', $kd_unit)
-            ->whereDate('tgl_masuk', $tgl_masuk)
-            ->where('urut_masuk', $urut_masuk);
+            ->where(function ($query) use ($dataMedis, $nginapListUnit) {
+                // where data medis ok
+                $query->where(function ($q) use ($dataMedis) {
+                    $q->where('kd_unit', $dataMedis->kd_unit)
+                        ->whereDate('tgl_masuk', $dataMedis->tgl_masuk)
+                        ->where('urut_masuk', $dataMedis->urut_masuk);
+                });
+
+                // where data medis asal (only when we have target units)
+                if (!empty($nginapListUnit) && is_array($nginapListUnit)) {
+                    $query->orWhereHas('serahTerima', function ($q) use ($dataMedis, $nginapListUnit) {
+                        $q->whereIn('kd_unit_tujuan', $nginapListUnit);
+
+                        // Guard whereDate calls to avoid passing null values to the query builder
+                        if (!empty($dataMedis->tgl_pulang)) {
+                            $q->whereDate('tgl_masuk', '>=', $dataMedis->tgl_pulang);
+                        }
+
+                        if (!empty($dataMedis->tgl_pulang)) {
+                            $q->whereDate('tgl_masuk', '<=', $dataMedis->tgl_pulang);
+                        }
+                    });
+                }
+            });
 
         // Pencarian berdasarkan nama dokter
         if ($search = $request->query('search')) {
@@ -362,13 +380,6 @@ class TransferPasienAntarRuang extends Controller
             abort(404, 'Data medis not found');
         }
 
-        // Menghitung umur
-        if ($dataMedis->pasien && $dataMedis->pasien->tgl_lahir) {
-            $dataMedis->pasien->umur = Carbon::parse($dataMedis->pasien->tgl_lahir)->age;
-        } else {
-            $dataMedis->pasien->umur = 'Tidak Diketahui';
-        }
-
         $unit = Unit::where('aktif', 1)->get();
         $unitTujuan = Unit::where('kd_bagian', 1)
             ->where('aktif', 1)
@@ -467,13 +478,13 @@ class TransferPasienAntarRuang extends Controller
     {
         return $request->validate([
             // Unit dan Kamar
-            'kd_unit_tujuan' => 'required|string',
+            'kd_unit_tujuan' => 'nullable|string',
             'no_kamar' => 'nullable|string',
 
             // Petugas yang menyerahkan
-            'petugas_menyerahkan' => 'required|string',
-            'tanggal_menyerahkan' => 'required|date',
-            'jam_menyerahkan' => 'required',
+            'petugas_menyerahkan' => 'nullable|string',
+            'tanggal_menyerahkan' => 'nullable|date',
+            'jam_menyerahkan' => 'nullable',
 
             // Informasi Medis
             'dokter_merawat' => 'nullable|string',

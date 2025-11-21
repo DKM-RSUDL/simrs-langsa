@@ -110,57 +110,20 @@
                             <!-- Unit Asal -->
                             <div class="mb-3">
                                 <label for="kd_unit_asal" class="form-label">Dari Unit/ Ruang</label>
-                                <select name="kd_unit_asal" id="kd_unit_asal" class="form-select select2" disabled>
-                                    <option value="">--Pilih--</option>
-                                    @foreach ($unit as $item)
-                                        <option value="{{ $item->kd_unit }}" @selected($item->kd_unit == $dataMedis->kd_unit)>
-                                            {{ $item->nama_unit }}
-                                        </option>
-                                    @endforeach
-                                </select>
+                                <input type="text" class="form-control" value="{{ $transfer->serahTerima->unitAsal->nama_unit ?? '' }}" disabled>
                             </div>
 
                             <!-- Unit Tujuan -->
                             <div class="mb-3">
                                 <label for="kd_unit_tujuan" class="form-label">Tujuan ke Unit/ Ruang</label>
-                                <select name="kd_unit_tujuan" id="kd_unit_tujuan" class="form-select select2" required>
-                                    <option value="">--Pilih--</option>
-                                    @foreach ($unitTujuan as $item)
-                                        <option value="{{ $item->kd_unit }}" @selected(old('kd_unit_tujuan', $transfer->kd_unit_tujuan) == $item->kd_unit)>
-                                            {{ $item->nama_unit }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                                @error('kd_unit_tujuan')
-                                    <div class="invalid-feedback d-block">{{ $message }}</div>
-                                @enderror
-                            </div>
-
-                            <!-- Kamar -->
-                            <div class="form-group mt-3">
-                                <label for="no_kamar" class="form-label">Kamar</label>
-                                <select name="no_kamar" id="no_kamar" class="form-select select2" required>
-                                    <option value="">--Pilih Kamar--</option>
-                                </select>
-                                @error('no_kamar')
-                                    <div class="invalid-feedback d-block">{{ $message }}</div>
-                                @enderror
-                                <small class="form-text text-muted">Pilih unit tujuan terlebih dahulu</small>
-                            </div>
-
-                            <!-- Loading indicator -->
-                            <div id="loading-indicator" class="text-center mt-2" style="display: none;">
-                                <div class="spinner-border spinner-border-sm text-primary" role="status">
-                                    <span class="visually-hidden">Loading...</span>
-                                </div>
-                                <span class="ms-2 text-muted">Memuat data...</span>
+                                <input type="text" class="form-control" value="{{ $transfer->serahTerima->unitTujuan->nama_unit ?? '' }}" disabled>
                             </div>
 
                             <div class="mb-3">
                                 <label for="petugas_menyerahkan" class="form-label">Petugas yang Menyerahkan</label>
-                                <select name="petugas_menyerahkan" id="petugas_menyerahkan" class="form-select select2" required>
+                                <select name="petugas_menyerahkan" id="petugas_menyerahkan" class="form-select select2" disabled>
                                     <option value="">--Pilih--</option>
-                                    <option value="{{ auth()->user()->kd_karyawan }}" @selected(old('petugas_menyerahkan', $transfer->petugas_menyerahkan) == auth()->user()->kd_karyawan)>
+                                    <option value="{{ auth()->user()->kd_karyawan }}" @selected(old('petugas_menyerahkan', $transfer->serahTerima->petugas_menyerahkan) == auth()->user()->kd_karyawan)>
                                         {{ auth()->user()->karyawan->gelar_depan . ' ' .
                                         str()->title(auth()->user()->karyawan->nama) . ' ' .
                                         auth()->user()->karyawan->gelar_belakang }}
@@ -168,7 +131,7 @@
 
                                     @foreach ($petugas as $item)
                                         @if ($item->kd_karyawan != auth()->user()->kd_karyawan)
-                                            <option value="{{ $item->kd_karyawan }}" @selected(old('petugas_menyerahkan', $transfer->petugas_menyerahkan) == $item->kd_karyawan)>
+                                            <option value="{{ $item->kd_karyawan }}" @selected(old('petugas_menyerahkan', $transfer->serahTerima->petugas_menyerahkan) == $item->kd_karyawan)>
                                                 {{ $item->gelar_depan . ' ' . str()->title($item->nama) . ' ' .
                                                 $item->gelar_belakang }}
                                             </option>
@@ -183,15 +146,15 @@
                             <div class="mb-3 row">
                                 <div class="col-md-6">
                                     <label class="form-label">Tanggal</label>
-                                    <input type="date" name="tanggal_menyerahkan" value="{{ old('tanggal_menyerahkan', $transfer->tanggal_menyerahkan) }}"
-                                        class="form-control" required>
+                                    <input type="date" name="tanggal_menyerahkan" value="{{ old('tanggal_menyerahkan', date('Y-m-d', strtotime($transfer->serahTerima->tanggal_menyerahkan))) }}"
+                                        class="form-control" disabled>
                                     @error('tanggal_menyerahkan')
                                         <div class="invalid-feedback d-block">{{ $message }}</div>
                                     @enderror
                                 </div>
                                 <div class="col-md-6">
                                     <label class="form-label">Jam</label>
-                                    <input type="time" name="jam_menyerahkan" value="{{ old('jam_menyerahkan', $transfer->jam_menyerahkan) }}" class="form-control" required>
+                                    <input type="time" name="jam_menyerahkan" value="{{ old('jam_menyerahkan', date('H:i', strtotime($transfer->serahTerima->jam_menyerahkan))) }}" class="form-control" disabled>
                                     @error('jam_menyerahkan')
                                         <div class="invalid-feedback d-block">{{ $message }}</div>
                                     @enderror
@@ -205,20 +168,20 @@
                             <h5 class="fw-bold">Yang Menerima:</h5>
                             <div class="mb-3">
                                 <label class="form-label">Diterima di Ruang/ Unit Pelayanan</label>
-                                <input type="text" class="form-control" value="" disabled>
+                                <input type="text" class="form-control" value="{{ $transfer->serahTerima->unitTujuan->nama_unit ?? '' }}" disabled>
                             </div>
                             <div class="mb-3">
                                 <label class="form-label">Petugas yang Menerima</label>
-                                <input type="text" class="form-control" value="" disabled>
+                                <input type="text" class="form-control" value="{{ ($transfer->serahTerima->petugasTerima->gelar_depan ?? '') . ' ' . str()->title($transfer->serahTerima->petugasTerima->nama ?? '') . ' ' . ($transfer->serahTerima->petugasTerima->gelar_belakang ?? '') }}" disabled>
                             </div>
                             <div class="mb-3 row">
                                 <div class="col-md-6">
                                     <label class="form-label">Tanggal</label>
-                                    <input type="date" value="" class="form-control" disabled>
+                                    <input type="date" value="{{ date('Y-m-d', strtotime($transfer->serahTerima->tanggal_terima ?? '')) }}" class="form-control" disabled>
                                 </div>
                                 <div class="col-md-6">
                                     <label class="form-label">Jam</label>
-                                    <input type="time" value="" class="form-control" disabled>
+                                    <input type="time" value="{{ date('H:i', strtotime($transfer->serahTerima->jam_terima ?? '')) }}" class="form-control" disabled>
                                 </div>
                             </div>
                         </div>

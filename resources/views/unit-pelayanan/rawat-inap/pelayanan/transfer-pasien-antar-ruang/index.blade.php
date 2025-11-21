@@ -174,7 +174,9 @@
                                             </h6>
                                         </li>
 
-                                        <li><a class="custom__dropdown__item" href="{{ route('rawat-inap.transfer-pasien-antar-ruang.penunjang.index', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}">Transfer Penunjang</a>
+                                        <li><a class="custom__dropdown__item"
+                                                href="{{ route('rawat-inap.transfer-pasien-antar-ruang.penunjang.index', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}">Transfer
+                                                Penunjang</a>
                                         </li>
                                     </ul>
                                 </div>
@@ -230,21 +232,23 @@
                                                             <i class="ti-eye"></i> Lihat
                                                         </a>
 
-                                                        <a href="{{ route('rawat-inap.transfer-pasien-antar-ruang.edit', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
-                                                            class="btn btn-edit btn-sm" title="Edit">
-                                                            <i class="ti-pencil"></i> Edit
-                                                        </a>
+                                                        @if (($item->serahTerima->kd_unit_asal ?? '') == $dataMedis->kd_unit && ($item->serahTerima->status ?? '') == 1)
+                                                            <a href="{{ route('rawat-inap.transfer-pasien-antar-ruang.edit', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
+                                                                class="btn btn-edit btn-sm" title="Edit">
+                                                                <i class="ti-pencil"></i> Edit
+                                                            </a>
 
-                                                        <form
-                                                            action="{{ route('rawat-inap.transfer-pasien-antar-ruang.destroy', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
-                                                            method="POST" class="delete-form d-inline">
-                                                            @csrf
-                                                            @method('DELETE')
-                                                            <button type="submit" class="btn btn-danger btn-sm"
-                                                                title="Hapus">
-                                                                <i class="ti-trash"></i>
-                                                            </button>
-                                                        </form>
+                                                            <form
+                                                                action="{{ route('rawat-inap.transfer-pasien-antar-ruang.destroy', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
+                                                                method="POST" class="delete-form d-inline">
+                                                                @csrf
+                                                                @method('DELETE')
+                                                                <button type="submit" class="btn btn-danger btn-sm"
+                                                                    title="Hapus">
+                                                                    <i class="ti-trash"></i>
+                                                                </button>
+                                                            </form>
+                                                        @endif
                                                     </div>
                                                 </div>
                                             </div>

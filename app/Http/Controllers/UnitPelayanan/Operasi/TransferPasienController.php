@@ -55,19 +55,21 @@ class TransferPasienController extends Controller
         // Query untuk data transfer pasien antar ruang
         $kdUnit = $this->kdUnit;
         $query = RmeTransferPasienAntarRuang::with(['userCreate', 'serahTerima'])
-            // where data medis ok
-            ->where(function ($q) use ($dataMedis) {
-                $q->where('kd_unit', $dataMedis->kd_unit)
-                    ->whereDate('tgl_masuk', $dataMedis->tgl_masuk)
-                    ->where('urut_masuk', $dataMedis->urut_masuk);
-            })
-            // where data medis asal
-            ->orWhere(function ($q) use ($dataMedisAsal, $kdUnit) {
-                $q->where('kd_unit', $dataMedisAsal->kd_unit)
-                    ->whereDate('tgl_masuk', $dataMedisAsal->tgl_masuk)
-                    ->where('urut_masuk', $dataMedisAsal->urut_masuk)
-                    ->whereHas('serahTerima', function ($q) use ($kdUnit) {
-                        $q->where('kd_unit_tujuan', $kdUnit);
+            ->where(function ($query) use ($dataMedis, $dataMedisAsal, $kdUnit) {
+                // where data medis ok
+                $query->where(function ($q) use ($dataMedis) {
+                    $q->where('kd_unit', $dataMedis->kd_unit)
+                        ->whereDate('tgl_masuk', $dataMedis->tgl_masuk)
+                        ->where('urut_masuk', $dataMedis->urut_masuk);
+                })
+                    // where data medis asal
+                    ->orWhere(function ($q) use ($dataMedisAsal, $kdUnit) {
+                        $q->where('kd_unit', $dataMedisAsal->kd_unit)
+                            ->whereDate('tgl_masuk', $dataMedisAsal->tgl_masuk)
+                            ->where('urut_masuk', $dataMedisAsal->urut_masuk)
+                            ->whereHas('serahTerima', function ($q) use ($kdUnit) {
+                                $q->where('kd_unit_tujuan', $kdUnit);
+                            });
                     });
             })
             ->where('kd_pasien', $dataMedis->kd_pasien);

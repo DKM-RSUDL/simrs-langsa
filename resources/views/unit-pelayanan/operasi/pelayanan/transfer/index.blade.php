@@ -205,7 +205,7 @@
                                                             <i class="ti-eye"></i> Lihat
                                                         </a>
 
-                                                        @if ($item->kd_unit == $dataMedis->kd_unit)
+                                                        @if (($item->serahTerima->kd_unit_asal ?? '') == $dataMedis->kd_unit && ($item->serahTerima->status ?? '') == 1)
                                                             <a href="{{ route('operasi.pelayanan.transfer-pasien.edit', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
                                                                 class="btn btn-edit btn-sm" title="Edit">
                                                                 <i class="ti-pencil"></i> Edit
