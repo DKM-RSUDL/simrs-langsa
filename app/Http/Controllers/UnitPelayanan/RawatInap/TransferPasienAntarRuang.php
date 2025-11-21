@@ -318,7 +318,6 @@ class TransferPasienAntarRuang extends Controller
 
     public function show($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $id)
     {
-
         $transfer = RmeTransferPasienAntarRuang::findOrFail($id);
 
         $dataMedis = $this->baseService->getDataMedis($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
@@ -344,7 +343,7 @@ class TransferPasienAntarRuang extends Controller
             ->where('kd_detail_jenis_tenaga', 1)
             ->where('status_peg', 1)
             ->get();
-        $dokter = Dokter::where('status', 1)->orderBy('nama_lengkap', 'asc')->get();
+        $dokter = Dokter::where('status', 1)->orderBy('nama', 'asc')->get();
         $alergiPasien = RmeAlergiPasien::where('kd_pasien', $kd_pasien)->get();
 
         // Decode JSON fields

@@ -1,75 +1,76 @@
 @extends('layouts.administrator.master')
 
+@push('css')
+    <link rel="stylesheet" href="{{ asset('assets/css/MedisGawatDaruratController.css') }}">
+    <style>
+        .header-background {
+            height: 100%;
+            background-image: url("{{ asset('assets/img/background_gawat_darurat.png') }}");
+        }
+
+        .form-section {
+            border: 1px solid #dee2e6;
+            margin-bottom: 1rem;
+            border-radius: 0.375rem;
+        }
+
+        .section-header {
+            background-color: #f8f9fa;
+            padding: 12px 15px;
+            border-bottom: 1px solid #dee2e6;
+            font-weight: 600;
+            color: #495057;
+            border-radius: 0.375rem 0.375rem 0 0;
+        }
+
+        .section-content {
+            padding: 15px;
+        }
+
+        .checkbox-group {
+            margin-bottom: 0.75rem;
+        }
+
+        .checkbox-inline {
+            display: inline-flex;
+            align-items: center;
+            margin-right: 20px;
+            margin-bottom: 8px;
+        }
+
+        .vital-signs {
+            background-color: #f8f9fa;
+            border-radius: 0.375rem;
+            padding: 15px;
+            margin-bottom: 1rem;
+        }
+
+        .table-status th {
+            background-color: #e9ecef;
+            font-weight: 600;
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        .table-status td {
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        .signature-box {
+            border: 1px solid #dee2e6;
+            height: 100px;
+            background-color: #f8f9fa;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #6c757d;
+            border-radius: 0.375rem;
+        }
+    </style>
+@endpush
+
 @section('content')
-    @push('css')
-        <link rel="stylesheet" href="{{ asset('assets/css/MedisGawatDaruratController.css') }}">
-        <style>
-            .header-background {
-                height: 100%;
-                background-image: url("{{ asset('assets/img/background_gawat_darurat.png') }}");
-            }
-
-            .form-section {
-                border: 1px solid #dee2e6;
-                margin-bottom: 1rem;
-                border-radius: 0.375rem;
-            }
-
-            .section-header {
-                background-color: #f8f9fa;
-                padding: 12px 15px;
-                border-bottom: 1px solid #dee2e6;
-                font-weight: 600;
-                color: #495057;
-                border-radius: 0.375rem 0.375rem 0 0;
-            }
-
-            .section-content {
-                padding: 15px;
-            }
-
-            .checkbox-group {
-                margin-bottom: 0.75rem;
-            }
-
-            .checkbox-inline {
-                display: inline-flex;
-                align-items: center;
-                margin-right: 20px;
-                margin-bottom: 8px;
-            }
-
-            .vital-signs {
-                background-color: #f8f9fa;
-                border-radius: 0.375rem;
-                padding: 15px;
-                margin-bottom: 1rem;
-            }
-
-            .table-status th {
-                background-color: #e9ecef;
-                font-weight: 600;
-                text-align: center;
-                vertical-align: middle;
-            }
-
-            .table-status td {
-                text-align: center;
-                vertical-align: middle;
-            }
-
-            .signature-box {
-                border: 1px solid #dee2e6;
-                height: 100px;
-                background-color: #f8f9fa;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                color: #6c757d;
-                border-radius: 0.375rem;
-            }
-        </style>
-    @endpush
 
     <div class="row">
         <div class="col-md-3">
