@@ -429,12 +429,12 @@ class HemodialisaController extends Controller
                 'tgl_transaksi' => $tglSekarang,
                 'kd_tarif' => 'TU',
                 'kd_produk' => $request->kd_produk,
-                'kd_unit' => $this->kdUnitDef_,
+                'kd_unit' => '10013',
                 'tgl_berlaku' => $request->tgl_berlaku,
                 'qty' => 1,
                 'harga' => $request->tarif,
                 'shift' => 1,
-                'kd_unit_tr' => $order->kd_unit_order,
+                'kd_unit_tr' => '5',
                 'flag' => 0,
             ];
 
