@@ -42,7 +42,7 @@ class FarmasiController extends Controller
             abort(404, 'Data not found');
         }
 
-        $riwayatObat = $this->getRiwayatObat($kd_pasien);
+        $riwayatObat = $this->getRiwayatObat($dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk);
         $riwayatObatHariIni = $this->getRiwayatObatHariIni($dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk);
 
         $riwayatObatHariIniPulang = DB::table('MR_RESEP')
@@ -329,7 +329,7 @@ class FarmasiController extends Controller
             abort(404, 'Data not found');
         }
 
-        $riwayatObat = $this->getRiwayatObat($kd_pasien);
+        $riwayatObat = $this->getRiwayatObat($dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk);
 
         $dokters = Dokter::where('status', 1)->get();
 
@@ -400,7 +400,7 @@ class FarmasiController extends Controller
         return response()->json($rows);
     }
 
-    private function getRiwayatObat($kd_pasien)
+    private function getRiwayatObat($kd_pasien, $tgl_masuk, $urut_masuk)
     {
         return DB::table('MR_RESEP')
             ->join('DOKTER', 'MR_RESEP.KD_DOKTER', '=', 'DOKTER.KD_DOKTER')
@@ -415,6 +415,9 @@ class FarmasiController extends Controller
                                WHERE KD_PRD = db.KD_PRD
                            )) AS latest_price'), 'APT_OBAT.KD_PRD', '=', 'latest_price.KD_PRD')
             ->where('MR_RESEP.KD_PASIEN', $kd_pasien)
+            ->whereDate('MR_RESEP.TGL_MASUK', $tgl_masuk)
+            ->where('MR_RESEP.URUT_MASUK', $urut_masuk)
+            ->where('MR_RESEP.KD_UNIT', 3)
             ->select(
                 DB::raw('DISTINCT MR_RESEP.TGL_MASUK'),
                 'MR_RESEP.KD_DOKTER',

@@ -514,7 +514,7 @@ class RadiologiController extends Controller
             $kunjunganIGD = $this->baseService->getDataMedisbyTransaksi($asalIGD->kd_kasir_asal, $asalIGD->no_transaksi_asal);
 
             // Get main data
-            $dataRadiologi = SegalaOrder::with(['details', 'laplisitempemeriksaan', 'dokter', 'produk', 'unit'])
+            $dataRadiologi = SegalaOrder::with(['details', 'dokter', 'produk', 'unit'])
                 ->where('kategori', 'RD')
                 ->where('kd_pasien', $kunjunganIGD->kd_pasien)
                 ->where('tgl_masuk', $kunjunganIGD->tgl_transaksi)

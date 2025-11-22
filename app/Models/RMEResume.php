@@ -21,6 +21,7 @@ class RMEResume extends Model
         'urut_masuk',
         'anamnesis',
         'konpas',
+        'pemeriksaan_fisik',
         'pemeriksaan_penunjang',
         'diagnosis',
         'icd_10',

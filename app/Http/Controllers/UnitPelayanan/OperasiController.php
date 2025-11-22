@@ -626,7 +626,7 @@ class OperasiController extends Controller
                 ]);
 
 
-            // update serah terima jika ada (sederhanakan dengan null-safe update)
+            // update serah terima jika ada
             if (!empty($request->transfer_id)) {
                 $transferPasien = RmeTransferPasienAntarRuang::with('serahTerima')
                     ->find($request->transfer_id);

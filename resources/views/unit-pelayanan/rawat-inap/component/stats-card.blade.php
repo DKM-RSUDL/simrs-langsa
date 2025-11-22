@@ -33,7 +33,7 @@
                     <img src="{{ asset('assets/img/icons/Sick.png') }}" alt="Icon" width="36" height="36">
                     <div class="text-start">
                         <div class="small mb-1">Selesai</div>
-                        <div class="fs-4 fw-bold">{{ countAktivePatientRanap($unit->kd_unit) }}</div>
+                        <div class="fs-4 fw-bold">-</div>
                     </div>
                 </div>
             </div>

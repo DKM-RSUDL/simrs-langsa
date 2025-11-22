@@ -47,6 +47,9 @@
                     <a href="{{ $pelayananUrl }}/operasi-ibs" class="list-group-item list-group-item-action">
                         Operasi (IBS)
                     </a>
+                    <a href="#" class="list-group-item list-group-item-action">
+                        Rehab Medik
+                    </a>
                 </div>
             </div>
         </div>

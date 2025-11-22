@@ -96,6 +96,7 @@
                     </div>
                 @endif
 
+
                 <!-- Informasi Dasar Transfer -->
                 <div class="form-section">
                     <div class="section-header">Petugas Handover</div>
@@ -126,7 +127,8 @@
                                     </div>
 
                                     <div class="mb-3">
-                                        <label for="petugas_menyerahkan" class="form-label">Petugas yang Menyerahkan</label>
+                                        <label for="petugas_menyerahkan" class="form-label">Petugas yang
+                                            Menyerahkan</label>
                                         <select id="petugas_menyerahkan" class="form-select select2" disabled>
                                             <option value="">--Pilih--</option>
                                             <option value="{{ auth()->user()->kd_karyawan }}" @selected(old('petugas_menyerahkan', $transfer->serahTerima->petugas_menyerahkan) == auth()->user()->kd_karyawan)>
@@ -459,7 +461,8 @@
                                     <label for="kesadaran" class="form-label">Kesadaran</label>
                                     <select name="kesadaran" id="kesadaran" class="form-select select2" disabled>
                                         <option value="">--Pilih--</option>
-                                        <option value="Compos Mentis" @selected(old('kesadaran', $transfer->kesadaran) == 'Compos Mentis')>Compos Mentis</option>
+                                        <option value="Compos Mentis" @selected(old('kesadaran', $transfer->kesadaran) == 'Compos Mentis')>Compos Mentis
+                                        </option>
                                         <option value="Apatis" @selected(old('kesadaran', $transfer->kesadaran) == 'Apatis')>Apatis</option>
                                         <option value="Sopor" @selected(old('kesadaran', $transfer->kesadaran) == 'Sopor')>Sopor</option>
                                         <option value="Coma" @selected(old('kesadaran', $transfer->kesadaran) == 'Coma')>Coma</option>
@@ -531,7 +534,8 @@
                                             <select name="status_nyeri" id="status_nyeri" class="form-select select2"
                                                 disabled>
                                                 <option value="">--Pilih--</option>
-                                                <option value="tidak_ada" @selected(old('status_nyeri', $transfer->status_nyeri) == 'tidak_ada')>Tidak Ada</option>
+                                                <option value="tidak_ada" @selected(old('status_nyeri', $transfer->status_nyeri) == 'tidak_ada')>Tidak Ada
+                                                </option>
                                                 <option value="ringan" @selected(old('status_nyeri', $transfer->status_nyeri) == 'ringan')>Ringan</option>
                                                 <option value="sedang" @selected(old('status_nyeri', $transfer->status_nyeri) == 'sedang')>Sedang</option>
                                                 <option value="berat" @selected(old('status_nyeri', $transfer->status_nyeri) == 'berat')>Berat</option>
@@ -960,12 +964,14 @@
                                     </tr>
                                     @error('berguling')
                                         <tr>
-                                            <td colspan="4"><small class="text-danger">{{ $message }}</small></td>
+                                            <td colspan="4"><small class="text-danger">{{ $message }}</small>
+                                            </td>
                                         </tr>
                                     @enderror
                                     @error('duduk')
                                         <tr>
-                                            <td colspan="4"><small class="text-danger">{{ $message }}</small></td>
+                                            <td colspan="4"><small class="text-danger">{{ $message }}</small>
+                                            </td>
                                         </tr>
                                     @enderror
                                     <tr>
@@ -1036,27 +1042,32 @@
                                     </tr>
                                     @error('higiene_wajah')
                                         <tr>
-                                            <td colspan="4"><small class="text-danger">{{ $message }}</small></td>
+                                            <td colspan="4"><small class="text-danger">{{ $message }}</small>
+                                            </td>
                                         </tr>
                                     @enderror
                                     @error('higiene_tubuh')
                                         <tr>
-                                            <td colspan="4"><small class="text-danger">{{ $message }}</small></td>
+                                            <td colspan="4"><small class="text-danger">{{ $message }}</small>
+                                            </td>
                                         </tr>
                                     @enderror
                                     @error('higiene_ekstremitas_bawah')
                                         <tr>
-                                            <td colspan="4"><small class="text-danger">{{ $message }}</small></td>
+                                            <td colspan="4"><small class="text-danger">{{ $message }}</small>
+                                            </td>
                                         </tr>
                                     @enderror
                                     @error('traktus_digestivus')
                                         <tr>
-                                            <td colspan="4"><small class="text-danger">{{ $message }}</small></td>
+                                            <td colspan="4"><small class="text-danger">{{ $message }}</small>
+                                            </td>
                                         </tr>
                                     @enderror
                                     @error('traktus_urinarius')
                                         <tr>
-                                            <td colspan="4"><small class="text-danger">{{ $message }}</small></td>
+                                            <td colspan="4"><small class="text-danger">{{ $message }}</small>
+                                            </td>
                                         </tr>
                                     @enderror
                                     <tr>
@@ -1103,17 +1114,20 @@
                                     </tr>
                                     @error('pakaian_atas')
                                         <tr>
-                                            <td colspan="4"><small class="text-danger">{{ $message }}</small></td>
+                                            <td colspan="4"><small class="text-danger">{{ $message }}</small>
+                                            </td>
                                         </tr>
                                     @enderror
                                     @error('pakaian_tubuh')
                                         <tr>
-                                            <td colspan="4"><small class="text-danger">{{ $message }}</small></td>
+                                            <td colspan="4"><small class="text-danger">{{ $message }}</small>
+                                            </td>
                                         </tr>
                                     @enderror
                                     @error('pakaian_bawah')
                                         <tr>
-                                            <td colspan="4"><small class="text-danger">{{ $message }}</small></td>
+                                            <td colspan="4"><small class="text-danger">{{ $message }}</small>
+                                            </td>
                                         </tr>
                                     @enderror
                                     <tr>
@@ -1127,7 +1141,8 @@
                                     </tr>
                                     @error('makan')
                                         <tr>
-                                            <td colspan="4"><small class="text-danger">{{ $message }}</small></td>
+                                            <td colspan="4"><small class="text-danger">{{ $message }}</small>
+                                            </td>
                                         </tr>
                                     @enderror
                                     <tr>
@@ -1160,12 +1175,14 @@
                                     </tr>
                                     @error('jalan_kaki')
                                         <tr>
-                                            <td colspan="4"><small class="text-danger">{{ $message }}</small></td>
+                                            <td colspan="4"><small class="text-danger">{{ $message }}</small>
+                                            </td>
                                         </tr>
                                     @enderror
                                     @error('kursi_roda_kemandirian')
                                         <tr>
-                                            <td colspan="4"><small class="text-danger">{{ $message }}</small></td>
+                                            <td colspan="4"><small class="text-danger">{{ $message }}</small>
+                                            </td>
                                         </tr>
                                     @enderror
                                 </tbody>
@@ -1174,7 +1191,8 @@
 
                         <div class="mt-4">
                             <div class="mb-3">
-                                <label class="form-label">Pemeriksaan penunjang diagnostik yang sudah dilakukan (EKG, Lab,
+                                <label class="form-label">Pemeriksaan penunjang diagnostik yang sudah dilakukan (EKG,
+                                    Lab,
                                     dll):</label>
                                 <textarea name="pemeriksaan_penunjang" class="form-control" rows="3" disabled>{{ old('pemeriksaan_penunjang', $transfer->pemeriksaan_penunjang) }}</textarea>
                                 @error('pemeriksaan_penunjang')
@@ -1244,14 +1262,19 @@
                             <label for="derajat_pasien" class="form-label">Derajat Pasien</label>
                             <select name="derajat_pasien" id="derajat_pasien" class="form-select" disabled>
                                 <option value="">--Pilih--</option>
-                                <option value="Derajat 1" @selected(old('derajat_pasien', $transfer->derajat_pasien) == 'Derajat 1')>Derajat 1 - Transporter - Perawat
+                                <option value="Derajat 1" @selected(old('derajat_pasien', $transfer->derajat_pasien) == 'Derajat 1')>Derajat 1 - Transporter -
+                                    Perawat
                                 </option>
-                                <option value="Derajat 2" @selected(old('derajat_pasien', $transfer->derajat_pasien) == 'Derajat 2')>Derajat 2 - Transporter - Perawat
+                                <option value="Derajat 2" @selected(old('derajat_pasien', $transfer->derajat_pasien) == 'Derajat 2')>Derajat 2 - Transporter -
+                                    Perawat
                                     - Dokter</option>
-                                <option value="Derajat 3" @selected(old('derajat_pasien', $transfer->derajat_pasien) == 'Derajat 3')>Derajat 3 - Transporter - Perawat
+                                <option value="Derajat 3" @selected(old('derajat_pasien', $transfer->derajat_pasien) == 'Derajat 3')>Derajat 3 - Transporter -
+                                    Perawat
                                     - Dokter yang kompeten</option>
-                                <option value="Derajat 4" @selected(old('derajat_pasien', $transfer->derajat_pasien) == 'Derajat 4')>Derajat 4 - Transporter - Perawat
-                                    - Dokter yang kompeten menangani pasien kritis dan berpengalaman minimal 6 bulan bekerja
+                                <option value="Derajat 4" @selected(old('derajat_pasien', $transfer->derajat_pasien) == 'Derajat 4')>Derajat 4 - Transporter -
+                                    Perawat
+                                    - Dokter yang kompeten menangani pasien kritis dan berpengalaman minimal 6 bulan
+                                    bekerja
                                     di IGD/ ICU</option>
                             </select>
                             @error('derajat_pasien')

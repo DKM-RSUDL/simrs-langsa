@@ -80,6 +80,7 @@ class OrderHemodialisaController extends Controller
                 'tgl_order' => $request->tanggal_menyerahkan,
                 'jam_order' => $request->jam_menyerahkan,
                 'status'    => 0,
+                'user_create' => Auth::user()->kd_karyawan,
                 // 'id_serah_terima' => $serahTerima->id,
             ];
 

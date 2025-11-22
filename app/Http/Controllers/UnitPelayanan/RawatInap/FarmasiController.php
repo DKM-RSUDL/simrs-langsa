@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\UnitPelayanan\RawatInap;
 
 use App\Http\Controllers\Controller;
+use App\Models\AsalIGD;
 use App\Models\Dokter;
 use App\Models\Kunjungan;
 use App\Models\MrResep;
@@ -33,24 +34,21 @@ class FarmasiController extends Controller
 
     public function index($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
     {
-        $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
-            ->join('transaksi as t', function ($join) {
-                $join->on('kunjungan.kd_pasien', '=', 't.kd_pasien');
-                $join->on('kunjungan.kd_unit', '=', 't.kd_unit');
-                $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
-                $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
-            })
-            ->where('kunjungan.kd_pasien', $kd_pasien)
-            ->where('kunjungan.kd_unit', $kd_unit)
-            ->where('kunjungan.urut_masuk', $urut_masuk)
-            ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
-            ->first();
+        $dataMedis = $this->baseService->getDataMedis($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
 
         if (!$dataMedis) {
             abort(404, 'Data not found');
         }
 
-        $riwayatObat = $this->getRiwayatObat($kd_pasien);
+        // get data medis
+        $asalIGD = AsalIGD::where('kd_kasir', $dataMedis->kd_kasir)->where('no_transaksi', $dataMedis->no_transaksi)->first();
+        $kunjunganIGD = null;
+
+        if (!empty($asalIGD)) {
+            $kunjunganIGD = $this->baseService->getDataMedisbyTransaksi($asalIGD->kd_kasir_asal, $asalIGD->no_transaksi_asal);
+        }
+
+        $riwayatObat = $this->getRiwayatObat($dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk, $kunjunganIGD);
         $riwayatObatHariIni = $this->getRiwayatObatHariIni($dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk);
 
         // Pisahkan resep hari ini menjadi Inap (RESEP_PULANG = 0) dan Pulang (RESEP_PULANG = 1)
@@ -132,33 +130,23 @@ class FarmasiController extends Controller
         );
     }
 
-
     public function orderObat($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
     {
-        $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
-            ->join('transaksi as t', function ($join) {
-                $join->on('kunjungan.kd_pasien', '=', 't.kd_pasien');
-                $join->on('kunjungan.kd_unit', '=', 't.kd_unit');
-                $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
-                $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
-            })
-            ->where('kunjungan.kd_pasien', $kd_pasien)
-            ->where('kunjungan.kd_unit', $kd_unit)
-            ->where('kunjungan.urut_masuk', $urut_masuk)
-            ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
-            ->first();
+        $dataMedis = $this->baseService->getDataMedis($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
 
         if (!$dataMedis) {
             abort(404, 'Data not found');
         }
 
-        if ($dataMedis->pasien && $dataMedis->pasien->tgl_lahir) {
-            $dataMedis->pasien->umur = Carbon::parse($dataMedis->pasien->tgl_lahir)->age;
-        } else {
-            $dataMedis->pasien->umur = 'Tidak Diketahui';
+        // get data medis
+        $asalIGD = AsalIGD::where('kd_kasir', $dataMedis->kd_kasir)->where('no_transaksi', $dataMedis->no_transaksi)->first();
+        $kunjunganIGD = null;
+
+        if (!empty($asalIGD)) {
+            $kunjunganIGD = $this->baseService->getDataMedisbyTransaksi($asalIGD->kd_kasir_asal, $asalIGD->no_transaksi_asal);
         }
 
-        $riwayatObat = $this->getRiwayatObat($kd_pasien);
+        $riwayatObat = $this->getRiwayatObat($dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk, $kunjunganIGD);
 
         $dokters = Dokter::where('status', 1)->get();
 
@@ -417,18 +405,7 @@ class FarmasiController extends Controller
     // === E-Resep Pulang ===
     public function orderObatEResepPulang($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
     {
-        $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
-            ->join('transaksi as t', function ($join) {
-                $join->on('kunjungan.kd_pasien', '=', 't.kd_pasien');
-                $join->on('kunjungan.kd_unit', '=', 't.kd_unit');
-                $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
-                $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
-            })
-            ->where('kunjungan.kd_pasien', $kd_pasien)
-            ->where('kunjungan.kd_unit', $kd_unit)
-            ->where('kunjungan.urut_masuk', $urut_masuk)
-            ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
-            ->first();
+        $dataMedis = $this->baseService->getDataMedis($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
 
         if (!$dataMedis) {
             abort(404, 'Data not found');
@@ -527,7 +504,7 @@ class FarmasiController extends Controller
     }
 
 
-    private function getRiwayatObat($kd_pasien)
+    private function getRiwayatObat($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $kunjunganIGD = null)
     {
         return DB::table('MR_RESEP')
             ->join('DOKTER', 'MR_RESEP.KD_DOKTER', '=', 'DOKTER.KD_DOKTER')
@@ -541,7 +518,20 @@ class FarmasiController extends Controller
                                FROM DATA_BATCH
                                WHERE KD_PRD = db.KD_PRD
                            )) AS latest_price'), 'APT_OBAT.KD_PRD', '=', 'latest_price.KD_PRD')
-            ->where('MR_RESEP.KD_PASIEN', $kd_pasien)
+            ->where(function ($query) use ($kunjunganIGD, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk) {
+                $query->where(function ($q) use ($kunjunganIGD) {
+                    $q->where('MR_RESEP.kd_pasien', $kunjunganIGD->kd_pasien ?? '')
+                        ->whereDate('MR_RESEP.tgl_masuk', $kunjunganIGD->tgl_masuk ?? '')
+                        ->where('MR_RESEP.urut_masuk', $kunjunganIGD->urut_masuk ?? '')
+                        ->where('MR_RESEP.kd_unit', $kunjunganIGD->kd_unit ?? '');
+                })
+                    ->orWhere(function ($q) use ($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk) {
+                        $q->where('MR_RESEP.kd_pasien', $kd_pasien)
+                            ->whereDate('MR_RESEP.tgl_masuk', $tgl_masuk)
+                            ->where('MR_RESEP.urut_masuk', $urut_masuk)
+                            ->where('MR_RESEP.kd_unit', $kd_unit);
+                    });
+            })
             ->select(
                 DB::raw('DISTINCT MR_RESEP.TGL_MASUK'),
                 'MR_RESEP.KD_DOKTER',

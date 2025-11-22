@@ -28,6 +28,7 @@ use App\Models\SegalaOrder;
 use App\Models\Transaksi;
 use App\Models\Unit;
 use App\Services\AsesmenService;
+use App\Services\BaseService;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
@@ -36,11 +37,13 @@ use Illuminate\Support\Facades\DB;
 class AsesmenController extends Controller
 {
     protected $asesmentService;
+    private $baseService;
 
     public function __construct()
     {
         $this->middleware('can:read unit-pelayanan/rawat-inap');
         $this->asesmentService = new AsesmenService();
+        $this->baseService = new BaseService();
     }
 
     public function index($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
@@ -49,28 +52,10 @@ class AsesmenController extends Controller
         $user = auth()->user();
 
         // Mengambil data kunjungan dan tanggal triase terkait
-        $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
-            ->join('transaksi as t', function ($join) {
-                $join->on('kunjungan.kd_pasien', '=', 't.kd_pasien');
-                $join->on('kunjungan.kd_unit', '=', 't.kd_unit');
-                $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
-                $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
-            })
-            ->leftJoin('dokter', 'kunjungan.KD_DOKTER', '=', 'dokter.KD_DOKTER')
-            ->select('kunjungan.*', 't.*', 'dokter.NAMA as nama_dokter')
-            ->where('kunjungan.kd_unit', $kd_unit)
-            ->where('kunjungan.kd_pasien', $kd_pasien)
-            ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
-            ->first();
+        $dataMedis = $this->baseService->getDataMedis($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
 
         if (!$dataMedis) {
             abort(404, 'Data not found');
-        }
-
-        if ($dataMedis->pasien && $dataMedis->pasien->tgl_lahir) {
-            $dataMedis->pasien->umur = Carbon::parse($dataMedis->pasien->tgl_lahir)->age;
-        } else {
-            $dataMedis->pasien->umur = 'Tidak Diketahui';
         }
 
         // Mengambil nama alergen dari riwayat_alergi
@@ -85,7 +70,6 @@ class AsesmenController extends Controller
         $dataMedis->waktu_masuk = Carbon::parse($dataMedis->TGL_MASUK . ' ' . $dataMedis->JAM_MASUK)->format('Y-m-d H:i:s');
         $dokter = Dokter::where('status', 1)->get();
         $triageClass = $this->getTriageClass($dataMedis->kd_triase);
-        $riwayatObat = $this->getRiwayatObat($kd_pasien);
         $itemFisik = MrItemFisik::orderby('urut')->get();
         $menjalar = RmeMenjalar::all();
         $frekuensinyeri = RmeFrekuensiNyeri::all();
@@ -119,7 +103,7 @@ class AsesmenController extends Controller
         $radiologiData = [];
 
         if (!empty($asalIGD)) {
-            $transaksiIGD = Transaksi::where('kd_kasir', $asalIGD->kd_kasir_asal)->where('no_transaksi', $asalIGD->no_transaksi_asal)->first();
+            $transaksiIGD = $this->baseService->getDataMedisbyTransaksi($asalIGD->kd_kasir_asal, $asalIGD->no_transaksi_asal);
             $laborData = $this->getLabor($transaksiIGD->kd_unit, $transaksiIGD->kd_pasien, $transaksiIGD->tgl_transaksi, $transaksiIGD->urut_masuk);
             $radiologiData = $this->getRadiologi($transaksiIGD->kd_unit, $transaksiIGD->kd_pasien, $transaksiIGD->tgl_transaksi, $transaksiIGD->urut_masuk);
 
@@ -132,6 +116,8 @@ class AsesmenController extends Controller
             $asesmenIGD = [];
             $transaksiIGD = [];
         }
+
+        $riwayatObat = $this->getRiwayatObat($dataMedis, $transaksiIGD);
 
 
         return view('unit-pelayanan.rawat-inap.pelayanan.asesmen.index', compact(
@@ -664,13 +650,16 @@ class AsesmenController extends Controller
         }
     }
 
-    private function getRiwayatObat($kd_pasien)
+    private function getRiwayatObat($dataMedis, $kunjunganIGD)
     {
         return DB::table('MR_RESEP')
             ->join('DOKTER', 'MR_RESEP.KD_DOKTER', '=', 'DOKTER.KD_DOKTER')
             ->leftJoin('MR_RESEPDTL', 'MR_RESEP.ID_MRRESEP', '=', 'MR_RESEPDTL.ID_MRRESEP')
             ->leftJoin('APT_OBAT', 'MR_RESEPDTL.KD_PRD', '=', 'APT_OBAT.KD_PRD')
-            ->where('MR_RESEP.KD_PASIEN', $kd_pasien)
+            ->where('MR_RESEP.kd_pasien', $kunjunganIGD->kd_pasien ?? '')
+            ->whereDate('MR_RESEP.tgl_masuk', $kunjunganIGD->tgl_masuk ?? '')
+            ->where('MR_RESEP.urut_masuk', $kunjunganIGD->urut_masuk ?? '')
+            ->where('MR_RESEP.kd_unit', $kunjunganIGD->kd_unit ?? '')
             ->select(
                 DB::raw('DISTINCT MR_RESEP.TGL_MASUK'),
                 'MR_RESEP.KD_DOKTER',

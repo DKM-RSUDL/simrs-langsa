@@ -14,6 +14,8 @@ use App\Models\RmeSerahTerima;
 use App\Models\RmeTransferPasienAntarRuang;
 use App\Models\Transaksi;
 use App\Models\Unit;
+use App\Models\UnitAsal;
+use App\Models\UnitAsalInap;
 use App\Services\BaseService;
 use Carbon\Carbon;
 use Exception;
@@ -212,16 +214,18 @@ class HemodialisaController extends Controller
 
 
         $transfer = RmeTransferPasienAntarRuang::with(['serahTerima'])
-        ->whereHas('serahTerima',function($q){
-            $q->where('kd_unit_tujuan',$this->kdUnitDef_);
-        })
-         ->where('kd_pasien',$dataMedis->kd_pasien)
-         ->where('kd_unit',$dataMedis->kd_unit)
-         ->where('tgl_masuk',$dataMedis->tgl_masuk)
-         ->where('urut_masuk',$dataMedis->urut_masuk)
-         ->orderBy('id','desc')
-         ->first();
-   
+            ->whereHas('serahTerima', function ($q) {
+                $q->where('kd_unit_tujuan', $this->kdUnitDef_)
+                ->where('status', 1);
+            })
+            ->where('kd_pasien', $dataMedis->kd_pasien)
+            ->where('kd_unit', $dataMedis->kd_unit)
+            ->where('tgl_masuk', $dataMedis->tgl_masuk)
+            ->where('urut_masuk', $dataMedis->urut_masuk)
+            ->orderBy('id', 'desc')
+            ->first();
+
+
         $unit = Unit::where('aktif', 1)->get();
         $unitTujuan = Unit::where('kd_bagian', 1)
             ->where('aktif', 1)
@@ -232,9 +236,9 @@ class HemodialisaController extends Controller
             ->where('kd_detail_jenis_tenaga', 1)
             ->where('status_peg', 1)
             ->get();
-       
+
         // get data serah terima
-        $serahTerima = RmeSerahTerima::find($order->id_serah_terima);
+        $serahTerima = $transfer->serahTerima ?? null;
 
         $petugas = HrdKaryawan::where('kd_jenis_tenaga', 2)
             ->where('kd_detail_jenis_tenaga', 1)
@@ -243,7 +247,7 @@ class HemodialisaController extends Controller
             ->get();
 
         $dokterAll = Dokter::where('status', 1)
-        ->orderBy('nama_lengkap', 'asc')->get();
+            ->orderBy('nama_lengkap', 'asc')->get();
 
         $dokter = DokterKlinik::with(['dokter', 'unit'])
             ->where('kd_unit', 215)
@@ -284,29 +288,76 @@ class HemodialisaController extends Controller
             ->distinct()
             ->get();
 
-        return view('unit-pelayanan.hemodialisa.pelayanan.order.terima.index', compact('dataMedis', 'order', 'serahTerima', 'petugas', 'produk', 'dokter','transfer','dokterAll'));
+        return view('unit-pelayanan.hemodialisa.pelayanan.order.terima.index', compact('dataMedis', 'order', 'serahTerima', 'petugas', 'produk', 'dokter', 'transfer', 'dokterAll'));
+    }
+
+    private function mappingDataByKdKasir($kd_kasir)
+    {
+        $kd_kasir_hd = null;
+        $asal_pasien = null;
+
+        switch ($kd_kasir) {
+            case '01':
+                $kd_kasir_hd = '16';
+                $asal_pasien = 1; // Rawat Jalan
+                break;
+            case '02':
+                $kd_kasir_hd = '17';
+                $asal_pasien = 2; // Rawat Inap
+                break;
+            case '06':
+                $kd_kasir_hd = '18';
+                $asal_pasien = 3; // IGD
+                break;
+        }
+
+        return [
+            'kd_kasir' => $kd_kasir_hd,
+            'asal_pasien' => $asal_pasien
+        ];
+    }
+
+    private function mappingDataUnitAsal($kd_kasir)
+    {
+        $asal_pasien = null;
+
+        switch ($kd_kasir) {
+            case '01':
+                $asal_pasien = 0; // Rawat Jalan
+                break;
+            case '02':
+                $asal_pasien = 2; // Rawat Inap
+                break;
+            case '06':
+                $asal_pasien = 1; // IGD
+                break;
+        }
+
+        return $asal_pasien;
     }
 
     public function storeTerimaOrder(Request $request, $idEncrypt)
     {
-        $id = decrypt($idEncrypt);
-
-       
-
-        // cek order
-        $order = OrderHD::find($id);
-        if (empty($order)) return back()->with('error', 'Order tidak ditemukan');
-        if($order->status != 0) return back()->with('error', 'Order tidak valid!');
-
-        // get kunjungan asal
-        $dataMedis = $this->baseService->getDataMedisbyTransaksi($order->kd_kasir_asal, $order->no_transaksi_asal);
-        if (empty($dataMedis)) return back()->with('error', 'data kunjungan asal tidak ditemukan');
 
         DB::beginTransaction();
         try {
+            $id = decrypt($idEncrypt);
+
+            // cek order
+            $order = OrderHD::find($id);
+            if (empty($order)) throw new Exception('Order tidak ditemukan');
+            if ($order->status != 0) throw new Exception('Order tidak valid!');
+
+            // get kunjungan asal
+            $dataMedis = $this->baseService->getDataMedisbyTransaksi($order->kd_kasir_asal, $order->no_transaksi_asal);
+            if (empty($dataMedis)) throw new Exception('data kunjungan asal tidak ditemukan');
 
             $tglSekarang = date('Y-m-d');
             $jamSekarang = date('H:i:s');
+
+            // mapping data kd kasir
+            $mappingData = $this->mappingDataByKdKasir($order->kd_kasir_asal);
+            $nginap = $this->baseService->getNginapData($dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk);
 
             // Ambil urut masuk terakhir untuk pasien yang sudah ada
             $getLastUrutMasukPatientToday = Kunjungan::select('urut_masuk')
@@ -341,7 +392,7 @@ class HemodialisaController extends Controller
             // Simpan transaksi
             $lastTransaction = Transaksi::select('no_transaksi')
                 ->where('kd_unit', $this->kdUnitDef_)
-                ->where('kd_kasir', $request->kd_kasir)
+                ->where('kd_kasir', $mappingData['kd_kasir'])
                 ->orderBy('no_transaksi', 'desc')
                 ->first();
 
@@ -355,7 +406,7 @@ class HemodialisaController extends Controller
             $formattedTransactionNumber = str_pad($newTransactionNumber, 7, '0', STR_PAD_LEFT);
 
             $dataTransaksi = [
-                'kd_kasir' => $request->kd_kasir,
+                'kd_kasir' => $mappingData['kd_kasir'],
                 'no_transaksi' => $formattedTransactionNumber,
                 'kd_pasien' => $dataMedis->kd_pasien,
                 'kd_unit' => $this->kdUnitDef_,
@@ -372,18 +423,18 @@ class HemodialisaController extends Controller
 
             // Simpan detail_transaksi
             $dataDetailTransaksi = [
-                'kd_kasir' => $request->kd_kasir,
+                'kd_kasir' => $mappingData['kd_kasir'],
                 'no_transaksi' => $formattedTransactionNumber,
                 'urut' => 1,
                 'tgl_transaksi' => $tglSekarang,
                 'kd_tarif' => 'TU',
                 'kd_produk' => $request->kd_produk,
-                'kd_unit' => $this->kdUnitDef_,
+                'kd_unit' => '10013',
                 'tgl_berlaku' => $request->tgl_berlaku,
                 'qty' => 1,
                 'harga' => $request->tarif,
                 'shift' => 1,
-                'kd_unit_tr' => $order->kd_unit_order,
+                'kd_unit_tr' => '5',
                 'flag' => 0,
             ];
 
@@ -391,27 +442,57 @@ class HemodialisaController extends Controller
 
             // update order
             $order->status = 1;
-            $order->kd_kasir_hd = $request->kd_kasir;
+            $order->kd_kasir_hd = $mappingData['kd_kasir'];
             $order->no_transaksi_hd = $formattedTransactionNumber;
             $order->kd_produk = $request->kd_produk;
             $order->save();
 
-            // update serah terima
-            // $serahTerima = RmeSerahTerima::find($order->id_serah_terima);
 
-            // if (!empty($serahTerima)) {
-            //     $serahTerima->tanggal_terima = $request->tanggal_terima;
-            //     $serahTerima->jam_terima = $request->jam_terima;
-            //     $serahTerima->petugas_terima = $request->petugas_terima;
-            //     $serahTerima->status = 2;
-            //     $serahTerima->save();
-            // }
+            // SIMPAN DATA UNIT_ASAL
+            $mappingUnitAsal = $this->mappingDataUnitAsal($order->kd_kasir_asal);
+
+            $dataUnitAsal = [
+                'kd_kasir'      => $mappingData['kd_kasir'],
+                'no_transaksi'  => $formattedTransactionNumber,
+                'no_transaksi_asal' => $order->no_transaksi_asal,
+                'kd_kasir_asal'   => $order->kd_kasir_asal,
+                'id_asal'        => $mappingUnitAsal,
+            ];
+
+            UnitAsal::create($dataUnitAsal);
+
+            // SIMPAN DATA UNIT_ASALINAP
+            $dataUnitAsalInap = [
+                'kd_kasir'      => $mappingData['kd_kasir'],
+                'no_transaksi'  => $formattedTransactionNumber,
+                'kd_unit'   => $nginap->kd_unit_kamar,
+                'no_kamar'  => $nginap->no_kamar,
+                'kd_spesial' => $nginap->kd_spesial,
+            ];
+
+            UnitAsalInap::create($dataUnitAsalInap);
+
+
+            // update serah terima jika ada
+            if (!empty($request->transfer_id)) {
+                $transferPasien = RmeTransferPasienAntarRuang::with('serahTerima')
+                    ->find($request->transfer_id);
+
+                if ($transferPasien && $transferPasien->serahTerima) {
+                    $transferPasien->serahTerima->update([
+                        'petugas_terima' => $request->petugas_terima,
+                        'tanggal_terima' => $request->tanggal_terima,
+                        'jam_terima' => $request->jam_terima,
+                        'status' => 2,
+                    ]);
+                }
+            }
 
             DB::commit();
             return to_route('hemodialisa.pelayanan', [$dataMedis->kd_pasien, $tglSekarang, $urut_masuk])->with('success', 'Order berhasil diterima');
         } catch (Exception $e) {
             DB::rollBack();
-            return back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
+            return back()->with('error', $e->getMessage());
         }
     }
 
