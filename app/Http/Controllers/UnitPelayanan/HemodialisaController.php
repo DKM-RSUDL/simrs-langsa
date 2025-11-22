@@ -215,7 +215,8 @@ class HemodialisaController extends Controller
 
         $transfer = RmeTransferPasienAntarRuang::with(['serahTerima'])
             ->whereHas('serahTerima', function ($q) {
-                $q->where('kd_unit_tujuan', $this->kdUnitDef_);
+                $q->where('kd_unit_tujuan', $this->kdUnitDef_)
+                ->where('status', 1);
             })
             ->where('kd_pasien', $dataMedis->kd_pasien)
             ->where('kd_unit', $dataMedis->kd_unit)
@@ -223,6 +224,7 @@ class HemodialisaController extends Controller
             ->where('urut_masuk', $dataMedis->urut_masuk)
             ->orderBy('id', 'desc')
             ->first();
+
 
         $unit = Unit::where('aktif', 1)->get();
         $unitTujuan = Unit::where('kd_bagian', 1)
@@ -236,7 +238,7 @@ class HemodialisaController extends Controller
             ->get();
 
         // get data serah terima
-        $serahTerima = RmeSerahTerima::find($order->id_serah_terima);
+        $serahTerima = $transfer->serahTerima ?? null;
 
         $petugas = HrdKaryawan::where('kd_jenis_tenaga', 2)
             ->where('kd_detail_jenis_tenaga', 1)
@@ -471,16 +473,20 @@ class HemodialisaController extends Controller
             UnitAsalInap::create($dataUnitAsalInap);
 
 
-            // update serah terima
-            // $serahTerima = RmeSerahTerima::find($order->id_serah_terima);
+            // update serah terima jika ada
+            if (!empty($request->transfer_id)) {
+                $transferPasien = RmeTransferPasienAntarRuang::with('serahTerima')
+                    ->find($request->transfer_id);
 
-            // if (!empty($serahTerima)) {
-            //     $serahTerima->tanggal_terima = $request->tanggal_terima;
-            //     $serahTerima->jam_terima = $request->jam_terima;
-            //     $serahTerima->petugas_terima = $request->petugas_terima;
-            //     $serahTerima->status = 2;
-            //     $serahTerima->save();
-            // }
+                if ($transferPasien && $transferPasien->serahTerima) {
+                    $transferPasien->serahTerima->update([
+                        'petugas_terima' => $request->petugas_terima,
+                        'tanggal_terima' => $request->tanggal_terima,
+                        'jam_terima' => $request->jam_terima,
+                        'status' => 2,
+                    ]);
+                }
+            }
 
             DB::commit();
             return to_route('hemodialisa.pelayanan', [$dataMedis->kd_pasien, $tglSekarang, $urut_masuk])->with('success', 'Order berhasil diterima');
