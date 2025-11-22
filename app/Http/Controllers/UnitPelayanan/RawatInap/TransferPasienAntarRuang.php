@@ -456,10 +456,14 @@ class TransferPasienAntarRuang extends Controller
 
     public function destroy($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $id)
     {
+        DB::beginTransaction();
+
         try {
             $transfer = RmeTransferPasienAntarRuang::findOrFail($id);
+            if (!empty($transfer->serahTerima)) $transfer->serahTerima->delete();
             $transfer->delete();
 
+            DB::commit();
             return redirect()->route('rawat-inap.transfer-pasien-antar-ruang.index', [
                 $kd_unit,
                 $kd_pasien,
@@ -467,6 +471,7 @@ class TransferPasienAntarRuang extends Controller
                 $urut_masuk
             ])->with('success', 'Data transfer pasien berhasil dihapus.');
         } catch (Exception $e) {
+            DB::rollback();
             return back()->withErrors(['error' => 'Terjadi kesalahan: ' . $e->getMessage()]);
         }
     }

@@ -94,6 +94,15 @@
                 $dataMedis->urut_masuk,
             ]),
         ],
+        [
+            'icon' => 'check.svg',
+            'label' => 'Transfer Pasien',
+            'link' => route('hemodialisa.pelayanan.transfer-pasien.index', [
+                $dataMedis->kd_pasien,
+                $tglMasukData,
+                $dataMedis->urut_masuk,
+            ]),
+        ],
         // [
         // 'icon' => 'test_tube.png',
         // 'label' => 'Labor',

@@ -103,7 +103,7 @@
         </div>
 
         <div class="col-md-9">
-            @include('components.navigation-operasi')
+            @include('components.navigation-hemodialisa')
 
             <div class="d-flex justify-content-center">
                 <div class="card w-100 h-100">
@@ -137,7 +137,7 @@
                             <!-- Search Bar -->
                             <div class="col-md-3">
                                 <form method="GET"
-                                    action="{{ route('operasi.pelayanan.transfer-pasien.index', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}">
+                                    action="{{ route('hemodialisa.pelayanan.transfer-pasien.index', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}">
                                     <div class="input-group">
                                         <input type="text" name="search" class="form-control" placeholder="Cari"
                                             aria-label="Cari" value="{{ request('search') }}"
@@ -149,7 +149,7 @@
 
                             <!-- Button "Tambah" di sebelah kanan -->
                             <div class="col-md-3 text-end">
-                                <a href="{{ route('operasi.pelayanan.transfer-pasien.create', [$dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk]) }}"
+                                <a href="{{ route('hemodialisa.pelayanan.transfer-pasien.create', [$dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk]) }}"
                                     class="btn btn-primary">
                                     <i class="fas fa-shuffle"></i> Pindah Unit Asal
                                 </a>
@@ -200,19 +200,19 @@
                                                 <!-- Action Buttons -->
                                                 <div class="col-auto">
                                                     <div class="action-buttons">
-                                                        <a href="{{ route('operasi.pelayanan.transfer-pasien.show', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
+                                                        <a href="{{ route('hemodialisa.pelayanan.transfer-pasien.show', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
                                                             class="btn btn-view btn-sm" title="Lihat">
                                                             <i class="ti-eye"></i> Lihat
                                                         </a>
 
                                                         @if (($item->serahTerima->kd_unit_asal ?? '') == $dataMedis->kd_unit && ($item->serahTerima->status ?? '') == 1)
-                                                            <a href="{{ route('operasi.pelayanan.transfer-pasien.edit', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
+                                                            <a href="{{ route('hemodialisa.pelayanan.transfer-pasien.edit', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
                                                                 class="btn btn-edit btn-sm" title="Edit">
                                                                 <i class="ti-pencil"></i> Edit
                                                             </a>
 
                                                             <form
-                                                                action="{{ route('operasi.pelayanan.transfer-pasien.destroy', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
+                                                                action="{{ route('hemodialisa.pelayanan.transfer-pasien.destroy', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
                                                                 method="POST" class="delete-form d-inline">
                                                                 @csrf
                                                                 @method('DELETE')
@@ -285,7 +285,7 @@
 
                 // Construct URL with query parameters
                 let url =
-                    "{{ route('operasi.pelayanan.transfer-pasien.index', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}";
+                    "{{ route('hemodialisa.pelayanan.transfer-pasien.index', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}";
                 const params = new URLSearchParams();
                 if (startDate) params.append('start_date', startDate);
                 if (endDate) params.append('end_date', endDate);
