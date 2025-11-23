@@ -153,32 +153,6 @@ class HemodialisaController extends Controller
 
 
             return DataTables::of($data)
-                // ->filter(function ($query) use ($request) {
-                //     if ($searchValue = $request->get('search')['value']) {
-                //         $query->where(function ($q) use ($searchValue) {
-                //             if (is_numeric($searchValue) && strlen($searchValue) == 4) {
-                //                 $q->whereRaw("YEAR(kunjungan.tgl_masuk) = ?", [$searchValue]);
-                //             } elseif (preg_match('/^\d{4}-\d{2}-\d{2}$/', $searchValue)) {
-                //                 $q->whereRaw("CONVERT(varchar, kunjungan.tgl_masuk, 23) like ?", ["%{$searchValue}%"]);
-                //             } elseif (preg_match('/^\d{2}:\d{2}$/', $searchValue)) {
-                //                 $q->whereRaw("FORMAT(kunjungan.jam_masuk, 'HH:mm') like ?", ["%{$searchValue}%"]);
-                //             } else {
-                //                 $q->where('kunjungan.kd_pasien', 'like', "%{$searchValue}%")
-                //                     ->orWhereHas('pasien', function ($q) use ($searchValue) {
-                //                         $q->where('nama', 'like', "%{$searchValue}%")
-                //                             ->orWhere('alamat', 'like', "%{$searchValue}%");
-                //                     })
-                //                     ->orWhereHas('dokter', function ($q) use ($searchValue) {
-                //                         $q->where('nama_lengkap', 'like', "%{$searchValue}%");
-                //                     })
-                //                     ->orWhereHas('customer', function ($q) use ($searchValue) {
-                //                         $q->where('customer', 'like', "%{$searchValue}%");
-                //                     });
-                //             }
-                //         });
-                //     }
-                // })
-
                 ->order(function ($query) {
                     $query->orderBy('order_hd.tgl_order', 'desc')
                         ->orderBy('order_hd.jam_order', 'desc');

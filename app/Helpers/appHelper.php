@@ -3,6 +3,7 @@
 use App\Models\Kunjungan;
 use App\Models\Navigation;
 use App\Models\OrderHD;
+use App\Models\OrderRehabMedik;
 use App\Models\RmeMasterTindakLanjut;
 use App\Models\RmeSerahTerima;
 use App\Models\Role;
@@ -575,6 +576,14 @@ if (!function_exists('countPendingOrderHD')) {
     function countPendingOrderHD()
     {
         $result = OrderHD::where('status', 0)->count();
+        return $result;
+    }
+}
+
+if (!function_exists('countPendingOrderRehabMedik')) {
+    function countPendingOrderRehabMedik()
+    {
+        $result = OrderRehabMedik::where('status', 0)->count();
         return $result;
     }
 }

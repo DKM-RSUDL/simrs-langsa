@@ -10,6 +10,9 @@ use App\Http\Controllers\UnitPelayanan\RehabMedis\Pelayanan\TindakanController a
 Route::prefix('rehab-medis')->group(function () {
     Route::name('rehab-medis')->group(function () {
         Route::get('/', [RehabMedisController::class, 'index'])->name('.index');
+        Route::get('/pending', [RehabMedisController::class, 'pending'])->name('.pending');
+        Route::get('/terima-order/{data}', [RehabMedisController::class, 'terimaOrder'])->name('.terima-order');
+        Route::post('/terima-order/{data}', [RehabMedisController::class, 'storeTerimaOrder'])->name('.terima-order.store');
 
         Route::prefix('pelayanan/{kd_pasien}/{tgl_masuk}/{urut_masuk}')->group(function () {
             Route::name('.pelayanan')->group(function () {

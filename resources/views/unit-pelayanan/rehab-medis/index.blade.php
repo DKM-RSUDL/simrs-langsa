@@ -1,106 +1,107 @@
 @extends('layouts.administrator.master')
 
+@push('css')
+    <style>
+        /* Profile */
+        .profile {
+            display: flex;
+            align-items: center;
+        }
+
+        .profile img {
+            margin-right: 10px;
+            border-radius: 50%;
+        }
+
+        .profile .info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .profile .info strong {
+            font-size: 14px;
+        }
+
+        .profile .info span {
+            font-size: 12px;
+            color: #777;
+        }
+
+        /* Select2 — samakan dengan Bootstrap & z-index di modal */
+        .select2-container {
+            z-index: 9999;
+        }
+
+        .modal-dialog {
+            z-index: 1050 !important;
+        }
+
+        .modal-content {
+            overflow: visible !important;
+        }
+
+        .select2-dropdown {
+            z-index: 99999 !important;
+        }
+
+        .select2-container+.select2-container {
+            display: none;
+        }
+
+        .select2-container--default .select2-selection--single {
+            height: calc(1.5em + 0.75rem + 2px);
+            padding: 0.375rem 0.75rem;
+            font-size: 1rem;
+            font-weight: 400;
+            line-height: 1.5;
+            color: #495057;
+            background-color: #fff;
+            border: 1px solid #ced4da;
+            border-radius: 0.25rem;
+            transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+        }
+
+        .select2-container--default .select2-selection--single .select2-selection__rendered {
+            line-height: 1.5;
+            padding-left: 0;
+            padding-right: 0;
+            color: #495057;
+        }
+
+        .select2-container--default .select2-selection--single .select2-selection__arrow {
+            height: calc(1.5em + 0.75rem);
+            position: absolute;
+            top: 1px;
+            right: 1px;
+            width: 20px;
+        }
+
+        .select2-container--default .select2-selection--single .select2-selection__arrow b {
+            border-color: #6c757d transparent transparent transparent;
+        }
+
+        .select2-container--default.select2-container--open .select2-selection--single .select2-selection__arrow b {
+            border-color: transparent transparent #6c757d transparent;
+        }
+
+        .select2-container--default .select2-dropdown {
+            border-color: #80bdff;
+            border-radius: 0.25rem;
+        }
+
+        .select2-container--default .select2-results__option--highlighted[aria-selected] {
+            background-color: #0d6efd;
+        }
+
+        .select2-container--default.select2-container--focus .select2-selection--single {
+            border-color: #80bdff;
+            outline: 0;
+            box-shadow: 0 0 0 .2rem rgba(13, 110, 253, .25);
+        }
+    </style>
+@endpush
+
 @section('content')
-    @push('css')
-        <style>
-            /* Profile */
-            .profile {
-                display: flex;
-                align-items: center;
-            }
-
-            .profile img {
-                margin-right: 10px;
-                border-radius: 50%;
-            }
-
-            .profile .info {
-                display: flex;
-                flex-direction: column;
-            }
-
-            .profile .info strong {
-                font-size: 14px;
-            }
-
-            .profile .info span {
-                font-size: 12px;
-                color: #777;
-            }
-
-            /* Select2 — samakan dengan Bootstrap & z-index di modal */
-            .select2-container {
-                z-index: 9999;
-            }
-
-            .modal-dialog {
-                z-index: 1050 !important;
-            }
-
-            .modal-content {
-                overflow: visible !important;
-            }
-
-            .select2-dropdown {
-                z-index: 99999 !important;
-            }
-
-            .select2-container+.select2-container {
-                display: none;
-            }
-
-            .select2-container--default .select2-selection--single {
-                height: calc(1.5em + 0.75rem + 2px);
-                padding: 0.375rem 0.75rem;
-                font-size: 1rem;
-                font-weight: 400;
-                line-height: 1.5;
-                color: #495057;
-                background-color: #fff;
-                border: 1px solid #ced4da;
-                border-radius: 0.25rem;
-                transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
-            }
-
-            .select2-container--default .select2-selection--single .select2-selection__rendered {
-                line-height: 1.5;
-                padding-left: 0;
-                padding-right: 0;
-                color: #495057;
-            }
-
-            .select2-container--default .select2-selection--single .select2-selection__arrow {
-                height: calc(1.5em + 0.75rem);
-                position: absolute;
-                top: 1px;
-                right: 1px;
-                width: 20px;
-            }
-
-            .select2-container--default .select2-selection--single .select2-selection__arrow b {
-                border-color: #6c757d transparent transparent transparent;
-            }
-
-            .select2-container--default.select2-container--open .select2-selection--single .select2-selection__arrow b {
-                border-color: transparent transparent #6c757d transparent;
-            }
-
-            .select2-container--default .select2-dropdown {
-                border-color: #80bdff;
-                border-radius: 0.25rem;
-            }
-
-            .select2-container--default .select2-results__option--highlighted[aria-selected] {
-                background-color: #0d6efd;
-            }
-
-            .select2-container--default.select2-container--focus .select2-selection--single {
-                border-color: #80bdff;
-                outline: 0;
-                box-shadow: 0 0 0 .2rem rgba(13, 110, 253, .25);
-            }
-        </style>
-    @endpush
 
     <x-content-card>
         <div class="row">
@@ -111,22 +112,11 @@
                         <h4 class="fw-bold m-0">Rehabilitasi Medik</h4>
                     </div>
 
-                    <div class="col-12 col-md-4">
-                        <div class="row gap-2">
-                            {{-- Aktif (Primary) --}}
-                            <a href="{{ route('rehab-medis.index') }}" class="text-decoration-none col-6 ms-auto">
-                                <div class="rounded bg-primary text-white">
-                                    <div class="card-body d-flex align-items-center gap-3 px-3">
-                                        <img src="{{ asset('assets/img/icons/Sick.png') }}" alt="Icon" width="36"
-                                            height="36">
-                                        <div class="text-start">
-                                            <div class="small mb-1">Aktif</div>
-                                            <div class="fs-4 fw-bold">{{ countUnfinishedPatientWithTglKeluar(74) }}</div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </a>
-
+                    <div class="col-md-4">
+                        <div class="row g-2">
+                            @include('unit-pelayanan.rehab-medis.components.stats-card')
+                        </div>
+                        <div class="row">
                             {{-- Filter Dokter --}}
                             <div class="col-12 d-flex align-items-center justify-content-md-end mt-3 mt-lg-0">
                                 <label for="dokterSelect" class="form-label me-2 mb-0">Dokter:</label>

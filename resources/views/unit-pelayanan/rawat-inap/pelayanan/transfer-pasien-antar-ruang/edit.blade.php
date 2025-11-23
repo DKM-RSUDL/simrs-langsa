@@ -151,14 +151,14 @@
                                 <div class="col-md-6">
                                     <label class="form-label">Tanggal</label>
                                     <input type="date" name="tanggal_menyerahkan" value="{{ old('tanggal_menyerahkan', date('Y-m-d', strtotime($transfer->serahTerima->tanggal_menyerahkan))) }}"
-                                        class="form-control" disabled>
+                                        class="form-control" readonly>
                                     @error('tanggal_menyerahkan')
                                         <div class="invalid-feedback d-block">{{ $message }}</div>
                                     @enderror
                                 </div>
                                 <div class="col-md-6">
                                     <label class="form-label">Jam</label>
-                                    <input type="time" name="jam_menyerahkan" value="{{ old('jam_menyerahkan', date('H:i', strtotime($transfer->serahTerima->jam_menyerahkan))) }}" class="form-control" disabled>
+                                    <input type="time" name="jam_menyerahkan" value="{{ old('jam_menyerahkan', date('H:i', strtotime($transfer->serahTerima->jam_menyerahkan))) }}" class="form-control" readonly>
                                     @error('jam_menyerahkan')
                                         <div class="invalid-feedback d-block">{{ $message }}</div>
                                     @enderror

@@ -11,13 +11,13 @@
                 <x-button-previous />
 
                 @include('components.page-header', [
-                    'title' => 'Terima Order HD',
+                    'title' => 'Terima Order Rehabilitasi Medik',
                     'description' =>
-                        'Terima Order pelayanan Hemodialisa (HD) dengan mengisi formulir di bawah ini.',
+                        'Terima Order pelayanan Rehabilitasi Medik dengan mengisi formulir di bawah ini.',
                 ])
 
 
-                <form action="{{ route('hemodialisa.terima-order.store', [encrypt($order->id)]) }}" method="post">
+                <form action="{{ route('rehab-medis.terima-order.store', [encrypt($order->id)]) }}" method="post">
                     @csrf
 
                     <input type="hidden" name="transfer_id" value="{{ $transfer->id ?? '' }}">
@@ -43,6 +43,35 @@
                                     </div>
                                 </div>
                             </div>
+                        </div>
+                    </div>
+
+                    <div class="row mt-3">
+                        <h5 class="fw-bold">Tindakan:</h5>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="kd_produk">Nama Tindakan</label>
+                                <select name="kd_produk" id="kd_produk" class="form-select select2" required>
+                                    <option value="">--Pilih--</option>
+                                    @foreach ($produk as $item)
+                                        <option value="{{ $item->kd_produk }}" @selected($item->kd_produk == $order->kd_produk)>
+                                            {{ $item->deskripsi }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="kd_dokter">Dokter</label>
+                            <select name="kd_dokter" id="kd_dokter" class="form-select select2" required>
+                                <option value="">--Pilih--</option>
+                                @foreach ($dokter as $item)
+                                    <option value="{{ $item->kd_dokter }}" @selected($item->kd_dokter == $order->kd_dokter)>
+                                        {{ $item->dokter->nama_lengkap }}
+                                    </option>
+                                @endforeach
+                            </select>
                         </div>
                     </div>
 
@@ -118,43 +147,6 @@
                         </div>
                     </div>
                     {{-- END : HANDOVER --}}
-
-                    <div class="row mt-3">
-                        <h5 class="fw-bold">Tindakan:</h5>
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <label>Nama Tindakan</label>
-                                <select name="kd_produk" id="kd_produk" class="form-select select2" required>
-                                    <option value="">--Pilih--</option>
-                                    @foreach ($produk as $item)
-                                        <option value="{{ $item->kd_produk }}" data-tarif="{{ $item->tarif }}"
-                                            data-tgl="{{ $item->tgl_berlaku }}">
-                                            {{ $item->deskripsi }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        </div>
-
-                        <div class="col-md-6">
-                            <label>Dokter</label>
-                            <select name="kd_dokter" id="kd_dokter" class="form-select select2" required>
-                                <option value="">--Pilih--</option>
-                                @foreach ($dokter as $item)
-                                    <option value="{{ $item->kd_dokter }}">
-                                        {{ $item->dokter->nama_lengkap }}
-                                    </option>
-                                @endforeach
-                            </select>
-
-                            <input type="hidden" name="asal_pasien" value="2">
-                            <input type="hidden" name="kd_kasir" value="17">
-                            <input type="hidden" name="tarif" id="tarif" class="form-control" placeholder="Tarif"
-                                readonly>
-                            <input type="hidden" name="tgl_berlaku" id="tgl_berlaku" class="form-control"
-                                placeholder="tgl_berlaku" readonly>
-                        </div>
-                    </div>
 
                     <div class="row mt-3">
                         <div class="col-12 text-end">
@@ -1260,19 +1252,8 @@
 
 @push('js')
     <script>
-        $(document).ready(function() {
-            $('#kd_produk').on('change', function() {
-                var selectedOption = $(this).find('option:selected');
-                var tarif = selectedOption.data('tarif');
-                var tgl_berlaku = selectedOption.data('tgl');
-
-                $('#tarif').val(tarif ? tarif : '');
-                $('#tgl_berlaku').val(tgl_berlaku ? tgl_berlaku : '');
-            });
-        });
-
         // Persetujuan dan Alasan Pemindahan
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             const setujuYa = document.getElementById('setuju_ya');
             const setujuTidak = document.getElementById('setuju_tidak');
             const keluargaSection = document.getElementById('keluarga-section');
@@ -1333,14 +1314,13 @@
         }
 
         // Add event listeners for radio buttons to hide "lainnya" input when other options are selected
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             const rehabilitasiRadios = document.querySelectorAll('input[name="rehabilitasi"]');
             rehabilitasiRadios.forEach(radio => {
                 if (radio.id !== 'lainnya_rehabilitasi') {
-                    radio.addEventListener('change', function() {
+                    radio.addEventListener('change', function () {
                         if (this.checked) {
-                            const lainnyaInput = document.getElementById(
-                                'rehabilitasi_lainnya_input');
+                            const lainnyaInput = document.getElementById('rehabilitasi_lainnya_input');
                             lainnyaInput.style.display = 'none';
                             lainnyaInput.value = '';
                         }
@@ -1350,7 +1330,7 @@
         });
 
         // Initialize checkbox/radio states on page load
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             // Check all checkboxes with "lainnya" to show/hide corresponding inputs
             const lainnyaCheckboxes = document.querySelectorAll('input[type="checkbox"][id*="lainnya"]');
             lainnyaCheckboxes.forEach(checkbox => {
@@ -1483,7 +1463,7 @@
 
             // Hapus semua baris kecuali baris kosong
             var rows = tbody.querySelectorAll('tr:not(#barisKosong)');
-            rows.forEach(function(row) {
+            rows.forEach(function (row) {
                 row.remove();
             });
 
@@ -1491,7 +1471,7 @@
             if (dataObat.length > 0) {
                 barisKosong.style.display = 'none';
 
-                dataObat.forEach(function(item, index) {
+                dataObat.forEach(function (item, index) {
                     var baris = document.createElement('tr');
                     baris.innerHTML = `
                         <td><strong>${item.namaObat || '-'}</strong></td>
@@ -1572,7 +1552,7 @@
         }
 
         // Inisialisasi saat halaman dimuat
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             // Tampilkan tabel kosong
             tampilkanTabel();
         });
