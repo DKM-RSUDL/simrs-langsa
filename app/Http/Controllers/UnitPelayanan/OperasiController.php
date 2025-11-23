@@ -608,7 +608,7 @@ class OperasiController extends Controller
 
 
             // Update Order OK
-            OrderOK::where('tgl_op', $tanggal_op)
+            OrderOK::whereDate('tgl_op', $tanggal_op)
                 ->where('jam_op', $jam_op)
                 ->where('kd_kasir', $order->kd_kasir)
                 ->where('no_transaksi', $order->no_transaksi)

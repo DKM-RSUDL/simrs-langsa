@@ -183,6 +183,11 @@ class TransferPasienController extends Controller
 
             if (empty($order)) return back()->with('error', 'Pasien belum memiliki order atau tidak melalui RME saat order !');
 
+            if ($order->status == 2) throw new Exception('Order pasien sudah selesai, tidak dapat melakukan transfer lagi !');
+
+            $order->status = 2;
+            $order->save();
+
             $dataMedisAsal = $this->baseService->getDataMedisbyTransaksi($order->kd_kasir_asal, $order->no_transaksi_asal);
 
             if (empty($dataMedisAsal)) {
@@ -301,7 +306,7 @@ class TransferPasienController extends Controller
         // Decode JSON fields
         $transfer = $this->decodeJsonFields($transfer);
 
-        return view('unit-pelayanan.operasi.pelayanan.transfer.edit', compact('transfer', 'dataMedis', 'petugas', 'dokter', 'alergiPasien'));
+        return view('unit-pelayanan.hemodialisa.pelayanan.transfer.edit', compact('transfer', 'dataMedis', 'petugas', 'dokter', 'alergiPasien'));
     }
 
     public function update(Request $request, $kd_pasien, $tgl_masuk, $urut_masuk, $id)
@@ -344,7 +349,7 @@ class TransferPasienController extends Controller
 
             DB::commit();
 
-            return redirect()->route('operasi.pelayanan.transfer-pasien.index', [
+            return redirect()->route('hemodialisa.pelayanan.transfer-pasien.index', [
                 $kd_pasien,
                 $tgl_masuk,
                 $urut_masuk,

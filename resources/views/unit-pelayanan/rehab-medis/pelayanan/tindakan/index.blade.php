@@ -128,7 +128,7 @@
                             <!-- Search Bar -->
                             <div>
                                 <form method="GET"
-                                    action="{{ route('tindakan.index', ['kd_pasien' => $dataMedis->kd_pasien, 'tgl_masuk' => \Carbon\Carbon::parse($dataMedis->tgl_masuk)->format('Y-m-d')]) }}">
+                                    action="{{ route('rehab-medis.pelayanan.tindakan.index', [$dataMedis->kd_pasien, \Carbon\Carbon::parse($dataMedis->tgl_masuk)->format('Y-m-d'), $dataMedis->urut_masuk]) }}">
 
                                     <div class="input-group">
                                         <input type="text" name="search" class="form-control"

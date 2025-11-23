@@ -6,6 +6,7 @@ use App\Http\Controllers\UnitPelayanan\RehabMedis\Pelayanan\LayananController;
 use App\Http\Controllers\UnitPelayanan\RehabMedis\PelayananRehabMedisController;
 use App\Http\Controllers\UnitPelayanan\RehabMedis\RehabMedisController;
 use App\Http\Controllers\UnitPelayanan\RehabMedis\Pelayanan\TindakanController as RehamMedisTindakanController;
+use App\Http\Controllers\UnitPelayanan\RehabMedis\TransferPasienController;
 
 Route::prefix('rehab-medis')->group(function () {
     Route::name('rehab-medis')->group(function () {
@@ -46,6 +47,21 @@ Route::prefix('rehab-medis')->group(function () {
                             Route::post('/', 'store')->name('.store');
                             Route::put('/{data}', 'update')->name('.update');
                             Route::delete('/', 'destroy')->name('.destroy');
+                        });
+                    });
+                });
+
+                // Transfer Pasien Antar Ruang
+                Route::prefix('transfer-pasien')->group(function () {
+                    Route::name('.transfer-pasien')->group(function () {
+                        Route::controller(TransferPasienController::class)->group(function () {
+                            Route::get('/', 'index')->name('.index');
+                            Route::get('/create', 'create')->name('.create');
+                            Route::post('/', 'store')->name('.store');
+                            Route::get('/edit/{data}', 'edit')->name('.edit');
+                            Route::put('/{data}', 'update')->name('.update');
+                            Route::delete('/{data}', 'destroy')->name('.destroy');
+                            Route::get('/{data}', 'show')->name('.show');
                         });
                     });
                 });
