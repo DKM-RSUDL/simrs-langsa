@@ -1,19 +1,17 @@
 <?php
 
-namespace App\Http\Controllers\UnitPelayanan\Operasi;
+namespace App\Http\Controllers\UnitPelayanan\RehabMedis;
 
 use App\Http\Controllers\Controller;
 use App\Models\Dokter;
 use App\Models\HrdKaryawan;
-use App\Models\OrderOK;
+use App\Models\OrderRehabMedik;
 use App\Models\PasienInap;
 use App\Models\RmeAlergiPasien;
-use App\Models\RmeCatatanPemberianObat;
 use App\Models\RmeSerahTerima;
 use App\Models\RmeTransferPasienAntarRuang;
 use App\Models\Unit;
 use App\Services\BaseService;
-use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -26,9 +24,9 @@ class TransferPasienController extends Controller
 
     public function __construct()
     {
-        $this->middleware('can:read unit-pelayanan/operasi');
+        $this->middleware('can:read unit-pelayanan/rehab-medis');
         $this->baseService = new BaseService();
-        $this->kdUnit = 71;
+        $this->kdUnit = 74;
     }
 
     public function index(Request $request, $kd_pasien, $tgl_masuk, $urut_masuk)
@@ -39,14 +37,14 @@ class TransferPasienController extends Controller
             abort(404, 'Data not found');
         }
 
-        // get order OK
-        $order = OrderOK::where('kd_kasir_ok', $dataMedis->kd_kasir)
-            ->where('no_transaksi_ok', $dataMedis->no_transaksi)
+        // get order Rehab
+        $order = OrderRehabMedik::where('kd_kasir_rehab', $dataMedis->kd_kasir)
+            ->where('no_transaksi_rehab', $dataMedis->no_transaksi)
             ->first();
 
         if (empty($order)) return back()->with('error', 'Pasien belum memiliki order atau tidak melalui RME saat order !');
 
-        $dataMedisAsal = $this->baseService->getDataMedisbyTransaksi($order->kd_kasir, $order->no_transaksi);
+        $dataMedisAsal = $this->baseService->getDataMedisbyTransaksi($order->kd_kasir_asal, $order->no_transaksi_asal);
 
         if (empty($dataMedisAsal)) {
             abort(404, 'Data medis asal not found');
@@ -108,7 +106,7 @@ class TransferPasienController extends Controller
         $dokter = Dokter::where('status', 1)->orderBy('nama_lengkap', 'asc')->get();
         $alergiPasien = RmeAlergiPasien::where('kd_pasien', $kd_pasien)->get();
 
-        return view('unit-pelayanan.operasi.pelayanan.transfer.index', compact(
+        return view('unit-pelayanan.rehab-medis.pelayanan.transfer.index', compact(
             'dataMedis',
             'transfers',
             'unit',
@@ -127,14 +125,14 @@ class TransferPasienController extends Controller
             abort(404, 'Data not found');
         }
 
-        // get order OK
-        $order = OrderOK::where('kd_kasir_ok', $dataMedis->kd_kasir)
-            ->where('no_transaksi_ok', $dataMedis->no_transaksi)
+        // get order HD
+        $order = OrderRehabMedik::where('kd_kasir_rehab', $dataMedis->kd_kasir)
+            ->where('no_transaksi_rehab', $dataMedis->no_transaksi)
             ->first();
 
         if (empty($order)) return back()->with('error', 'Pasien belum memiliki order atau tidak melalui RME saat order !');
 
-        $dataMedisAsal = $this->baseService->getDataMedisbyTransaksi($order->kd_kasir, $order->no_transaksi);
+        $dataMedisAsal = $this->baseService->getDataMedisbyTransaksi($order->kd_kasir_asal, $order->no_transaksi_asal);
 
         if (empty($dataMedisAsal)) {
             abort(404, 'Data medis asal not found');
@@ -157,7 +155,7 @@ class TransferPasienController extends Controller
         $dokter = Dokter::where('status', 1)->orderBy('nama', 'asc')->get();
         $alergiPasien = RmeAlergiPasien::where('kd_pasien', $kd_pasien)->get();
 
-        return view('unit-pelayanan.operasi.pelayanan.transfer.create', compact(
+        return view('unit-pelayanan.rehab-medis.pelayanan.transfer.create', compact(
             'dataMedis',
             'unit',
             'unitTujuan',
@@ -178,20 +176,19 @@ class TransferPasienController extends Controller
             $dataMedis = $this->baseService->getDataMedis($this->kdUnit, $kd_pasien, $tgl_masuk, $urut_masuk);
             if (empty($dataMedis)) throw new Exception('Data medis tidak ditemukan');
 
-            // get order OK
-            $order = OrderOK::where('kd_kasir_ok', $dataMedis->kd_kasir)
-                ->where('no_transaksi_ok', $dataMedis->no_transaksi)
+            // get order Rehab
+            $order = OrderRehabMedik::where('kd_kasir_rehab', $dataMedis->kd_kasir)
+                ->where('no_transaksi_rehab', $dataMedis->no_transaksi)
                 ->first();
 
             if (empty($order)) throw new Exception('Pasien belum memiliki order atau tidak melalui RME saat order !');
 
             if ($order->status == 2) throw new Exception('Order pasien sudah selesai, tidak dapat melakukan transfer lagi !');
 
-            OrderOK::where('kd_kasir_ok', $dataMedis->kd_kasir)
-                ->where('no_transaksi_ok', $dataMedis->no_transaksi)
-                ->update(['status' => 2]);
+            $order->status = 2;
+            $order->save();
 
-            $dataMedisAsal = $this->baseService->getDataMedisbyTransaksi($order->kd_kasir, $order->no_transaksi);
+            $dataMedisAsal = $this->baseService->getDataMedisbyTransaksi($order->kd_kasir_asal, $order->no_transaksi_asal);
 
             if (empty($dataMedisAsal)) {
                 abort(404, 'Data medis asal not found');
@@ -250,7 +247,7 @@ class TransferPasienController extends Controller
 
             DB::commit();
 
-            return to_route('operasi.pelayanan.transfer-pasien.index', [
+            return to_route('rehab-medis.pelayanan.transfer-pasien.index', [
                 $kd_pasien,
                 $tgl_masuk,
                 $urut_masuk,
@@ -264,8 +261,9 @@ class TransferPasienController extends Controller
         }
     }
 
-    public function show($kd_pasien, $tgl_masuk, $urut_masuk, $id)
+    public function show($kd_pasien, $tgl_masuk, $urut_masuk, $idHash)
     {
+        $id = decrypt($idHash);
         $transfer = RmeTransferPasienAntarRuang::findOrFail($id);
 
         $dataMedis = $this->baseService->getDataMedis($this->kdUnit, $kd_pasien, $tgl_masuk, $urut_masuk);
@@ -283,11 +281,12 @@ class TransferPasienController extends Controller
         // Decode JSON fields
         $transfer = $this->decodeJsonFields($transfer);
 
-        return view('unit-pelayanan.operasi.pelayanan.transfer.show', compact('transfer', 'dataMedis', 'petugas', 'dokter', 'alergiPasien'));
+        return view('unit-pelayanan.rehab-medis.pelayanan.transfer.show', compact('transfer', 'dataMedis', 'petugas', 'dokter', 'alergiPasien'));
     }
 
-    public function edit($kd_pasien, $tgl_masuk, $urut_masuk, $id)
+    public function edit($kd_pasien, $tgl_masuk, $urut_masuk, $idHash)
     {
+        $id = decrypt($idHash);
         $transfer = RmeTransferPasienAntarRuang::with(['serahTerima'])->where('id', $id)->first();
         if (!$transfer) {
             abort(404, 'Data transfer not found');
@@ -309,15 +308,15 @@ class TransferPasienController extends Controller
         // Decode JSON fields
         $transfer = $this->decodeJsonFields($transfer);
 
-        return view('unit-pelayanan.operasi.pelayanan.transfer.edit', compact('transfer', 'dataMedis', 'petugas', 'dokter', 'alergiPasien'));
+        return view('unit-pelayanan.rehab-medis.pelayanan.transfer.edit', compact('transfer', 'dataMedis', 'petugas', 'dokter', 'alergiPasien'));
     }
 
-    public function update(Request $request, $kd_pasien, $tgl_masuk, $urut_masuk, $id)
+    public function update(Request $request, $kd_pasien, $tgl_masuk, $urut_masuk, $idHash)
     {
         DB::beginTransaction();
 
         try {
-
+            $id = decrypt($idHash);
             $transfer = RmeTransferPasienAntarRuang::findOrFail($id);
 
             // Validasi data
@@ -352,7 +351,7 @@ class TransferPasienController extends Controller
 
             DB::commit();
 
-            return redirect()->route('operasi.pelayanan.transfer-pasien.index', [
+            return redirect()->route('rehab-medis.pelayanan.transfer-pasien.index', [
                 $kd_pasien,
                 $tgl_masuk,
                 $urut_masuk,
@@ -366,23 +365,26 @@ class TransferPasienController extends Controller
         }
     }
 
-    public function destroy($kd_pasien, $tgl_masuk, $urut_masuk, $id)
+    public function destroy($kd_pasien, $tgl_masuk, $urut_masuk, $idHash)
     {
         DB::beginTransaction();
         try {
+            $id = decrypt($idHash);
             $transfer = RmeTransferPasienAntarRuang::findOrFail($id);
+
             if (!empty($transfer->serahTerima)) $transfer->serahTerima->delete();
+
             $transfer->delete();
 
             DB::commit();
-            return redirect()->route('operasi.pelayanan.transfer-pasien.index', [
+            return to_route('rehab-medis.pelayanan.transfer-pasien.index', [
                 $kd_pasien,
                 $tgl_masuk,
                 $urut_masuk
             ])->with('success', 'Data transfer pasien berhasil dihapus.');
         } catch (Exception $e) {
             DB::rollback();
-            return back()->withErrors(['error' => 'Terjadi kesalahan: ' . $e->getMessage()]);
+            return back()->with(['error' => 'Terjadi kesalahan: ' . $e->getMessage()]);
         }
     }
 
@@ -732,32 +734,5 @@ class TransferPasienController extends Controller
                 'data'      => 0
             ]);
         }
-    }
-
-    private function getRiwayatCatatanPemberianObat($kd_pasien, $kd_unit, $tgl_masuk, $urut_masuk)
-    {
-        $since = now()->subDay();
-        return RmeCatatanPemberianObat::where('kd_pasien', $kd_pasien)
-            ->where('kd_unit', $kd_unit)
-            ->whereDate('tgl_masuk', $tgl_masuk)
-            ->where('urut_masuk', $urut_masuk)
-            ->where('tanggal', '>=', $since)
-            ->with(['petugas', 'petugasValidasi'])
-            ->select(
-                'id',
-                'kd_petugas',
-                'nama_obat',
-                'frekuensi',
-                'dosis',
-                'satuan',
-                'keterangan',
-                'freak',
-                'tanggal',
-                'catatan',
-                'is_validasi',
-                'petugas_validasi'
-            )
-            ->orderBy('tanggal', 'desc')
-            ->get();
     }
 }

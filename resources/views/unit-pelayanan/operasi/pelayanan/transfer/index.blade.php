@@ -103,7 +103,7 @@
         </div>
 
         <div class="col-md-9">
-            @include('components.navigation-ranap')
+            @include('components.navigation-operasi')
 
             <div class="d-flex justify-content-center">
                 <div class="card w-100 h-100">
@@ -137,7 +137,7 @@
                             <!-- Search Bar -->
                             <div class="col-md-3">
                                 <form method="GET"
-                                    action="{{ route('rawat-inap.transfer-pasien-antar-ruang.index', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}">
+                                    action="{{ route('operasi.pelayanan.transfer-pasien.index', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}">
                                     <div class="input-group">
                                         <input type="text" name="search" class="form-control" placeholder="Cari"
                                             aria-label="Cari" value="{{ request('search') }}"
@@ -205,14 +205,14 @@
                                                             <i class="ti-eye"></i> Lihat
                                                         </a>
 
-                                                        @if ($item->kd_unit == $dataMedis->kd_unit)
+                                                        @if (($item->serahTerima->kd_unit_asal ?? '') == $dataMedis->kd_unit && ($item->serahTerima->status ?? '') == 1)
                                                             <a href="{{ route('operasi.pelayanan.transfer-pasien.edit', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
                                                                 class="btn btn-edit btn-sm" title="Edit">
                                                                 <i class="ti-pencil"></i> Edit
                                                             </a>
 
                                                             <form
-                                                                action="{{ route('operasi.pelayanan.transfer-pasien.destroy', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
+                                                                action="{{ route('operasi.pelayanan.transfer-pasien.destroy', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
                                                                 method="POST" class="delete-form d-inline">
                                                                 @csrf
                                                                 @method('DELETE')
@@ -285,7 +285,7 @@
 
                 // Construct URL with query parameters
                 let url =
-                    "{{ route('rawat-inap.transfer-pasien-antar-ruang.index', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}";
+                    "{{ route('operasi.pelayanan.transfer-pasien.index', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}";
                 const params = new URLSearchParams();
                 if (startDate) params.append('start_date', startDate);
                 if (endDate) params.append('end_date', endDate);

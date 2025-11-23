@@ -1,19 +1,17 @@
 <?php
 
-namespace App\Http\Controllers\UnitPelayanan\Operasi;
+namespace App\Http\Controllers\UnitPelayanan\Hemodialisa;
 
 use App\Http\Controllers\Controller;
 use App\Models\Dokter;
 use App\Models\HrdKaryawan;
-use App\Models\OrderOK;
+use App\Models\OrderHD;
 use App\Models\PasienInap;
 use App\Models\RmeAlergiPasien;
-use App\Models\RmeCatatanPemberianObat;
 use App\Models\RmeSerahTerima;
 use App\Models\RmeTransferPasienAntarRuang;
 use App\Models\Unit;
 use App\Services\BaseService;
-use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -26,9 +24,9 @@ class TransferPasienController extends Controller
 
     public function __construct()
     {
-        $this->middleware('can:read unit-pelayanan/operasi');
+        $this->middleware('can:read unit-pelayanan/hemodialisa');
         $this->baseService = new BaseService();
-        $this->kdUnit = 71;
+        $this->kdUnit = 72;
     }
 
     public function index(Request $request, $kd_pasien, $tgl_masuk, $urut_masuk)
@@ -39,14 +37,14 @@ class TransferPasienController extends Controller
             abort(404, 'Data not found');
         }
 
-        // get order OK
-        $order = OrderOK::where('kd_kasir_ok', $dataMedis->kd_kasir)
-            ->where('no_transaksi_ok', $dataMedis->no_transaksi)
+        // get order HD
+        $order = OrderHD::where('kd_kasir_hd', $dataMedis->kd_kasir)
+            ->where('no_transaksi_hd', $dataMedis->no_transaksi)
             ->first();
 
         if (empty($order)) return back()->with('error', 'Pasien belum memiliki order atau tidak melalui RME saat order !');
 
-        $dataMedisAsal = $this->baseService->getDataMedisbyTransaksi($order->kd_kasir, $order->no_transaksi);
+        $dataMedisAsal = $this->baseService->getDataMedisbyTransaksi($order->kd_kasir_asal, $order->no_transaksi_asal);
 
         if (empty($dataMedisAsal)) {
             abort(404, 'Data medis asal not found');
@@ -108,7 +106,7 @@ class TransferPasienController extends Controller
         $dokter = Dokter::where('status', 1)->orderBy('nama_lengkap', 'asc')->get();
         $alergiPasien = RmeAlergiPasien::where('kd_pasien', $kd_pasien)->get();
 
-        return view('unit-pelayanan.operasi.pelayanan.transfer.index', compact(
+        return view('unit-pelayanan.hemodialisa.pelayanan.transfer.index', compact(
             'dataMedis',
             'transfers',
             'unit',
@@ -127,14 +125,14 @@ class TransferPasienController extends Controller
             abort(404, 'Data not found');
         }
 
-        // get order OK
-        $order = OrderOK::where('kd_kasir_ok', $dataMedis->kd_kasir)
-            ->where('no_transaksi_ok', $dataMedis->no_transaksi)
+        // get order HD
+        $order = OrderHD::where('kd_kasir_hd', $dataMedis->kd_kasir)
+            ->where('no_transaksi_hd', $dataMedis->no_transaksi)
             ->first();
 
         if (empty($order)) return back()->with('error', 'Pasien belum memiliki order atau tidak melalui RME saat order !');
 
-        $dataMedisAsal = $this->baseService->getDataMedisbyTransaksi($order->kd_kasir, $order->no_transaksi);
+        $dataMedisAsal = $this->baseService->getDataMedisbyTransaksi($order->kd_kasir_asal, $order->no_transaksi_asal);
 
         if (empty($dataMedisAsal)) {
             abort(404, 'Data medis asal not found');
@@ -157,7 +155,7 @@ class TransferPasienController extends Controller
         $dokter = Dokter::where('status', 1)->orderBy('nama', 'asc')->get();
         $alergiPasien = RmeAlergiPasien::where('kd_pasien', $kd_pasien)->get();
 
-        return view('unit-pelayanan.operasi.pelayanan.transfer.create', compact(
+        return view('unit-pelayanan.hemodialisa.pelayanan.transfer.create', compact(
             'dataMedis',
             'unit',
             'unitTujuan',
@@ -178,20 +176,19 @@ class TransferPasienController extends Controller
             $dataMedis = $this->baseService->getDataMedis($this->kdUnit, $kd_pasien, $tgl_masuk, $urut_masuk);
             if (empty($dataMedis)) throw new Exception('Data medis tidak ditemukan');
 
-            // get order OK
-            $order = OrderOK::where('kd_kasir_ok', $dataMedis->kd_kasir)
-                ->where('no_transaksi_ok', $dataMedis->no_transaksi)
+            // get order HD
+            $order = OrderHD::where('kd_kasir_hd', $dataMedis->kd_kasir)
+                ->where('no_transaksi_hd', $dataMedis->no_transaksi)
                 ->first();
 
-            if (empty($order)) throw new Exception('Pasien belum memiliki order atau tidak melalui RME saat order !');
+            if (empty($order)) return back()->with('error', 'Pasien belum memiliki order atau tidak melalui RME saat order !');
 
             if ($order->status == 2) throw new Exception('Order pasien sudah selesai, tidak dapat melakukan transfer lagi !');
 
-            OrderOK::where('kd_kasir_ok', $dataMedis->kd_kasir)
-                ->where('no_transaksi_ok', $dataMedis->no_transaksi)
-                ->update(['status' => 2]);
+            $order->status = 2;
+            $order->save();
 
-            $dataMedisAsal = $this->baseService->getDataMedisbyTransaksi($order->kd_kasir, $order->no_transaksi);
+            $dataMedisAsal = $this->baseService->getDataMedisbyTransaksi($order->kd_kasir_asal, $order->no_transaksi_asal);
 
             if (empty($dataMedisAsal)) {
                 abort(404, 'Data medis asal not found');
@@ -250,7 +247,7 @@ class TransferPasienController extends Controller
 
             DB::commit();
 
-            return to_route('operasi.pelayanan.transfer-pasien.index', [
+            return to_route('hemodialisa.pelayanan.transfer-pasien.index', [
                 $kd_pasien,
                 $tgl_masuk,
                 $urut_masuk,
@@ -283,7 +280,7 @@ class TransferPasienController extends Controller
         // Decode JSON fields
         $transfer = $this->decodeJsonFields($transfer);
 
-        return view('unit-pelayanan.operasi.pelayanan.transfer.show', compact('transfer', 'dataMedis', 'petugas', 'dokter', 'alergiPasien'));
+        return view('unit-pelayanan.hemodialisa.pelayanan.transfer.show', compact('transfer', 'dataMedis', 'petugas', 'dokter', 'alergiPasien'));
     }
 
     public function edit($kd_pasien, $tgl_masuk, $urut_masuk, $id)
@@ -309,7 +306,7 @@ class TransferPasienController extends Controller
         // Decode JSON fields
         $transfer = $this->decodeJsonFields($transfer);
 
-        return view('unit-pelayanan.operasi.pelayanan.transfer.edit', compact('transfer', 'dataMedis', 'petugas', 'dokter', 'alergiPasien'));
+        return view('unit-pelayanan.hemodialisa.pelayanan.transfer.edit', compact('transfer', 'dataMedis', 'petugas', 'dokter', 'alergiPasien'));
     }
 
     public function update(Request $request, $kd_pasien, $tgl_masuk, $urut_masuk, $id)
@@ -352,7 +349,7 @@ class TransferPasienController extends Controller
 
             DB::commit();
 
-            return redirect()->route('operasi.pelayanan.transfer-pasien.index', [
+            return redirect()->route('hemodialisa.pelayanan.transfer-pasien.index', [
                 $kd_pasien,
                 $tgl_masuk,
                 $urut_masuk,
@@ -371,18 +368,20 @@ class TransferPasienController extends Controller
         DB::beginTransaction();
         try {
             $transfer = RmeTransferPasienAntarRuang::findOrFail($id);
+
             if (!empty($transfer->serahTerima)) $transfer->serahTerima->delete();
+
             $transfer->delete();
 
             DB::commit();
-            return redirect()->route('operasi.pelayanan.transfer-pasien.index', [
+            return to_route('hemodialisa.pelayanan.transfer-pasien.index', [
                 $kd_pasien,
                 $tgl_masuk,
                 $urut_masuk
             ])->with('success', 'Data transfer pasien berhasil dihapus.');
         } catch (Exception $e) {
             DB::rollback();
-            return back()->withErrors(['error' => 'Terjadi kesalahan: ' . $e->getMessage()]);
+            return back()->with(['error' => 'Terjadi kesalahan: ' . $e->getMessage()]);
         }
     }
 

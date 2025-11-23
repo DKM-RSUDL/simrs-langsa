@@ -103,7 +103,7 @@
         </div>
 
         <div class="col-md-9">
-            @include('components.navigation-ranap')
+            @include('components.navigation-rahab-medis')
 
             <div class="d-flex justify-content-center">
                 <div class="card w-100 h-100">
@@ -137,7 +137,7 @@
                             <!-- Search Bar -->
                             <div class="col-md-3">
                                 <form method="GET"
-                                    action="{{ route('rawat-inap.transfer-pasien-antar-ruang.index', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}">
+                                    action="{{ route('rehab-medis.pelayanan.transfer-pasien.index', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}">
                                     <div class="input-group">
                                         <input type="text" name="search" class="form-control" placeholder="Cari"
                                             aria-label="Cari" value="{{ request('search') }}"
@@ -149,37 +149,10 @@
 
                             <!-- Button "Tambah" di sebelah kanan -->
                             <div class="col-md-3 text-end">
-                                <div class="dropdown">
-                                    <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton"
-                                        data-bs-toggle="dropdown" aria-expanded="false">
-                                        <i class="fas fa-plus me-2"></i> Pindah
-                                    </button>
-                                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton">
-                                        <li class="bg-light">
-                                            <h6 class="dropdown-header"><i class="fas fa-user-nurse me-2"></i>Rawat
-                                                Inap</h6>
-                                        </li>
-                                        <li><a class="custom__dropdown__item"
-                                                href="{{ route('rawat-inap.transfer-pasien-antar-ruang.create', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}">Ruang
-                                                Rawat</a>
-                                        </li>
-
-                                        <li>
-                                            <hr class="dropdown-divider">
-                                        </li>
-
-
-                                        <li class="bg-light">
-                                            <h6 class="dropdown-header"><i class="fas fa-stethoscope me-2"></i>Penunjang
-                                            </h6>
-                                        </li>
-
-                                        <li><a class="custom__dropdown__item"
-                                                href="{{ route('rawat-inap.transfer-pasien-antar-ruang.penunjang.index', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}">Transfer
-                                                Penunjang</a>
-                                        </li>
-                                    </ul>
-                                </div>
+                                <a href="{{ route('rehab-medis.pelayanan.transfer-pasien.create', [$dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk]) }}"
+                                    class="btn btn-primary">
+                                    <i class="fas fa-shuffle"></i> Pindah Unit Asal
+                                </a>
                             </div>
                         </div>
 
@@ -227,19 +200,19 @@
                                                 <!-- Action Buttons -->
                                                 <div class="col-auto">
                                                     <div class="action-buttons">
-                                                        <a href="{{ route('rawat-inap.transfer-pasien-antar-ruang.show', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
+                                                        <a href="{{ route('rehab-medis.pelayanan.transfer-pasien.show', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, encrypt($item->id)]) }}"
                                                             class="btn btn-view btn-sm" title="Lihat">
                                                             <i class="ti-eye"></i> Lihat
                                                         </a>
 
                                                         @if (($item->serahTerima->kd_unit_asal ?? '') == $dataMedis->kd_unit && ($item->serahTerima->status ?? '') == 1)
-                                                            <a href="{{ route('rawat-inap.transfer-pasien-antar-ruang.edit', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
+                                                            <a href="{{ route('rehab-medis.pelayanan.transfer-pasien.edit', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, encrypt($item->id)]) }}"
                                                                 class="btn btn-edit btn-sm" title="Edit">
                                                                 <i class="ti-pencil"></i> Edit
                                                             </a>
 
                                                             <form
-                                                                action="{{ route('rawat-inap.transfer-pasien-antar-ruang.destroy', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
+                                                                action="{{ route('rehab-medis.pelayanan.transfer-pasien.destroy', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, encrypt($item->id)]) }}"
                                                                 method="POST" class="delete-form d-inline">
                                                                 @csrf
                                                                 @method('DELETE')
@@ -312,7 +285,7 @@
 
                 // Construct URL with query parameters
                 let url =
-                    "{{ route('rawat-inap.transfer-pasien-antar-ruang.index', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}";
+                    "{{ route('rehab-medis.pelayanan.transfer-pasien.index', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}";
                 const params = new URLSearchParams();
                 if (startDate) params.append('start_date', startDate);
                 if (endDate) params.append('end_date', endDate);

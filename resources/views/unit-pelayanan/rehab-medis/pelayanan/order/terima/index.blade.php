@@ -1,227 +1,164 @@
 @extends('layouts.administrator.master')
 
-@push('css')
-    <link rel="stylesheet" href="{{ asset('assets/css/MedisGawatDaruratController.css') }}">
-    <style>
-        .header-background {
-            height: 100%;
-            background-image: url("{{ asset('assets/img/background_gawat_darurat.png') }}");
-        }
-    </style>
-@endpush
-
 @section('content')
-    @php
-        $transferFormReady =
-            !empty($serahTerima->kd_spesial) &&
-            !empty($serahTerima->kd_dokter) &&
-            !empty($serahTerima->kd_kelas) &&
-            !empty($serahTerima->no_kamar);
-    @endphp
-
     <div class="row">
         <div class="col-md-3">
-
-            <div class="card h-auto sticky-top" style="top:1rem; z-index: 0;">
-                <div class="card-body">
-                    <div class="position-absolute top-0 end-0 p-3 d-flex flex-column align-items-center gap-1">
-                        <span class="d-block rounded-circle bg-danger" style="width:8px;height:8px;"></span>
-                        <span class="d-block rounded-circle bg-warning" style="width:8px;height:8px;"></span>
-                        <span class="d-block rounded-circle bg-success" style="width:8px;height:8px;"></span>
-                    </div>
-
-                    <div class="row g-3">
-                        {{-- Foto pasien --}}
-                        <div class="col-5">
-                            <img src="{{ asset('assets/img/profile.jpg') }}" alt="Patient Photo"
-                                class="object-fit-cover rounded w-100 h-100">
-                        </div>
-
-                        {{-- Info pasien --}}
-                        <div class="col-7 col-md-12 d-flex flex-column justify-content-center">
-                            <h6 class="h6 mb-1 fw-semibold">
-                                {{ $serahTerima->pasien->nama ?? 'Tidak Diketahui' }}
-                            </h6>
-
-                            <p class="mb-1">
-                                @if (($serahTerima->pasien->jenis_kelamin ?? '') == 1)
-                                    Laki-laki
-                                @elseif (($serahTerima->pasien->jenis_kelamin ?? '') == 0)
-                                    Perempuan
-                                @else
-                                    Tidak Diketahui
-                                @endif
-                            </p>
-
-                            <div class="small text-body-secondary mb-2">
-                                {{ !empty($serahTerima->pasien->tgl_lahir) ? hitungUmur($serahTerima->pasien->tgl_lahir) : 'Tidak Diketahui' }}
-                                Thn
-                                (
-                                {{ $serahTerima->pasien->tgl_lahir
-                                    ? \Carbon\Carbon::parse($serahTerima->pasien->tgl_lahir)->format('d/m/Y')
-                                    : 'Tidak Diketahui' }}
-                                )
-                            </div>
-
-                            <div class="d-flex flex-column gap-1">
-                                <div class="fw-semibold">
-                                    RM: {{ $serahTerima->pasien->kd_pasien ?? '-' }}
-                                </div>
-
-                                <div class="d-inline-flex align-items-start gap-2">
-                                    <i class="bi bi-hospital"></i>
-                                    <span>
-                                        {{ $serahTerima->unitTujuan->bagian->bagian ?? '-' }}
-                                        ({{ $serahTerima->unitTujuan->nama_unit ?? '-' }})
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
+            @include('components.patient-card')
         </div>
 
         <div class="col-md-9">
-
             <x-content-card>
                 <x-button-previous />
 
                 @include('components.page-header', [
-                    'title' => 'Serah Terima Pasien Antar Ruang',
-                    'description' => 'Lengkapi form serah terima pasien antar ruang berikut ini',
+                    'title' => 'Terima Order Rehabilitasi Medik',
+                    'description' =>
+                        'Terima Order pelayanan Rehabilitasi Medik dengan mengisi formulir di bawah ini.',
                 ])
 
-                <form
-                    action="{{ route('rawat-inap.unit.serah-terima.store', [$serahTerima->kd_unit_tujuan, encrypt($serahTerima->id)]) }}"
-                    method="post">
+
+                <form action="{{ route('rehab-medis.terima-order.store', [encrypt($order->id)]) }}" method="post">
                     @csrf
-                    @method('put')
+
+                    <input type="hidden" name="transfer_id" value="{{ $transfer->id ?? '' }}">
+
+                    {{-- START : HANDOVER --}}
 
                     <div class="row">
-                        @if ($transferFormReady)
-                            <div class="col-md-6">
-                                <div class="mb-4">
-                                    <h5 class="fw-bold">SBAR</h5>
-                                    <div class="row g-3">
-                                        <div class="col-12 mb-3">
-                                            <label>Subjective</label>
-                                            <textarea name="subjective" placeholder="Data subjektif" class="form-control" rows="5" disabled>{{ old('subjective', $serahTerima->subjective ?? '') }}</textarea>
-                                        </div>
-                                        <div class="col-12 mb-3">
-                                            <label>Background</label>
-                                            <textarea name="background" placeholder="Background" class="form-control" rows="5" disabled>{{ old('background', $serahTerima->background ?? '') }}</textarea>
-                                        </div>
-                                        <div class="col-12 mb-3">
-                                            <label>Assessment</label>
-                                            <textarea name="assessment" placeholder="Assessment" class="form-control" rows="5" disabled>{{ old('assessment', $serahTerima->assessment ?? '') }}</textarea>
-                                        </div>
-                                        <div class="col-12 mb-3">
-                                            <label>Recommendation</label>
-                                            <textarea name="recomendation" placeholder="Recommendation" class="form-control" rows="5" disabled>{{ old('recomendation', $serahTerima->recomendation ?? '') }}</textarea>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        @endif
-
-                        <div class="{{ $transferFormReady ? 'col-md-6' : 'col-12' }}">
+                        <div class="col-12">
+                            <h5 class="fw-bold">Waktu Permintaan</h5>
                             <div class="row">
-                                <div class="{{ $transferFormReady ? 'mb-4' : 'col-md-6' }}">
-                                    <h5 class="fw-bold">Yang Menyerahkan:</h5>
+                                <div class="col-md-6">
                                     <div class="mb-3">
-                                        <label for="kd_unit_asal">Dari Unit/ Ruang</label>
-                                        <input type="text" class="form-control"
-                                            value="{{ $serahTerima->unitAsal->nama_unit ?? '' }}" disabled>
+                                        <label for="kd_unit_asal">Tanggal</label>
+                                        <input type="date" class="form-control" disabled
+                                            value="{{ date('Y-m-d', strtotime($order->tgl_order)) }}">
                                     </div>
-                                    <div class="mb-3">
-                                        <label for="kd_unit_tujuan">Tujuan ke Unit/ Ruang</label>
-                                        <input type="text" class="form-control"
-                                            value="{{ $serahTerima->unitTujuan->nama_unit ?? '' }}" disabled>
-                                    </div>
-                                    <div class="mb-3">
-                                        <label for="petugas_menyerahkan">Petugas yang Menyerahkan</label>
-                                        <input type="text" class="form-control"
-                                            value="{{ ($serahTerima->petugasAsal->gelar_depan ?? '') . ' ' . str()->title($serahTerima->petugasAsal->nama ?? '') . ' ' . ($serahTerima->petugasAsal->gelar_belakang ?? '') }}"
-                                            disabled>
-                                    </div>
-
-                                    <div class="mb-3 row">
-                                        <div class="col-md-6">
-                                            <label>Tanggal</label>
-                                            <input type="date" name="tanggal_menyerahkan"
-                                                value="{{ !empty($serahTerima->tanggal_menyerahkan) ? date('Y-m-d', strtotime($serahTerima->tanggal_menyerahkan)) : '' }}"
-                                                class="form-control" disabled>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <label>Jam</label>
-                                            <input type="time" name="jam_menyerahkan"
-                                                value="{{ !empty($serahTerima->jam_menyerahkan) ? date('H:i', strtotime($serahTerima->jam_menyerahkan)) : date('H:i') }}"
-                                                class="form-control" disabled>
-                                        </div>
-                                    </div>
-                                    {{-- <button type="button" class="btn btn-primary w-100">Validasi petugas yang menerima</button> --}}
                                 </div>
-
-                                <div class="{{ $transferFormReady ? 'mb-4' : 'col-md-6' }}">
-                                    <h5 class="fw-bold">Yang Menerima:</h5>
+                                <div class="col-md-6">
                                     <div class="mb-3">
-                                        <label>Diterima di Ruang/ Unit Pelayanan</label>
-                                        <input type="text" class="form-control"
-                                            value="{{ $serahTerima->unitTujuan->nama_unit ?? '' }}" disabled>
+                                        <label for="kd_unit_asal">Jam</label>
+                                        <input type="time" class="form-control" disabled
+                                            value="{{ date('H:i', strtotime($order->jam_order)) }}">
                                     </div>
-                                    <div class="mb-3">
-                                        <label>Petugas yang Menerima</label>
-                                        <select name="petugas_terima" id="petugas_terima" class="form-select select2">
-                                            <option value="">--Pilih--</option>
-                                            <option
-                                                value="{{ $serahTerima->petugas_terima ?? auth()->user()->kd_karyawan }}"
-                                                selected>
-                                                {{ $serahTerima->petugasTerima->name ?? auth()->user()->name }}
-                                            </option>
-
-                                            @foreach ($petugas as $item)
-                                                @if ($item->kd_karyawan != auth()->user()->kd_karyawan && $item->kd_karyawan != $serahTerima->petugas_terima)
-                                                    <option value="{{ $item->kd_karyawan }}">
-                                                        {{ $item->gelar_depan . ' ' . str()->title($item->nama) . ' ' . $item->gelar_belakang }}
-                                                    </option>
-                                                @endif
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                    <div class="mb-3 row">
-                                        <div class="col-md-6">
-                                            <label>Tanggal</label>
-                                            <input type="date" name="tanggal_terima"
-                                                value="{{ !empty($serahTerima->tanggal_terima) ? date('Y-m-d', strtotime($serahTerima->tanggal_terima)) : date('Y-m-d') }}"
-                                                class="form-control">
-                                        </div>
-                                        <div class="col-md-6">
-                                            <label>Jam</label>
-                                            <input type="time" name="jam_terima"
-                                                value="{{ !empty($serahTerima->jam_terima) ? date('H:i', strtotime($serahTerima->jam_terima)) : date('H:i') }}"
-                                                class="form-control">
-                                        </div>
-                                    </div>
-                                    {{-- <button type="button" class="btn btn-primary w-100">Validasi petugas yang menerima</button> --}}
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    @if ($serahTerima->status == 1)
-                        <div class="d-flex justify-content-end gap-2">
-                            <x-button-submit>Terima Order</x-button-submit>
+                    <div class="row mt-3">
+                        <h5 class="fw-bold">Tindakan:</h5>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="kd_produk">Nama Tindakan</label>
+                                <select name="kd_produk" id="kd_produk" class="form-select select2" required>
+                                    <option value="">--Pilih--</option>
+                                    @foreach ($produk as $item)
+                                        <option value="{{ $item->kd_produk }}" @selected($item->kd_produk == $order->kd_produk)>
+                                            {{ $item->deskripsi }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
                         </div>
-                    @endif
+
+                        <div class="col-md-6">
+                            <label for="kd_dokter">Dokter</label>
+                            <select name="kd_dokter" id="kd_dokter" class="form-select select2" required>
+                                <option value="">--Pilih--</option>
+                                @foreach ($dokter as $item)
+                                    <option value="{{ $item->kd_dokter }}" @selected($item->kd_dokter == $order->kd_dokter)>
+                                        {{ $item->dokter->nama_lengkap }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="row mt-3">
+
+                        <div class="col-md-6">
+                            <h5 class="fw-bold">Yang Menyerahkan:</h5>
+                            <div class="mb-3">
+                                <label for="kd_unit_asal">Dari Unit/ Ruang</label>
+                                <input type="text" class="form-control" disabled
+                                    value="{{ $order->unit_asal->nama_unit }}">
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="petugas_menyerahkan">Petugas yang Menyerahkan</label>
+                                <input type="text" class="form-control" disabled
+                                    value="{{ ($serahTerima->petugasAsal->gelar_depan ?? '') . ' ' . str()->title($serahTerima->petugasAsal->nama ?? '') . ' ' . ($serahTerima->petugasAsal->gelar_belakang ?? '') }}">
+                            </div>
+
+                            <div class="mb-3 row">
+                                <div class="col-md-6">
+                                    <label>Tanggal</label>
+                                    <input type="date" name="tanggal_menyerahkan"
+                                        value="{{ $serahTerima->tanggal_menyerahkan ?? '' ? date('Y-m-d', strtotime($serahTerima->tanggal_menyerahkan)) : '' }}"
+                                        class="form-control" disabled>
+                                </div>
+                                <div class="col-md-6">
+                                    <label>Jam</label>
+                                    <input type="time" name="jam_menyerahkan"
+                                        value="{{ !empty($serahTerima->jam_menyerahkan ?? '') ? date('H:i', strtotime($serahTerima->jam_menyerahkan)) : '' }}"
+                                        class="form-control" disabled>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <h5 class="fw-bold">Yang Menerima:</h5>
+                            <div class="mb-3">
+                                <label>Diterima di Ruang/ Unit Pelayanan</label>
+                                <input type="text" class="form-control"
+                                    value="{{ $serahTerima->unitTujuan->nama_unit ?? '' }}" disabled>
+                            </div>
+                            <div class="mb-3">
+                                <label>Petugas yang Menerima</label>
+                                <select name="petugas_terima" id="petugas_terima" class="form-select select2" required>
+                                    <option value="">--Pilih--</option>
+                                    <option value="{{ auth()->user()->kd_karyawan }}" selected>
+                                        {{ auth()->user()->karyawan->gelar_depan . ' ' . str()->title(auth()->user()->karyawan->nama) . ' ' . auth()->user()->karyawan->gelar_belakang }}
+                                    </option>
+
+                                    @foreach ($petugas as $item)
+                                        <option value="{{ $item->kd_karyawan }}">
+                                            {{ $item->gelar_depan . ' ' . str()->title($item->nama) . ' ' . $item->gelar_belakang }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+
+                            <div class="mb-3 row">
+                                <div class="col-md-6">
+                                    <label>Tanggal</label>
+                                    <input type="date" name="tanggal_terima"
+                                        value="{{ !empty($serahTerima->tanggal_terima) ? date('Y-m-d', strtotime($serahTerima->tanggal_terima)) : date('Y-m-d') }}"
+                                        class="form-control" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label>Jam</label>
+                                    <input type="time" name="jam_terima"
+                                        value="{{ !empty($serahTerima->jam_terima) ? date('H:i', strtotime($serahTerima->jam_terima)) : date('H:i') }}"
+                                        class="form-control" required>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {{-- END : HANDOVER --}}
+
+                    <div class="row mt-3">
+                        <div class="col-12 text-end">
+                            <x-button-submit>Terima</x-button-submit>
+                        </div>
+                    </div>
                 </form>
+
             </x-content-card>
 
-            @if (!empty($serahTerima->transfer))
+            @if (!empty($transfer))
                 <x-content-card>
-
-                    <!-- Informasi Medis -->
                     <div class="form-section">
                         <div class="section-header">Informasi Medis</div>
                         <div class="section-content">
@@ -231,7 +168,7 @@
                                         <label class="form-label">Dokter yang Merawat</label>
                                         <select name="dokter_merawat" class="form-select select2" disabled>
                                             <option value="">--Pilih--</option>
-                                            @foreach ($dokter as $item)
+                                            @foreach ($dokterAll as $item)
                                                 <option value="{{ $item->kd_dokter }}" @selected(old('dokter_merawat', $transfer->dokter_merawat) == $item->kd_dokter)>
                                                     {{ $item->nama_lengkap }}
                                                 </option>
@@ -261,7 +198,7 @@
                                         <label class="form-label">DPJP (Dokter Penanggung Jawab Pelayanan)</label>
                                         <select name="dpjp" class="form-select select2" disabled>
                                             <option value="">--Pilih--</option>
-                                            @foreach ($dokter as $item)
+                                            @foreach ($dokterAll as $item)
                                                 <option value="{{ $item->kd_dokter }}" @selected(old('dpjp', $transfer->dpjp) == $item->kd_dokter)>
                                                     {{ $item->nama_lengkap }}
                                                 </option>
@@ -1221,8 +1158,7 @@
                             <div class="mt-4">
                                 <div class="mb-3">
                                     <label class="form-label">Pemeriksaan penunjang diagnostik yang sudah dilakukan (EKG,
-                                        Lab,
-                                        dll):</label>
+                                        Lab, dll):</label>
                                     <textarea name="pemeriksaan_penunjang" class="form-control" rows="3" disabled>{{ old('pemeriksaan_penunjang', $transfer->pemeriksaan_penunjang) }}</textarea>
                                     @error('pemeriksaan_penunjang')
                                         <small class="text-danger">{{ $message }}</small>
@@ -1292,19 +1228,14 @@
                                 <select name="derajat_pasien" id="derajat_pasien" class="form-select" disabled>
                                     <option value="">--Pilih--</option>
                                     <option value="Derajat 1" @selected(old('derajat_pasien', $transfer->derajat_pasien) == 'Derajat 1')>Derajat 1 - Transporter -
-                                        Perawat
-                                    </option>
+                                        Perawat</option>
                                     <option value="Derajat 2" @selected(old('derajat_pasien', $transfer->derajat_pasien) == 'Derajat 2')>Derajat 2 - Transporter -
-                                        Perawat
-                                        - Dokter</option>
+                                        Perawat - Dokter</option>
                                     <option value="Derajat 3" @selected(old('derajat_pasien', $transfer->derajat_pasien) == 'Derajat 3')>Derajat 3 - Transporter -
-                                        Perawat
-                                        - Dokter yang kompeten</option>
+                                        Perawat - Dokter yang kompeten</option>
                                     <option value="Derajat 4" @selected(old('derajat_pasien', $transfer->derajat_pasien) == 'Derajat 4')>Derajat 4 - Transporter -
-                                        Perawat
-                                        - Dokter yang kompeten menangani pasien kritis dan berpengalaman minimal 6 bulan
-                                        bekerja
-                                        di IGD/ ICU</option>
+                                        Perawat - Dokter yang kompeten menangani pasien kritis dan berpengalaman minimal 6
+                                        bulan bekerja di IGD/ ICU</option>
                                 </select>
                                 @error('derajat_pasien')
                                     <small class="text-danger">{{ $message }}</small>
@@ -1314,6 +1245,316 @@
                     </div>
                 </x-content-card>
             @endif
+
         </div>
     </div>
 @endsection
+
+@push('js')
+    <script>
+        // Persetujuan dan Alasan Pemindahan
+        document.addEventListener('DOMContentLoaded', function () {
+            const setujuYa = document.getElementById('setuju_ya');
+            const setujuTidak = document.getElementById('setuju_tidak');
+            const keluargaSection = document.getElementById('keluarga-section');
+
+            function toggleKeluargaSection() {
+                if (setujuYa.checked) {
+                    keluargaSection.style.display = 'block';
+                } else {
+                    keluargaSection.style.display = 'none';
+                }
+            }
+
+            // Check on page load untuk old values
+            toggleKeluargaSection();
+
+            // Add event listeners
+            setujuYa.addEventListener('change', toggleKeluargaSection);
+            setujuTidak.addEventListener('change', toggleKeluargaSection);
+        });
+
+        // Toggle other input functions
+        function toggleOtherInput(checkboxId, inputId) {
+            const checkbox = document.getElementById(checkboxId);
+            const input = document.getElementById(inputId);
+
+            if (checkbox.checked) {
+                input.style.display = 'block';
+                input.focus();
+            } else {
+                input.style.display = 'none';
+                input.value = '';
+            }
+        }
+
+        function toggleOtherInputRadio(radioId, inputId, radioName) {
+            const radio = document.getElementById(radioId);
+            const input = document.getElementById(inputId);
+            const allRadios = document.querySelectorAll(`input[name="${radioName}"]`);
+
+            // Hide all related inputs first
+            allRadios.forEach(r => {
+                if (r.id !== radioId) {
+                    const relatedInput = document.getElementById(r.id.replace(r.id.split('_')[1], 'lainnya_input'));
+                    if (relatedInput && relatedInput.id.includes('lainnya')) {
+                        relatedInput.style.display = 'none';
+                        relatedInput.value = '';
+                    }
+                }
+            });
+
+            if (radio.checked) {
+                input.style.display = 'block';
+                input.focus();
+            } else {
+                input.style.display = 'none';
+                input.value = '';
+            }
+        }
+
+        // Add event listeners for radio buttons to hide "lainnya" input when other options are selected
+        document.addEventListener('DOMContentLoaded', function () {
+            const rehabilitasiRadios = document.querySelectorAll('input[name="rehabilitasi"]');
+            rehabilitasiRadios.forEach(radio => {
+                if (radio.id !== 'lainnya_rehabilitasi') {
+                    radio.addEventListener('change', function () {
+                        if (this.checked) {
+                            const lainnyaInput = document.getElementById('rehabilitasi_lainnya_input');
+                            lainnyaInput.style.display = 'none';
+                            lainnyaInput.value = '';
+                        }
+                    });
+                }
+            });
+        });
+
+        // Initialize checkbox/radio states on page load
+        document.addEventListener('DOMContentLoaded', function () {
+            // Check all checkboxes with "lainnya" to show/hide corresponding inputs
+            const lainnyaCheckboxes = document.querySelectorAll('input[type="checkbox"][id*="lainnya"]');
+            lainnyaCheckboxes.forEach(checkbox => {
+                if (checkbox.checked) {
+                    const inputId = checkbox.id.replace('lainnya_', '') + '_lainnya_input';
+                    const input = document.getElementById(inputId);
+                    if (input) {
+                        input.style.display = 'block';
+                    }
+                }
+            });
+
+            // Check radio buttons with "lainnya" to show/hide corresponding inputs
+            const lainnyaRadios = document.querySelectorAll('input[type="radio"][id*="lainnya"]');
+            lainnyaRadios.forEach(radio => {
+                if (radio.checked) {
+                    const inputId = radio.id + '_input';
+                    const input = document.getElementById(inputId);
+                    if (input) {
+                        input.style.display = 'block';
+                    }
+                }
+            });
+        });
+
+        // TERAPI SAAT PINDAH
+        var dataObat = [];
+        var indexEdit = -1;
+        var indexHapus = -1;
+
+        // Initialize old values untuk terapi (robust parsing)
+        document.addEventListener('DOMContentLoaded', function() {
+            // Load old terapi data injected from server (could be string, double-encoded string, or array)
+            const oldTerapiDataRaw = {!! json_encode(old('terapi_data', json_encode($transfer->terapi_data ?? []))) !!};
+
+            if (oldTerapiDataRaw) {
+                try {
+                    if (Array.isArray(oldTerapiDataRaw)) {
+                        dataObat = oldTerapiDataRaw;
+                    } else if (typeof oldTerapiDataRaw === 'string') {
+                        // Try to parse once
+                        let parsed = JSON.parse(oldTerapiDataRaw);
+
+                        // If still a string (double-encoded), parse again
+                        if (typeof parsed === 'string') {
+                            parsed = JSON.parse(parsed);
+                        }
+
+                        dataObat = Array.isArray(parsed) ? parsed : [];
+                    } else {
+                        dataObat = [];
+                    }
+
+                    if (dataObat.length > 0) {
+                        tampilkanTabel();
+                    }
+                } catch (e) {
+                    console.error('Error parsing old terapi data:', e);
+                    dataObat = [];
+                }
+            }
+        });
+
+        // Fungsi buka modal
+        function bukaModal() {
+            document.getElementById('judulModal').textContent = 'Tambah Terapi Obat';
+            document.getElementById('textSimpan').textContent = 'Simpan';
+            kosongkanForm();
+            indexEdit = -1;
+
+            var modal = new bootstrap.Modal(document.getElementById('modalForm'));
+            modal.show();
+        }
+
+        // Fungsi kosongkan form
+        function kosongkanForm() {
+            document.getElementById('namaObat').value = '';
+            document.getElementById('jumlah').value = '';
+            document.getElementById('dosis').value = '';
+            document.getElementById('frekuensi').value = '';
+            document.getElementById('cara').value = '';
+        }
+
+        // Fungsi simpan data - SANGAT SEDERHANA
+        function simpanData() {
+            var nama = document.getElementById('namaObat').value || '';
+            var jml = document.getElementById('jumlah').value || '';
+            var dos = document.getElementById('dosis').value || '';
+            var frek = document.getElementById('frekuensi').value || '';
+            var caraPemberian = document.getElementById('cara').value || '';
+
+            var objData = {
+                namaObat: nama,
+                jumlah: jml,
+                dosis: dos,
+                frekuensi: frek,
+                cara: caraPemberian
+            };
+
+            if (indexEdit >= 0) {
+                dataObat[indexEdit] = objData;
+                indexEdit = -1;
+            } else {
+                dataObat.push(objData);
+            }
+
+            tampilkanTabel();
+
+            var modal = bootstrap.Modal.getInstance(document.getElementById('modalForm'));
+            if (modal) {
+                modal.hide();
+            }
+
+            // Ganti alert dengan SweetAlert2 jika ada
+            if (typeof Swal !== 'undefined') {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Sukses',
+                    text: 'Data berhasil disimpan!',
+                    timer: 2000,
+                    showConfirmButton: false
+                });
+            }
+        }
+
+        // Fungsi tampilkan tabel - SANGAT SEDERHANA
+        function tampilkanTabel() {
+            var tbody = document.getElementById('tabelData');
+            var barisKosong = document.getElementById('barisKosong');
+
+            // Hapus semua baris kecuali baris kosong
+            var rows = tbody.querySelectorAll('tr:not(#barisKosong)');
+            rows.forEach(function (row) {
+                row.remove();
+            });
+
+            // Jika ada data
+            if (dataObat.length > 0) {
+                barisKosong.style.display = 'none';
+
+                dataObat.forEach(function (item, index) {
+                    var baris = document.createElement('tr');
+                    baris.innerHTML = `
+                        <td><strong>${item.namaObat || '-'}</strong></td>
+                        <td>${item.jumlah || '-'}</td>
+                        <td>${item.dosis || '-'}</td>
+                        <td>${item.frekuensi || '-'}</td>
+                        <td><span class="badge bg-info">${item.cara || '-'}</span></td>
+                    `;
+                    tbody.appendChild(baris);
+                });
+            } else {
+                barisKosong.style.display = '';
+            }
+
+            // Simpan data ke input hidden dalam format JSON
+            document.getElementById('terapiData').value = JSON.stringify(dataObat);
+        }
+
+        // Fungsi edit data
+        function editData(index) {
+            var item = dataObat[index];
+            if (!item) return;
+
+            indexEdit = index;
+
+            // Isi form
+            document.getElementById('namaObat').value = item.namaObat || '';
+            document.getElementById('jumlah').value = item.jumlah || '';
+            document.getElementById('dosis').value = item.dosis || '';
+            document.getElementById('frekuensi').value = item.frekuensi || '';
+            document.getElementById('cara').value = item.cara || '';
+
+            // Ubah judul
+            document.getElementById('judulModal').textContent = 'Edit Terapi Obat';
+            document.getElementById('textSimpan').textContent = 'Update';
+
+            // Buka modal
+            var modal = new bootstrap.Modal(document.getElementById('modalForm'));
+            modal.show();
+        }
+
+        // Fungsi hapus data
+        function hapusData(index) {
+            var item = dataObat[index];
+            if (!item) return;
+
+            indexHapus = index;
+            document.getElementById('namaHapus').textContent = item.namaObat || 'Data ini';
+
+            var modal = new bootstrap.Modal(document.getElementById('modalHapus'));
+            modal.show();
+        }
+
+        // Fungsi konfirmasi hapus
+        function konfirmasiHapus() {
+            if (indexHapus >= 0) {
+                dataObat.splice(indexHapus, 1);
+                indexHapus = -1;
+
+                tampilkanTabel();
+
+                var modal = bootstrap.Modal.getInstance(document.getElementById('modalHapus'));
+                if (modal) {
+                    modal.hide();
+                }
+
+                // Ganti alert dengan SweetAlert2 jika ada
+                if (typeof Swal !== 'undefined') {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Sukses',
+                        text: 'Data berhasil dihapus!',
+                        timer: 2000,
+                        showConfirmButton: false
+                    });
+                }
+            }
+        }
+
+        // Inisialisasi saat halaman dimuat
+        document.addEventListener('DOMContentLoaded', function () {
+            // Tampilkan tabel kosong
+            tampilkanTabel();
+        });
+    </script>
+@endpush
