@@ -19,11 +19,13 @@ use App\Models\Transaksi;
 use App\Models\Unit;
 use App\Models\UnitAsal;
 use App\Services\BaseService;
+use App\Services\RadiologyFileService;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 class RadiologiController extends Controller
 {
@@ -319,6 +321,218 @@ class RadiologiController extends Controller
         }
     }
 
+    public function preview($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, Request $request)
+    {
+        $fileName  = $request->query('file'); // nama file
+
+        $tanggal   = $tgl_masuk;
+        $kdPasien  = $kd_pasien;
+        $kdUnit    = $kd_unit;
+        $urutMasuk = $urut_masuk;
+
+        if (!$fileName) {
+            abort(404, 'File tidak ditemukan');
+        }
+
+        if (!$fileName || !$tanggal || !$kdPasien) {
+            abort(404, 'Parameter tidak lengkap');
+        }
+
+        $service = new RadiologyFileService();
+
+        // First try the configured mount path
+        $filePath = $service->buildFilePath($fileName, $tanggal);
+
+
+        if ($service->fileExists($filePath) && $service->isWithinMount($filePath)) {
+            $response = response()->file($filePath, [
+                'Content-Type' => 'application/pdf',
+            ]);
+            // Ensure browser tab shows the filename
+            $response->headers->set('Content-Disposition', $response->headers->makeDisposition(
+                'inline',
+                basename($fileName)
+            ));
+            return $response;
+        }
+
+        // If the mount path doesn't have the file, try to read the original path stored in DB (UNC)
+        $original = $service->findOriginalFilePath($fileName, $kdPasien, $tanggal, $kdUnit, $urutMasuk);
+        if ($original && $service->fileExists($original)) {
+            Log::info('Serving radiology file from original DB path', ['path' => $original, 'file' => $fileName]);
+            $response = response()->file($original, [
+                'Content-Type' => 'application/pdf',
+            ]);
+            $response->headers->set('Content-Disposition', $response->headers->makeDisposition(
+                'inline',
+                basename($fileName)
+            ));
+            return $response;
+        }
+
+        abort(404, 'File hasil radiologi tidak ditemukan');
+    }
+
+    /**
+     * Download PDF radiologi
+     */
+    public function download($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, Request $request)
+    {
+        $fileName  = $request->query('file');
+
+        // Read route parameters
+        $tanggal   = $tgl_masuk;
+        $kdPasien  = $kd_pasien;
+        $kdUnit    = $kd_unit;
+        $urutMasuk = $urut_masuk;
+
+        if (!$fileName) {
+            abort(404, 'File tidak ditemukan');
+        }
+
+        if (!$fileName || !$tanggal || !$kdPasien) {
+            abort(404, 'Parameter tidak lengkap');
+        }
+
+        $service  = new RadiologyFileService();
+
+        if (!$service->validateFileOwnership($fileName, $kdPasien, $tanggal, $kdUnit, $urutMasuk)) {
+            abort(403, 'Anda tidak memiliki akses ke file ini');
+        }
+
+        // Try mount path first
+        $filePath = $service->buildFilePath($fileName, $tanggal);
+
+        if ($service->fileExists($filePath) && $service->isWithinMount($filePath)) {
+            return response()->download($filePath, basename($fileName), [
+                'Content-Type' => 'application/pdf',
+            ]);
+        }
+
+        // Fallback to original UNC/absolute path from DB
+        $original = $service->findOriginalFilePath($fileName, $kdPasien, $tanggal, $kdUnit, $urutMasuk);
+        if ($original && $service->fileExists($original)) {
+            return response()->download($original, basename($fileName), [
+                'Content-Type' => 'application/pdf',
+            ]);
+        }
+
+        Log::warning('Radiology download: file not found', ['file' => $fileName, 'mount' => $filePath, 'original' => $original ?? null]);
+        abort(404, 'File hasil radiologi tidak ditemukan');
+    }
+
+    public function printAll($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, Request $request)
+    {
+        try {
+            $dataMedis = $this->baseService->getDataMedis($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
+
+            // Dapatkan data radiologi menggunakan query yang lengkap
+            $dataRadiologi = $this->getRadiologyResults(
+                $dataMedis->kd_pasien,
+                $dataMedis->tgl_masuk,
+                $dataMedis->urut_masuk
+            );
+
+            // get data trx radiologi by trx unit asal (untuk data yang berasal dari unit lain)
+            $unitAsal = UnitAsal::where('no_transaksi_asal', $dataMedis->no_transaksi)
+                ->where('kd_kasir_asal', $dataMedis->kd_kasir)
+                ->where('kd_kasir', '09')
+                ->get();
+
+            // get data transaksi rad dari unit asal menggunakan Eloquent
+            $dataTransaksi = [];
+
+            foreach ($unitAsal as $ua) {
+                $dataRadHasil = RadHasil::with([
+                    'produk.klas',
+                    'kunjungan.dokter'
+                ])
+                    ->whereHas('kunjungan.transaksi', function ($query) use ($ua) {
+                        $query->where('no_transaksi', $ua->no_transaksi)
+                            ->where('kd_kasir', $ua->kd_kasir);
+                    })
+                    ->where('kd_pasien', $dataMedis->kd_pasien)
+                    ->where('kd_unit', 5)
+                    ->get()
+                    ->map(function ($item) {
+                        $service = new RadiologyFileService();
+                        $fileName = $item->file ? $service->extractFileName($item->file) : null;
+
+                        return [
+                            'kd_pasien' => $item->kd_pasien,
+                            'kd_unit' => $item->kd_unit,
+                            'tgl_transaksi' => $item->tgl_masuk,
+                            'TGL_MASUK' => $item->tgl_masuk,
+                            'urut_masuk' => $item->urut_masuk,
+                            'urut' => $item->urut,
+                            'urut_rad' => $item->urut,
+                            'kd_dokter' => $item->kunjungan->dokter->kd_dokter ?? null,
+                            'nama_dokter' => $item->kunjungan->dokter->nama_lengkap ?? null,
+                            'kd_produk' => $item->kd_test,
+                            'nama_produk' => $item->produk->deskripsi ?? null,
+                            'hasil' => $item->hasil,
+                            'kd_alat' => $item->kd_alat,
+                            'klasifikasi' => $item->produk->klas->klasifikasi ?? null,
+                            'file' => $item->file ?? null,
+                            'filename' => $fileName,
+                            'kd_unit_rad' => $item->kd_unit,
+                        ];
+                    })
+                    ->toArray();
+
+                $dataTransaksi = array_merge($dataTransaksi, $dataRadHasil);
+            }
+
+            $service = new RadiologyFileService();
+
+            $files = [];
+            $seen = [];
+
+            foreach ($dataTransaksi as $row) {
+                // Extract date only for URL construction
+                $raw = $row['file'] ?? null;
+                if (!$raw) continue;
+
+                $filename = $service->extractFileName($raw);
+                if (!$filename) continue;
+
+                // Dedupe by filename
+                if (in_array($filename, $seen)) continue;
+                $seen[] = $filename;
+
+                $previewBase = url("unit-pelayanan/rawat-inap/unit/{$kd_unit}/pelayanan/{$kd_pasien}/{$tgl_masuk}/{$urut_masuk}/radiologi/preview");
+                $fileUrl = $previewBase . '?file=' . urlencode($filename);
+
+                $files[] = [
+                    'file_name' => $filename,
+                    'file_url' => $fileUrl,
+                ];
+            }
+
+            // If request expects JSON (AJAX/API), return JSON. Otherwise return an HTML page
+            if ($request->wantsJson() || $request->ajax()) {
+                return response()->json([
+                    'status' => 'success',
+                    'message' => 'Files retrieved',
+                    'data' => [
+                        'count' => count($files),
+                        'files' => $files,
+                    ]
+                ], 200);
+            }
+
+            return view('unit-pelayanan.rawat-inap.pelayanan.radiologi.print-all-open', [
+                'files' => $files,
+                'count' => count($files),
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => $e->getMessage(),
+                'data' => []
+            ], 500);
+        }
+    }
 
     private function orderTabs($kd_unit, $dataMedis, $radiologiIGD, $request)
     {
@@ -442,20 +656,27 @@ class RadiologiController extends Controller
                 ->where('kd_unit', 5)
                 ->get()
                 ->map(function ($item) {
+                    $service = new RadiologyFileService();
+                    $fileName = $item->file ? $service->extractFileName($item->file) : null;
+
                     return [
                         'kd_pasien' => $item->kd_pasien,
                         'kd_unit' => $item->kd_unit,
                         'tgl_transaksi' => $item->tgl_masuk,
+                        'TGL_MASUK' => $item->tgl_masuk,
                         'urut_masuk' => $item->urut_masuk,
                         'urut' => $item->urut,
+                        'urut_rad' => $item->urut,
                         'kd_dokter' => $item->kunjungan->dokter->kd_dokter ?? null,
                         'nama_dokter' => $item->kunjungan->dokter->nama_lengkap ?? null,
                         'kd_produk' => $item->kd_test,
                         'nama_produk' => $item->produk->deskripsi ?? null,
                         'hasil' => $item->hasil,
                         'kd_alat' => $item->kd_alat,
-                        'accession_number' => $item->accession_number,
-                        'klasifikasi' => $item->produk->klas->klasifikasi ?? null
+                        'klasifikasi' => $item->produk->klas->klasifikasi ?? null,
+                        'file' => $item->file ?? null,
+                        'filename' => $fileName,
+                        'kd_unit_rad' => $item->kd_unit,
                     ];
                 })
                 ->toArray();
@@ -697,6 +918,10 @@ class RadiologiController extends Controller
                     "- diagnosa banding : " . ($anamnesis->dd ?? '');
             }
 
+            $service = new RadiologyFileService();
+
+            $fileName = $item->file ? $service->extractFileName($item->file) : null;
+
             return (object) [
                 'no_asuransi' => $item->pasien->no_asuransi ?? null,
                 'NO_SJP' => $sjp,
@@ -717,7 +942,9 @@ class RadiologiController extends Controller
                 'ACCESSION_NUMBER' => $item->accession_number ? (string) $item->accession_number : null,
                 'kd_test' => $item->kd_test,
                 'urut_rad' => $item->urut,
-                'kd_unit_rad' => $item->kd_unit
+                'kd_unit_rad' => $item->kd_unit,
+                'file'              => $item->file,
+                'filename'          => $fileName,         // nama file saja
             ];
         });
 
