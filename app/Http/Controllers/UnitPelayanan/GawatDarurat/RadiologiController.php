@@ -518,4 +518,14 @@ class RadiologiController extends Controller
             ], 500);
         }
     }
+
+    public function preview($kd_pasien, $tgl_masuk, Request $request)
+    {
+        //
+    }
+
+    public function download($kd_pasien, $tgl_masuk, Request $request)
+    {
+        //
+    }
 }
