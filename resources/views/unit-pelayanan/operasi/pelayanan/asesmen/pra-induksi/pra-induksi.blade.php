@@ -142,6 +142,11 @@
                         <i class="fas fa-edit"></i>
                         Edit
                     </a>
+                    <a href="{{ route('operasi.pelayanan.asesmen.pra-induksi.print', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
+                        class="btn btn-warning btn-sm" target="_blank">
+                        <i class="fas fa-print me-1"></i>
+                        Cetak
+                    </a>
                 </div>
             </li>
         @endforeach
