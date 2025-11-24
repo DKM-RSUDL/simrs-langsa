@@ -426,15 +426,30 @@ class PraInduksitController extends Controller
                 ->where('urut_masuk', $urut_masuk)
                 ->firstOrFail();
 
-            // 3. Generate PDF
-            // $pdf = Pdf::loadView('unit-pelayanan.operasi.pelayanan.asesmen.pra-induksi.print', compact(
-            //     'okPraInduksi',
-            //     'dataMedis'
-            // ))->setPaper('a4', 'portrait');
+            if ($dataMedis->pasien && $dataMedis->pasien->tgl_lahir) {
+                $dataMedis->pasien->umur = Carbon::parse($dataMedis->pasien->tgl_lahir)->age;
+            } else {
+                $dataMedis->pasien->umur = 'Tidak Diketahui';
+            }
+
+            $asesmenParent = OkAsesmen::with('userCreate.karyawan') // Load creator data
+                ->where('kd_pasien', $kd_pasien)
+                ->where('kd_unit', 71)
+                ->whereDate('tgl_masuk', $tgl_masuk)
+                ->where('urut_masuk', $urut_masuk)
+                ->first(); // Mengambil asesmen parent yang sesuai kunjungan
+
+            $namaCreator = '_________________________';
+            if ($asesmenParent && $asesmenParent->userCreate && $asesmenParent->userCreate->karyawan) {
+                $karyawan = $asesmenParent->userCreate->karyawan;
+                $namaCreator = trim((($karyawan->gelar_depan ?? '') . ' ' . ($karyawan->nama_lengkap ?? $karyawan->nama ?? '') . ' ' . ($karyawan->gelar_belakang ?? '')));
+                if ($namaCreator == '') $namaCreator = '_________________________';
+            }
 
             return view('unit-pelayanan.operasi.pelayanan.asesmen.pra-induksi.print', compact(
                 'okPraInduksi',
-                'dataMedis'
+                'dataMedis',
+                'namaCreator'
             ));
 
             // return $pdf->stream('Pra_Induksi_' . $dataMedis->pasien->kd_pasien . '.pdf');

@@ -153,9 +153,20 @@
     @php
         $pasien = $dataMedis->pasien ?? (object) [];
         $pra = $asesmen->praOperatifMedis ?? (object) []; // Data Pra Operatif Medis
+        $creator = $asesmen->userCreate;
+        $namaDpjp = '_________________________';
 
-        // Ambil nama dokter dari relasi atau lookup (Asumsi relasi dimuat di controller)
-        $dokterAnastesi = $pra->dokterAnestesi->nama_lengkap ?? '_________________________';
+        if ($creator && $creator->karyawan) {
+            $gelarDepan = $creator->karyawan->gelar_depan ?? '';
+            // Ambil nama dari nama_lengkap atau nama (sesuai struktur DB)
+            $nama = $creator->karyawan->nama_lengkap ?? ($creator->karyawan->nama ?? '');
+            $gelarBelakang = $creator->karyawan->gelar_belakang ?? '';
+            // Gabungkan dan bersihkan spasi
+            $namaDpjp = trim("{$gelarDepan} {$nama} {$gelarBelakang}");
+            if ($namaDpjp === '') {
+                $namaDpjp = '_________________________';
+            }
+        }
     @endphp
 
     {{-- ======================================================= --}}
@@ -179,7 +190,7 @@
                 </table>
             </td>
             <td class="td-center" style="width: 40%; text-align: center;">
-                <span class="title-main">ASESMEN PRA ANESTESI</span>
+                <span class="title-main">ASESMEN PRA ANESTESI MEDIS</span>
             </td>
             <td class="td-right" style="width: 20%;">
                 <div class="hd-box"><span class="hd-text">OPERASI</span></div>
@@ -270,6 +281,20 @@
     <div class="form-row">
         <div class="form-label">Risiko / Komplikasi</div>
         <div class="form-value">: {{ $pra->resiko ?? '-' }}</div>
+    </div>
+    <div class="ttd-container">
+        <table class="no-border" style="width: 100%;">
+            <tr class="no-border">
+                <td class="ttd-cell" style="width: 50%;"></td>
+                <td class="ttd-cell" style="width: 50%;">Dokter Penanggung Jawab Pasien,</td>
+            </tr>
+            <tr class="no-border">
+                <td class="ttd-cell" style="padding-top: 50px;"></td>
+                <td class="ttd-cell" style="padding-top: 50px;">
+                    ( {{ $namaDpjp }} )
+                </td>
+            </tr>
+        </table>
     </div>
 
 </body>
