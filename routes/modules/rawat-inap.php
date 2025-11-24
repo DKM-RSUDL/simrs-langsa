@@ -82,6 +82,7 @@ use App\Http\Controllers\UnitPelayanan\RawatInap\AsesmenPraOperatifPerawatContro
 use App\Http\Controllers\UnitPelayanan\RawatInap\OperasiIBSController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\OrderHemodialisaController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\OrderOKController;
+use App\Http\Controllers\UnitPelayanan\RawatInap\OrderRehabController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\PneumoniaCurb65Controller;
 use App\Http\Controllers\UnitPelayanan\RawatInap\PneumoniaPsiController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\RincianEchocardiographyController;
@@ -104,6 +105,17 @@ Route::prefix('rawat-inap')->group(function () {
                 Route::get('/aktif', [RawatInapController::class, 'unitPelayanan'])->name('.aktif');
                 Route::get('/selesai', [RawatInapController::class, 'selesai'])->name('.selesai');
                 Route::get('/pending', [RawatInapController::class, 'pending'])->name('.pending');
+
+
+                // Hand Over Pasien
+                Route::prefix('serah-terima')->group(function () {
+                    Route::name('.serah-terima')->group(function () {
+                        Route::controller(RawatInapController::class)->group(function () {
+                            Route::get('/{data}', 'serahTerimaPasien');
+                            Route::put('/{data}', 'serahTerimaPasienCreate')->name('.store');
+                        });
+                    });
+                });
             });
 
             // Pelayanan
@@ -737,15 +749,15 @@ Route::prefix('rawat-inap')->group(function () {
                     });
                 });
 
-                // Hand Over Pasien
-                Route::prefix('serah-terima')->group(function () {
-                    Route::name('.serah-terima')->group(function () {
-                        Route::controller(RawatInapController::class)->group(function () {
-                            Route::get('/', 'serahTerimaPasien');
-                            Route::put('/{data}', 'serahTerimaPasienCreate')->name('.store');
-                        });
-                    });
-                });
+                // // Hand Over Pasien
+                // Route::prefix('serah-terima')->group(function () {
+                //     Route::name('.serah-terima')->group(function () {
+                //         Route::controller(RawatInapController::class)->group(function () {
+                //             Route::get('/', 'serahTerimaPasien');
+                //             Route::put('/{data}', 'serahTerimaPasienCreate')->name('.store');
+                //         });
+                //     });
+                // });
 
                 // Intake Output Cairan
                 Route::prefix('intake-cairan')->group(function () {
@@ -1462,6 +1474,21 @@ Route::prefix('rawat-inap')->group(function () {
                         Route::controller(OrderHemodialisaController::class)->group(function () {
                             Route::get('/', 'index')->name('.index');
                             Route::post('/', 'store')->name('.store');
+                        });
+                    });
+                });
+
+                // Order Rehab Medik
+                Route::prefix('order-rehab')->group(function () {
+                    Route::name('.order-rehab')->group(function () {
+                        Route::controller(OrderRehabController::class)->group(function () {
+                            Route::get('/', 'index')->name('.index');
+                            Route::get('/create', 'create')->name('.create');
+                            Route::get('/{data}/show', 'show')->name('.show');
+                            Route::get('/{data}/edit', 'edit')->name('.edit');
+                            Route::delete('/{data}', 'delete')->name('.delete');
+                            Route::post('/', 'store')->name('.store');
+                            Route::put('/{data}', 'update')->name('.update');
                         });
                     });
                 });

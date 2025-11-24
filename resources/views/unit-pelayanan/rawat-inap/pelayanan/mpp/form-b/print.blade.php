@@ -591,57 +591,67 @@
         </table>
 
         <!-- Tabel Daftar Tenaga Medis -->
-        <table class="staff-table">
-            <thead>
-                <tr>
-                    <th class="ppa-col">PPA</th>
-                    <th class="nama-col">NAMA</th>
-                    <th class="ttd-col">TANDA TANGAN</th>
-                </tr>
-            </thead>
-            <tbody>
-                <!-- DPJP Utama -->
-                <tr>
-                    <td><strong>DPJP Utama</strong></td>
-                    <td>{{ $dpjpUtama ? $dpjpUtama->nama : '-' }}</td>
-                    <td style="height: 40px;"></td>
-                </tr>
+        <table style="width: 100%; border-collapse: collapse; font-size: 13px;">
+    <thead>
+        <tr>
+            <th style="border: 1px solid #000; padding: 4px; text-align: left;">PPA</th>
+            <th style="border: 1px solid #000; padding: 4px; text-align: left;">NAMA</th>
+            <th style="border: 1px solid #000; padding: 4px; text-align: left;">TANDA TANGAN</th>
+        </tr>
+    </thead>
 
-                <!-- Dokter Tambahan -->
-                @if ($dokterTambahan && count($dokterTambahan) > 0)
-                    @foreach ($dokterTambahan as $index => $dokter)
-                        <tr>
-                            <td>{{ $index == 0 ? 'Dokter Tambahan' : '' }}</td>
-                            <td>{{ $dokter->nama }}</td>
-                            <td style="height: 40px;"></td>
-                        </tr>
-                    @endforeach
-                @else
-                    <tr>
-                        <td><strong>Dokter Tambahan</strong></td>
-                        <td>-</td>
-                        <td style="height: 40px;"></td>
-                    </tr>
-                @endif
+    <tbody>
 
-                <!-- Petugas Terkait -->
-                @if ($petugasTerkait && count($petugasTerkait) > 0)
-                    @foreach ($petugasTerkait as $index => $petugas)
-                        <tr>
-                            <td>{{ $index == 0 ? 'Petugas Terkait' : '' }}</td>
-                            <td>{{ trim("$petugas->gelar_depan $petugas->nama $petugas->gelar_belakang") }}</td>
-                            <td style="height: 40px;"></td>
-                        </tr>
-                    @endforeach
-                @else
-                    <tr>
-                        <td><strong>Petugas Terkait</strong></td>
-                        <td>-</td>
-                        <td style="height: 40px;"></td>
-                    </tr>
-                @endif
-            </tbody>
-        </table>
+        <!-- DPJP Utama -->
+        <tr style="height: 28px;">
+            <td style="border: 1px solid #000; padding: 3px;"><strong>DPJP Utama</strong></td>
+            <td style="border: 1px solid #000; padding: 3px;">{{ $dpjpUtama ? $dpjpUtama->nama : '-' }}</td>
+            <td style="border: 1px solid #000; padding: 3px; height: 35px;"></td>
+        </tr>
+
+        <!-- Dokter Tambahan -->
+        @if ($dokterTambahan && count($dokterTambahan) > 0)
+            @foreach ($dokterTambahan as $index => $dokter)
+                <tr style="height: 26px;">
+                    <td style="border: 1px solid #000; padding: 3px;">
+                        <strong>Dokter Tambahan {{ $index+1 }}</strong>
+                    </td>
+                    <td style="border: 1px solid #000; padding: 3px;">{{ $dokter->nama }}</td>
+                    <td style="border: 1px solid #000; padding: 3px; height: 35px;"></td>
+                </tr>
+            @endforeach
+        @else
+            <tr style="height: 26px;">
+                <td style="border: 1px solid #000; padding: 3px;"><strong>Dokter Tambahan</strong></td>
+                <td style="border: 1px solid #000; padding: 3px;">-</td>
+                <td style="border: 1px solid #000; padding: 3px; height: 35px;"></td>
+            </tr>
+        @endif
+
+        <!-- Petugas Terkait -->
+        @if ($petugasTerkait && count($petugasTerkait) > 0)
+            @foreach ($petugasTerkait as $index => $petugas)
+                <tr style="height: 26px;">
+                    <td style="border: 1px solid #000; padding: 3px;">
+                        <strong>Petugas Terkait {{ $index+1 }}</strong>
+                    </td>
+                    <td style="border: 1px solid #000; padding: 3px;">
+                        {{ trim("$petugas->gelar_depan $petugas->nama $petugas->gelar_belakang") }}
+                    </td>
+                    <td style="border: 1px solid #000; padding: 3px; height: 35px;"></td>
+                </tr>
+            @endforeach
+        @else
+            <tr style="height: 26px;">
+                <td style="border: 1px solid #000; padding: 3px;"><strong>Petugas Terkait</strong></td>
+                <td style="border: 1px solid #000; padding: 3px;">-</td>
+                <td style="border: 1px solid #000; padding: 3px; height: 35px;"></td>
+            </tr>
+        @endif
+
+    </tbody>
+</table>
+
 
         <!-- Signature pada halaman 2 -->
         <div style="text-align: right; margin-top: 30px; width: 100%;">

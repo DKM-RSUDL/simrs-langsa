@@ -5,18 +5,18 @@
 
     // Data instruksi PPA untuk setiap CPPT (dari blade)
     const cpptInstruksiPpaData = {
-        @if(!empty($cppt) && empty($isEdit))
+        @if (!empty($cppt) && empty($isEdit))
             @foreach ($cppt as $key => $value)
-                            '{{ $value['urut_total'] }}': [
-                @if (!empty($value['instruksi_ppa']))
-                    @foreach ($value['instruksi_ppa'] as $instruksi)
-                                                                {
-                            ppa: '{{ $instruksi->ppa }}',
-                            instruksi: '{{ addslashes($instruksi->instruksi) }}'
-                        },
-                    @endforeach
-                @endif
-                            ],
+                '{{ $value['urut_total'] }}': [
+                    @if (!empty($value['instruksi_ppa']))
+                        @foreach ($value['instruksi_ppa'] as $instruksi)
+                            {
+                                ppa: '{{ $instruksi->ppa }}',
+                                instruksi: `{{ addslashes($instruksi->instruksi) }}`
+                            },
+                        @endforeach
+                    @endif
+                ],
             @endforeach
         @endif
     };
@@ -24,63 +24,63 @@
     // Tambah diagnosis ke list
     let DiagnoseArrayTemp = []
     $('#addDiagnosisModal #btnAddListDiagnosa').off('click')
-    .on('click', function (e) {
-        e.preventDefault();
-        var searchInputValue = $('#addDiagnosisModal #searchInput').val().trim();
-        console.log("Tambah Data")
+        .on('click', function(e) {
+            e.preventDefault();
+            var searchInputValue = $('#addDiagnosisModal #searchInput').val().trim();
+            console.log("Tambah Data")
 
-        if (searchInputValue != '') {
-        // Cek apakah sudah ada
-        var exists = false;
-        $('#addDiagnosisModal #listDiagnosa li').each(function () {
-            var liText = $(this).text().trim();
-            if (liText === searchInputValue) {
-            exists = true;
-            return false;
+            if (searchInputValue != '') {
+                // Cek apakah sudah ada
+                var exists = false;
+                $('#addDiagnosisModal #listDiagnosa li').each(function() {
+                    var liText = $(this).text().trim();
+                    if (liText === searchInputValue) {
+                        exists = true;
+                        return false;
+                    }
+                });
+
+                if (!exists) {
+                    // Hapus placeholder jika ada
+                    var firstLi = $('#addDiagnosisModal #listDiagnosa li:first');
+                    if (
+                        firstLi.length > 0 &&
+                        (
+                            firstLi.hasClass('text-muted') ||
+                            firstLi.hasClass('text-danger') ||
+                            firstLi.text().includes('Memuat') ||
+                            firstLi.text().includes('Tidak ada')
+                        )
+                    ) {
+                        firstLi.remove();
+                    }
+                    DiagnoseArrayTemp.push(searchInputValue)
+                    if (searchInputValue != '') {
+                        let ListData = $('#listDiagnosa')
+                        ListData.empty()
+
+                        DiagnoseArray.map((item) => {
+                            ListData.append(`<li>${item}</li>`)
+                        })
+
+                        DiagnoseArrayTemp.map((item) => {
+                            ListData.append(`<li>${item}</li>`)
+                        })
+
+                        $('#addDiagnosisModal #searchInput').val('');
+                        console.log("Temp Data :", searchInputValue, DiagnoseArrayTemp)
+                    }
+                } else {
+                    if (typeof showToast === 'function') {
+                        showToast('warning', 'Diagnosis sudah ada dalam daftar!');
+                    } else {
+                        alert('Diagnosis sudah ada dalam daftar!');
+                    }
+                }
             }
         });
 
-        if (!exists) {
-            // Hapus placeholder jika ada
-            var firstLi = $('#addDiagnosisModal #listDiagnosa li:first');
-            if (
-            firstLi.length > 0 &&
-            (
-                firstLi.hasClass('text-muted') ||
-                firstLi.hasClass('text-danger') ||
-                firstLi.text().includes('Memuat') ||
-                firstLi.text().includes('Tidak ada')
-            )
-            ) {
-            firstLi.remove();
-            }
-            DiagnoseArrayTemp.push(searchInputValue)
-            if (searchInputValue != '') {
-                let ListData = $('#listDiagnosa')
-                ListData.empty()
-
-                DiagnoseArray.map((item)=>{
-                        ListData.append(`<li>${item}</li>`)
-                })
-
-                DiagnoseArrayTemp.map((item)=>{
-                        ListData.append(`<li>${item}</li>`)
-                })
-
-                $('#addDiagnosisModal #searchInput').val('');
-                console.log("Temp Data :", searchInputValue,DiagnoseArrayTemp)
-            }
-        } else {
-            if (typeof showToast === 'function') {
-            showToast('warning', 'Diagnosis sudah ada dalam daftar!');
-            } else {
-            alert('Diagnosis sudah ada dalam daftar!');
-            }
-        }
-        }
-    });
-
-    $(document).on('click', '.CancelDiagnose', function () {
+    $(document).on('click', '.CancelDiagnose', function() {
         const isEdit_Adime = "{{ !empty($lastDiagnose) ? 1 : 0 }}"
         if (DiagnoseArrayTemp.length > 0) {
             DiagnoseArrayTemp = []
@@ -106,7 +106,7 @@
                     '{{ $item->kd_karyawan }}': '{{ $nama_lengkap_escaped }}',
             @endforeach
         @endif
-        };
+    };
 
     // Convert ke array untuk pencarian
     const karyawanArray = Object.keys(instruksiPpaKaryawanData).map(kode => ({
@@ -146,7 +146,7 @@
             '"': '&quot;',
             "'": '&#039;'
         };
-        return text.toString().replace(/[&<>"']/g, function (m) {
+        return text.toString().replace(/[&<>"']/g, function(m) {
             return map[m];
         });
     }
@@ -183,26 +183,26 @@
         dropdown.off('click mouseenter');
 
         // Event ketik di input
-        searchInput.on('input', function () {
+        searchInput.on('input', function() {
             const query = $(this).val().toLowerCase();
             filterAddKaryawan(query);
         });
 
         // Event focus - tampilkan dropdown
-        searchInput.on('focus', function () {
+        searchInput.on('focus', function() {
             dropdown.show();
             filterAddKaryawan($(this).val().toLowerCase());
         });
 
         // Event blur - sembunyikan dropdown setelah delay
-        searchInput.on('blur', function () {
+        searchInput.on('blur', function() {
             setTimeout(() => {
                 dropdown.hide();
             }, 200);
         });
 
         // Event keydown untuk navigasi
-        searchInput.on('keydown', function (e) {
+        searchInput.on('keydown', function(e) {
             const items = dropdown.find('.dropdown-item:visible');
             const active = dropdown.find('.dropdown-item.active');
 
@@ -262,14 +262,14 @@
             `);
         });
 
-        dropdown.on('click', '.dropdown-item', function () {
+        dropdown.on('click', '.dropdown-item', function() {
             const kode = $(this).data('kode');
             const nama = $(this).data('nama');
             selectAddPerawat(kode, nama);
             dropdown.hide();
         });
 
-        dropdown.on('mouseenter', '.dropdown-item', function () {
+        dropdown.on('mouseenter', '.dropdown-item', function() {
             dropdown.find('.dropdown-item.active').removeClass('active');
             $(this).addClass('active');
         });
@@ -284,7 +284,7 @@
             return;
         }
 
-        items.each(function () {
+        items.each(function() {
             const nama = $(this).text().toLowerCase();
             if (nama.includes(query)) {
                 $(this).show();
@@ -371,7 +371,7 @@
             `);
         });
 
-         $('#instruksi_ppa_json_input').val(JSON.stringify(addInstruksiPpaData));
+        $('#instruksi_ppa_json_input').val(JSON.stringify(addInstruksiPpaData));
     }
 
     function updateAddInstruksiPpaCountBadge() {
@@ -461,26 +461,26 @@
         dropdown.off('click mouseenter');
 
         // Event ketik di input
-        searchInput.on('input', function () {
+        searchInput.on('input', function() {
             const query = $(this).val().toLowerCase();
             filterEditKaryawan(query);
         });
 
         // Event focus - tampilkan dropdown
-        searchInput.on('focus', function () {
+        searchInput.on('focus', function() {
             dropdown.show();
             filterEditKaryawan($(this).val().toLowerCase());
         });
 
         // Event blur - sembunyikan dropdown setelah delay
-        searchInput.on('blur', function () {
+        searchInput.on('blur', function() {
             setTimeout(() => {
                 dropdown.hide();
             }, 200);
         });
 
         // Event keydown untuk navigasi
-        searchInput.on('keydown', function (e) {
+        searchInput.on('keydown', function(e) {
             const items = dropdown.find('.dropdown-item:visible');
             const active = dropdown.find('.dropdown-item.active');
 
@@ -540,14 +540,14 @@
             `);
         });
 
-        dropdown.on('click', '.dropdown-item', function () {
+        dropdown.on('click', '.dropdown-item', function() {
             const kode = $(this).data('kode');
             const nama = $(this).data('nama');
             selectEditPerawat(kode, nama);
             dropdown.hide();
         });
 
-        dropdown.on('mouseenter', '.dropdown-item', function () {
+        dropdown.on('mouseenter', '.dropdown-item', function() {
             dropdown.find('.dropdown-item.active').removeClass('active');
             $(this).addClass('active');
         });
@@ -562,7 +562,7 @@
             return;
         }
 
-        items.each(function () {
+        items.each(function() {
             const nama = $(this).text().toLowerCase();
             if (nama.includes(query)) {
                 $(this).show();
@@ -675,7 +675,7 @@
         editInstruksiPpaCounter = 0;
 
         if (instruksiPpaArray && Array.isArray(instruksiPpaArray)) {
-            instruksiPpaArray.forEach(function (item) {
+            instruksiPpaArray.forEach(function(item) {
                 editInstruksiPpaCounter++;
                 editInstruksiPpaData.push({
                     id: editInstruksiPpaCounter,
@@ -734,6 +734,7 @@
         if (!instruksi) return;
 
         if (confirm(`Apakah Anda yakin ingin menghapus instruksi untuk: ${instruksi.perawat_nama}?`)) {
+
             editInstruksiPpaData = editInstruksiPpaData.filter(item => item.id !== id);
             updateEditInstruksiPpaTable();
             updateEditInstruksiPpaHiddenInputs();
@@ -755,18 +756,18 @@
     var dataListDiagnose = $('#addDiagnosisModal #dataList');
 
     // Function BARU untuk load dari database (hanya dipanggil jika form kosong)
-    function loadPreviousDiagnosesFromDatabase(first=false) {
+    function loadPreviousDiagnosesFromDatabase(first = false) {
         $('#addDiagnosisModal #listDiagnosa').html('<li class="text-muted">Memuat diagnosis...</li>');
 
         showDiagnosisLoading('Mengambil Diagnosis Terakhir', 'Memuat riwayat diagnosis...');
 
         $.ajax({
-            url: '{{ route("rawat-inap.cppt.get-last-diagnoses", [$dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk]) }}',
+            url: '{{ route('rawat-inap.cppt.get-last-diagnoses', [$dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk]) }}',
             method: 'POST',
             data: {
                 _token: '{{ csrf_token() }}',
             },
-            success: function (response) {
+            success: function(response) {
                 // console.log('Response dari database:', response);
 
                 $('#addDiagnosisModal #listDiagnosa').empty();
@@ -779,7 +780,7 @@
                     //     $('#addDiagnosisModal #listDiagnosa').append(`<li>${escapeHtml(diagnosis)}</li>`);
                     // });
 
-                    if(first){
+                    if (first) {
 
                         const dignoseListContent = render_list_diagonis_content(response.data)
                         const ListData = $('#diagnoseList');
@@ -794,15 +795,17 @@
 
                     // console.log('Total <li> di modal:', $('#addDiagnosisModal #listDiagnosa li').length);
                 } else {
-                    $('#addDiagnosisModal #listDiagnosa').append('<li class="text-muted">Tidak ada diagnosis sebelumnya</li>');
+                    $('#addDiagnosisModal #listDiagnosa').append(
+                        '<li class="text-muted">Tidak ada diagnosis sebelumnya</li>');
                 }
             },
-            error: function (xhr, status, error) {
+            error: function(xhr, status, error) {
                 // console.error('Error loading previous diagnoses:', error);
                 $('#addDiagnosisModal #listDiagnosa').empty();
-                $('#addDiagnosisModal #listDiagnosa').append('<li class="text-danger">Gagal memuat data</li>');
+                $('#addDiagnosisModal #listDiagnosa').append(
+                    '<li class="text-danger">Gagal memuat data</li>');
             },
-            complete: function () {
+            complete: function() {
                 hideDiagnosisLoading();
             }
         });
@@ -821,7 +824,7 @@
                 handle: '.drag-handle',
                 ghostClass: 'bg-primary',
                 onEnd: () => {
-                    $container.find('.diag-item-wrap').each(function (i) {
+                    $container.find('.diag-item-wrap').each(function(i) {
                         $(this).find('.order-input').val(i);
                         $(this).find('.btnListDiagnose').attr('data-id', i);
                     });
@@ -831,15 +834,16 @@
 
     }
 
-    $('#addDiagnosisModal #btnSaveDiagnose').off('click').on('click', function (e) {
+    $('#addDiagnosisModal #btnSaveDiagnose').off('click').on('click', function(e) {
         e.preventDefault();
 
         let html = '';
         let index = 0;
 
-        $('#addDiagnosisModal #listDiagnosa li').each(function () {
+        $('#addDiagnosisModal #listDiagnosa li').each(function() {
             let text = $(this).text().trim();
-            if (text && !text.includes('Tidak ada') && !text.includes('Gagal') && !text.includes('Memuat')) {
+            if (text && !text.includes('Tidak ada') && !text.includes('Gagal') && !text.includes(
+                    'Memuat')) {
                 html += `
                     <div class="diag-item-wrap position-relative bg-white border rounded mb-2 p-3 shadow-sm" style="user-select:none;">
                         <div class="drag-handle position-absolute start-0 top-0 bottom-0 d-flex align-items-center ps-3 text-muted fw-bold"
@@ -860,12 +864,12 @@
 
         });
 
-        const $target = $('#addCpptModal').children().length === 0
-            ? $('#diagnoseList')
-            : $('#addCpptModal #diagnoseList');
+        const $target = $('#addCpptModal').children().length === 0 ?
+            $('#diagnoseList') :
+            $('#addCpptModal #diagnoseList');
 
-        DiagnoseArrayTemp.map((item)=>{
-          DiagnoseArray.push(item)
+        DiagnoseArrayTemp.map((item) => {
+            DiagnoseArray.push(item)
         })
 
         DiagnoseArrayTemp = []
@@ -877,15 +881,16 @@
         setupDiagnosisDrag($target);
     });
 
-    $('#editDiagnosisModal #btnSaveDiagnose').off('click').on('click', function (e) {
+    $('#editDiagnosisModal #btnSaveDiagnose').off('click').on('click', function(e) {
         e.preventDefault();
 
         let html = '';
         let index = 0;
 
-        $('#editDiagnosisModal #listDiagnosa li').each(function () {
+        $('#editDiagnosisModal #listDiagnosa li').each(function() {
             let text = $(this).text().trim();
-            if (text && !text.includes('Tidak ada') && !text.includes('Gagal') && !text.includes('Memuat')) {
+            if (text && !text.includes('Tidak ada') && !text.includes('Gagal') && !text.includes(
+                    'Memuat')) {
                 html += `
                     <div class="diag-item-wrap position-relative bg-white border rounded mb-2 p-3 shadow-sm" style="user-select:none;">
                         <div class="drag-handle position-absolute start-0 top-0 bottom-0 d-flex align-items-center ps-3 text-muted fw-bold"
@@ -905,8 +910,8 @@
             }
         });
 
-        DiagnoseArrayTemp.map((item)=>{
-          DiagnoseArray.push(item)
+        DiagnoseArrayTemp.map((item) => {
+            DiagnoseArray.push(item)
         })
 
         DiagnoseArrayTemp = []
@@ -919,12 +924,12 @@
     });
 
     // Event handler untuk tombol "Gunakan" diagnosis sebelumnya
-    $(document).on('click', '.btn-use-previous', function () {
+    $(document).on('click', '.btn-use-previous', function() {
         var diagnosis = $(this).data('diagnosis');
 
         // Cek apakah sudah ada di list
         var exists = false;
-        $('#addDiagnosisModal #listDiagnosa li').each(function () {
+        $('#addDiagnosisModal #listDiagnosa li').each(function() {
             if ($(this).text().trim() === diagnosis) {
                 exists = true;
                 return false;
@@ -974,16 +979,16 @@
         showDiagnosisLoading('Mengambil Diagnosis Terakhir', 'Memuat riwayat diagnosis...');
 
         $.ajax({
-            url: '{{ route("rawat-inap.cppt.get-last-diagnoses", [$dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk]) }}',
+            url: '{{ route('rawat-inap.cppt.get-last-diagnoses', [$dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk]) }}',
             method: 'POST',
             data: {
                 _token: '{{ csrf_token() }}',
                 kd_unit: '{{ $dataMedis->kd_unit }}',
                 kd_pasien: '{{ $dataMedis->kd_pasien }}',
-                tgl_masuk: '{{ date("Y-m-d", strtotime($dataMedis->tgl_masuk)) }}',
+                tgl_masuk: '{{ date('Y-m-d', strtotime($dataMedis->tgl_masuk)) }}',
                 urut_masuk: '{{ $dataMedis->urut_masuk }}'
             },
-            success: function (response) {
+            success: function(response) {
                 // console.log('Response dari server:', response);
 
                 // Clear list dulu
@@ -993,23 +998,26 @@
                     // console.log('Jumlah diagnosis:', response.data.length);
 
                     // Masukkan satu per satu
-                    response.data.forEach(function (diagnosis, index) {
+                    response.data.forEach(function(diagnosis, index) {
                         console.log('Menambah diagnosis ke-' + (index + 1) + ':', diagnosis);
 
-                        $('#addDiagnosisModal #listDiagnosa').append(`<li>${escapeHtml(diagnosis)}</li>`);
+                        $('#addDiagnosisModal #listDiagnosa').append(
+                            `<li>${escapeHtml(diagnosis)}</li>`);
                     });
 
                     // console.log('Total <li> di modal:', $('#addDiagnosisModal #listDiagnosa li').length);
                 } else {
-                    $('#addDiagnosisModal #listDiagnosa').append('<li class="text-muted">Tidak ada diagnosis sebelumnya</li>');
+                    $('#addDiagnosisModal #listDiagnosa').append(
+                        '<li class="text-muted">Tidak ada diagnosis sebelumnya</li>');
                 }
             },
-            error: function (xhr, status, error) {
+            error: function(xhr, status, error) {
                 console.error('Error loading previous diagnoses:', error);
                 $('#addDiagnosisModal #listDiagnosa').empty();
-                $('#addDiagnosisModal #listDiagnosa').append('<li class="text-danger">Gagal memuat data</li>');
+                $('#addDiagnosisModal #listDiagnosa').append(
+                    '<li class="text-danger">Gagal memuat data</li>');
             },
-            complete: function () {
+            complete: function() {
                 hideDiagnosisLoading();
             }
         });
@@ -1023,16 +1031,16 @@
         showDiagnosisLoading('Menyiapkan Form CPPT', 'Memuat diagnosis terakhir...');
 
         $.ajax({
-            url: '{{ route("rawat-inap.cppt.get-last-diagnoses", [$dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk]) }}',
+            url: '{{ route('rawat-inap.cppt.get-last-diagnoses', [$dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk]) }}',
             method: 'POST',
             data: {
                 _token: '{{ csrf_token() }}',
                 kd_unit: '{{ $dataMedis->kd_unit }}',
                 kd_pasien: '{{ $dataMedis->kd_pasien }}',
-                tgl_masuk: '{{ date("Y-m-d", strtotime($dataMedis->tgl_masuk)) }}',
+                tgl_masuk: '{{ date('Y-m-d', strtotime($dataMedis->tgl_masuk)) }}',
                 urut_masuk: '{{ $dataMedis->urut_masuk }}'
             },
-            success: function (response) {
+            success: function(response) {
                 if (response.status === 'success' && response.data && response.data.length > 0) {
 
                     const dignoseListContent = render_list_diagonis_content(response.data)
@@ -1046,21 +1054,21 @@
                     }
                 }
             },
-            error: function (xhr, status, error) {
+            error: function(xhr, status, error) {
                 console.error('Error loading initial diagnoses:', error);
             },
-            complete: function () {
+            complete: function() {
                 hideDiagnosisLoading();
             }
         });
     }
 
-    const render_list_diagonis_content = (data)=>{
-            var dignoseListContent = '';
+    const render_list_diagonis_content = (data) => {
+        var dignoseListContent = '';
 
 
-            data.forEach(function (diagnosis, index) {
-                dignoseListContent += `
+        data.forEach(function(diagnosis, index) {
+            dignoseListContent += `
                      <div class="diag-item-wrap position-relative bg-white border rounded mb-2 p-3 shadow-sm" style="user-select:none;">
                         <div class="drag-handle position-absolute start-0 top-0 bottom-0 d-flex align-items-center ps-3 text-muted fw-bold"
                             style="cursor:grab; font-size:22px; width:50px;">
@@ -1075,11 +1083,11 @@
                         <input type="hidden" name="diagnose_name[]" value="${escapeHtml(diagnosis)}">
                         <input type="hidden" name="diagnose_order[]" value="${index}" class="order-input">
                     </div>`;
-            });
-            return dignoseListContent
+        });
+        return dignoseListContent
     }
 
-    $('#addCpptModal input[name="skala_nyeri"]').change(function (e) {
+    $('#addCpptModal input[name="skala_nyeri"]').change(function(e) {
         var $this = $(this);
         var skalaValue = $this.val();
 
@@ -1113,7 +1121,7 @@
     });
 
     // Submit validation
-    $('#formAddCppt').submit(function (e) {
+    $('#formAddCppt').submit(function(e) {
         let $this = $(this);
         let diagnoseNameEl = $this.find('input[name="diagnose_name[]"]');
         once = 0;
@@ -1135,7 +1143,7 @@
     window.addEventListener('load', () => hideDiagnosisLoading(50));
 
     // Initialize
-    $(document).ready(function () {
+    $(document).ready(function() {
         ensureDiagnosisLoader();
     });
 
@@ -1144,7 +1152,7 @@
     // ===========================================
 
     // GANTI KODE EDIT CPPT YANG SUDAH ADA DENGAN INI
-    $('.btn-edit-cppt').click(function (e) {
+    $('.btn-edit-cppt').click(function(e) {
         e.preventDefault();
 
         DiagnoseArray = []
@@ -1157,7 +1165,7 @@
         var unitData = $this.attr('data-unit');
         var transaksiData = $this.attr('data-transaksi');
         var target = $this.attr('data-bs-target');
-        var tipe_data=  $this.attr('data-tipe-cppt');
+        var tipe_data = $this.attr('data-tipe-cppt');
 
 
 
@@ -1172,27 +1180,28 @@
         );
         $this.prop('disabled', true);
 
-        if(tipe_data==4){
+        if (tipe_data == 4) {
             // Template URL dari Laravel, tapi kita sisipkan placeholder
-       let url = "{{ route('rawat-inap.cppt.get-cppt-adime', [$dataMedis->kd_unit,$dataMedis->kd_pasien,$dataMedis->tgl_masuk,$dataMedis->urut_masuk])}}";
+            let url =
+                "{{ route('rawat-inap.cppt.get-cppt-adime', [$dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk]) }}";
 
-        url = url
-            .replace('TANGGAL', tanggal)
-            .replace('URUT', urut);
+            url = url
+                .replace('TANGGAL', tanggal)
+                .replace('URUT', urut);
 
-        const queryString = new URLSearchParams({
-            urut_masuk: "{{ $dataMedis->urut_masuk }}",
-            no_transaksi: "{{ $dataMedis->no_transaksi }}",
-            tanggal: tanggal,
-            urut: urut,
+            const queryString = new URLSearchParams({
+                urut_masuk: "{{ $dataMedis->urut_masuk }}",
+                no_transaksi: "{{ $dataMedis->no_transaksi }}",
+                tanggal: tanggal,
+                urut: urut,
 
-        }).toString();
+            }).toString();
 
-        location.href = `${url}?${queryString}`;
+            location.href = `${url}?${queryString}`;
 
-        }else{
-          let url =
-            "{{ route('rawat-inap.cppt.get-cppt-ajax', [$dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk]) }}";
+        } else {
+            let url =
+                "{{ route('rawat-inap.cppt.get-cppt-ajax', [$dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk]) }}";
 
             $.ajax({
                 type: "post",
@@ -1206,22 +1215,19 @@
                     kd_unit: unit
                 },
                 dataType: "json",
-                success: function (response) {
+                success: function(response) {
                     if (response.status == 'success') {
                         var data = response.data;
 
                         for (let key in data) {
                             if (data.hasOwnProperty(key)) {
                                 let patient = data[key];
-                                console.log(patient)
-
-                                console.log(patient.jam)
 
                                 // Set key to input
 
                                 // Misalnya patient.tanggal = "2025-11-12 14:30:00"
 
-                              // Ambil jam dari format "1900-01-01 10:34:00.000"
+                                // Ambil jam dari format "1900-01-01 10:34:00.000"
                                 const formattedTime = patient.jam.split(' ')[1].slice(0, 5);
 
                                 // Ambil tanggal dari format "2025-11-12 00:00:00.000"
@@ -1278,10 +1284,10 @@
 
                                 // set pemberat value
                                 $(target).find(
-                                    `#pemberat option[value="${patient?.pemberat?.id || ''}"]`)
+                                        `#pemberat option[value="${patient?.pemberat?.id || ''}"]`)
                                     .attr('selected', 'selected');
                                 $(target).find(
-                                    `#peringan option[value="${patient?.peringan?.id || ''}"]`)
+                                        `#peringan option[value="${patient?.peringan?.id || ''}"]`)
                                     .attr('selected', 'selected');
                                 $(target).find(
                                     `#kualitas_nyeri option[value="${patient?.kualitas?.id || ''}"]`
@@ -1290,13 +1296,13 @@
                                     `#frekuensi_nyeri option[value="${patient?.frekuensi?.id || ''}"]`
                                 ).attr('selected', 'selected');
                                 $(target).find(
-                                    `#menjalar option[value="${patient?.menjalar?.id || ''}"]`)
+                                        `#menjalar option[value="${patient?.menjalar?.id || ''}"]`)
                                     .attr('selected', 'selected');
                                 $(target).find(
-                                    `#jenis_nyeri option[value="${patient?.jenis?.id || ''}"]`)
+                                        `#jenis_nyeri option[value="${patient?.jenis?.id || ''}"]`)
                                     .attr('selected', 'selected');
 
-                                                                // diagnosis set value
+                                // diagnosis set value
                                 var penyakit = patient.cppt_penyakit;
                                 var dignoseListContent = '';
                                 let index = 0;
@@ -1339,7 +1345,8 @@
                                 }
 
                                 // INI YANG BENAR: Cari #diagnoseList DI DALAM MODAL YANG SEDANG DIBUKA!
-                                const $currentModal = $(target); // modal yang diklik (data-bs-target)
+                                const $currentModal = $(
+                                    target); // modal yang diklik (data-bs-target)
                                 const $diagnoseList = $currentModal.find('#diagnoseList');
 
                                 // Tempel data
@@ -1359,21 +1366,26 @@
                                             handle: '.drag-handle',
                                             ghostClass: 'bg-primary',
                                             onEnd: () => {
-                                                $diagnoseList.finaaaad('.diag-item-wrap').each(function(idx) {
-                                                    $(this).find('.order-input').val(idx);
-                                                    $(this).find('.btnListDiagnose').attr('data-id', idx);
-                                                });
+                                                $diagnoseList.finaaaad(
+                                                    '.diag-item-wrap').each(
+                                                    function(idx) {
+                                                        $(this).find(
+                                                            '.order-input'
+                                                        ).val(idx);
+                                                        $(this).find(
+                                                            '.btnListDiagnose'
+                                                        ).attr(
+                                                            'data-id',
+                                                            idx);
+                                                    });
                                             }
                                         });
 
-                                        console.log("%cEDIT CPPT: DRAG & DROP SUDAH AKTIF! BISA GESER PAKE ⋮⋮", "background:#00aa00;color:white;padding:10px 20px;font-size:16px;border-radius:8px;");
                                     }
                                 }, 150);
 
                                 // Simpan data PPA
                                 window.MASTER_EDIT_INSTRUKSI_PPA = patient.instruksi_ppa || [];
-
-
 
                                 // CRITICAL: Simpan data instruksi PPA ke GLOBAL variable yang persisten
                                 window.MASTER_EDIT_INSTRUKSI_PPA = patient.instruksi_ppa || [];
@@ -1386,48 +1398,48 @@
                     $(target).modal('show');
 
                     // CRITICAL: Tunggu modal benar-benar muncul, JANGAN reset data
-                    setTimeout(() => {
-                        try {
-                            // console.log('Initializing edit modal with PPA data...');
+                    // setTimeout(() => {
+                    try {
+                        // console.log('Initializing edit modal with PPA data...');
 
-                            // Initialize searchable select TANPA reset data
-                            initEditInstruksiPpaSearchableSelect();
+                        // Initialize searchable select TANPA reset data
+                        initEditInstruksiPpaSearchableSelect();
 
-                            // Load data PPA dari MASTER variable
-                            if (window.MASTER_EDIT_INSTRUKSI_PPA && Array.isArray(window
+                        // Load data PPA dari MASTER variable
+                        if (window.MASTER_EDIT_INSTRUKSI_PPA && Array.isArray(window
                                 .MASTER_EDIT_INSTRUKSI_PPA)) {
-                                loadEditInstruksiPpaFromAjaxDataFinal(window
-                                    .MASTER_EDIT_INSTRUKSI_PPA);
+                            loadEditInstruksiPpaFromAjaxDataFinal(window
+                                .MASTER_EDIT_INSTRUKSI_PPA);
 
-                                // console.log('PPA data loaded successfully:', editInstruksiPpaData.length, 'items');
-                            } else {
-                                // console.warn('No master PPA data found');
-                                loadEditInstruksiPpaFromAjaxDataFinal([]);
-                            }
-
-                        } catch (error) {
-                            console.error('Error initializing edit modal:', error);
+                            // console.log('PPA data loaded successfully:', editInstruksiPpaData.length, 'items');
+                        } else {
+                            // console.warn('No master PPA data found');
+                            loadEditInstruksiPpaFromAjaxDataFinal([]);
                         }
-                    }, 1200);
+
+                    } catch (error) {
+                        console.error('Error initializing edit modal:', error);
+                    }
+                    // }, 1200);
 
                     // Ubah teks tombol jadi edit
                     button.html('Edit');
                     button.prop('disabled', false);
                 },
-                error: function (xhr, status, error) {
+                error: function(xhr, status, error) {
                     showToast('error', 'internal server error');
                     button.html('Edit');
                     button.prop('disabled', false);
                 }
-                });
+            });
         }
 
     });
 
 
 
-  // Delete diagnosis dari list
-    $(document).on('click', '.btnListDiagnose', function (e) {
+    // Delete diagnosis dari list
+    $(document).on('click', '.btnListDiagnose', function(e) {
         e.preventDefault();
 
         const name = $(this).data('name'); // ✅ ambil nama dari data-id
@@ -1453,13 +1465,13 @@
 
 
 
-    $(document).on('click', '#addCpptModal .btnListDiagnose', function (e) {
+    $(document).on('click', '#addCpptModal .btnListDiagnose', function(e) {
         e.preventDefault();
         var $this = $(this);
         $(this).closest('.diag-item-wrap').remove();
     });
 
-    $(document).on('click', '#editCpptModal .btnListDiagnose', function (e) {
+    $(document).on('click', '#editCpptModal .btnListDiagnose', function(e) {
         e.preventDefault();
         var $this = $(this);
         $(this).closest('.diag-item-wrap').remove();
@@ -1469,12 +1481,12 @@
     // DIAGNOSIS MODAL HANDLERS - FIXED VERSION
     // ===========================================
 
-    $('#editDiagnosisModal #btnAddListDiagnosa').click(function (e) {
+    $('#editDiagnosisModal #btnAddListDiagnosa').click(function(e) {
         e.preventDefault();
         var searchInputValue = $(editSearchInputDiagnose).val();
 
         if (searchInputValue != '') {
-            if($('#editDiagnosisModal').children.length > 0){
+            if ($('#editDiagnosisModal').children.length > 0) {
                 console.log("Masuk Edit")
 
                 DiagnoseArrayTemp.push(searchInputValue)
@@ -1482,19 +1494,19 @@
                 let ListData = $('#editDiagnosisModal #listDiagnosa')
                 ListData.empty()
 
-                DiagnoseArray.map((item)=>{
-                        ListData.append(`<li>${item}</li>`)
+                DiagnoseArray.map((item) => {
+                    ListData.append(`<li>${item}</li>`)
                 })
 
-                DiagnoseArrayTemp.map((item)=>{
-                        ListData.append(`<li>${item}</li>`)
+                DiagnoseArrayTemp.map((item) => {
+                    ListData.append(`<li>${item}</li>`)
                 })
 
                 $('#addDiagnosisModal #searchInput').val('');
-                console.log("Temp Data :", searchInputValue,DiagnoseArrayTemp)
+                console.log("Temp Data :", searchInputValue, DiagnoseArrayTemp)
 
                 $(editSearchInputDiagnose).val('');
-            }else{
+            } else {
                 $('#listDiagnosa').append(`<li>${searchInputValue}</li>`);
             }
 
@@ -1504,7 +1516,7 @@
 
 
     // Event handler untuk buka modal diagnosis dengan proteksi data PPA
-    $('#editCpptModal #openEditDiagnosisModal').click(function (e) {
+    $('#editCpptModal #openEditDiagnosisModal').click(function(e) {
         e.preventDefault();
 
         // console.log('Opening diagnosis modal, current PPA data:', editInstruksiPpaData.length);
@@ -1533,12 +1545,12 @@
         $(target).modal('show');
     });
 
-    $('#editCpptModal #editDiagnosisModal').on('show.bs.modal', function (e) {
+    $('#editCpptModal #editDiagnosisModal').on('show.bs.modal', function(e) {
         var $this = $(this);
         var penyakitList = $('#editCpptModal #diagnoseList p');
         let listNamaPenyakitHtml = '';
 
-        $.each(penyakitList, function (i, el) {
+        $.each(penyakitList, function(i, el) {
             var nmDiag = $(el).text();
             if (nmDiag != '') {
                 listNamaPenyakitHtml += `<li>${nmDiag}</li>`;
@@ -1549,7 +1561,7 @@
     });
 
     // Event handler untuk restore data PPA saat modal diagnosis ditutup
-    $('#editDiagnosisModal').on('hidden.bs.modal', function () {
+    $('#editDiagnosisModal').on('hidden.bs.modal', function() {
         // console.log('Diagnosis modal closed, final PPA restore...');
 
         // Final restore attempt jika data masih kosong
@@ -1569,7 +1581,7 @@
             } else if (window.MASTER_EDIT_INSTRUKSI_PPA && window.MASTER_EDIT_INSTRUKSI_PPA.length > 0) {
                 // Convert dari format server
                 finalBackup = [];
-                window.MASTER_EDIT_INSTRUKSI_PPA.forEach(function (item, index) {
+                window.MASTER_EDIT_INSTRUKSI_PPA.forEach(function(item, index) {
                     finalBackup.push({
                         id: index + 1,
                         perawat_kode: item.ppa,
@@ -1599,7 +1611,7 @@
         delete window.ULTRA_SAFE_BACKUP;
     });
 
-    $('#editCpptModal input[name="skala_nyeri"]').change(function (e) {
+    $('#editCpptModal input[name="skala_nyeri"]').change(function(e) {
         var $this = $(this);
         var skalaValue = $this.val();
 
@@ -1632,7 +1644,7 @@
         $('#editCpptModal #skalaNyeriBtn').text(skalaLabel);
     });
 
-    $('#formEditCppt').submit(function (e) {
+    $('#formEditCppt').submit(function(e) {
         let $this = $(this);
         let diagnoseNameEl = $this.find('input[name="diagnose_name[]"]');
 
@@ -1648,24 +1660,24 @@
 
     //GLOBAL VARIABEL dataListDiagnose
     let DiagnoseArray = []
-    $(document).ready(function () {
+    $(document).ready(function() {
         // Initialize ADD modal
         initAddInstruksiPpaSearchableSelect();
         // Auto load diagnosis
 
-        const isTherelastDiagnose = "{{ !empty($lastDiagnoses) ? 1 : 0  }}";
+        const isTherelastDiagnose = "{{ !empty($lastDiagnoses) ? 1 : 0 }}";
         if (isTherelastDiagnose == 1) {
             let ArrayDataFromChildren = $('#listDiagnosa').children();
             console.log(ArrayDataFromChildren);
 
-            ArrayDataFromChildren.each(function () {
+            ArrayDataFromChildren.each(function() {
                 DiagnoseArray.push($(this).text().trim());
             });
         }
     });
 
     // Event handler untuk button tambah di ADD modal
-    $(document).on('click', '#instruksi_ppa_tambah_btn', function () {
+    $(document).on('click', '#instruksi_ppa_tambah_btn', function() {
         const perawatKode = $('#instruksi_ppa_selected_value').val();
         const perawatNama = addSelectedPerawat ? addSelectedPerawat.nama : '';
         const instruksi = $('#instruksi_ppa_text_input').val().trim();
@@ -1705,7 +1717,7 @@
     });
 
     // Event handler untuk button tambah di EDIT modal
-    $(document).on('click', '#edit_instruksi_ppa_tambah_btn', function () {
+    $(document).on('click', '#edit_instruksi_ppa_tambah_btn', function() {
         const perawatKode = $('#edit_instruksi_ppa_selected_value').val();
         const perawatNama = editSelectedPerawat ? editSelectedPerawat.nama : '';
         const instruksi = $('#edit_instruksi_ppa_text_input').val().trim();
@@ -1748,14 +1760,14 @@
     });
 
     // Event handler untuk enter key
-    $(document).on('keypress', '#instruksi_ppa_text_input', function (e) {
+    $(document).on('keypress', '#instruksi_ppa_text_input', function(e) {
         if (e.which === 13 && !e.shiftKey) {
             e.preventDefault();
             $('#instruksi_ppa_tambah_btn').click();
         }
     });
 
-    $(document).on('keypress', '#edit_instruksi_ppa_text_input', function (e) {
+    $(document).on('keypress', '#edit_instruksi_ppa_text_input', function(e) {
         if (e.which === 13 && !e.shiftKey) {
             e.preventDefault();
             $('#edit_instruksi_ppa_tambah_btn').click();
@@ -1787,14 +1799,14 @@
     // });
 
     //gizi deooooo
-    $(document).on('click','#instruksi_ppa_search_input', function () {
+    $(document).on('click', '#instruksi_ppa_search_input', function() {
         console.log("CARIIIIIIIIIIIIIIIIIIIII")
         setTimeout(() => {
             initAddInstruksiPpaSearchableSelect();
         }, 100);
     });
 
-    $(document).on('click',' #edit_instruksi_ppa_search_input', function () {
+    $(document).on('click', ' #edit_instruksi_ppa_search_input', function() {
         console.log("CARIIIIIIIIIIIIIIIIIIIII")
         setTimeout(() => {
             initEditInstruksiPpaSearchableSelect();
@@ -1802,8 +1814,8 @@
     });
 
     let once = 0;
-    $('#addCpptModal').on('show.bs.modal', async function(){
-        if(once === 0){
+    $('#addCpptModal').on('show.bs.modal', async function() {
+        if (once === 0) {
             DiagnoseArray = []
             DiagnoseArrayTemp = []
             const data = await loadPreviousDiagnosesFromDatabase(true);
@@ -1829,14 +1841,14 @@
     // });
 
     // check untuk memastikan data PPA tidak hilang
-    $('#editCpptModal').on('focus', 'input:not([id^="edit_instruksi_ppa"]), textarea, select', function () {
+    $('#editCpptModal').on('focus', 'input:not([id^="edit_instruksi_ppa"]), textarea, select', function() {
         setTimeout(() => {
             ensureEditInstruksiPpaData();
         }, 50);
     });
 
     // Additional safety checks
-    $(document).on('click', '#editCpptModal .modal-body', function () {
+    $(document).on('click', '#editCpptModal .modal-body', function() {
         setTimeout(() => {
             ensureEditInstruksiPpaData();
         }, 100);
@@ -1856,7 +1868,7 @@
             backupToUse = window.PERSISTENT_PPA_BACKUP;
         } else if (window.MASTER_EDIT_INSTRUKSI_PPA && window.MASTER_EDIT_INSTRUKSI_PPA.length > 0) {
             backupToUse = [];
-            window.MASTER_EDIT_INSTRUKSI_PPA.forEach(function (item, index) {
+            window.MASTER_EDIT_INSTRUKSI_PPA.forEach(function(item, index) {
                 backupToUse.push({
                     id: index + 1,
                     perawat_kode: item.ppa,
@@ -1884,16 +1896,16 @@
     }
 
     // Auto-check setiap 2 detik jika data PPA hilang
-    setInterval(function () {
-        if ($('#editCpptModal').hasClass('show')) {
-            if ((!editInstruksiPpaData || editInstruksiPpaData.length === 0) &&
-                (window.PERSISTENT_PPA_BACKUP && window.PERSISTENT_PPA_BACKUP.length > 0)) {
+    // setInterval(function() {
+    //     if ($('#editCpptModal').hasClass('show')) {
+    //         if ((!editInstruksiPpaData || editInstruksiPpaData.length === 0) &&
+    //             (window.PERSISTENT_PPA_BACKUP && window.PERSISTENT_PPA_BACKUP.length > 0)) {
 
-                // console.log('Auto-restoring PPA data...');
-                manualRestorePpaData();
-            }
-        }
-    }, 2000);
+    //             // console.log('Auto-restoring PPA data...');
+    //             manualRestorePpaData();
+    //         }
+    //     }
+    // }, 2000);
 
     // DEBUG: Function untuk check semua backup data
     // function debugAllBackups() {
@@ -1921,7 +1933,7 @@
             editInstruksiPpaData = [];
             editInstruksiPpaCounter = 0;
 
-            instruksiPpaArray.forEach(function (item) {
+            instruksiPpaArray.forEach(function(item) {
                 editInstruksiPpaCounter++;
                 editInstruksiPpaData.push({
                     id: editInstruksiPpaCounter,
@@ -1930,7 +1942,6 @@
                     instruksi: item.instruksi,
                     created_at: new Date().toLocaleString('id-ID')
                 });
-                console.log(item)
             });
         }
 
@@ -1947,15 +1958,18 @@
         // log('PPA data loaded and backed up:', editInstruksiPpaData.length, 'items');
     }
 
-    setTimeout(()=>{
-       const isEditAdime = "{{ !empty($isEdit) ? 1 : 0 }}"
-       if(isEditAdime==1){
-            const instruksiPpaArray = JSON.parse("{{ !empty($cppt['instruksi_ppa']) ? $cppt['instruksi_ppa'] : '' }}".replace(/&quot;/g, '"'));
+    setTimeout(() => {
+        const isEditAdime = "{{ !empty($isEdit) ? 1 : 0 }}"
+        if (isEditAdime == 1) {
+            const instruksiPpaArray = JSON.parse(
+                "{{ !empty($cppt['instruksi_ppa']) ? $cppt['instruksi_ppa'] : '' }}".replace(/&quot;/g,
+                    '"'));
             editInstruksiPpaData = instruksiPpaArray
             console.log(editInstruksiPpaData)
             loadEditInstruksiPpaFromAjaxDataFinal(instruksiPpaArray)
-       }
-    },1000)
+        }
+
+    }, 1000)
 
     function loadInstruksiPpa(urutTotal, containerId) {
         $.ajax({
@@ -1965,7 +1979,7 @@
                 _token: '{{ csrf_token() }}',
                 urut_total: urutTotal
             },
-            success: function (response) {
+            success: function(response) {
                 if (response.status === 'success') {
                     let html = '';
                     if (response.data.length > 0) {
@@ -1995,13 +2009,13 @@
                     $(`#${containerId} tbody`).html(html);
                 }
             },
-            error: function () {
+            error: function() {
                 console.error('Error loading instruksi PPA');
             }
         });
     }
 
-    $(document).on('click','.btn-close',function (){
+    $(document).on('click', '.btn-close', function() {
         DiagnoseArrayTemp = [];
         document.querySelectorAll('.modal-backdrop').forEach(backdrop => backdrop.remove());
     })

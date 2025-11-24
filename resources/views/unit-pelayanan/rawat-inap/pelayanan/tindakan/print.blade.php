@@ -190,11 +190,14 @@
 
 <body>
     @php
-        $countTindakan = count($tindakan);
+        $countTindakanIGD = count($tindakanIGD);
+        $countTindakanRawatInap = count($tindakanRawatInap);
+        $totalTindakan = $countTindakanIGD + $countTindakanRawatInap;
         $index = 1;
     @endphp
 
-    @foreach ($tindakan as $tdk)
+    @php $asal = 'IGD'; @endphp
+    @foreach ($tindakanIGD as $tdk)
         <header>
             <table class="header-table">
                 <tr>
@@ -216,11 +219,12 @@
                     </td>
                     <td class="td-center">
                         <span class="title-main">TINDAKAN</span>
-                        <span class="title-sub">RAWAT INAP</span>
+                        <span class="title-sub">{{ $asal == 'IGD' ? 'GAWAT DARURAT' : 'RAWAT INAP' }}</span>
                     </td>
                     <td class="td-right">
                         <div class="igd-box">
-                            <span class="igd-text" style="font-size: 16px; padding: 10px;">RWI</span>
+                            <span class="igd-text"
+                                style="font-size: 16px; padding: 10px;">{{ $asal == 'IGD' ? 'IGD' : 'RWI' }}</span>
                         </div>
                     </td>
                 </tr>
@@ -247,7 +251,7 @@
                 <tr>
                     <td>TGL PELAYANAN</td>
                     <td>:</td>
-                    <td>{{ \Carbon\Carbon::parse($tdk->tgl_tindakan)->format('d M Y H:i') }} WIB</td>
+                    <td>{{ carbon_parse($tdk->tgl_tindakan, null, 'd M Y H:i') }} WIB</td>
                 </tr>
                 <tr>
                     <td>POLI/RUANG</td>
@@ -296,7 +300,118 @@
             </div>
         </div>
 
-        @if ($index < $countTindakan)
+        @if ($index < $totalTindakan)
+            <div class="page-break"></div>
+        @endif
+
+        @php $index++; @endphp
+    @endforeach
+
+    @php $asal = 'Rawat Inap'; @endphp
+    @foreach ($tindakanRawatInap as $tdk)
+        <header>
+            <table class="header-table">
+                <tr>
+                    <td class="td-left">
+                        <table class="brand-table">
+                            <tr>
+                                <td class="va-middle">
+                                    <img src="{{ public_path('assets/img/Logo-RSUD-Langsa-1.png') }}"
+                                        alt="Logo RSUD Langsa" class="brand-logo">
+                                </td>
+                                <td class="va-middle">
+                                    <p class="brand-name">RSUD Langsa</p>
+                                    <p class="brand-info">Jl. Jend. A. Yani No.1 Kota Langsa</p>
+                                    <p class="brand-info">Telp. 0641-22051, email: rsulangsa@gmail.com</p>
+                                    <p class="brand-info">www.rsud.langsakota.go.id</p>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                    <td class="td-center">
+                        <span class="title-main">TINDAKAN</span>
+                        <span class="title-sub">{{ $asal == 'IGD' ? 'GAWAT DARURAT' : 'RAWAT INAP' }}</span>
+                    </td>
+                    <td class="td-right">
+                        <div class="igd-box">
+                            <span class="igd-text"
+                                style="font-size: 16px; padding: 10px;">{{ $asal == 'IGD' ? 'IGD' : 'RWI' }}</span>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        </header>
+
+        <div class="slip">
+            <table class="data-table">
+                <tr>
+                    <td>NO RM</td>
+                    <td>:</td>
+                    <td>{{ $dataMedis->pasien->kd_pasien }}</td>
+                </tr>
+                <tr>
+                    <td>NO SEP</td>
+                    <td>:</td>
+                    <td>{{ $sjp->NO_SJP ?? '...................' }}</td>
+                </tr>
+                <tr>
+                    <td>NAMA</td>
+                    <td>:</td>
+                    <td>{{ $dataMedis->pasien->nama }}</td>
+                </tr>
+                <tr>
+                    <td>TGL PELAYANAN</td>
+                    <td>:</td>
+                    <td>{{ carbon_parse($tdk->tgl_tindakan, null, 'd M Y H:i') }} WIB</td>
+                </tr>
+                <tr>
+                    <td>POLI/RUANG</td>
+                    <td>:</td>
+                    <td>{{ $tdk->unit->nama_unit }}</td>
+                </tr>
+                <tr>
+                    <td>DIAGNOSE</td>
+                    <td>:</td>
+                    <td>{{ $resume && $resume->diagnosis ? implode(', ', $resume->diagnosis) : '...................' }}
+                    </td>
+                </tr>
+                <tr>
+                    <td>JENIS TINDAKAN</td>
+                    <td>:</td>
+                    <td>{{ $tdk->produk->deskripsi }}</td>
+                </tr>
+            </table>
+
+            <div class="content-fields">
+                <h5>LAPORAN HASIL TINDAKAN:</h5>
+                <p>{!! nl2br(e($tdk->laporan_hasil)) !!}</p>
+
+                <h5>KESIMPULAN:</h5>
+                <p>{!! nl2br(e($tdk->kesimpulan)) !!}</p>
+
+                @if ($tdk->gambar)
+                    <h5>GAMBAR:</h5>
+                    <img src="{{ public_path('storage/' . $tdk->gambar) }}" alt="Gambar Tindakan">
+                @endif
+            </div>
+
+            <div class="signature-block">
+                <div class="sig-left">
+                    TANDA TANGAN PASIEN
+                    <div class="sig-name">
+                        ({{ $dataMedis->pasien->nama }})
+                    </div>
+                </div>
+                <div class="sig-right">
+                    TANDA TANGAN DOKTER
+                    <div class="sig-name">
+                        ({{ $tdk->ppa->nama_lengkap }})
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @if ($index < $totalTindakan)
             <div class="page-break"></div>
         @endif
 

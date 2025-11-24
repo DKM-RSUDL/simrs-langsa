@@ -116,49 +116,26 @@
 @section('content')
     <x-content-card>
         <div class="row">
-            <div class="col-md-12">
+            <div class="col-12">
                 {{-- Header + kartu ringkas (Bootstrap-only) --}}
                 <div class="row g-3 align-items-start">
-                    <div class="col-12 col-lg-8">
+                    <div class="col-12 col-md-6">
                         <h4 class="fw-bold m-0">Gawat Darurat</h4>
                     </div>
 
-                    <div class="col-12 col-lg-4">
-                        <div class="row g-3 align-items-center">
-                            {{-- Kartu Aktif (Primary) --}}
-                            <a href="{{ route('gawat-darurat.index') }}" class="text-decoration-none col-6 ms-auto w-min">
-                                <div class="rounded bg-primary text-white">
-                                    <div class="card-body d-flex align-items-center gap-3 px-3">
-                                        <img src="{{ asset('assets/img/icons/Sick.png') }}" alt="Icon" width="36"
-                                            height="36">
-                                        <div class="text-start">
-                                            <div class="small mb-1">Aktif</div>
-                                            <div class="fs-4 fw-bold">{{ countActivePatientIGD() }}</div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </a>
-
-                            {{-- Filter Dokter --}}
-                            <div class="col-12 d-flex align-items-center justify-content-md-end gap-2">
-                                <label for="dokterSelect" class="form-label me-2 mb-0">Dokter:</label>
-                                <select class="form-select select2" id="dokterSelect" aria-label="Pilih dokter">
-                                    <option value="" selected>Semua</option>
-                                    @foreach ($dokter as $d)
-                                        <option value="{{ $d->dokter->kd_dokter }}">{{ $d->dokter->nama_lengkap }}</option>
-                                    @endforeach
-                                </select>
-                                @canany(['is-admin', 'is-dokter-umum'])
-                                    <a href="{{ route('gawat-darurat.triase') }}"
-                                        class="btn btn-primary d-flex align-items-center gap-2">
-                                        <i class="ti-plus"></i> Tambah
-                                    </a>
-                                @endcanany
-                            </div>
-                        </div>
+                    <div class="col-12 col-md-6">
+                        @include('unit-pelayanan.gawat-darurat.component.stats-card')
                     </div>
                 </div>
                 {{-- End Header --}}
+            </div>
+
+            <div class="col-12 mt-3 d-flex justify-content-end">
+                @canany(['is-admin', 'is-dokter-umum'])
+                    <a href="{{ route('gawat-darurat.triase') }}" class="btn btn-primary d-flex align-items-center gap-2">
+                        <i class="ti-plus"></i> Tambah
+                    </a>
+                @endcanany
             </div>
         </div>
 

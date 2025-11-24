@@ -337,6 +337,7 @@
             </div>
         </div>
 
+      
         <div class="row">
             <div class="col-6">
                 <div class="form-group">
@@ -352,7 +353,12 @@
                 </div>
             </div>
         </div>
-
+        <div class="row">
+            <div class="form-group">
+                <label>Catatan Site Marking</label>
+                <div>{{ $siteMarking->notes ?: 'Tidak ada catatan' }}</div>
+            </div>
+        </div>
         <div class="diagram-section">
             <!-- Kolom Kiri: Full Body dan Kaki -->
             <div class="left-column">
@@ -469,7 +475,7 @@
                     <div class="col-6">
                         <div class="form-group">
                             <!-- Space kosong untuk tanda tangan manual -->
-                            <div style="height: 60px; border-bottom: 1px solid #000; margin: 10px 0;"></div>
+                            <div style="height: 20px; border-bottom: 1px solid #000; margin: 10px 0;"></div>
                             <p>
                                 @if ($siteMarking->responsible_person === 'pasien')
                                     ({{ $siteMarking->patient_name ?: $dataMedis->pasien->nama }})
@@ -484,17 +490,17 @@
                     <div class="col-6">
                         <div class="form-group">
                             <!-- Space kosong untuk tanda tangan dokter manual -->
-                            <div style="height: 60px; border-bottom: 1px solid #000; margin: 10px 0;"></div>
+                            <div style="height: 20px; border-bottom: 1px solid #000; margin: 10px 0;"></div>
                             <p>({{ $siteMarking->dokter->nama_lengkap ?? 'Tidak Diketahui' }})</p>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="footer">
+        {{-- <div class="footer">
             <span>Penandaan daerah operasi ({{ $dataMedis->pasien->jenis_kelamin == 1 ? 'PRIA' : 'WANITA' }})</span>
             <span>Nomor Dokumen: HB-ISM/Rev 0/2017</span>
-        </div>
+        </div> --}}
     </div>
 
     <script>

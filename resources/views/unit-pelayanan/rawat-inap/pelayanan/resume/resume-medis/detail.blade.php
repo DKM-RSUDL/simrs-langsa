@@ -7,7 +7,7 @@
         </div>
 
         <div class="col-md-9">
-            @include('components.navigation')
+            @include('components.navigation-ranap')
 
             <div class="d-flex justify-content-center">
                 <div class="card w-100 h-100">
@@ -52,6 +52,8 @@
                                         </div>
 
                                     </div>
+
+                                    <textarea class="form-control mt-2" rows="3" id="pemeriksaan_fisik">{{ $dataResume->pemeriksaan_fisik ?? '' }}</textarea>
                                 </div>
 
                                 <div class="mt-3">
@@ -175,7 +177,7 @@
 
                                 <div class="mt-3">
                                     <strong class="fw-bold">Hasil Pemeriksaan Penunjang</strong>
-                                    <textarea class="form-control" id="pemeriksaan_penunjang" rows="3">{{ $dataResume->pemeriksaan_penunjang ?? '-' }}</textarea>
+                                    <textarea class="form-control" id="pemeriksaan_penunjang" rows="3">{{ $dataResume->pemeriksaan_penunjang ?? '' }}</textarea>
                                 </div>
 
                                 <div class="mt-3">
@@ -558,6 +560,7 @@
             let formData = new FormData();
 
             formData.append('anamnesis', $('#anamnesis').val().trim());
+            formData.append('pemeriksaan_fisik', $('#pemeriksaan_fisik').val().trim());
             formData.append('pemeriksaan_penunjang', $('#pemeriksaan_penunjang').val().trim());
 
 

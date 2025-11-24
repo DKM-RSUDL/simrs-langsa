@@ -89,54 +89,7 @@
                         <h4 class="fw-bold m-0">{{ $unit->nama_unit }} (Pending Masuk)</h4>
                     </div>
 
-                    <div class="col-12 col-md-6">
-                        <div class="row g-2">
-                            {{-- Aktif (Primary) --}}
-                            <a href="{{ route('rawat-inap.unit.aktif', $unit->kd_unit) }}"
-                                class="text-decoration-none col-12 col-md-4">
-                                <div class="rounded bg-primary text-white">
-                                    <div class="card-body d-flex align-items-center gap-3 px-3">
-                                        <img src="{{ asset('assets/img/icons/Sick.png') }}" alt="Icon" width="36"
-                                            height="36">
-                                        <div class="text-start">
-                                            <div class="small mb-1">Aktif</div>
-                                            <div class="fs-4 fw-bold">{{ countAktivePatientRanap($unit->kd_unit) }}</div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </a>
-
-                            {{-- Pending Order Masuk (Warning) --}}
-                            <a href="{{ route('rawat-inap.unit.pending', $unit->kd_unit) }}"
-                                class="text-decoration-none col-12 col-md-4">
-                                <div class="rounded bg-warning text-white">
-                                    <div class="card-body d-flex align-items-center gap-3 px-3">
-                                        <img src="{{ asset('assets/img/icons/Sick.png') }}" alt="Icon" width="36"
-                                            height="36">
-                                        <div class="text-start">
-                                            <div class="small mb-1">Pending Masuk</div>
-                                            <div class="fs-4 fw-bold">{{ countPendingPatientRanap($unit->kd_unit) }}</div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </a>
-
-                            {{-- Selesai --}}
-                            <a href="{{ route('rawat-inap.unit.selesai', $unit->kd_unit) }}"
-                                class="text-decoration-none col-12 col-md-4">
-                                <div class="rounded bg-success text-white">
-                                    <div class="card-body d-flex align-items-center gap-3 px-3">
-                                        <img src="{{ asset('assets/img/icons/Sick.png') }}" alt="Icon" width="36"
-                                            height="36">
-                                        <div class="text-start">
-                                            <div class="small mb-1">Selesai</div>
-                                            <div class="fs-4 fw-bold">{{ countAktivePatientRanap($unit->kd_unit) }}</div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </a>
-                        </div>
-                    </div>
+                    @include('unit-pelayanan.rawat-inap.component.stats-card')
 
                 </div>
                 {{-- End Header --}}
@@ -151,13 +104,10 @@
                             <tr>
                                 <th width="100px">Aksi</th>
                                 <th>Pasien</th>
-                                <th>No RM / Tgl Masuk</th>
+                                <th>No RM / Tgl Diserahkan</th>
                                 <th>DPJP</th>
-                                <th>Alamat</th>
-                                <th>Jaminan</th>
-                                <th>Status Pelayanan</th>
-                                <th>Keterangan</th>
-                                <th>Tindak Lanjut</th>
+                                <th>Kamar</th>
+                                <th>Unit/Ruang Asal</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -193,7 +143,7 @@
                                             <i class="bi bi-three-dots"></i>
                                         </button>
                                         <ul class="dropdown-menu shadow-lg">
-                                            <li><a class="dropdown-item m-1" href="${pelayananUrl + row.kd_unit + '/pelayanan/' + row.kd_pasien + '/' + row.tgl_masuk + '/' + row.urut_masuk + '/serah-terima'}">Serah Terima / Handover</a></li>
+                                            <li><a class="dropdown-item m-1" href="${pelayananUrl + row.kd_unit_tujuan + '/serah-terima/' + row.id}">Serah Terima / Handover</a></li>
                                             <li><a class="dropdown-item m-1" href="#">Batalkan Serah Terima</a></li>
                                         </ul>
                                     </div>
@@ -230,7 +180,7 @@
                             return `
                                 <div class="rm-reg">
                                     RM: ${row.kd_pasien ? row.kd_pasien : 'N/A'}<br>
-                                    Tgl: ${row.tgl_masuk ? row.tgl_masuk : 'N/A'}
+                                    Tgl: ${row.waktu_menyerahkan ? row.waktu_menyerahkan : 'N/A'}
                                 </div>
                             `;
                         },
@@ -242,28 +192,13 @@
                         defaultContent: ''
                     },
                     {
-                        data: 'alamat',
-                        name: 'alamat',
+                        data: 'kamar.nama_kamar',
+                        name: '',
                         defaultContent: ''
                     },
                     {
-                        data: 'jaminan',
-                        name: 'jaminan',
-                        defaultContent: ''
-                    },
-                    {
-                        data: 'status_pelayanan',
-                        name: 'status_pelayanan',
-                        defaultContent: ''
-                    },
-                    {
-                        data: 'keterangan',
-                        name: 'keterangan',
-                        defaultContent: ''
-                    },
-                    {
-                        data: 'tindak_lanjut',
-                        name: 'tindak_lanjut',
+                        data: 'unit_asal.nama_unit',
+                        name: '',
                         defaultContent: ''
                     },
                 ],

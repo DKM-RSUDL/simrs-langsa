@@ -4,9 +4,11 @@ namespace App\Http\Controllers\UnitPelayanan;
 
 use App\Http\Controllers\Controller;
 use App\Models\DetailTransaksi;
+use App\Models\Dokter;
 use App\Models\DokterAnastesi;
 use App\Models\DokterKlinik;
 use App\Models\DokterPenunjang;
+use App\Models\HrdKaryawan;
 use App\Models\Kamar;
 use App\Models\KlasProduk;
 use App\Models\Kunjungan;
@@ -15,6 +17,8 @@ use App\Models\Operasi\OkJadwalDr;
 use App\Models\Operasi\OkJadwalPs;
 use App\Models\OrderOK;
 use App\Models\Produk;
+use App\Models\RmeSerahTerima;
+use App\Models\RmeTransferPasienAntarRuang;
 use App\Models\Spesialisasi;
 use App\Models\Transaksi;
 use App\Models\UnitAsal;
@@ -230,7 +234,31 @@ class OperasiController extends Controller
             ->where('status', 0)
             ->first();
 
-        return view('unit-pelayanan.operasi.pelayanan.order.terima.edit', compact('operasi', 'dataMedis', 'products', 'kamarOperasi', 'dokters', 'dokterAnastesi'));
+
+        if (empty($operasi)) return back()->with('error', 'data Order Operasi tidak ditemukan');
+
+
+        $transfer = RmeTransferPasienAntarRuang::with(['serahTerima'])
+        ->whereHas('serahTerima',function($q){
+            $q->where('kd_unit_tujuan',$this->kdUnitDef_);
+        })
+         ->where('kd_pasien',$dataMedis->kd_pasien)
+         ->where('kd_unit',$dataMedis->kd_unit)
+         ->where('tgl_masuk',$dataMedis->tgl_masuk)
+         ->where('urut_masuk',$dataMedis->urut_masuk)
+         ->orderBy('id','desc')
+         ->first();
+
+         $petugas = HrdKaryawan::where('kd_jenis_tenaga', 2)
+            ->where('kd_detail_jenis_tenaga', 1)
+            ->where('status_peg', 1)
+            ->where('kd_karyawan', '!=', Auth::user()->kd_karyawan)
+            ->get();
+
+         $dokterAll = Dokter::where('status', 1)
+        ->orderBy('nama_lengkap', 'asc')->get();
+
+        return view('unit-pelayanan.operasi.pelayanan.order.terima.edit', compact('operasi', 'dataMedis', 'products', 'kamarOperasi', 'dokters', 'dokterAnastesi','transfer','dokterAll','petugas'));
     }
 
     private function mappingDataByKdKasir($kd_kasir)
@@ -596,6 +624,22 @@ class OperasiController extends Controller
                     'kd_kasir_ok' => $mappingData['kd_kasir'],
                     'no_transaksi_ok' => $formattedTransactionNumber,
                 ]);
+
+
+            // update serah terima jika ada
+            if (!empty($request->transfer_id)) {
+                $transferPasien = RmeTransferPasienAntarRuang::with('serahTerima')
+                    ->find($request->transfer_id);
+
+                if ($transferPasien && $transferPasien->serahTerima) {
+                    $transferPasien->serahTerima->update([
+                        'petugas_terima' => Auth::user()->kd_karyawan,
+                        'tanggal_terima' => date('Y-m-d'),
+                        'jam_terima' => date('H:i:s'),
+                        'status' => 2,
+                    ]);
+                }
+            }
 
             DB::commit();
             return to_route('operasi.pelayanan', [$dataMedis->kd_pasien, $request->tanggal_registrasi, $urut_masuk])->with('success', 'Order operasi berhasil diterima dan diproses.');

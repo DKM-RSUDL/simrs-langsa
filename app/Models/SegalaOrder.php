@@ -57,7 +57,7 @@ class SegalaOrder extends Model
 
     public function laplisitempemeriksaan()
     {
-        return $this->belongsTo(LaplisItemPemeriksaan::class, 'kd_produk', 'kd_produk');
+        return $this->belongsTo(LapLisItemPemeriksaan::class, 'kd_produk', 'kd_produk');
     }
 
     public function dokter()
@@ -71,7 +71,7 @@ class SegalaOrder extends Model
 
     public function produk()
     {
-        return $this->belongsTo(produk::class, 'kd_produk', 'kp_produk');
+        return $this->belongsTo(Produk::class, 'kd_produk', 'kp_produk');
     }
 
     public function unit()

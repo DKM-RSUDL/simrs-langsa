@@ -136,6 +136,99 @@ class GawatDaruratController extends Controller
         return view('unit-pelayanan.gawat-darurat.index', compact('dokter'));
     }
 
+    public function selesai(Request $request)
+    {
+        if ($request->ajax()) {
+            $tanggal_filter = $request->get('tanggal_filter');
+
+            $data = Kunjungan::with(['pasien', 'dokter', 'customer'])
+                ->join('transaksi as t', function ($join) {
+                    $join->on('kunjungan.kd_pasien', '=', 't.kd_pasien');
+                    $join->on('kunjungan.kd_unit', '=', 't.kd_unit');
+                    $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
+                    $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
+                })
+                ->leftJoin('rme_ket_status_kunjungan as sk', function ($q) {
+                    $q->on('t.kd_kasir', '=', 'sk.kd_kasir');
+                    $q->on('t.no_transaksi', '=', 'sk.no_transaksi');
+                })
+                ->where('kunjungan.kd_unit', 3)
+                ->where(function ($q) {
+                    $q->where('t.Dilayani', 1)
+                        ->orWhere('t.co_status', 1);
+                })
+                ->whereNotNull('kunjungan.tgl_keluar')
+                ->whereNotNull('kunjungan.jam_keluar')
+                ->whereYear('kunjungan.tgl_masuk', '>=', 2025);
+
+            if (! empty($tanggal_filter)) {
+                $data->whereDate('kunjungan.tgl_masuk', $tanggal_filter);
+            }
+
+            return DataTables::of($data)
+                ->filter(function ($query) use ($request) {
+                    if ($searchValue = $request->get('search')['value']) {
+                        $query->where(function ($q) use ($searchValue) {
+                            if (is_numeric($searchValue) && strlen($searchValue) == 4) {
+                                $q->whereRaw('YEAR(kunjungan.tgl_masuk) = ?', [$searchValue]);
+                            } elseif (preg_match('/^\d{4}-\d{2}-\d{2}$/', $searchValue)) {
+                                $q->whereRaw('CONVERT(varchar, kunjungan.tgl_masuk, 23) like ?', ["%{$searchValue}%"]);
+                            } elseif (preg_match('/^\d{2}:\d{2}$/', $searchValue)) {
+                                $q->whereRaw("FORMAT(kunjungan.jam_masuk, 'HH:mm') like ?", ["%{$searchValue}%"]);
+                            } else {
+                                $q->where('kunjungan.kd_pasien', 'like', "%{$searchValue}%")
+                                    ->orWhereHas('pasien', function ($q) use ($searchValue) {
+                                        $q->where('nama', 'like', "%{$searchValue}%")
+                                            ->orWhere('alamat', 'like', "%{$searchValue}%");
+                                    })
+                                    ->orWhereHas('dokter', function ($q) use ($searchValue) {
+                                        $q->where('nama_lengkap', 'like', "%{$searchValue}%");
+                                    })
+                                    ->orWhereHas('customer', function ($q) use ($searchValue) {
+                                        $q->where('customer', 'like', "%{$searchValue}%");
+                                    });
+                            }
+                        });
+                    }
+                })
+                ->order(function ($query) {
+                    $query->orderBy('kunjungan.tgl_masuk', 'desc')
+                        ->orderBy('kunjungan.antrian', 'desc')
+                        ->orderBy('kunjungan.urut_masuk', 'desc');
+                })
+                ->editColumn('tgl_masuk', fn($row) => date('Y-m-d', strtotime($row->tgl_masuk)) ?: '-')
+                ->addColumn('triase', fn($row) => $row->kd_triase ?: '-')
+                ->addColumn('bed', fn($row) => '' ?: '-')
+                ->addColumn('no_rm', fn($row) => $row->kd_pasien ?: '-')
+                ->addColumn('alamat', fn($row) => $row->pasien->alamat ?: '-')
+                ->addColumn('jaminan', fn($row) => $row->customer->customer ?: '-')
+                ->addColumn('instruksi', fn($row) => '' ?: '-')
+                ->addColumn('kd_dokter', fn($row) => $row->dokter->nama ?: '-')
+                ->addColumn('waktu_masuk', function ($row) {
+                    $tglMasuk = Carbon::parse($row->tgl_masuk)->format('d M Y');
+                    $jamMasuk = date('H:i', strtotime($row->jam_masuk));
+                    return "$tglMasuk $jamMasuk";
+                })
+                ->addColumn('umur', function ($row) {
+                    return $row->pasien && $row->pasien->tgl_lahir
+                        ? Carbon::parse($row->pasien->tgl_lahir)->age . ''
+                        : 'Tidak diketahui';
+                })
+                ->addColumn('action', fn($row) => $row->kd_pasien)
+                ->addColumn('del', fn($row) => $row->kd_pasien)
+                ->addColumn('profile', fn($row) => $row)
+                ->rawColumns(['action', 'del', 'profile'])
+                ->make(true);
+        }
+
+        $dokter = DokterKlinik::with(['dokter', 'unit'])
+            ->where('kd_unit', 3)
+            ->whereRelation('dokter', 'status', 1)
+            ->get();
+
+        return view('unit-pelayanan.gawat-darurat.selesai', compact('dokter'));
+    }
+
     public function getTriaseData(Request $request)
     {
         try {
@@ -258,8 +351,8 @@ class GawatDaruratController extends Controller
             // Ambil data dari request
             $dokter_triase = $request->dokter_triase;
             $dokter_yang_melayani = $request->dokter_yang_melayani;
-          
-           
+
+
             $tgl_masuk = $request->tgl_masuk;
             $jam_masuk = $request->jam_masuk;
             $nama_pasien = $request->nama_pasien;

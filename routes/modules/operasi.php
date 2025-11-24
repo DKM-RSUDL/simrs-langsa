@@ -13,6 +13,7 @@ use App\Http\Controllers\UnitPelayanan\Operasi\PraAnestesiMedisController;
 use App\Http\Controllers\UnitPelayanan\Operasi\LaporanOperasiController;
 use App\Http\Controllers\UnitPelayanan\Operasi\PraAnestesiPerawatController;
 use App\Http\Controllers\UnitPelayanan\Operasi\SiteMarkingController;
+use App\Http\Controllers\UnitPelayanan\Operasi\TransferPasienController;
 use App\Http\Controllers\UnitPelayanan\OperasiController;
 
 
@@ -119,7 +120,7 @@ Route::prefix('operasi')->group(function () {
                         Route::controller(CeklistAnasthesiController::class)->group(function () {
                             Route::get('/', 'index')->name('.index');
                             Route::get('/create', 'create')->name('.create');
-                            Route::get('/print/{id}', 'print')->name('.print');
+                            Route::get('/print/{id}', 'printCheckListKesiapan')->name('.printCheckListKesiapan');
                             Route::post('/', 'store')->name('.store');
                             Route::get('/edit/{data}', 'edit')->name('.edit');
                             Route::put('/{data}', 'update')->name('.update');
@@ -132,7 +133,7 @@ Route::prefix('operasi')->group(function () {
 
                 //LAPORAN OPERASI
                 Route::prefix('laporan-operasi')->group(function () {
-                    Route::name('.laporan-operasi')->group(function () {
+                    Route::name('.laporan-operasi')->group(callback: function () {
                         Route::controller(LaporanOperasiController::class)->group(function () {
                             Route::get('/', 'index')->name('.index');
                             Route::get('/create', 'create')->name('.create');
@@ -187,6 +188,22 @@ Route::prefix('operasi')->group(function () {
                             Route::put('/update/{id}', 'update')->name('.update');
                             Route::delete('/destroy/{id}', 'destroy')->name('.destroy');
                             Route::get('/print/{id}', 'print')->name('.print');
+                        });
+                    });
+                });
+
+
+                // TRANSFER PASIEN
+                Route::prefix('transfer-pasien')->group(function () {
+                    Route::name('.transfer-pasien')->group(function () {
+                        Route::controller(TransferPasienController::class)->group(function () {
+                            Route::get('/', 'index')->name('.index');
+                            Route::get('/create', 'create')->name('.create');
+                            Route::post('/', 'store')->name('.store');
+                            Route::get('/edit/{data}', 'edit')->name('.edit');
+                            Route::put('/{data}', 'update')->name('.update');
+                            Route::delete('/{data}', 'destroy')->name('.destroy');
+                            Route::get('/{data}', 'show')->name('.show');
                         });
                     });
                 });
