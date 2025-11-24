@@ -25,7 +25,6 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Log;
 
 class RadiologiController extends Controller
 {
@@ -359,7 +358,6 @@ class RadiologiController extends Controller
         // If the mount path doesn't have the file, try to read the original path stored in DB (UNC)
         $original = $service->findOriginalFilePath($fileName, $kdPasien, $tanggal, $kdUnit, $urutMasuk);
         if ($original && $service->fileExists($original)) {
-            Log::info('Serving radiology file from original DB path', ['path' => $original, 'file' => $fileName]);
             $response = response()->file($original, [
                 'Content-Type' => 'application/pdf',
             ]);
@@ -417,7 +415,6 @@ class RadiologiController extends Controller
             ]);
         }
 
-        Log::warning('Radiology download: file not found', ['file' => $fileName, 'mount' => $filePath, 'original' => $original ?? null]);
         abort(404, 'File hasil radiologi tidak ditemukan');
     }
 
