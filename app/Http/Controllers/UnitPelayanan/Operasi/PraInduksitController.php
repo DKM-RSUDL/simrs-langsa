@@ -21,6 +21,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class PraInduksitController extends Controller
 {
@@ -390,8 +391,8 @@ class PraInduksitController extends Controller
                            )) AS latest_price'), 'APT_OBAT.KD_PRD', '=', 'latest_price.KD_PRD')
             ->where(function ($query) use ($search) {
                 // Optimize search conditions
-                $query->where('APT_OBAT.nama_obat', 'LIKE', $search.'%')
-                    ->orWhere('APT_OBAT.nama_obat', 'LIKE', '% '.$search.'%');
+                $query->where('APT_OBAT.nama_obat', 'LIKE', $search . '%')
+                    ->orWhere('APT_OBAT.nama_obat', 'LIKE', '% ' . $search . '%');
             })
             ->select(
                 'APT_OBAT.KD_PRD as id',
@@ -405,5 +406,42 @@ class PraInduksitController extends Controller
 
 
         return response()->json($obats);
+    }
+    public function print($kd_pasien, $tgl_masuk, $urut_masuk, $id)
+    {
+        try {
+            // 1. Load Main Pra Induksi Record dan 4 Sub-Models
+            $okPraInduksi = OkPraInduksi::with([
+                'okPraInduksiEpas',
+                'okPraInduksiPsas',
+                'okPraInduksiCtkp',
+                'okPraInduksiIpb'
+            ])->findOrFail($id);
+
+            // 2. Load Kunjungan/Pasien Data
+            $dataMedis = Kunjungan::with('pasien')
+                ->where('kd_pasien', $kd_pasien)
+                ->where('kd_unit', 71)
+                ->whereDate('tgl_masuk', $tgl_masuk)
+                ->where('urut_masuk', $urut_masuk)
+                ->firstOrFail();
+
+            // 3. Generate PDF
+            // $pdf = Pdf::loadView('unit-pelayanan.operasi.pelayanan.asesmen.pra-induksi.print', compact(
+            //     'okPraInduksi',
+            //     'dataMedis'
+            // ))->setPaper('a4', 'portrait');
+
+            return view('unit-pelayanan.operasi.pelayanan.asesmen.pra-induksi.print', compact(
+                'okPraInduksi',
+                'dataMedis'
+            ));
+
+            // return $pdf->stream('Pra_Induksi_' . $dataMedis->pasien->kd_pasien . '.pdf');
+        } catch (ModelNotFoundException $e) {
+            return back()->with('error', 'Data Pra Induksi tidak ditemukan.');
+        } catch (\Exception $e) {
+            return back()->with('error', 'Terjadi kesalahan saat mencetak: ' . $e->getMessage());
+        }
     }
 }

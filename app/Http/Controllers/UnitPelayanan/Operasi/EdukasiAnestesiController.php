@@ -8,6 +8,7 @@ use App\Models\Kunjungan;
 use App\Models\OkAsesmen;
 use App\Models\OkEdukasiAnestesi;
 use App\Models\OkJenisAnastesi;
+use App\Services\BaseService;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
@@ -15,28 +16,25 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class EdukasiAnestesiController extends Controller
 {
+    private $baseService;
     public function __construct()
     {
         $this->middleware('can:read unit-pelayanan/operasi');
+        $this->baseService = new BaseService();
     }
 
     public function create($kd_pasien, $tgl_masuk, $urut_masuk)
     {
-        $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
-            ->join('transaksi as t', function ($join) {
-                $join->on('kunjungan.kd_pasien', '=', 't.kd_pasien');
-                $join->on('kunjungan.kd_unit', '=', 't.kd_unit');
-                $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
-                $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
-            })
-            ->where('kunjungan.kd_pasien', $kd_pasien)
-            ->where('kunjungan.kd_unit', 71)
-            ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
-            ->where('kunjungan.urut_masuk', $urut_masuk)
-            ->first();
+        $dataMedis = $this->baseService->getDataMedis(
+            71,
+            $kd_pasien,
+            $tgl_masuk,
+            $urut_masuk
+        );
 
         // Menghitung umur berdasarkan tgl_lahir jika ada
         if ($dataMedis->pasien && $dataMedis->pasien->tgl_lahir) {
@@ -121,18 +119,12 @@ class EdukasiAnestesiController extends Controller
 
     public function edit($kd_pasien, $tgl_masuk, $urut_masuk, $id)
     {
-        $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
-            ->join('transaksi as t', function ($join) {
-                $join->on('kunjungan.kd_pasien', '=', 't.kd_pasien');
-                $join->on('kunjungan.kd_unit', '=', 't.kd_unit');
-                $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
-                $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
-            })
-            ->where('kunjungan.kd_pasien', $kd_pasien)
-            ->where('kunjungan.kd_unit', 71)
-            ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
-            ->where('kunjungan.urut_masuk', $urut_masuk)
-            ->first();
+        $dataMedis = $this->baseService->getDataMedis(
+            71,
+            $kd_pasien,
+            $tgl_masuk,
+            $urut_masuk
+        );
 
         // Menghitung umur berdasarkan tgl_lahir jika ada
         if ($dataMedis->pasien && $dataMedis->pasien->tgl_lahir) {
@@ -252,6 +244,49 @@ class EdukasiAnestesiController extends Controller
             return view('unit-pelayanan.operasi.pelayanan.asesmen.pra-anestesi.edukasi.show', compact('dataMedis', 'asesmen', 'jenisAnastesi', 'dokterAnastesi'));
         } catch (Exception $e) {
             return back()->with('error', $e->getMessage());
+        }
+    }
+    public function print($kd_pasien, $tgl_masuk, $urut_masuk, $id)
+    {
+        try {
+            // 1. Ambil Data Kunjungan/Pasien ($dataMedis)
+            $dataMedis = $this->baseService->getDataMedis(
+                71,
+                $kd_pasien,
+                $tgl_masuk,
+                $urut_masuk
+            );
+
+            if (!$dataMedis) {
+                abort(404, 'Data not found');
+            }
+
+            if ($dataMedis->pasien && $dataMedis->pasien->tgl_lahir) {
+                $dataMedis->pasien->umur = Carbon::parse($dataMedis->pasien->tgl_lahir)->age;
+            } else {
+                $dataMedis->pasien->umur = 'Tidak Diketahui';
+            }
+
+            // 2. Load Data Master & Asesmen
+            $asesmen = OkAsesmen::findOrFail($id);
+            $jenisAnastesi = OkJenisAnastesi::all();
+            $dokterAnastesi = DokterAnastesi::with(['dokter'])->get();
+
+            // 3. Ambil Record Edukasi (Child Record)
+            $edukasiAnestesi = OkEdukasiAnestesi::where('id_asesmen', $asesmen->id)->firstOrFail();
+
+            // 4. Generate PDF
+            $pdf = Pdf::loadView(
+                'unit-pelayanan.operasi.pelayanan.asesmen.pra-anestesi.edukasi.print',
+                compact('dataMedis', 'edukasiAnestesi', 'jenisAnastesi', 'dokterAnastesi')
+            )->setPaper('a4', 'portrait');
+
+            // Menggunakan stream untuk menampilkan di browser
+            return $pdf->stream('Edukasi_Anestesi_' . $dataMedis->pasien->kd_pasien . '.pdf');
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            abort(404, 'Data edukasi anestesi tidak ditemukan');
+        } catch (Exception $e) {
+            abort(500, 'Gagal mencetak dokumen. Error: ' . $e->getMessage());
         }
     }
 }
