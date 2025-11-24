@@ -373,31 +373,34 @@ class PraAnestesiPerawatController extends Controller
                 $dataMedis->pasien->umur = 'Tidak Diketahui';
             }
 
-            // 2. Ambil Asesmen (Parent) dan Pra Operasi Perawat (Child)
-            $asesmen = OkAsesmen::findOrFail($id);
+            // 1. Ambil Asesmen (Parent ID) DENGAN RELASI USER CREATE
+            $asesmen = OkAsesmen::with(['userCreate.karyawan'])->findOrFail($id); // <-- BARIS INI WAJIB DIUBAH
 
-            // PERBAIKAN: Hapus with(['perawat']) dan gunakan findOrFail
+            // 2. Ambil Data Pra Operasi Perawat (Child Record)
             $asesmenPerawat = OkPraOperasiPerawat::where('id_asesmen', $asesmen->id)->firstOrFail();
 
-            // 3. Dapatkan Nama Perawat (Direct Lookup FIX)
-            $idPerawat = $asesmenPerawat->id_perawat_penerima;
-            $perawatObj = \App\Models\HrdKaryawan::where('kd_karyawan', $idPerawat)->first();
+            // 3. Dapatkan Nama Perawat PENERIMA (Direct Lookup)
+            $idPerawatPenerima = $asesmenPerawat->id_perawat_penerima;
+            $perawatObjPenerima = \App\Models\HrdKaryawan::where('kd_karyawan', $idPerawatPenerima)->first();
+            $namaPerawatPenerima = optional($perawatObjPenerima)->nama_lengkap ?? optional($perawatObjPenerima)->nama ?? '_________________________';
 
-            // Menggunakan optional() untuk menghindari error jika HrdKaryawan tidak ditemukan
-            $namaPerawat = optional($perawatObj)->nama_lengkap ?? optional($perawatObj)->nama ?? '_________________________';
-            $perawat = HrdKaryawan::where('status_peg', 1)
-                ->where('kd_ruangan', 4)
-                ->where('kd_jenis_tenaga', 2)
-                ->get();
-            // 4. Generate PDF
+            // 4. Dapatkan Nama Perawat RUANGAN (Dari User Create)
+            $creator = $asesmen->userCreate->karyawan; // Mengakses relasi yang baru dimuat
+            $namaPerawatRuangan = optional($creator)->gelar_depan . ' ' . optional($creator)->nama . ' ' . optional($creator)->gelar_belakang;
+
+            // 5. Load List Perawat (Untuk Lookup Lainnya di Blade)
+            $perawat = HrdKaryawan::where('status_peg', 1)->where('kd_ruangan', 4)->where('kd_jenis_tenaga', 2)->get();
+
+            // 6. Generate PDF
             $pdf = Pdf::loadView(
                 'unit-pelayanan.operasi.pelayanan.asesmen.pra-anestesi.perawat.print',
-                compact('dataMedis', 'asesmen', 'asesmenPerawat', 'namaPerawat', 'perawat')
+                // PASTIKAN SEMUA VARIABEL BARU ADA DI COMPACT
+                compact('dataMedis', 'asesmen', 'asesmenPerawat', 'namaPerawatPenerima', 'namaPerawatRuangan', 'perawat')
             )->setPaper('a4', 'portrait');
 
             return $pdf->stream('Asesmen_Pra_Anestesi_Perawat_' . $dataMedis->pasien->kd_pasien . '.pdf');
         } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
-            return back()->with('error', 'Gagal mencetak dokumen. Data asesmen perawat tidak ditemukan. (Pastikan data sudah tersimpan dengan benar)');
+            return back()->with('error', 'Gagal mencetak dokumen. Data asesmen perawat tidak ditemukan.');
         } catch (\Exception $e) {
             return back()->with('error', 'Gagal mencetak dokumen. Error: ' . $e->getMessage());
         }

@@ -1049,6 +1049,30 @@
             </td>
         </tr>
     </table>
+    {{-- ======================================================= --}}
+    {{-- TANDA TANGAN --}}
+    {{-- ======================================================= --}}
+    <div class="ttd-container">
+        <table class="no-border" style="width: 100%;">
+            <tr class="no-border">
+                {{-- Kolom Kosong untuk Jarak --}}
+                <td style="width: 50%; border: none;"></td>
+
+                {{-- TTD --}}
+                <td class="ttd-cell" style="width: 50%; text-align: center; border: none;">
+                    Dokter<br>,
+                </td>
+            </tr>
+            <tr class="no-border">
+                {{-- Kolom Kosong untuk Jarak --}}
+                <td style="width: 50%; border: none;"></td>
+
+                <td class="ttd-cell" style="padding-top: 60px; border: none;">
+                    ( {{ $namaCreator ?? '_____________________' }} )
+                </td>
+            </tr>
+        </table>
+    </div>
 
     <script>
         // --- 1. Data PSAS (Monitoring Selama Anestesi dan Sedasi) ---

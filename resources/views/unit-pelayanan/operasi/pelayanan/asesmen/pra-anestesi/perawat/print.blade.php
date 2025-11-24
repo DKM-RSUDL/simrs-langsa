@@ -250,7 +250,7 @@
                 </table>
             </td>
             <td class="td-center" style="width: 40%; text-align: center;">
-                <span class="title-main">ASESMEN PRA ANESTESI</span>
+                <span class="title-main">ASESMEN PRA ANESTESI KEPERAWATAN</span>
             </td>
             <td class="td-right" style="width: 20%;">
                 <div class="hd-box"><span class="hd-text">PERAWAT</span></div>
@@ -291,14 +291,14 @@
     <div class="form-row">
         <div class="form-label">Tek. Darah (mmHg)</div>
         <div class="form-value">
-            : Sistole: {{ $asesmenPerawat->sistole ?? '-' }} / Diastole: {{ $asesmenPerawat->diastole ?? '-' }} mmHg
+            : {{ $asesmenPerawat->sistole ?? '-' }} / {{ $asesmenPerawat->diastole ?? '-' }} mmHg
         </div>
     </div>
 
     <div class="form-row">
         <div class="form-label">Nadi / Nafas / Suhu</div>
         <div class="form-value">
-            : Nadi: {{ $asesmenPerawat->nadi ?? '-' }} | Nafas: {{ $asesmenPerawat->nafas ?? '-' }} | Suhu:
+            : {{ $asesmenPerawat->nadi ?? '-' }} | {{ $asesmenPerawat->nafas ?? '-' }} |
             {{ $asesmenPerawat->suhu ?? '-' }}°C
         </div>
     </div>
@@ -306,8 +306,8 @@
     <div class="form-row">
         <div class="form-label">TB / BB / IMT / LPT</div>
         <div class="form-value">
-            : TB: {{ $asesmenPerawat->tinggi_badan ?? '-' }}cm | BB: {{ $asesmenPerawat->berat_badan ?? '-' }}kg |
-            IMT: {{ $asesmenPerawat->imt ?? '-' }} | LPT: {{ $asesmenPerawat->lpt ?? '-' }}
+            : {{ $asesmenPerawat->tinggi_badan ?? '-' }}cm | {{ $asesmenPerawat->berat_badan ?? '-' }}kg |
+            {{ $asesmenPerawat->imt ?? '-' }} | {{ $asesmenPerawat->lpt ?? '-' }}
         </div>
     </div>
 
@@ -580,6 +580,25 @@
         <div class="form-value">
             : {{ getYesNoText($asesmenPerawat->penjelasan_prosedur) }}
         </div>
+    </div>
+    <div class="ttd-container">
+        <table class="no-border" style="width: 100%;">
+            <tr class="no-border">
+                <td class="ttd-cell" style="width: 50%;">Perawat Ruangan,</td>
+                <td class="ttd-cell" style="width: 50%;">Perawat Penerima,</td>
+            </tr>
+            <tr class="no-border">
+                {{-- PERAWAT RUANGAN (DARI userCreate) --}}
+                <td class="ttd-cell" style="padding-top: 60px;">
+                    ( {{ $namaPerawatRuangan ?? '_____________________' }} )
+                </td>
+
+                {{-- PERAWAT PENERIMA (DARI id_perawat_penerima) --}}
+                <td class="ttd-cell" style="padding-top: 60px;">
+                    ( {{ $namaPerawatPenerimaLengkap ?? '_____________________' }} )
+                </td>
+            </tr>
+        </table>
     </div>
 
 </body>

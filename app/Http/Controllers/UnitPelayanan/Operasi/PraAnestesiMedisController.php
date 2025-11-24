@@ -197,7 +197,7 @@ class PraAnestesiMedisController extends Controller
 
     public function print($kd_pasien, $tgl_masuk, $urut_masuk, $id)
     {
-        
+
         try {
             // Logika Get Data Medis dan Hitung Umur (Sama seperti fungsi show)
             $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
@@ -224,7 +224,7 @@ class PraAnestesiMedisController extends Controller
             }
 
             // 1. Ambil Asesmen (Parent ID)
-            $asesmen = OkAsesmen::find($id);
+            $asesmen = OkAsesmen::with(['userCreate.karyawan'])->find($id);
 
             if (!$asesmen) {
                 abort(404, 'Asesmen tidak ditemukan');

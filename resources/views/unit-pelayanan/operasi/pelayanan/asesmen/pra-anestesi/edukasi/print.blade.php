@@ -176,30 +176,27 @@
 <body>
 
     @php
-        // Definisikan variabel edukasi untuk kemudahan akses
         $edukasi = $edukasiAnestesi;
 
-        // Konversi string edukasi_anestesi ke array (untuk checklist)
+        // Konversi string edukasi_anestesi ke array
         $edukasiAnestesiTopics = json_decode($edukasi->edukasi_anestesi ?? '[]', true);
 
-        // Helper untuk Yes/No/Skala (Didefinisikan di sini untuk menghindari redeclare error)
-        if (!function_exists('getText')) {
-            function getText($value, $type)
-            {
-                if ($type === 'YN') {
-                    $map = ['1' => 'Ya', '0' => 'Tidak'];
-                    return $map[$value] ?? '-';
-                }
-                if ($type === 'PEMAHAMAN') {
-                    $map = ['1' => 'Baik', '2' => 'Cukup', '3' => 'Kurang'];
-                    return $map[$value] ?? '-';
-                }
-                if ($type === 'JK') {
-                    $map = ['1' => 'Laki-Laki', '0' => 'Perempuan'];
-                    return $map[$value] ?? '-';
-                }
-                return $value ?? '-';
+        // Helper untuk Yes/No/Skala (diasumsikan didefinisikan secara global atau di awal file)
+        function getText($value, $type)
+        {
+            if ($type === 'YN') {
+                $map = ['1' => 'Ya', '0' => 'Tidak'];
+                return $map[$value] ?? '-';
             }
+            if ($type === 'PEMAHAMAN') {
+                $map = ['1' => 'Baik', '2' => 'Cukup', '3' => 'Kurang'];
+                return $map[$value] ?? '-';
+            }
+            if ($type === 'JK') {
+                $map = ['1' => 'Laki-Laki', '0' => 'Perempuan'];
+                return $map[$value] ?? '-';
+            }
+            return $value ?? '-';
         }
 
         // =======================================================
@@ -231,7 +228,6 @@
             ],
         ];
 
-        // Ambil nama dokter (Lookup FIX)
         $dokterEdukasiRecord = $dokterAnastesi->firstWhere('kd_dokter', $edukasi->dokter_edukasi);
         $namaDokterEdukasi = '_________________________';
 
@@ -271,7 +267,7 @@
                 </table>
             </td>
             <td class="td-center" style="width: 40%; text-align: center;">
-                <span class="title-main">EDUKASI ANESTESI</span>
+                <span class="title-main">EDUKASI PRA ANESTESI</span>
             </td>
             <td class="td-right" style="width: 20%;">
                 <div class="hd-box"><span class="hd-text">OPERASI</span></div>
@@ -480,17 +476,6 @@
         </div>
     </div>
 
-    <div class="form-row">
-        <div class="form-label">HardCopy Form Persetujuan</div>
-        <div class="form-value">
-            : @if ($edukasi->file_persetujuan)
-                <a href="{{ asset('storage/' . $edukasi->file_persetujuan) }}" target="_blank">Lihat Hardcopy
-                    (PDF/Image)</a>
-            @else
-                Tidak ada file terlampir.
-            @endif
-        </div>
-    </div>
 
     {{-- ======================================================= --}}
     {{-- SECTION 5: CATATAN TAMBAHAN --}}
@@ -516,6 +501,22 @@
         <div class="form-value">
             : {{ $edukasi->lainnya ?? '-' }}
         </div>
+    </div>
+    <div class="ttd-container">
+        <table class="no-border" style="width: 100%;">
+            <tr class="no-border">
+                <td class="ttd-cell" style="width: 50%;">Dokter yang Menjelaskan,</td>
+                <td class="ttd-cell" style="width: 50%; padding-right: 20%;">Pihak yang diJelaskan,</td>
+            </tr>
+            <tr class="no-border">
+                <td class="ttd-cell" style="padding-top: 50px;">
+                    ( {{ $namaDokterEdukasi }} )
+                </td>
+                <td class="ttd-cell" style="padding-top: 50px;">
+                    ( {{ $edukasi->nama_keluarga ?? '_____________________' }} )
+                </td>
+            </tr>
+        </table>
     </div>
 
 </body>
