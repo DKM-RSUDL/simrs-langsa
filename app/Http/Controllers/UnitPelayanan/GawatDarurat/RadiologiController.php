@@ -13,6 +13,7 @@ use App\Models\RmeResumeDtl;
 use App\Models\SegalaOrder;
 use App\Models\SegalaOrderDet;
 use App\Models\UnitAsal;
+use App\Services\RadiologyFileService;
 use Exception;
 use Illuminate\Support\Carbon;
 use Illuminate\Http\Request;
@@ -188,6 +189,7 @@ class RadiologiController extends Controller
                 'rad_hasil.hasil',
                 'rad_hasil.kd_alat',
                 'rad_hasil.accession_number',
+                'rad_hasil.file',
             ])
                 ->join('transaksi as t', function ($q) {
                     $q->on('rad_hasil.kd_pasien', '=', 't.kd_pasien');
@@ -521,7 +523,51 @@ class RadiologiController extends Controller
 
     public function preview($kd_pasien, $tgl_masuk, Request $request)
     {
-        //
+        $fileName  = $request->query('file'); // nama file
+
+        $tanggal   = $tgl_masuk;
+        $kdPasien  = $kd_pasien;
+
+        if (!$fileName) {
+            abort(404, 'File tidak ditemukan');
+        }
+
+        if (!$fileName || !$tanggal || !$kdPasien) {
+            abort(404, 'Parameter tidak lengkap');
+        }
+
+        $service = new RadiologyFileService();
+
+        // First try the configured mount path
+        $filePath = $service->buildFilePath($fileName, $tanggal);
+
+
+        if ($service->fileExists($filePath) && $service->isWithinMount($filePath)) {
+            $response = response()->file($filePath, [
+                'Content-Type' => 'application/pdf',
+            ]);
+            // Ensure browser tab shows the filename
+            $response->headers->set('Content-Disposition', $response->headers->makeDisposition(
+                'inline',
+                basename($fileName)
+            ));
+            return $response;
+        }
+
+        // If the mount path doesn't have the file, try to read the original path stored in DB (UNC)
+        $original = $service->findOriginalFilePath($fileName, $kdPasien, $tanggal);
+        if ($original && $service->fileExists($original)) {
+            $response = response()->file($original, [
+                'Content-Type' => 'application/pdf',
+            ]);
+            $response->headers->set('Content-Disposition', $response->headers->makeDisposition(
+                'inline',
+                basename($fileName)
+            ));
+            return $response;
+        }
+
+        abort(404, 'File hasil radiologi tidak ditemukan');
     }
 
     public function download($kd_pasien, $tgl_masuk, Request $request)

@@ -73,7 +73,7 @@
                                                                     href="{{ route('radiologi.preview', [
                                                                         $dataMedis['kd_pasien'],
                                                                         $dataMedis['tgl_masuk'],
-                                                                        // 'file' => $item['filename'],
+                                                                        $item['file'],
                                                                     ]) }}"
                                                                     class="btn btn-sm btn-success"
                                                                     title="Print / Preview Hasil Radiologi">
@@ -84,7 +84,7 @@
                                                                 <a href="{{ route('radiologi.download', [
                                                                     $dataMedis['kd_pasien'],
                                                                     $dataMedis['tgl_masuk'],
-                                                                    // 'file' => $item['filename'],
+                                                                    $item['file'],
                                                                 ]) }}"
                                                                     class="btn btn-sm btn-primary"
                                                                     title="Download Hasil Radiologi">
