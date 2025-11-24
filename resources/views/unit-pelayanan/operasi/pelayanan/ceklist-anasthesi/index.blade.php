@@ -104,6 +104,10 @@
                         <i class="fas fa-edit"></i>
                         Edit
                     </a>
+                     <a href="{{ route('operasi.pelayanan.ceklist-anasthesi.printCheckListKesiapan', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
+                        target="_blank" class="btn btn-primary">
+                        <i class="fas fa-print"></i> Cetak
+                    </a>
                 </div>
             </li>
         @empty

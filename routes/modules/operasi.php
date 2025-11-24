@@ -120,7 +120,7 @@ Route::prefix('operasi')->group(function () {
                         Route::controller(CeklistAnasthesiController::class)->group(function () {
                             Route::get('/', 'index')->name('.index');
                             Route::get('/create', 'create')->name('.create');
-                            Route::get('/print/{id}', 'print')->name('.print');
+                            Route::get('/print/{id}', 'printCheckListKesiapan')->name('.printCheckListKesiapan');
                             Route::post('/', 'store')->name('.store');
                             Route::get('/edit/{data}', 'edit')->name('.edit');
                             Route::put('/{data}', 'update')->name('.update');
@@ -133,7 +133,7 @@ Route::prefix('operasi')->group(function () {
 
                 //LAPORAN OPERASI
                 Route::prefix('laporan-operasi')->group(function () {
-                    Route::name('.laporan-operasi')->group(function () {
+                    Route::name('.laporan-operasi')->group(callback: function () {
                         Route::controller(LaporanOperasiController::class)->group(function () {
                             Route::get('/', 'index')->name('.index');
                             Route::get('/create', 'create')->name('.create');

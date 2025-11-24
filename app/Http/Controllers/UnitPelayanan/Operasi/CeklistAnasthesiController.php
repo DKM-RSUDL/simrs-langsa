@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\UnitPelayanan\Operasi;
 
 use App\Http\Controllers\Controller;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use App\Models\Kunjungan;
 use App\Models\OkJenisAnastesi;
@@ -290,4 +291,49 @@ class CeklistAnasthesiController extends Controller
             return back()->with('error', $e->getMessage());
         }
     }
+
+        public function printCheckListKesiapan($kd_pasien, $tgl_masuk, $urut_masuk, $id){
+            $getAnasetesi = $this->getKesiapanAnestesiData($id,$kd_pasien, $tgl_masuk, $urut_masuk);
+            $dataMedis = $getAnasetesi['dataMedis'];
+            $jenisAnastesi  =  $getAnasetesi['jenisAnastesi'];
+            $ceklistKesiapanAnesthesi = $getAnasetesi['ceklistKesiapanAnesthesi'];
+            $perawat = $getAnasetesi['perawat'];
+
+            
+            
+            $pdf = Pdf::loadView(
+                'unit-pelayanan.operasi.pelayanan.ceklist-anasthesi.print',
+                compact('dataMedis','jenisAnastesi','ceklistKesiapanAnesthesi','perawat')
+            );
+
+            $fileName = 'Laporan-Operasi-' . ($pasien->kd_pasien ?? 'Unknown') . '-' . $id . '.pdf';
+
+            return $pdf->stream($fileName);
+        }
+
+        private function getKesiapanAnestesiData($id, $kd_pasien, $tgl_masuk, $urut_masuk){
+            // Ambil data ceklist
+            $ceklistKesiapanAnesthesi = RmeCeklistKesiapanAnesthesi::findOrFail($id);
+
+            // Ambil data medis kunjungan + relasi pasien
+            $dataMedis = Kunjungan::with('pasien')
+                ->where('kd_pasien', $kd_pasien)
+                ->where('kd_unit', 71)
+                ->whereDate('tgl_masuk', $tgl_masuk)
+                ->where('urut_masuk', $urut_masuk)
+                ->firstOrFail();
+
+            // Ambil data dari property controller (misal di __construct)
+            $perawat = $this->perawat;
+            $jenisAnastesi = $this->jenisAnastesi;
+
+            // Kembalikan dalam bentuk array
+            return [
+                'ceklistKesiapanAnesthesi' => $ceklistKesiapanAnesthesi,
+                'dataMedis'                => $dataMedis,
+                'perawat'                  => $perawat,
+                'jenisAnastesi'            => $jenisAnastesi,
+            ];
+        }
+
 }
