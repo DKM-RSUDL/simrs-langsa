@@ -639,8 +639,6 @@ class ResumeController extends Controller
             ->where('is_normal', 0)
             ->get();
 
-        $qrCode = base64_encode(QrCode::format('png')->size(100)->errorCorrection('H')->generate($dataMedis->dokter->nama_lengkap));
-
         $pdf = Pdf::loadView('unit-pelayanan.gawat-darurat.action-gawat-darurat.resume.resume-medis.print', compact(
             'resume',
             'dataMedis',
@@ -651,7 +649,6 @@ class ResumeController extends Controller
             'pemeriksaanFisik',
             'resepRawat',
             'resepPulang',
-            'qrCode'
         ))
             ->setPaper('a4', 'potrait');
         return $pdf->stream('resume_' . $resume->kd_pasien . '_' . $resume->tgl_konsul . '.pdf');

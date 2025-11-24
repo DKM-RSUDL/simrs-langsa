@@ -646,16 +646,6 @@ if (!function_exists('carbon_parse')) {
 /*============================================*/
 
 if (!function_exists('generateQrCode')) {
-    // function generateQrCode($text, $size = 100, $type = 'text')
-    // {
-    //     $qrCode = null;
-
-    //     // if($type == 'text') $qrCode = base64_encode(QrCode::format('png')->size($size)->errorCorrection('H')->generate($text));
-    //     if ($type == 'text') $qrCode = QrCode::format('svg')->size($size)->errorCorrection('H')->generate($text);
-
-    //     return $qrCode;
-    // }
-
     function generateQrCode($text, $size = 100, $type = 'svg')
     {
         try {

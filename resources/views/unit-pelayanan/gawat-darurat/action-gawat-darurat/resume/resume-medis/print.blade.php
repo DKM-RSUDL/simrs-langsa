@@ -284,8 +284,8 @@
                     <th>Terapi Pulang</th>
                     <td>
                         @foreach ($resepPulang as $item)
-                        - {{ "$item->nama_obat $item->cara_pakai" }} <br>
-                    @endforeach
+                            - {{ "$item->nama_obat $item->cara_pakai" }} <br>
+                        @endforeach
                     </td>
                 </tr>
             @endif
@@ -380,7 +380,7 @@
         <div class="left-column">
             <p>DPJP yang merawat</p>
             <br>
-            <img src="data:image/png;base64,{{ generateQrCode($dataMedis->dokter->nama_lengkap) }}" alt="QR Code">
+            <img src="{{ generateQrCode($dataMedis->dokter->nama_lengkap, 120, 'svg_datauri') }}" alt="QR Code">
             <p class="name-konsulen">{{ $dataMedis->dokter->nama_lengkap }}</p>
             <p class="identity-num">
                 @php
