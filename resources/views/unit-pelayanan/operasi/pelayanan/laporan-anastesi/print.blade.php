@@ -129,7 +129,7 @@
                     </table>
                 </td>
                 <td class="td-center">
-                    <span class="title-main">LAPORAN OPERASI</span>
+                    <span class="title-main">LAPORAN OPERASI (ANASTESI)</span>
                 </td>
                 <td class="td-right">
                     <div class="hd-box"><span class="hd-text">OPERASI</span></div>
