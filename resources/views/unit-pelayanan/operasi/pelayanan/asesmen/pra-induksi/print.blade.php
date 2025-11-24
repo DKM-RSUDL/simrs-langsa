@@ -342,7 +342,7 @@
                 </table>
             </td>
             <td class="td-center" style="width: 40%; text-align: center;">
-                <span class="title-main">PRA INDUKSI</span>
+                <span class="title-main">CATATAN ANASTESI DAN SEDASI</span>
             </td>
             <td class="td-right" style="width: 20%;">
                 <div class="hd-box"><span class="hd-text">OPERASI</span></div>
