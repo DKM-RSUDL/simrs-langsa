@@ -337,7 +337,7 @@
             </div>
         </div>
 
-      
+
         <div class="row">
             <div class="col-6">
                 <div class="form-group">
@@ -365,7 +365,7 @@
                 <div class="diagram-col full-body">
                     <div class="image-wrapper full-body">
                         @if (isset($markingImages['full-body']) && Storage::exists($markingImages['full-body']))
-                            <img src="{{ Storage::url($markingImages['full-body']) }}" alt="Full Body">
+                            <img src="{{ asset('storage/' . $markingImages['full-body']) }}" alt="Full Body">
                         @else
                             <img src="{{ asset('assets/images/sitemarking/' . ($dataMedis->pasien->jenis_kelamin == 1 ? '7.png' : '1.png')) }}"
                                 alt="Full Body Default">
@@ -376,7 +376,7 @@
                 <div class="diagram-col foot">
                     <div class="image-wrapper foot">
                         @if (isset($markingImages['foot']) && Storage::exists($markingImages['foot']))
-                            <img src="{{ Storage::url($markingImages['foot']) }}" alt="Foot">
+                            <img src="{{ asset('storage/' . $markingImages['foot']) }}" alt="Foot">
                         @else
                             <img src="{{ asset('assets/images/sitemarking/' . ($dataMedis->pasien->jenis_kelamin == 1 ? '12.png' : '5.png')) }}"
                                 alt="Foot Default">
@@ -390,7 +390,7 @@
                 <div class="diagram-col small">
                     <div class="image-wrapper small">
                         @if (isset($markingImages['head-front-back']) && Storage::exists($markingImages['head-front-back']))
-                            <img src="{{ Storage::url($markingImages['head-front-back']) }}" alt="Head Front Back">
+                            <img src="{{ asset('storage/' . $markingImages['head-front-back']) }}" alt="Head Front Back">
                         @else
                             <img src="{{ asset('assets/images/sitemarking/' . ($dataMedis->pasien->jenis_kelamin == 1 ? '9.png' : '3.png')) }}"
                                 alt="Head Front Back Default">
@@ -401,7 +401,7 @@
                 <div class="diagram-col small">
                     <div class="image-wrapper small">
                         @if (isset($markingImages['head-side']) && Storage::exists($markingImages['head-side']))
-                            <img src="{{ Storage::url($markingImages['head-side']) }}" alt="Head Side">
+                            <img src="{{ asset('storage/' . $markingImages['head-side']) }}" alt="Head Side">
                         @else
                             <img src="{{ asset('assets/images/sitemarking/' . ($dataMedis->pasien->jenis_kelamin == 1 ? '8.png' : '2.png')) }}"
                                 alt="Head Side Default">
@@ -412,7 +412,7 @@
                 <div class="diagram-col small">
                     <div class="image-wrapper small">
                         @if (isset($markingImages['hand-palmar']) && Storage::exists($markingImages['hand-palmar']))
-                            <img src="{{ Storage::url($markingImages['hand-palmar']) }}" alt="Hand Palmar">
+                            <img src="{{ asset('storage/' . $markingImages['hand-palmar']) }}" alt="Hand Palmar">
                         @else
                             <img src="{{ asset('assets/images/sitemarking/' . ($dataMedis->pasien->jenis_kelamin == 1 ? '10.png' : '4.png')) }}"
                                 alt="Hand Palmar Default">
@@ -423,7 +423,7 @@
                 <div class="diagram-col small">
                     <div class="image-wrapper small">
                         @if (isset($markingImages['hand-dorsal']) && Storage::exists($markingImages['hand-dorsal']))
-                            <img src="{{ Storage::url($markingImages['hand-dorsal']) }}" alt="Hand Dorsal">
+                            <img src="{{ asset('storage/' . $markingImages['hand-dorsal']) }}" alt="Hand Dorsal">
                         @else
                             <img src="{{ asset('assets/images/sitemarking/' . ($dataMedis->pasien->jenis_kelamin == 1 ? '11.png' : '6.png')) }}"
                                 alt="Hand Dorsal Default">
