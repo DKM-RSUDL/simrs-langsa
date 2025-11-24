@@ -332,7 +332,7 @@ class LaporanAnastesiController extends Controller
         if($isPrint){
             $pdf = Pdf::loadView(
                 'unit-pelayanan.operasi.pelayanan.laporan-anastesi.print',
-                compact('dataMedis','jenisAnastesi','laporanAnastesi','laporanAnastesiDtl','laporanAnastesiDtl2','jenisAnastesi','dokterAnastesi','dokter','drainData')
+                compact('dataMedis','jenisAnastesi','laporanAnastesi','laporanAnastesiDtl','laporanAnastesiDtl2','jenisAnastesi','dokterAnastesi','dokter','drainData','perawat')
             );
 
             $fileName = 'Laporan-Operasi-' . ($pasien->kd_pasien ?? 'Unknown') . '-' . $id . '.pdf';

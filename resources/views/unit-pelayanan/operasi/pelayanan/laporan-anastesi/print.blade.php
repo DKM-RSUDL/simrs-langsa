@@ -11,15 +11,12 @@
     <style>
         @page {
             size: A4 portrait;
-
         }
-
-
 
         /* CHECKBOX RATA TENGAH DENGAN LABEL */
         input[type="checkbox"] {
-            width: 13px;
-            height: 13px;
+            width: 10px;
+            height: 10px;
             margin: 0 4px 0 5px !important;
             padding: 0;
             vertical-align: middle !important;
@@ -35,14 +32,115 @@
             padding: 1px 3px;
             background: transparent;
         }
+
+        .header-table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: #f0f0f0;
+            padding: 0;
+            position: relative;
+        }
+
+        .td-left {
+            width: 40%;
+            text-align: left;
+            vertical-align: middle;
+        }
+
+        .td-center {
+            width: 40%;
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        .td-right {
+            width: 20%;
+            position: relative;
+            padding: 0;
+        }
+
+        .brand-table {
+            border-collapse: collapse;
+            background-color: transparent;
+        }
+
+        .va-middle {
+            vertical-align: middle;
+        }
+
+        .brand-logo {
+            width: 40px;
+            height: auto;
+            margin-right: 2px;
+        }
+
+        .brand-name {
+            font-weight: 700;
+            margin: 0;
+            font-size: 14px;
+        }
+
+        .brand-info {
+            margin: 0;
+            font-size: 6px;
+        }
+
+        .title-main {
+            display: block;
+            font-size: 16px;
+            font-weight: bold;
+            margin: 0;
+        }
+
+        .title-sub {
+            display: block;
+            font-size: 14px;
+            font-weight: bold;
+            margin: 0;
+        }
+
+
+        .hd-box {
+            background-color: #bbbbbb;
+            padding: 15px 0px;
+            width: 100%;
+            margin: 0 auto;
+            text-align: center;
+        }
     </style>
 </head>
 
 <body>
+    <header>
+        <table class="header-table">
+            <tr>
+                <td class="td-left">
+                    <table class="brand-table">
+                        <tr>
+                            <td class="va-middle"><img src="{{ public_path('assets/img/Logo-RSUD-Langsa-1.png') }}"
+                                    alt="Logo" class="brand-logo"></td>
+                            <td class="va-middle">
+                                <p class="brand-name">RSUD Langsa</p>
+                                <p class="brand-info">Jl. Jend. A. Yani No.1 Kota Langsa</p>
+                                <p class="brand-info">Telp. 0641-22051, email: rsulangsa@gmail.com</p>
+                                <p class="brand-info">www.rsud.langsakota.go.id</p>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+                <td class="td-center">
+                    <span class="title-main">LAPORAN OPERASI</span>
+                </td>
+                <td class="td-right">
+                    <div class="hd-box"><span class="hd-text">OPERASI</span></div>
+                </td>
+            </tr>
+        </table>
+    </header>
 
     <table>
         <tr>
-            <table>
+            <table style="font-size:12px;">
                 <tr>
                     <td>1.</td>
                     <td>Time Out</td>
@@ -54,15 +152,13 @@
                         @endif
                     </td>
 
-                    <td>
-                        {{-- Jika butuh centang otomatis, bisa tambahkan di sini --}}
-                    </td>
+                    <td></td>
                 </tr>
-
             </table>
         </tr>
+
         <tr>
-            <table>
+            <table style="font-size:12px;">
                 <tr>
                     <td>2.</td>
                     <td>Cek ketersediaan peralatan dan fungsinya,</td>
@@ -107,19 +203,42 @@
                     </td>
                 </tr>
 
+
+
+
+                @php
+
+                    $waktu = \Carbon\Carbon::parse($laporanAnastesi->waktu_mulai_operasi);
+
+                    $tanggal = $waktu->format('d-m-Y');   // 20-01-2025
+                    $jamMulai = $waktu->format('H:i');    // 13:45
+
+                    // Jika kamu punya jam selesai di database, misalnya:
+                    $jamSelesai = $laporanAnastesi->waktu_selesai_operasi
+                        ? \Carbon\Carbon::parse($laporanAnastesi->waktu_selesai_operasi)->format('H:i')
+                        : '';
+                @endphp
+
+
                 {{-- Pukul --}}
                 <tr>
                     <td></td>
                     <td>Pukul :</td>
-                    <td><input type="text" style="width:70px;"></td>
-                    <td>Selesai : <input type="text" style="width:70px;"></td>
-                </tr>
-            </table>
+                    <td>
+                        <input type="text" style="width:70px; font-size:12px;" value="{{ $jamMulai }}">
+                    </td>
 
+                    <td>Selesai :
+                        <input type="text" style="width:70px; font-size:12px;" value="{{ $jamSelesai }}">
+                    </td>
+                </tr>
+
+            </table>
         </tr>
 
+
         <tr>
-            <td colspan="4" style="padding:10px 0;">
+            <td colspan="4" style="padding:-1px 0; font-size: 12px">
                 <strong>
                     Dilakukan Operasi / Jenis Operasi :
                     <span style="min-width:380px;display:inline-block;border-bottom:1px solid #000;">
@@ -131,7 +250,7 @@
 
 
         <tr>
-            <table>
+            <table style="font-size:11px; margin-bottom:5px;">
                 <tr>
                     <td>Tipe Operasi</td>
                     <td></td>
@@ -142,11 +261,8 @@
                     <td><label>Operasi ADC <input type="checkbox" {{ $laporanAnastesi->tipe_operasi == 'Operasi ADC' ? 'checked' : '' }}></label></td>
                 </tr>
             </table>
-        </tr>
-
-        <tr>
-            <table border="1" style="width:100%; border-collapse:collapse; font-size:11px;">
-                <tbody style="font-size:11px;">
+            <table border="1" style="width:100%; border-collapse:collapse; font-size:8px;">
+                <tbody style="font-size:8px;">
 
                     <!-- 1–10 (punyamu yang sudah rapi) -->
                     <tr>
@@ -206,28 +322,28 @@
                             <input type="text" style="width:120px; font-size:11px;">
                         </td>
                     </tr>
-                    
+
                     <tr>
                         <td style="padding:5px 2px;">5.</td>
                         <td style="padding:5px 2px;">Posisi Lengan</td>
 
                         <!-- Lengan Terentang -->
                         <td style="padding:5px 2px;">
-                            <input type="checkbox" {{ Str::contains($laporanAnastesi->posisi_pasien, ['Telentang','Terentang']) ? 'checked' : '' }}>
+                            <input type="checkbox" {{ Str::contains($laporanAnastesi->posisi_pasien, ['Telentang', 'Terentang']) ? 'checked' : '' }}>
                             Lengan Terentang Ka/Ki
                         </td>
 
                         <!-- Lengan Terlipat -->
                         <td style="padding:5px 2px;">
-                            <input type="checkbox" {{ Str::contains($laporanAnastesi->posisi_pasien, ['Terlipat','Telipat']) ? 'checked' : '' }}>
+                            <input type="checkbox" {{ Str::contains($laporanAnastesi->posisi_pasien, ['Terlipat', 'Telipat']) ? 'checked' : '' }}>
                             Lengan Terlipat Ka/Ki
                         </td>
                         @php
-                            $isElse = !Str::contains($laporanAnastesi->posisi_pasien, ['Terlipat','Telipat','Telentang','Terentang']);
+                            $isElse = !Str::contains($laporanAnastesi->posisi_pasien, ['Terlipat', 'Telipat', 'Telentang', 'Terentang']);
                         @endphp
                         <!-- Lain-lain -->
                         <td style="padding:5px 2px;">
-                            <input type="checkbox" >
+                            <input type="checkbox">
                             Lain-lain : <span style="underline : display" {{ $isElse ? 'checked' : '' }}>{{$isElse ?? $laporanAnastesi->posisi_pasien }}</span>
                         </td>
                     </tr>
@@ -243,60 +359,57 @@
                         </td>
                     </tr>
 
-                                    <tr>
+                    <tr>
                         <td style="padding:5px 2px;">7.</td>
                         <td style="padding:5px 2px;">Memakai Kateter Urin</td>
 
                         <!-- YA -->
                         <td style="padding:5px 2px;">
-                            <input type="checkbox"
-                                {{ $laporanAnastesi->pemasangan_kater_urin == 1 ? 'checked' : '' }}>
+                            <input type="checkbox" {{ $laporanAnastesi->pemasangan_kater_urin == 1 ? 'checked' : '' }}>
                             Ya
                         </td>
 
                         <!-- TIDAK -->
                         <td style="padding:5px 2px;">
-                            <input type="checkbox"
-                                {{ $laporanAnastesi->pemasangan_kater_urin == 0 ? 'checked' : '' }}>
+                            <input type="checkbox" {{ $laporanAnastesi->pemasangan_kater_urin == 0 ? 'checked' : '' }}>
                             Tidak
                         </td>
 
                         <!-- Pilihan lokasi jika YA -->
-                       
+
                         <td style="padding:5px 2px;">
                             Jika Ya:
-                            <input type="checkbox"
-                                {{ $laporanAnastesi->dilakukan_kater === 'Kamar Operasi' ? 'checked' : '' }}>
+                            <input type="checkbox" {{ $laporanAnastesi->dilakukan_kater === 'Kamar Operasi' ? 'checked' : '' }}>
                             Kamar Operasi
 
-                            <input type="checkbox"
-                                {{ $laporanAnastesi->dilakukan_kater === 'Ruangan' ? 'checked' : '' }}>
+                            <input type="checkbox" {{ $laporanAnastesi->dilakukan_kater === 'Ruangan' ? 'checked' : '' }}>
                             Ruangan
                         </td>
                     </tr>
 
 
-                                    <tr>
+                    <tr>
                         <td style="padding:5px 2px;">8.</td>
                         <td style="padding:5px 2px;">Persiapan Kulit</td>
 
                         <!-- Chlorhexidine / 70% -->
                         <td style="padding:5px 2px;">
-                            <input type="checkbox"
-                                {{ Str::contains($laporanAnastesi->persiapan_kulit, ['Chlorhexidine','70%']) ? 'checked' : '' }}>
+                            <input type="checkbox" {{ Str::contains($laporanAnastesi->persiapan_kulit, ['Chlorhexidine', '70%']) ? 'checked' : '' }}>
                             Chlorhexidine / 70%
                         </td>
 
                         <!-- Povidone-Iodine / Hibiscrub -->
                         <td style="padding:5px 2px;">
-                            <input type="checkbox"
-                                {{ Str::contains($laporanAnastesi->persiapan_kulit, ['Povidone','Hibiscrub']) ? 'checked' : '' }}>
+                            <input type="checkbox" {{ Str::contains($laporanAnastesi->persiapan_kulit, ['Povidone', 'Hibiscrub']) ? 'checked' : '' }}>
                             Povidone-Iodine / Hibiscrub
                         </td>
 
                         @php
                             $isElsePK = !Str::contains($laporanAnastesi->persiapan_kulit, [
-                                'Chlorhexidine','70%','Povidone','Hibiscrub'
+                                'Chlorhexidine',
+                                '70%',
+                                'Povidone',
+                                'Hibiscrub'
                             ]);
                         @endphp
 
@@ -309,39 +422,35 @@
                             </span>
                         </td>
                     </tr>
-                   
 
 
-                   <tr>
+
+                    <tr>
                         <td style="padding:5px 2px;">9.</td>
                         <td style="padding:5px 2px;">Pemakaian Diathermy</td>
 
                         <!-- Tidak -->
                         <td style="padding:5px 2px;">
-                            <input type="checkbox" 
-                                {{ $laporanAnastesiDtl->pemakaian_diathermy == 'Tidak' ? 'checked' : '' }}>
+                            <input type="checkbox" {{ $laporanAnastesiDtl->pemakaian_diathermy == 'Tidak' ? 'checked' : '' }}>
                             Tidak
                         </td>
 
                         <!-- Monopolar -->
                         <td style="padding:5px 2px;">
-                            <input type="checkbox" 
-                                {{  $laporanAnastesiDtl->pemakaian_diathermy == 1 && $laporanAnastesiDtl->lokasi_diathermy == 'Monopolar' ? 'checked' : '' }}>
+                            <input type="checkbox" {{  $laporanAnastesiDtl->pemakaian_diathermy == 1 && $laporanAnastesiDtl->lokasi_diathermy == 'Monopolar' ? 'checked' : '' }}>
                             Monopolar
                         </td>
 
                         <!-- Bipolar -->
                         <td>
                             <div>
-                                
-                                 <div style="padding:5px 2px;">
-                                    <input type="checkbox" 
-                                        {{  $laporanAnastesiDtl->pemakaian_diathermy == 1 && $laporanAnastesiDtl->lokasi_diathermy == 'Bipolar' ? 'checked' : '' }}>
-                                    Bipolar
-                                 </div>
+
                                 <div style="padding:5px 2px;">
-                                    <input type="checkbox" 
-                                        {{  $laporanAnastesiDtl->pemakaian_diathermy == 1 && !Str::contains($laporanAnastesiDtl->lokasi_diathermy,['Bipolar','Monopolar']) ? 'checked' : '' }}>
+                                    <input type="checkbox" {{  $laporanAnastesiDtl->pemakaian_diathermy == 1 && $laporanAnastesiDtl->lokasi_diathermy == 'Bipolar' ? 'checked' : '' }}>
+                                    Bipolar
+                                </div>
+                                <div style="padding:5px 2px;">
+                                    <input type="checkbox" {{  $laporanAnastesiDtl->pemakaian_diathermy == 1 && !Str::contains($laporanAnastesiDtl->lokasi_diathermy, ['Bipolar', 'Monopolar']) ? 'checked' : '' }}>
                                     Lainya : <span>{{ $laporanAnastesiDtl->lokasi_diathermy }}</span>
                                 </div>
                             </div>
@@ -349,11 +458,11 @@
                     </tr>
 
 
-                  @php
+                    @php
                         $val = $laporanAnastesiDtl->kode_elektrosurgical;
 
                         $isBokong = Str::contains($val, ['Bokong']);
-                        $isPaha   = Str::contains($val, ['Paha']);
+                        $isPaha = Str::contains($val, ['Paha']);
 
                         // jika bukan Bokong dan bukan Paha → berarti Lain-lain
                         $isLain = !$isBokong && !$isPaha;
@@ -379,17 +488,16 @@
                         <td style="padding:5px 2px;">
                             <input type="checkbox" {{ $isLain ? 'checked' : '' }}>
                             Lain-lain
-                            <input type="text" style="font-size:11px; width:120px;"
-                                value="{{ $isLain ? $val : '' }}">
+                            <input type="text" style="font-size:11px; width:120px;" value="{{ $isLain ? $val : '' }}">
                         </td>
                     </tr>
 
 
-                                    @php
+                    @php
                         $valPra = $laporanAnastesiDtl2->pemeriksaan_kondisi_kulit_pra_operasi;
 
                         $isUtuhPra = Str::contains($valPra, ['Utuh']);
-                        $isBengkakPra = Str::contains($valPra, ['Menggelembung','Bengkak']);
+                        $isBengkakPra = Str::contains($valPra, ['Menggelembung', 'Bengkak']);
                         $isLainPra = !$isUtuhPra && !$isBengkakPra;
                     @endphp
 
@@ -416,11 +524,11 @@
                     </tr>
 
 
-                                        @php
+                    @php
                         $valPra = $laporanAnastesiDtl2->pemeriksaan_kondisi_kulit_pra_operasi;
 
                         $isUtuhPra = Str::contains($valPra, ['Utuh']);
-                        $isBengkakPra = Str::contains($valPra, ['Menggelembung','Bengkak']);
+                        $isBengkakPra = Str::contains($valPra, ['Menggelembung', 'Bengkak']);
                         $isLainPra = !$isUtuhPra && !$isBengkakPra;
                     @endphp
 
@@ -449,7 +557,9 @@
 
                     <tr>
                         <td></td>
-                        <td style="padding:5px 2px;">(Kode Unit Electrosurgical {{ $laporanAnastesiDtl->kode_elektrosurgical }})</td>
+                        <td style="padding:5px 2px;">(Kode Unit Electrosurgical
+                            {{ $laporanAnastesiDtl->kode_elektrosurgical }})
+                        </td>
                         <td colspan="3" style="padding:5px 2px;"><input type="checkbox"> Tidak</td>
                     </tr>
 
@@ -464,13 +574,13 @@
                     <tr>
                         <td></td>
                         <td colspan="4" style="padding:5px 2px;">
-                            <span>Pengaturan temperatur mulai :   {{ $laporanAnastesiDtl->temperatur_mulai }} °C</span>
+                            <span>Pengaturan temperatur mulai : {{ $laporanAnastesiDtl->temperatur_mulai }} °C</span>
                             <br>
                             <span> (Kode Unit : {{ $laporanAnastesiDtl->kode_unit }})</span>
                             <br>
                             <span> Temperatur selesai : {{ $laporanAnastesiDtl->temperatur_selesai }}°C</span>
-                           
-                            
+
+
                         </td>
                     </tr>
 
@@ -479,12 +589,12 @@
                     <!-- =========================== -->
 
                     <!-- 11. Pemakaian Tourniguet -->
-                  
+
                     <tr>
                         <td style="padding:5px 2px;">11.</td>
                         <td style="padding:5px 2px;">Pemakaian Tourniguet<br>(Diawasi oleh ______)</td>
                         <td style="padding:5px 2px;"><input type="checkbox" {{ !empty($laporanAnastesiDtl->pengawas_tomiquet) || $laporanAnastesiDtl->pengawas_tomiquet != null ? 'checked' : '' }}> Ya</td>
-                        <td style="padding:5px 2px;"><input type="checkbox"  {{ empty($laporanAnastesiDtl->pengawas_tomiquet) || $laporanAnastesiDtl->pengawas_tomiquet == null ? 'checked' : '' }}> Tidak</td>
+                        <td style="padding:5px 2px;"><input type="checkbox" {{ empty($laporanAnastesiDtl->pengawas_tomiquet) || $laporanAnastesiDtl->pengawas_tomiquet == null ? 'checked' : '' }}> Tidak</td>
                         <td style="padding:5px 2px;"></td>
                     </tr>
 
@@ -503,60 +613,68 @@
                                 <!-- Lengan Kanan -->
                                 @php
                                     $lkCheck = $laporanAnastesiDtl->lengan_kanan_mulai
-                                            || $laporanAnastesiDtl->lengan_kanan_selesai
-                                            || $laporanAnastesiDtl->lengan_kanan_tekanan;
+                                        || $laporanAnastesiDtl->lengan_kanan_selesai
+                                        || $laporanAnastesiDtl->lengan_kanan_tekanan;
                                 @endphp
                                 <tr>
                                     <td style="padding:4px;">
                                         <input type="checkbox" {{ $lkCheck ? 'checked' : '' }}> Lengan Kanan
                                     </td>
-                                    <td>{{ $laporanAnastesiDtl->lengan_kanan_mulai ? date('H:i', strtotime($laporanAnastesiDtl->lengan_kanan_mulai)) : '' }}</td>
-                                    <td>{{ $laporanAnastesiDtl->lengan_kanan_selesai ? date('H:i', strtotime($laporanAnastesiDtl->lengan_kanan_selesai)) : '' }}</td>
+                                    <td>{{ $laporanAnastesiDtl->lengan_kanan_mulai ? date('H:i', strtotime($laporanAnastesiDtl->lengan_kanan_mulai)) : '' }}
+                                    </td>
+                                    <td>{{ $laporanAnastesiDtl->lengan_kanan_selesai ? date('H:i', strtotime($laporanAnastesiDtl->lengan_kanan_selesai)) : '' }}
+                                    </td>
                                     <td>{{ $laporanAnastesiDtl->lengan_kanan_tekanan }}</td>
                                 </tr>
 
                                 <!-- Kaki Kanan -->
                                 @php
                                     $kkCheck = $laporanAnastesiDtl->kaki_kanan_mulai
-                                            || $laporanAnastesiDtl->kaki_kanan_selesai
-                                            || $laporanAnastesiDtl->kaki_kanan_tekanan;
+                                        || $laporanAnastesiDtl->kaki_kanan_selesai
+                                        || $laporanAnastesiDtl->kaki_kanan_tekanan;
                                 @endphp
                                 <tr>
                                     <td style="padding:4px;">
                                         <input type="checkbox" {{ $kkCheck ? 'checked' : '' }}> Kaki Kanan
                                     </td>
-                                    <td>{{ $laporanAnastesiDtl->kaki_kanan_mulai ? date('H:i', strtotime($laporanAnastesiDtl->kaki_kanan_mulai)) : '' }}</td>
-                                    <td>{{ $laporanAnastesiDtl->kaki_kanan_selesai ? date('H:i', strtotime($laporanAnastesiDtl->kaki_kanan_selesai)) : '' }}</td>
+                                    <td>{{ $laporanAnastesiDtl->kaki_kanan_mulai ? date('H:i', strtotime($laporanAnastesiDtl->kaki_kanan_mulai)) : '' }}
+                                    </td>
+                                    <td>{{ $laporanAnastesiDtl->kaki_kanan_selesai ? date('H:i', strtotime($laporanAnastesiDtl->kaki_kanan_selesai)) : '' }}
+                                    </td>
                                     <td>{{ $laporanAnastesiDtl->kaki_kanan_tekanan }}</td>
                                 </tr>
 
                                 <!-- Lengan Kiri -->
                                 @php
                                     $lkiCheck = $laporanAnastesiDtl->lengan_kiri_mulai
-                                            || $laporanAnastesiDtl->lengan_kiri_selesai
-                                            || $laporanAnastesiDtl->lengan_kiri_tekanan;
+                                        || $laporanAnastesiDtl->lengan_kiri_selesai
+                                        || $laporanAnastesiDtl->lengan_kiri_tekanan;
                                 @endphp
                                 <tr>
                                     <td style="padding:4px;">
                                         <input type="checkbox" {{ $lkiCheck ? 'checked' : '' }}> Lengan Kiri
                                     </td>
-                                    <td>{{ $laporanAnastesiDtl->lengan_kiri_mulai ? date('H:i', strtotime($laporanAnastesiDtl->lengan_kiri_mulai)) : '' }}</td>
-                                    <td>{{ $laporanAnastesiDtl->lengan_kiri_selesai ? date('H:i', strtotime($laporanAnastesiDtl->lengan_kiri_selesai)) : '' }}</td>
+                                    <td>{{ $laporanAnastesiDtl->lengan_kiri_mulai ? date('H:i', strtotime($laporanAnastesiDtl->lengan_kiri_mulai)) : '' }}
+                                    </td>
+                                    <td>{{ $laporanAnastesiDtl->lengan_kiri_selesai ? date('H:i', strtotime($laporanAnastesiDtl->lengan_kiri_selesai)) : '' }}
+                                    </td>
                                     <td>{{ $laporanAnastesiDtl->lengan_kiri_tekanan }}</td>
                                 </tr>
 
                                 <!-- Kaki Kiri -->
                                 @php
                                     $kkiCheck = $laporanAnastesiDtl->kaki_kiri_mulai
-                                            || $laporanAnastesiDtl->kaki_kiri_selesai
-                                            || $laporanAnastesiDtl->kaki_kiri_tekanan;
+                                        || $laporanAnastesiDtl->kaki_kiri_selesai
+                                        || $laporanAnastesiDtl->kaki_kiri_tekanan;
                                 @endphp
                                 <tr>
                                     <td style="padding:4px;">
                                         <input type="checkbox" {{ $kkiCheck ? 'checked' : '' }}> Kaki Kiri
                                     </td>
-                                    <td>{{ $laporanAnastesiDtl->kaki_kiri_mulai ? date('H:i', strtotime($laporanAnastesiDtl->kaki_kiri_mulai)) : '' }}</td>
-                                    <td>{{ $laporanAnastesiDtl->kaki_kiri_selesai ? date('H:i', strtotime($laporanAnastesiDtl->kaki_kiri_selesai)) : '' }}</td>
+                                    <td>{{ $laporanAnastesiDtl->kaki_kiri_mulai ? date('H:i', strtotime($laporanAnastesiDtl->kaki_kiri_mulai)) : '' }}
+                                    </td>
+                                    <td>{{ $laporanAnastesiDtl->kaki_kiri_selesai ? date('H:i', strtotime($laporanAnastesiDtl->kaki_kiri_selesai)) : '' }}
+                                    </td>
                                     <td>{{ $laporanAnastesiDtl->kaki_kiri_tekanan }}</td>
                                 </tr>
                             </table>
@@ -567,10 +685,11 @@
                     <tr>
                         <td style="padding:5px 2px;">12.</td>
                         <td colspan="4" style="padding:5px 2px;">
-                            Pemakaian Laser — Kode Model: 
+                            Pemakaian Laser — Kode Model:
                             <input type="text" style="width:200px; font-size:11px;" value={{  $laporanAnastesiDtl->kode_model ?? '-' }}>
                             <br>
-                            (Diawasi oleh  <span style="underline : display;">  {{ $laporanAnastesiDtl->pengawas_laser }}</span> )
+                            (Diawasi oleh <span style="underline : display;">
+                                {{ $laporanAnastesiDtl->pengawas_laser }}</span> )
                         </td>
                     </tr>
 
@@ -579,17 +698,23 @@
                         <td style="padding:5px 2px;">13.</td>
                         <td style="padding:5px 2px;">Pemakaian Implant</td>
                         <td style="padding:5px 2px;"><input type="checkbox" {{  $laporanAnastesiDtl->pemakaian_implant == '1' ? 'checked' : '' }}> Ya</td>
-                        <td style="padding:5px 2px;"><input type="checkbox"  {{  $laporanAnastesiDtl->pemakaian_implant == '0' ? 'checked' : '' }}> Tidak</td>
+                        <td style="padding:5px 2px;"><input type="checkbox" {{  $laporanAnastesiDtl->pemakaian_implant == '0' ? 'checked' : '' }}> Tidak</td>
                         <td style="padding:5px 2px;"><input type="checkbox"> Kadaluwarsa ______________</td>
                     </tr>
 
                     <tr>
                         <td></td>
-                        <td style="padding:5px 2px;"><p><strong>Pabrik:</strong> {{ $laporanAnastesiDtl->pabrik }}</p>
+                        <td style="padding:5px 2px;">
+                            <p><strong>Pabrik:</strong> {{ $laporanAnastesiDtl->pabrik }}</p>
                         </td>
-                        <td style="padding:5px 2px;"> <p><strong>Size:</strong> {{ $laporanAnastesiDtl->size }}</p></td>
-                        <td style="padding:5px 2px;">    <p><strong>Type:</strong> {{ $laporanAnastesiDtl->type }}</p></td>
-                        <td style="padding:5px 2px;">  <p><strong>No Seri:</strong> {{ $laporanAnastesiDtl->no_seri }}</p>
+                        <td style="padding:5px 2px;">
+                            <p><strong>Size:</strong> {{ $laporanAnastesiDtl->size }}</p>
+                        </td>
+                        <td style="padding:5px 2px;">
+                            <p><strong>Type:</strong> {{ $laporanAnastesiDtl->type }}</p>
+                        </td>
+                        <td style="padding:5px 2px;">
+                            <p><strong>No Seri:</strong> {{ $laporanAnastesiDtl->no_seri }}</p>
                         </td>
                     </tr>
 
@@ -604,12 +729,13 @@
 
 
 
+
         </tr>
     </table>
     <br><br>
 
     <!-- Hitung Instrumen / Kassa / Jarum -->
-    <table border="1" style="width:100%; border-collapse:collapse; font-size:11px;">
+    <table border="1" style="margin-top:-1px;width:100%; border-collapse:collapse; font-size:11px;">
         <tr>
             <th style="padding:5px 2px;">Hitung</th>
             <th style="padding:5px 2px;">Kassa</th>
@@ -646,17 +772,20 @@
             <td></td>
 
             <td style="padding:5px 2px;">
-                <input type="checkbox" {{ $laporanAnastesiDtl2->kassa_tidak_lengkap ? 'checked' : '' }}> Tidak Lengkap <br>
+                <input type="checkbox" {{ $laporanAnastesiDtl2->kassa_tidak_lengkap ? 'checked' : '' }}> Tidak Lengkap
+                <br>
                 <input type="checkbox" {{ $laporanAnastesiDtl2->kassa_tidak_perlu ? 'checked' : '' }}> Tidak Perlu
             </td>
 
             <td style="padding:5px 2px;">
-                <input type="checkbox" {{ $laporanAnastesiDtl2->jarum_tidak_lengkap ? 'checked' : '' }}> Tidak Lengkap <br>
+                <input type="checkbox" {{ $laporanAnastesiDtl2->jarum_tidak_lengkap ? 'checked' : '' }}> Tidak Lengkap
+                <br>
                 <input type="checkbox" {{ $laporanAnastesiDtl2->jarum_tidak_perlu ? 'checked' : '' }}> Tidak Perlu
             </td>
 
             <td style="padding:5px 2px;">
-                <input type="checkbox" {{ $laporanAnastesiDtl2->instrumen_tidak_lengkap ? 'checked' : '' }}> Tidak Lengkap <br>
+                <input type="checkbox" {{ $laporanAnastesiDtl2->instrumen_tidak_lengkap ? 'checked' : '' }}> Tidak
+                Lengkap <br>
                 <input type="checkbox" {{ $laporanAnastesiDtl2->instrumen_tidak_perlu ? 'checked' : '' }}> Tidak Perlu
             </td>
         </tr>
@@ -666,28 +795,28 @@
     <br>
 
     <!-- Hitungan ACC -->
-   <p style="font-size:12px;">
-    Hitungan ACC oleh Dokter Bedah,<br>
-    Tanda tangan dan Nama jelas : ___________________________________________<br><br>
+    <p style="font-size:12px;">
+        Hitungan ACC oleh Dokter Bedah,<br>
+        Tanda tangan dan Nama jelas : ___________________________________________<br><br>
 
-    Catatan:<br>
-    Jika dihitung tidak lengkap, setelah dicari tidak ditemukan → X-Ray:
-    <input type="checkbox" {{ $laporanAnastesiDtl2->dilakukan_xray == 1 ? 'checked' : '' }}> Ya
-    <input type="checkbox" {{ $laporanAnastesiDtl2->dilakukan_xray == 0 ? 'checked' : '' }}> Tidak<br>
+        Catatan:<br>
+        Jika dihitung tidak lengkap, setelah dicari tidak ditemukan → X-Ray:
+        <input type="checkbox" {{ $laporanAnastesiDtl2->dilakukan_xray == 1 ? 'checked' : '' }}> Ya
+        <input type="checkbox" {{ $laporanAnastesiDtl2->dilakukan_xray == 0 ? 'checked' : '' }}> Tidak<br>
 
-    Bila lengkap, Dokter Bedah langsung tanda tangan.<br><br>
+        Bila lengkap, Dokter Bedah langsung tanda tangan.<br><br>
 
-    Penggunaan tampon :
-    <input type="checkbox" {{ $laporanAnastesiDtl2->penggunaan_tampon == 1 ? 'checked' : '' }}> Ya
-    <input type="checkbox" {{ $laporanAnastesiDtl2->penggunaan_tampon == 0 ? 'checked' : '' }}> Tidak
+        Penggunaan tampon :
+        <input type="checkbox" {{ $laporanAnastesiDtl2->penggunaan_tampon == 1 ? 'checked' : '' }}> Ya
+        <input type="checkbox" {{ $laporanAnastesiDtl2->penggunaan_tampon == 0 ? 'checked' : '' }}> Tidak
 
-    {{-- Jika YA, tampilkan jenis tampon --}}
-    @if ($laporanAnastesiDtl2->penggunaan_tampon == 1)
-        Jenis tampon: {{ $laporanAnastesiDtl2->jenis_tampon }}
-    @else
-        Jenis tampon __________________
-    @endif
-</p>
+        {{-- Jika YA, tampilkan jenis tampon --}}
+        @if ($laporanAnastesiDtl2->penggunaan_tampon == 1)
+            Jenis tampon: {{ $laporanAnastesiDtl2->jenis_tampon }}
+        @else
+            Jenis tampon __________________
+        @endif
+    </p>
 
     <br>
 
@@ -734,14 +863,15 @@
 
     <!-- Irigasi Luka -->
     {{-- ===================== --}}
-{{-- 16. IRIGASI LUKA --}}
-{{-- ===================== --}}
+    {{-- 16. IRIGASI LUKA --}}
+    {{-- ===================== --}}
     @php
         // Data irigasi luka berupa string, contoh: "Sodium Chloride 0,9%, Antibiotik"
         $irigasi = strtolower($laporanAnastesiDtl2->irigasi_luka ?? '');
 
-        function cekIrigasi($label, $irigasi) {
-            return str_contains($irigasi, strtolower($label)) ? 'checked' : '';
+        function cekIrigasi($label, $irigasi)
+        {
+            return Str::contains($irigasi, strtolower($label)) ? 'checked' : '';
         }
     @endphp
 
@@ -749,7 +879,7 @@
 
     <p style="font-size:12px;">
         <input type="checkbox" {{ cekIrigasi('Sodium Chloride', $irigasi) }}> Sodium Chloride 0,9% &nbsp;&nbsp;
-        <input type="checkbox" {{ cekIrigasi('Anti Wolik Spray', $irigasi) }}> Anti Wolik Spray &nbsp;&nbsp;
+        <input type="checkbox" {{ cekIrigasi('Antiwolik Spray', $irigasi) }}> Anti Wolik Spray &nbsp;&nbsp;
         <input type="checkbox" {{ cekIrigasi('Antibiotik', $irigasi) }}> Antibiotik <br>
 
         <input type="checkbox" {{ cekIrigasi('H2O2', $irigasi) }}> H<sub>2</sub>O<sub>2</sub> &nbsp;&nbsp;
@@ -762,21 +892,52 @@
     {{-- ===================== --}}
     @php
         $pemakaianCairan = json_decode($laporanAnastesiDtl2->pemakaian_cairan, true) ?: [];
-        // Helper untuk cek apakah jenis cairan dipakai
-        function cekCairan($jenis, $arr) {
-            foreach ($arr as $item) {
-                if (strtolower($item['jenis']) === strtolower($jenis)) {
-                    return $item['jumlah'] ?? '';
-                }
-            }
-            return null; // tidak ada
+
+        // Normalisasi nama
+        function norm($text)
+        {
+            return strtolower(trim($text));
         }
 
-        $glysin = cekCairan('Glysin', $pemakaianCairan);
-        $bss = cekCairan('BSS Solution', $pemakaianCairan);
-        $airIrigasi = cekCairan('Air untuk irigasi', $pemakaianCairan);
-        $normalSaline = cekCairan('Sodium Chloride 0.9%', $pemakaianCairan);
+        // SUM cairan berdasarkan jenis (bukan hanya cari sekali)
+        function sumCairan($keyword, $arr)
+        {
+            $key = norm($keyword);
+            $total = 0;
+
+            foreach ($arr as $item) {
+                if (norm($item['jenis']) === $key) {
+                    $total += (float) ($item['jumlah'] ?? 0);
+                }
+            }
+
+            return $total > 0 ? $total : null;
+        }
+
+        // panggil
+        $glysin = sumCairan('Glysin', $pemakaianCairan);
+        $bss = sumCairan('BSS Solution', $pemakaianCairan);
+        $airIrigasi = sumCairan('Air untuk irigasi', $pemakaianCairan);
+        $normalSaline = sumCairan('Sodium Chloride 0.9%', $pemakaianCairan);
+
+        // daftar utama (untuk memisahkan lain-lain)
+        $known = [
+            norm('Glysin'),
+            norm('BSS Solution'),
+            norm('Air untuk irigasi'),
+            norm('Sodium Chloride 0.9%'),
+        ];
+
+        // kumpulkan jenis yang bukan utama
+        $lain2 = [];
+        foreach ($pemakaianCairan as $item) {
+            if (!in_array(norm($item['jenis']), $known)) {
+                $lain2[] = $item['jenis'] . ' (' . $item['jumlah'] . ' L)';
+            }
+        }
     @endphp
+
+
 
     <p style="font-size:12px;"><b>17. Pemakaian Cairan</b></p>
 
@@ -784,80 +945,146 @@
 
         {{-- Glysin --}}
         <input type="checkbox" {{ $glysin !== null ? 'checked' : '' }}>
-        Glysin: {{ $glysin !== null ? $glysin : '_______' }} Liter &nbsp;&nbsp;
+        Glysin: {{ $glysin ?? '_______' }} Liter &nbsp;&nbsp;
 
         {{-- BSS --}}
         <input type="checkbox" {{ $bss !== null ? 'checked' : '' }}>
         BSS Solution <br>
 
         {{-- Air irigasi --}}
-        Air untuk irigasi: {{ $airIrigasi !== null ? $airIrigasi : '_______' }} Liter <br>
+        Air untuk irigasi: {{ $airIrigasi ?? '_______' }} Liter <br>
 
         {{-- Sodium Chloride --}}
         <input type="checkbox" {{ $normalSaline !== null ? 'checked' : '' }}>
-        Sodium Chloride 0.9%: {{ $normalSaline !== null ? $normalSaline : '_______' }} Liter &nbsp;&nbsp;
+        Sodium Chloride 0.9%: {{ $normalSaline ?? '_______' }} Liter &nbsp;&nbsp;
 
         {{-- Lain-lain --}}
-        @php
-            // ekstrak semua jenis lain-lain selain yang utama
-            $known = ['glysin','bss solution','air untuk irigasi','sodium chloride 0.9%'];
-            $lain2 = [];
-
-            foreach ($pemakaianCairan as $item) {
-                if (!in_array(strtolower($item['jenis']), $known)) {
-                    $lain2[] = $item['jenis'] . ' (' . $item['jumlah'] . ' L)';
-                }
-            }
-        @endphp
-
         <input type="checkbox" {{ count($lain2) > 0 ? 'checked' : '' }}>
         Lain-lain {{ count($lain2) > 0 ? implode(', ', $lain2) : '____________________________' }}
 
     </p>
 
 
+
     <!-- Alat-alat Terbungkus -->
     <p style="font-size:12px;"><b>18. Alat-alat Terbungkus</b></p>
     <p style="font-size:12px;">
         <input type="checkbox"> Tidak Ada &nbsp;&nbsp;
-        <input type="checkbox"> Ada (Jenis: ____________________________) &nbsp;&nbsp;
+        <input type="checkbox" {{ $laporanAnastesiDtl2->alat_terbungkus ? 'checked' : '' }}>Ada (Jenis:
+        {{ $laporanAnastesiDtl2->alat_terbungkus }}) &nbsp;&nbsp;
         <input type="checkbox"> Lain-lain ____________________________
     </p>
 
     <!-- Balutan -->
     <p style="font-size:12px;"><b>19. Balutan</b></p>
     <p style="font-size:12px;">
-        <input type="checkbox"> Tidak Ada &nbsp;&nbsp;
-        <input type="checkbox"> Pressure &nbsp;&nbsp;
-        (Jenis: ____________________________)
+        <input type="checkbox" {{ $laporanAnastesiDtl2->balutan_luka == null ? 'checked' : '' }}> Tidak Ada &nbsp;&nbsp;
+        <input type="checkbox" {{ $laporanAnastesiDtl2->balutan_luka != null ? 'checked' : '' }}> Ada &nbsp;&nbsp;
+        (Jenis: {{ $laporanAnastesiDtl2->balutan_luka }})
     </p>
 
-    <!-- Spesimen -->
-    <p style="font-size:12px;"><b>20. Spesimen</b></p>
+    {{-- Spesimen --}}
+    @php
+        $spesimen = json_decode($laporanAnastesiDtl2->spesimen, true) ?: [];
+
+        // List kategori default
+        $kategoriList = [
+            'Histologi' => 0,
+            'Kultur' => 0,
+            'Frozen Section' => 0,
+            'Sitologi' => 0,
+            'Lain-lain' => 0,
+        ];
+
+        // Penjumlahan otomatis
+        foreach ($spesimen as $item) {
+            $kategori = $item['kategori'];
+            $nilai = is_numeric($item['jenis']) ? (int) $item['jenis'] : 0;
+
+            if (array_key_exists($kategori, $kategoriList)) {
+                $kategoriList[$kategori] += $nilai;
+            } else {
+                // Jika kategori tidak dikenal → masuk ke "Lain-lain"
+                $kategoriList['Lain-lain'] += $nilai;
+            }
+        }
+
+        // Untuk tampilan: jika nilai 0 → garis kosong
+        function tampil($v)
+        {
+            return $v > 0 ? $v : '_______';
+        }
+    @endphp
+
+    <p style="font-size:12px; margin-bottom:0px;">
+        <b>20. Spesimen</b>
+    </p>
+
+    <table style="font-size:12px; width:100%; border-collapse:collapse;">
+        <tr>
+            <td>Histologi (Jenis {{ tampil($kategoriList['Histologi']) }})</td>
+            <td>Kultur (Jenis {{ tampil($kategoriList['Kultur']) }})</td>
+            <td>Frozen Section (Jenis {{ tampil($kategoriList['Frozen Section']) }})</td>
+        </tr>
+
+        <tr>
+            <td>
+                <input type="checkbox" {{ $kategoriList['Sitologi'] > 0 ? 'checked' : '' }}>
+                Sitologi (Jenis {{ tampil($kategoriList['Sitologi']) }})
+            </td>
+
+            <td>
+                <input type="checkbox" {{ $kategoriList['Lain-lain'] > 0 ? 'checked' : '' }}>
+                Lain-lain (Jenis {{ tampil($kategoriList['Lain-lain']) }})
+            </td>
+
+            <td></td>
+        </tr>
+    </table>
+
+    <br>
+
     <p style="font-size:12px;">
-        <input type="checkbox"> Histologi (Jenis __________) &nbsp;&nbsp;
-        <input type="checkbox"> Kultur (Jenis __________) &nbsp;&nbsp;
-        <input type="checkbox"> Frozen Section <br>
 
-        <input type="checkbox"> Sitologi (Jenis __________) &nbsp;&nbsp;
-        <input type="checkbox"> Lain-lain (Jenis __________)
+        <b>Jumlah Total Jaringan / Cairan Pemeriksaan :</b>
+        {{ $laporanAnastesiDtl2->total_jaringan_cairan_pemeriksaan ?? '-' }} <br><br>
+
+        <b>Spesimen untuk pasien</b>
+        Jenis dari jaringan: {{ $laporanAnastesiDtl2->jenis_jaringan ?? '-' }}<br>
+        Jumlah dari jaringan: {{ $laporanAnastesiDtl2->jumlah_jaringan ?? '-' }}<br><br>
+
+        <b>Keterangan</b>
+        {{ $laporanAnastesiDtl2->keterangan ?: 'Tidak ada keterangan' }}<br><br>
+
+        @php
+            $perawatInstrumen = $perawat
+                ->where('kd_perawat', $laporanAnastesi->perawat_instrumen)
+                ->first();
+
+            $perawatSirkuler = $perawat
+                ->where('kd_perawat', $laporanAnastesi->perawat_sirkuler)
+                ->first();
+
+            if ($laporanAnastesi->tanggal_jam_pencatatan) {
+                $tgl = \Carbon\Carbon::parse($laporanAnastesi->tanggal_jam_pencatatan)->format('d-m-Y');
+                $jam = \Carbon\Carbon::parse($laporanAnastesi->tanggal_jam_pencatatan)->format('H:i');
+            } else {
+                $tgl = '-';
+                $jam = '-';
+            }
+        @endphp
+
+        Nama jelas dan tanda tangan perawat instrumen:
+        {{ $perawatInstrumen ? $perawatInstrumen->nama : 'Tidak ada data' }}<br>
+
+        Nama jelas dan tanda tangan perawat sirkuler:
+        {{ $perawatSirkuler ? $perawatSirkuler->nama : 'Tidak ada data' }}<br><br>
+
+        Tanggal: {{ $tgl }} &nbsp;&nbsp;&nbsp;
+        Jam: {{ $jam }}
     </p>
 
-    <!-- Jumlah Total Jaringan -->
-    <p style="font-size:12px;">
-        Jumlah Total Jaringan/Cairan Pemeriksaan: ________________________________________________<br><br>
 
-        <b>Spesimen untuk pasien</b><br>
-        Jenis dari jaringan: ________________________________________________<br>
-        Jumlah dari jaringan: ________________________________________________<br><br>
-
-        <b>Keterangan</b><br>
-        ___________________________________________________________________________________________<br><br>
-
-        Nama jelas dan tanda tangan perawat instrumen: _______________________________<br>
-        Nama jelas dan tanda tangan perawat sirkuler: _______________________________<br>
-        Tanggal: ____________________ &nbsp;&nbsp; Jam: ____________________
-    </p>
 
 </body>
 
