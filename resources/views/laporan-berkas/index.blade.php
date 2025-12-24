@@ -5,20 +5,24 @@
     @php
         $dataCard = [
             [
-                "name_card" => "Master Berkas Digital",
-                "url" => "#"
+                "name" => "Master Berkas Digital",
+                "url" => "#",
+                'color' => 'info',
             ],
             [
-                "name_card" => "Setting Berkas Claim",
-                "url" => "#"
+                "name" => "Setting Berkas Claim",
+                "url" => "#",
+                'color' => 'info',
             ],
             [
-                "name_card" => "Berkas Digital",
-                "url" => "#"
+                "name" => "Berkas Digital",
+                "url" => "#",
+                'color' => 'info',
             ],
             [
-                "name_card" => "Setting Urutan Berkas Digital",
-                "url" => "#"
+                "name" => "Setting Urutan Berkas Digital",
+                "url" => "#",
+                'color' => 'info',
             ]
         ]
     @endphp
@@ -26,19 +30,17 @@
         @foreach ($dataCard as $item)
             <div class="col-xl-3 col-lg-4 col-md-6">
                 <a href="{{ $item['url'] ?? '#' }}" class="text-decoration-none">
-                    <div class="card card-dashboard shadow-sm h-100">
-                        <div class="card-body d-flex align-items-center gap-3">
-                            <div class="icon-box">
+                    <x-content-card>
+
+                        <div class="d-flex align-items-center">
+                            <div class="bg-{{ $item['color'] }} text-white rounded p-3 me-3">
                                 <i class="{{ $item['icon'] ?? 'bi bi-folder2' }}"></i>
                             </div>
                             <div>
-                                <p class="mb-0 fs-5 card-title text-primary fw-bold">
-                                    {{ $item['name_card'] }}
-                                </p>
+                                <small class="fw-semibold">{{ $item['name'] }}</small>
                             </div>
                         </div>
-                    </div>
-
+                    </x-content-card>
                 </a>
             </div>
         @endforeach
