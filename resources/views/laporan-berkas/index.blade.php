@@ -26,21 +26,19 @@
         @foreach ($dataCard as $item)
             <div class="col-xl-3 col-lg-4 col-md-6">
                 <a href="{{ $item['url'] ?? '#' }}" class="text-decoration-none">
-                    <div class="card card-dashboard shadow-sm">
+                    <div class="card card-dashboard shadow-sm h-100">
                         <div class="card-body d-flex align-items-center gap-3">
                             <div class="icon-box">
                                 <i class="{{ $item['icon'] ?? 'bi bi-folder2' }}"></i>
                             </div>
                             <div>
-                                <p class="mb-0 card-title">
+                                <p class="mb-0 fs-5 card-title text-primary fw-bold">
                                     {{ $item['name_card'] }}
                                 </p>
-                                <small class="text-muted">
-                                    {{ $item['subtitle'] ?? 'Kelola data' }}
-                                </small>
                             </div>
                         </div>
                     </div>
+
                 </a>
             </div>
         @endforeach
