@@ -30,7 +30,7 @@
                     return in_array($menu->name, ['Unit Pelayanan', 'unit pelayanan']);
                 });
                 $lainLainMenus = $allMenus->filter(function ($menu) {
-                    return in_array($menu->name, ['Transfusi Darah', 'transfusi darah', 'Laporan Berkas', 'laporan berkas']);
+                    return in_array($menu->name, ['Transfusi Darah', 'transfusi darah', 'Berkas Digital', 'berkas digital']);
                 });
 
                 $otherMenus = $allMenus->filter(function ($menu) {

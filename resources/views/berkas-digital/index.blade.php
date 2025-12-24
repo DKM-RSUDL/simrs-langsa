@@ -5,28 +5,28 @@
     @php
         $dataCard = [
             [
-                "name" => "Master Berkas Digital",
-                "url" => "#",
+                'name' => 'Master Berkas Digital',
+                'url' => route('berkas-digital.master.index'),
                 'color' => 'info',
             ],
             [
-                "name" => "Setting Berkas Claim",
-                "url" => "#",
+                'name' => 'Setting Berkas Klaim',
+                'url' => route('berkas-digital.setting.index'),
                 'color' => 'info',
             ],
             [
-                "name" => "Berkas Digital",
-                "url" => "#",
+                'name' => 'Berkas Digital',
+                'url' => '#',
                 'color' => 'info',
             ],
             [
-                "name" => "Setting Urutan Berkas Digital",
-                "url" => "#",
+                'name' => 'Setting Urutan Berkas Digital',
+                'url' => '#',
                 'color' => 'info',
-            ]
-        ]
+            ],
+        ];
     @endphp
-    <div class="row g-4">
+    <div class="row">
         @foreach ($dataCard as $item)
             <div class="col-xl-3 col-lg-4 col-md-6">
                 <a href="{{ $item['url'] ?? '#' }}" class="text-decoration-none">
@@ -34,7 +34,7 @@
 
                         <div class="d-flex align-items-center">
                             <div class="bg-{{ $item['color'] }} text-white rounded p-3 me-3">
-                                <i class="{{ $item['icon'] ?? 'bi bi-folder2' }}"></i>
+                                <i class="{{ $item['icon'] ?? 'fas fa-folder-open' }}"></i>
                             </div>
                             <div>
                                 <small class="fw-semibold">{{ $item['name'] }}</small>
@@ -45,8 +45,4 @@
             </div>
         @endforeach
     </div>
-
-
-
-
 @endsection
