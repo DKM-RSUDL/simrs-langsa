@@ -10,8 +10,11 @@ Route::prefix('master')->name('.master')->group(function () {
     });
 });
 
-Route::prefix('setting')->name('.setting')->group(function () {
+
+Route::prefix('setting')->name('setting.')->group(function () {
     Route::controller(SettingBerkasController::class)->group(function () {
-        Route::get('/', 'index')->name('.index');
+        Route::get('/', 'index')->name('index');
+        Route::get('/show/{id}', 'show')->name('show');
+        Route::put('/update/{id}', 'update')->name('update');
     });
 });
