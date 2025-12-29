@@ -40,7 +40,7 @@
                         'Transfusi Darah',
                         'transfusi darah',
                         'Laporan Berkas',
-                        'laporan berkas'
+                        'laporan berkas',
                     ]);
                 });
 

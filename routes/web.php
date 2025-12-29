@@ -55,25 +55,25 @@ Route::middleware('ssoToken')->group(function () {
     // Grup rute untuk Unit Pelayanan\
     Route::prefix('unit-pelayanan')->group(function () {
         // Rute untuk Rawat Jalan
-        require __DIR__ . '/modules/rawat-jalan.php';
+        require __DIR__.'/modules/rawat-jalan.php';
 
         // Rute untuk Rawat Inap
-        require __DIR__ . '/modules/rawat-inap.php';
+        require __DIR__.'/modules/rawat-inap.php';
 
         // Rute untuk Gawat Darurat
-        require __DIR__ . '/modules/gawat-darurat.php';
+        require __DIR__.'/modules/gawat-darurat.php';
 
         // Rute untuk Forensik
-        require __DIR__ . '/modules/forensik.php';
+        require __DIR__.'/modules/forensik.php';
 
         // Rute untuk Rehab Medik
-        require __DIR__ . '/modules/rehab-medis.php';
+        require __DIR__.'/modules/rehab-medis.php';
 
         // Rute untuk Operasi
-        require __DIR__ . '/modules/operasi.php';
+        require __DIR__.'/modules/operasi.php';
 
         // Rute untuk Operasi
-        require __DIR__ . '/modules/hemodelisa.php';
+        require __DIR__.'/modules/hemodelisa.php';
     });
 
     // TRANSFUSI DARAH
@@ -97,13 +97,13 @@ Route::middleware('ssoToken')->group(function () {
         });
     });
 
-    Route::prefix('berkas-digital')->name('berkas-digital')->group(function () {
-        Route::controller(LaporanBerkasController::class)->group(function () {
-            Route::get('/', 'index')->name('.index');
+    Route::prefix('berkas-digital')->name('berkas-digital.')->group(function () {
 
-            // Sub Menu Berkas Digital
-            require __DIR__ . '/modules/berkas-digital.php';
+        Route::controller(LaporanBerkasController::class)->group(function () {
+            Route::get('/', 'index')->name('index');
         });
+
+        require __DIR__.'/modules/berkas-digital.php';
     });
 
     // BPJS
