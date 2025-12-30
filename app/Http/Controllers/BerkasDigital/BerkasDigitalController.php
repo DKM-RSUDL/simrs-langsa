@@ -9,6 +9,6 @@ class BerkasDigitalController extends Controller
 {
     public function index()
     {
-        return "halaman berkas digital";
+        return view('berkas-digital.document.index');
     }
 }
