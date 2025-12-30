@@ -4,7 +4,7 @@ namespace App\Http\Controllers\BerkasDigital;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\BerkasDigital;
+use App\Models\MasterBerkasDigital; // Nama model baru
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
 
@@ -12,18 +12,15 @@ class MasterBerkasController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('can:read berkas-digital'); // [cite: 1390]
+        $this->middleware('can:read berkas-digital');
     }
 
     public function index(Request $request)
     {
-        // Mengambil kata kunci dari input pencarian
         $keyword = $request->get('keyword');
+        $query = MasterBerkasDigital::query();
 
-        // Query dasar ke tabel RME_MR_BERKAS_DIGITAL
-        $query = BerkasDigital::query();
-
-        // Jika ada keyword, saring berdasarkan nama_berkas atau id
+        // Fitur Pencarian Berfungsi
         if (!empty($keyword)) {
             $query->where(function ($q) use ($keyword) {
                 $q->where('nama_berkas', 'LIKE', "%$keyword%")
@@ -31,46 +28,40 @@ class MasterBerkasController extends Controller
             });
         }
 
-        // Mengambil data hasil query
         $berkas = $query->get();
-
         return view('berkas-digital.master.index', compact('berkas'));
     }
 
     public function store(Request $request)
     {
-        $request->validate([
-            'nama_berkas' => 'required',
-        ]);
+        $request->validate(['nama_berkas' => 'required']);
 
-        BerkasDigital::create([
+        MasterBerkasDigital::create([
             'nama_berkas' => $request->nama_berkas,
-            'slug'        => Str::slug($request->nama_berkas, '_'), // Generate slug otomatis
+            'slug'        => Str::slug($request->nama_berkas, '_'), // Slug otomatis
             'user_create' => Auth::user()->name,
         ]);
 
-        return redirect()->back()->with('success', 'Master Berkas berhasil ditambah!');
+        return redirect()->back()->with('success', 'Data berhasil ditambah!');
     }
 
     public function update(Request $request, $id)
     {
-        $request->validate([
-            'nama_berkas' => 'required',
-        ]);
+        $request->validate(['nama_berkas' => 'required']);
 
-        $berkas = BerkasDigital::findOrFail($id);
+        $berkas = MasterBerkasDigital::findOrFail($id);
         $berkas->update([
             'nama_berkas' => $request->nama_berkas,
             'slug'        => Str::slug($request->nama_berkas, '_'),
             'user_update' => Auth::user()->name,
         ]);
 
-        return redirect()->back()->with('success', 'Master Berkas berhasil diperbarui!');
+        return redirect()->back()->with('success', 'Data berhasil diperbarui!');
     }
 
     public function destroy($id)
     {
-        BerkasDigital::findOrFail($id)->delete();
-        return redirect()->back()->with('success', 'Master Berkas berhasil dihapus!');
+        MasterBerkasDigital::findOrFail($id)->delete();
+        return redirect()->back()->with('success', 'Data berhasil dihapus!');
     }
 }

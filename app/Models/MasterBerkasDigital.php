@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class BerkasDigital extends Model
+class MasterBerkasDigital extends Model
 {
     protected $table = 'RME_MR_BERKAS_DIGITAL'; // Sesuai nama tabel di Navicat Anda
 
