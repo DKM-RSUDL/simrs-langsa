@@ -4,8 +4,7 @@ namespace App\Http\Controllers\BerkasDigital;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\MasterBerkasDigital; // Nama model baru
-use Illuminate\Support\Str;
+use App\Models\MasterBerkasDigital;
 use Illuminate\Support\Facades\Auth;
 
 class MasterBerkasController extends Controller
@@ -20,12 +19,9 @@ class MasterBerkasController extends Controller
         $keyword = $request->get('keyword');
         $query = MasterBerkasDigital::query();
 
-        // Fitur Pencarian Berfungsi
         if (!empty($keyword)) {
-            $query->where(function ($q) use ($keyword) {
-                $q->where('nama_berkas', 'LIKE', "%$keyword%")
-                    ->orWhere('id', 'LIKE', "%$keyword%");
-            });
+            $query->where('nama_berkas', 'LIKE', "%$keyword%")
+                ->orWhere('id', 'LIKE', "%$keyword%");
         }
 
         $berkas = $query->get();
@@ -34,29 +30,40 @@ class MasterBerkasController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate(['nama_berkas' => 'required']);
+        try {
+            $request->validate([
+                'nama_berkas' => 'required|unique:RME_MR_BERKAS_DIGITAL,nama_berkas',
+            ], [
+                'nama_berkas.unique' => 'Nama berkas ini sudah terdaftar di sistem.'
+            ]);
 
-        MasterBerkasDigital::create([
-            'nama_berkas' => $request->nama_berkas,
-            'slug'        => Str::slug($request->nama_berkas, '_'), // Slug otomatis
-            'user_create' => Auth::user()->name,
-        ]);
+            MasterBerkasDigital::create([
+                'nama_berkas' => $request->nama_berkas,
+                'user_create' => Auth::user()->name,
+            ]);
 
-        return redirect()->back()->with('success', 'Data berhasil ditambah!');
+            return redirect()->back()->with('success', 'Master Berkas berhasil ditambah!');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
+        }
     }
 
     public function update(Request $request, $id)
     {
-        $request->validate(['nama_berkas' => 'required']);
+        // Validasi unik kecuali untuk ID yang sedang diedit
+        $request->validate([
+            'nama_berkas' => 'required|unique:RME_MR_BERKAS_DIGITAL,nama_berkas,' . $id,
+        ]);
 
         $berkas = MasterBerkasDigital::findOrFail($id);
+
+        // Update nama_berkas, slug akan ter-update otomatis oleh library
         $berkas->update([
             'nama_berkas' => $request->nama_berkas,
-            'slug'        => Str::slug($request->nama_berkas, '_'),
             'user_update' => Auth::user()->name,
         ]);
 
-        return redirect()->back()->with('success', 'Data berhasil diperbarui!');
+        return redirect()->back()->with('success', 'Master Berkas berhasil diperbarui!');
     }
 
     public function destroy($id)
