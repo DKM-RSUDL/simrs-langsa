@@ -16,7 +16,7 @@
             ],
             [
                 'name' => 'Berkas Digital',
-                'url' => '#',
+                'url' => route('berkas-digital.dokumen.index'),
                 'color' => 'info',
             ],
             [
