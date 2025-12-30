@@ -19,9 +19,10 @@
         </div>
     </x-content-card>
     @php
-        $idData = null
+        $idData = null;
     @endphp
-    <x-modal id="BerkasUpdateModal" size="lg" title="Edit Berkas" confirm="{{ true }}" action="#" idForm="FormUpdateBerkas">
+    <x-modal id="BerkasUpdateModal" size="lg" title="Edit Berkas" confirm="{{ true }}" action="#"
+        idForm="FormUpdateBerkas">
         @csrf
         <input type="hidden" name="_method" value="PUT">
         <div class="mb-3">
@@ -49,30 +50,45 @@
 
 @push('js')
     <script>
-        $(document).on('click', '#UpdateBerkas', function () {
-            const id = $(this).data('id')
+        $(document).on('click', '#UpdateBerkas', function() {
+            let $this = $(this);
+            const id = $this.data('id')
 
             $.ajax({
-                url: "{{ route('berkas-digital.setting.show', ['id' => 'DATA_ID'])}}".replace('DATA_ID', id),
+                url: "{{ route('berkas-digital.setting.show', ['id' => 'DATA_ID']) }}".replace('DATA_ID',
+                    id),
                 type: 'GET',
-                process: function () {
-                    console.log("process")
+                beforeSend: function() {
+                    $this.data('orig-html', $this.html());
+                    $this.html(
+                        '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>'
+                        );
+                    $this.attr('disabled', true);
                 },
-                success: function (res) {
+                success: function(res) {
                     const data = res.data;
-                    console.log(data)
-                    console.log(data.aktif)
-                    $('#FormUpdateBerkas').attr('action', "{{ route('berkas-digital.setting.update', ['id' => 'DATA_ID'])}}".replace('DATA_ID', id)),
+                    // console.log(data)
+                    // console.log(data.aktif)
+                    $('#FormUpdateBerkas').attr('action',
+                            "{{ route('berkas-digital.setting.update', ['id' => 'DATA_ID']) }}".replace(
+                                'DATA_ID', id)),
                         $('#Nama_Berkas').val(data.nama_berkas);
                     $('#Status_Berkas').prop('checked', data.aktif == '1');
                     $('#Status_Berkas').val(data.aktif);
                     $('#BerkasUpdateModal').modal('show');
-
+                },
+                complete: function() {
+                    const orig = $this.data('orig-html');
+                    if (typeof orig !== 'undefined') {
+                        $this.html(orig);
+                        $this.removeData('orig-html');
+                    }
+                    $this.attr('disabled', false);
                 }
             })
         })
 
-        $('#Status_Berkas').on('click', function () {
+        $('#Status_Berkas').on('click', function() {
             const value = $('#Status_Berkas').val();
 
             $('#Status_Berkas').val(value == '1' ? '0' : '1');
@@ -83,8 +99,7 @@
             processing: true,
             serverSide: true,
             ajax: "{{ route('berkas-digital.setting.index') }}",
-            columnDefs: [
-                {
+            columnDefs: [{
                     targets: [1, 2],
                     className: "text-start"
                 },
@@ -93,21 +108,23 @@
                     className: "text-center"
                 }
             ],
-            columns: [
-                {
+            columns: [{
                     data: 'id',
-                    render: function (data, type, row, meta) {
+                    render: function(data, type, row, meta) {
                         return meta.row + meta.settings._iDisplayStart + 1;
                     }
                 },
-                { data: 'nama_berkas', name: 'nama_berkas' },
+                {
+                    data: 'nama_berkas',
+                    name: 'nama_berkas'
+                },
                 {
                     data: 'aktif',
                     name: 'aktif',
-                    render: function (data) {
-                        return data == 1
-                            ? '<span class="badge bg-success">Aktif</span>'
-                            : '<span class="badge bg-danger">Nonaktif</span>';
+                    render: function(data) {
+                        return data == 1 ?
+                            '<span class="badge bg-success">Aktif</span>' :
+                            '<span class="badge bg-danger">Nonaktif</span>';
                     }
                 },
                 {
@@ -118,6 +135,5 @@
                 }
             ]
         });
-
     </script>
 @endpush
