@@ -33,7 +33,7 @@
             <table class="table table-bordered table-hover">
                 <thead class="table-light">
                     <tr>
-                        <th width="10%">Kode</th>
+                        {{-- Kolom KODE dihapus --}}
                         <th>Nama Berkas</th>
                         <th>Alias Folder</th>
                         <th width="15%" class="text-center">Action</th>
@@ -42,7 +42,7 @@
                 <tbody>
                     @foreach ($berkas as $item)
                         <tr>
-                            <td>{{ str_pad($item->id, 3, '0', STR_PAD_LEFT) }}</td>
+                            {{-- Kolom KODE (TD) dihapus --}}
                             <td>{{ $item->nama_berkas }}</td>
                             <td><code>{{ $item->slug }}</code></td>
                             <td class="text-center">
@@ -89,6 +89,7 @@
             </form>
         </div>
     </div>
+
     {{-- MODAL EDIT --}}
     <x-modal id="modalEditMaster" title="Edit Master Berkas" size="md" :confirm="true" action="#"
         idForm="FormUpdateBerkas">
@@ -98,11 +99,6 @@
         <div class="mb-3">
             <label class="form-label">Nama Berkas</label>
             <input type="text" name="nama_berkas" id="Edit_Nama_Berkas" class="form-control" required>
-        </div>
-
-        <div class="mb-3">
-            <label class="text-muted small">Alias Folder (Otomatis)</label>
-            <input type="text" id="Edit_Slug" class="form-control bg-light" readonly>
         </div>
     </x-modal>
 @endsection
@@ -130,12 +126,8 @@
                 success: function(res) {
                     if (res.status) {
                         const data = res.data;
-
                         $('#FormUpdateBerkas').attr('action', urlUpdate);
-
                         $('#Edit_Nama_Berkas').val(data.nama_berkas);
-                        $('#Edit_Slug').val(data.slug);
-
                         $('#modalEditMaster').modal('show');
                     }
                 },
@@ -149,7 +141,8 @@
                 }
             });
         });
-
+    </script>
+    <script>
         /**
          * Toastr Notification dari Session
          */

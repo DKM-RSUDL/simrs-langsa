@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\MasterBerkasDigital;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str; // <--- 1. WAJIB IMPORT INI
 
 class MasterBerkasController extends Controller
 {
@@ -35,7 +36,6 @@ class MasterBerkasController extends Controller
 
     public function store(Request $request)
     {
-        // Mulai Transaksi
         DB::beginTransaction();
         try {
             $request->validate([
@@ -46,7 +46,9 @@ class MasterBerkasController extends Controller
 
             MasterBerkasDigital::create([
                 'nama_berkas' => $request->nama_berkas,
-                'user_create' => Auth::user()->name,
+                // 2. TAMBAHKAN INI (Generate Slug otomatis pakai Library)
+                'slug'        => Str::slug($request->nama_berkas, '_'),
+                'user_create' => Auth::user()->kd_karyawan,
             ]);
 
             DB::commit();
@@ -62,7 +64,6 @@ class MasterBerkasController extends Controller
     {
         DB::beginTransaction();
         try {
-            // Validasi unik kecuali untuk ID yang sedang diedit
             $request->validate([
                 'nama_berkas' => 'required|unique:RME_MR_BERKAS_DIGITAL,nama_berkas,' . $id,
             ]);
@@ -71,7 +72,9 @@ class MasterBerkasController extends Controller
 
             $berkas->update([
                 'nama_berkas' => $request->nama_berkas,
-                'user_update' => Auth::user()->name,
+                // 3. TAMBAHKAN JUGA DISINI (Agar waktu edit, slug ikut berubah)
+                'slug'        => Str::slug($request->nama_berkas, '_'),
+                'user_update' => Auth::user()->kd_karyawan,
             ]);
 
             DB::commit();
