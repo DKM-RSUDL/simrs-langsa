@@ -4,9 +4,9 @@ namespace App\Http\Controllers\BerkasDigital;
 
 use App\Http\Controllers\Controller;
 use App\Models\SettingBerkasDigital;
-use DB;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\Facades\DataTables;
 
 class SettingBerkasController extends Controller
@@ -23,10 +23,9 @@ class SettingBerkasController extends Controller
 
             return DataTables::of($data)
                 ->addColumn('action', function ($row) {
-                    return '<button id="UpdateBerkas" data-id="'.$row->id.'" class="btn btn-sm btn-warning  m-auto" >
+                    return '<button id="UpdateBerkas" data-id="' . $row->id . '" class="btn btn-sm btn-warning  m-auto" >
                             <i class="fas fa-edit">
                         </button>';
-
                 })
                 ->rawColumns(['action'])
                 ->make(true);
@@ -45,9 +44,10 @@ class SettingBerkasController extends Controller
         ]);
     }
 
-    public function update(Request $request, $id){
+    public function update(Request $request, $id)
+    {
 
-        try{
+        try {
             DB::beginTransaction();
             $data = SettingBerkasDigital::findOrFail($id);
 
@@ -56,9 +56,9 @@ class SettingBerkasController extends Controller
             ]);
 
             return back()->withInput()->with('success', 'Data Berhasil Di Update');
-        }catch(Exception $e){
+        } catch (Exception $e) {
             DB::rollBack();
-            return back()->withInput()->with('error', 'Internal Server Error');
+            return back()->withInput()->with('error', $e->getMessage());
         }
     }
 }
