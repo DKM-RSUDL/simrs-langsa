@@ -13,6 +13,7 @@ Route::prefix('master')->name('master')->group(function () {
         Route::post('/store', 'store')->name('.store');
         Route::put('/update/{id}', 'update')->name('.update');
         Route::delete('/destroy/{id}', 'destroy')->name('.destroy');
+        Route::get('/show/{id}', 'show')->name('.show');
     });
 });
 

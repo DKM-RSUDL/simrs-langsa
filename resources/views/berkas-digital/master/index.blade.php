@@ -33,10 +33,10 @@
             <table class="table table-bordered table-hover">
                 <thead class="table-light">
                     <tr>
-                        <th width="10%">Kode Berkas</th>
+                        <th width="10%">Kode</th>
                         <th>Nama Berkas</th>
-                        <th>Alias Folder Di Sistem</th>
-                        <th width="10%">Action</th>
+                        <th>Alias Folder</th>
+                        <th width="15%" class="text-center">Action</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -45,11 +45,12 @@
                             <td>{{ str_pad($item->id, 3, '0', STR_PAD_LEFT) }}</td>
                             <td>{{ $item->nama_berkas }}</td>
                             <td><code>{{ $item->slug }}</code></td>
-                            <td>
-                                <button class="btn btn-warning btn-sm" data-bs-toggle="modal"
-                                    data-bs-target="#modalEdit{{ $item->id }}">
+                            <td class="text-center">
+                                <button type="button" class="btn btn-warning btn-sm" id="BtnEditBerkas"
+                                    data-id="{{ $item->id }}">
                                     <i class="fas fa-edit text-white"></i>
                                 </button>
+
                                 <form action="{{ route('berkas-digital.master.destroy', $item->id) }}" method="POST"
                                     class="d-inline">
                                     @csrf @method('DELETE')
@@ -59,37 +60,13 @@
                                 </form>
                             </td>
                         </tr>
-
-                        <div class="modal fade" id="modalEdit{{ $item->id }}" tabindex="-1">
-                            <div class="modal-dialog">
-                                <form action="{{ route('berkas-digital.master.update', $item->id) }}" method="POST"
-                                    onsubmit="disableButton(this)">
-                                    @csrf @method('PUT')
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title">Edit Master Berkas</h5>
-                                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                                        </div>
-                                        <div class="modal-body">
-                                            <div class="mb-3">
-                                                <label>Nama Berkas</label>
-                                                <input type="text" name="nama_berkas" class="form-control"
-                                                    value="{{ $item->nama_berkas }}" required>
-                                            </div>
-                                        </div>
-                                        <div class="modal-footer">
-                                            <x-button-submit-confirm label="Simpan" />
-                                        </div>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
                     @endforeach
                 </tbody>
             </table>
         </div>
     </x-content-card>
 
+    {{-- MODAL TAMBAH --}}
     <div class="modal fade" id="modalTambah" tabindex="-1">
         <div class="modal-dialog">
             <form action="{{ route('berkas-digital.master.store') }}" method="POST" onsubmit="disableButton(this)">
@@ -102,13 +79,7 @@
                     <div class="modal-body">
                         <div class="mb-3">
                             <label>Nama Berkas</label>
-                            <input type="text" name="nama_berkas" id="input_nama" class="form-control"
-                                placeholder="Contoh: KARTU KELUARGA" required autofocus>
-                        </div>
-                        <div class="mb-3">
-                            <label class="text-muted small">Preview Alias Folder (Otomatis):</label>
-                            <input type="text" id="preview_slug" class="form-control bg-light border-0" readonly
-                                placeholder="alias_folder_akan_muncul_disini">
+                            <input type="text" name="nama_berkas" id="input_nama" class="form-control" required>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -118,60 +89,75 @@
             </form>
         </div>
     </div>
+    {{-- MODAL EDIT --}}
+    <x-modal id="modalEditMaster" title="Edit Master Berkas" size="md" :confirm="true" action="#"
+        idForm="FormUpdateBerkas">
+        @csrf
+        @method('PUT')
+
+        <div class="mb-3">
+            <label class="form-label">Nama Berkas</label>
+            <input type="text" name="nama_berkas" id="Edit_Nama_Berkas" class="form-control" required>
+        </div>
+
+        <div class="mb-3">
+            <label class="text-muted small">Alias Folder (Otomatis)</label>
+            <input type="text" id="Edit_Slug" class="form-control bg-light" readonly>
+        </div>
+    </x-modal>
 @endsection
 
 @push('js')
     <script>
+        $(document).on('click', '#BtnEditBerkas', function() {
+            let $this = $(this);
+            const id = $this.data('id');
+
+            let urlShow = "{{ route('berkas-digital.master.show', ':id') }}";
+            urlShow = urlShow.replace(':id', id);
+
+            let urlUpdate = "{{ route('berkas-digital.master.update', ':id') }}";
+            urlUpdate = urlUpdate.replace(':id', id);
+
+            $.ajax({
+                url: urlShow,
+                type: 'GET',
+                beforeSend: function() {
+                    $this.data('orig-html', $this.html());
+                    $this.html('<i class="fas fa-spinner fa-spin"></i>');
+                    $this.prop('disabled', true);
+                },
+                success: function(res) {
+                    if (res.status) {
+                        const data = res.data;
+
+                        $('#FormUpdateBerkas').attr('action', urlUpdate);
+
+                        $('#Edit_Nama_Berkas').val(data.nama_berkas);
+                        $('#Edit_Slug').val(data.slug);
+
+                        $('#modalEditMaster').modal('show');
+                    }
+                },
+                error: function(err) {
+                    toastr.error("Gagal mengambil data berkas.", "Error");
+                },
+                complete: function() {
+                    const orig = $this.data('orig-html');
+                    if (orig) $this.html(orig);
+                    $this.prop('disabled', false);
+                }
+            });
+        });
+
         /**
-         * Toastr Notification
+         * Toastr Notification dari Session
          */
         @if (session('success'))
-            toastr.success("{{ session('success') }}", "Berhasil", {
-                positionClass: "toast-top-right",
-                timeOut: 5000
-            });
+            toastr.success("{{ session('success') }}");
         @endif
-
         @if (session('error'))
-            toastr.error("{{ session('error') }}", "Gagal", {
-                positionClass: "toast-top-right",
-                timeOut: 5000
-            });
+            toastr.error("{{ session('error') }}");
         @endif
-
-        @if ($errors->any())
-            @foreach ($errors->all() as $error)
-                toastr.error("{{ $error }}", "Kesalahan Input", {
-                    positionClass: "toast-top-right",
-                    timeOut: 5000
-                });
-            @endforeach
-        @endif
-
-        /**
-         * Mencegah Double Click saat submit
-         */
-        function disableButton(form) {
-            const btn = form.querySelector('button[type="submit"]');
-            if (btn) {
-                btn.disabled = true;
-                btn.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i> Memproses...';
-            }
-        }
-
-        /**
-         * Live Preview Slug (Underscore)
-         */
-        const inputNama = document.getElementById('input_nama');
-        const previewSlug = document.getElementById('preview_slug');
-
-        if (inputNama) {
-            inputNama.addEventListener('keyup', function() {
-                let slug = inputNama.value.toLowerCase()
-                    .replace(/ /g, '_')
-                    .replace(/[^\w-]+/g, '');
-                previewSlug.value = slug;
-            });
-        }
     </script>
 @endpush
