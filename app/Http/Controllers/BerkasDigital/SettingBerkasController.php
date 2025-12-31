@@ -4,6 +4,8 @@ namespace App\Http\Controllers\BerkasDigital;
 
 use App\Http\Controllers\Controller;
 use App\Models\SettingBerkasDigital;
+use DB;
+use Exception;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -43,15 +45,20 @@ class SettingBerkasController extends Controller
         ]);
     }
 
-    public function update(Request $request, $id)
-    {
+    public function update(Request $request, $id){
 
-        $data = SettingBerkasDigital::findOrFail($id);
+        try{
+            DB::beginTransaction();
+            $data = SettingBerkasDigital::findOrFail($id);
 
-        $data->update([
-            'aktif' => $request->aktif ? '1' : '0',
-        ]);
+            $data->update([
+                'aktif' => $request->aktif ? '1' : '0',
+            ]);
 
-        return back()->withInput()->with('success', 'Data Berhasil Di Update');
+            return back()->withInput()->with('success', 'Data Berhasil Di Update');
+        }catch(Exception $e){
+            DB::rollBack();
+            return back()->withInput()->with('error', 'Internal Server Error');
+        }
     }
 }
