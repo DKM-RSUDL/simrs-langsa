@@ -8,6 +8,7 @@
                 <i class="fas fa-plus me-1"></i> Buka Form Input
             </button>
         </div>
+
         <div class="row mb-3">
             <div class="col-md-4">
                 <form action="{{ route('berkas-digital.master.index') }}" method="GET">
@@ -61,7 +62,8 @@
 
                         <div class="modal fade" id="modalEdit{{ $item->id }}" tabindex="-1">
                             <div class="modal-dialog">
-                                <form action="{{ route('berkas-digital.master.update', $item->id) }}" method="POST">
+                                <form action="{{ route('berkas-digital.master.update', $item->id) }}" method="POST"
+                                    onsubmit="disableButton(this)">
                                     @csrf @method('PUT')
                                     <div class="modal-content">
                                         <div class="modal-header">
@@ -76,7 +78,7 @@
                                             </div>
                                         </div>
                                         <div class="modal-footer">
-                                            <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
+                                            <x-button-submit-confirm label="Simpan" />
                                         </div>
                                     </div>
                                 </form>
@@ -90,7 +92,7 @@
 
     <div class="modal fade" id="modalTambah" tabindex="-1">
         <div class="modal-dialog">
-            <form action="{{ route('berkas-digital.master.store') }}" method="POST">
+            <form action="{{ route('berkas-digital.master.store') }}" method="POST" onsubmit="disableButton(this)">
                 @csrf
                 <div class="modal-content">
                     <div class="modal-header">
@@ -110,27 +112,66 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="submit" class="btn btn-success">Simpan Data</button>
+                        <x-button-submit-confirm label="Simpan" />
                     </div>
                 </div>
             </form>
         </div>
     </div>
-
-    @push('js')
-        <script>
-            // Logika Live Preview Slug (Generate Otomatis)
-            const inputNama = document.getElementById('input_nama');
-            const previewSlug = document.getElementById('preview_slug');
-
-            if (inputNama) {
-                inputNama.addEventListener('keyup', function() {
-                    let slug = inputNama.value.toLowerCase()
-                        .replace(/ /g, '_') // Ganti spasi dengan underscore (_)
-                        .replace(/[^\w-]+/g, ''); // Hapus karakter selain huruf dan angka
-                    previewSlug.value = slug;
-                });
-            }
-        </script>
-    @endpush
 @endsection
+
+@push('js')
+    <script>
+        /**
+         * Toastr Notification
+         */
+        @if (session('success'))
+            toastr.success("{{ session('success') }}", "Berhasil", {
+                positionClass: "toast-top-right",
+                timeOut: 5000
+            });
+        @endif
+
+        @if (session('error'))
+            toastr.error("{{ session('error') }}", "Gagal", {
+                positionClass: "toast-top-right",
+                timeOut: 5000
+            });
+        @endif
+
+        @if ($errors->any())
+            @foreach ($errors->all() as $error)
+                toastr.error("{{ $error }}", "Kesalahan Input", {
+                    positionClass: "toast-top-right",
+                    timeOut: 5000
+                });
+            @endforeach
+        @endif
+
+        /**
+         * Mencegah Double Click saat submit
+         */
+        function disableButton(form) {
+            const btn = form.querySelector('button[type="submit"]');
+            if (btn) {
+                btn.disabled = true;
+                btn.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i> Memproses...';
+            }
+        }
+
+        /**
+         * Live Preview Slug (Underscore)
+         */
+        const inputNama = document.getElementById('input_nama');
+        const previewSlug = document.getElementById('preview_slug');
+
+        if (inputNama) {
+            inputNama.addEventListener('keyup', function() {
+                let slug = inputNama.value.toLowerCase()
+                    .replace(/ /g, '_')
+                    .replace(/[^\w-]+/g, '');
+                previewSlug.value = slug;
+            });
+        }
+    </script>
+@endpush
