@@ -1,25 +1,14 @@
+@php
+    $tab = $_GET['ref'] ?? 'ri'
+@endphp
+
 <ul class="nav tab-minimal">
-
-    <li class="nav-item">
-        <form method="GET" action="{{ url()->current() }}">
-            <input type="hidden" name="rawat_inap" value="1">
-
-            <button type="submit"
-                class="tab-link {{ $isRawatInap ? 'active' : '' }}">
-                Rawat Inap
-            </button>
-        </form>
+    <li class="nav-item py-2">
+        <a href="?ref=ri" class="tab-link text-decoration-none {{ $tab == 'ri' ? 'active' : '' }}">Rawat Inap</a>
     </li>
 
-    <li class="nav-item">
-        <form method="GET" action="{{ url()->current() }}">
-            <input type="hidden" name="rawat_jalan" value="1">
-
-            <button type="submit"
-                class="tab-link {{ $isRawatJalan ? 'active' : '' }}">
-                Rawat Jalan
-            </button>
-        </form>
+    <li class="nav-item py-2">
+        <a href="?ref=rj" class="tab-link text-decoration-none {{ $tab == 'rj' ? 'active' : '' }}">Rawat Jalan</a>
     </li>
 
 </ul>
