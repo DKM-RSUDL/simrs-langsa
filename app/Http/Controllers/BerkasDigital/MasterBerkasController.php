@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\MasterBerkasDigital;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class MasterBerkasController extends Controller
 {
@@ -16,20 +17,26 @@ class MasterBerkasController extends Controller
 
     public function index(Request $request)
     {
-        $keyword = $request->get('keyword');
-        $query = MasterBerkasDigital::query();
+        try {
+            $keyword = $request->get('keyword');
+            $query = MasterBerkasDigital::query();
 
-        if (!empty($keyword)) {
-            $query->where('nama_berkas', 'LIKE', "%$keyword%")
-                ->orWhere('id', 'LIKE', "%$keyword%");
+            if (!empty($keyword)) {
+                $query->where('nama_berkas', 'LIKE', "%$keyword%")
+                    ->orWhere('id', 'LIKE', "%$keyword%");
+            }
+
+            $berkas = $query->get();
+            return view('berkas-digital.master.index', compact('berkas'));
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Gagal memuat data: ' . $e->getMessage());
         }
-
-        $berkas = $query->get();
-        return view('berkas-digital.master.index', compact('berkas'));
     }
 
     public function store(Request $request)
     {
+        // Mulai Transaksi
+        DB::beginTransaction();
         try {
             $request->validate([
                 'nama_berkas' => 'required|unique:RME_MR_BERKAS_DIGITAL,nama_berkas',
@@ -42,33 +49,63 @@ class MasterBerkasController extends Controller
                 'user_create' => Auth::user()->name,
             ]);
 
+            DB::commit();
+
             return redirect()->back()->with('success', 'Master Berkas berhasil ditambah!');
         } catch (\Exception $e) {
+            DB::rollBack();
             return redirect()->back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
         }
     }
 
     public function update(Request $request, $id)
     {
-        // Validasi unik kecuali untuk ID yang sedang diedit
-        $request->validate([
-            'nama_berkas' => 'required|unique:RME_MR_BERKAS_DIGITAL,nama_berkas,' . $id,
-        ]);
+        DB::beginTransaction();
+        try {
+            // Validasi unik kecuali untuk ID yang sedang diedit
+            $request->validate([
+                'nama_berkas' => 'required|unique:RME_MR_BERKAS_DIGITAL,nama_berkas,' . $id,
+            ]);
 
-        $berkas = MasterBerkasDigital::findOrFail($id);
+            $berkas = MasterBerkasDigital::findOrFail($id);
 
-        // Update nama_berkas, slug akan ter-update otomatis oleh library
-        $berkas->update([
-            'nama_berkas' => $request->nama_berkas,
-            'user_update' => Auth::user()->name,
-        ]);
+            $berkas->update([
+                'nama_berkas' => $request->nama_berkas,
+                'user_update' => Auth::user()->name,
+            ]);
 
-        return redirect()->back()->with('success', 'Master Berkas berhasil diperbarui!');
+            DB::commit();
+
+            return redirect()->back()->with('success', 'Master Berkas berhasil diperbarui!');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->back()->with('error', 'Gagal memperbarui data: ' . $e->getMessage());
+        }
     }
 
     public function destroy($id)
     {
-        MasterBerkasDigital::findOrFail($id)->delete();
-        return redirect()->back()->with('success', 'Data berhasil dihapus!');
+        DB::beginTransaction();
+        try {
+            $berkas = MasterBerkasDigital::findOrFail($id);
+            $berkas->delete();
+
+            DB::commit();
+
+            return redirect()->back()->with('success', 'Data berhasil dihapus!');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->back()->with('error', 'Gagal menghapus data: ' . $e->getMessage());
+        }
+    }
+
+    public function show($id)
+    {
+        $berkas = MasterBerkasDigital::findOrFail($id);
+
+        return response()->json([
+            'status' => true,
+            'data'   => $berkas
+        ]);
     }
 }
