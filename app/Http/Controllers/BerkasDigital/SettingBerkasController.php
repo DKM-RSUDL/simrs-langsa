@@ -47,13 +47,15 @@ class SettingBerkasController extends Controller
     public function update(Request $request, $id)
     {
 
+        DB::beginTransaction();
         try {
-            DB::beginTransaction();
             $data = SettingBerkasDigital::findOrFail($id);
 
             $data->update([
                 'aktif' => $request->aktif ? '1' : '0',
             ]);
+
+            DB::commit();
 
             return back()->withInput()->with('success', 'Data Berhasil Di Update');
         } catch (Exception $e) {
