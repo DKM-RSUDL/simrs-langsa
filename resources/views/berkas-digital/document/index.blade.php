@@ -43,31 +43,97 @@
 @endpush
 
 @section('content')
-
     @php
-        $isRawatInap = request()->has('rawat_inap');
-        $isRawatJalan = request()->has('rawat_jalan');
-
-        if (!$isRawatInap && !$isRawatJalan) {
-            $isRawatInap = true;
-        }
+        $tab = $_GET['pel'] ?? 'ri';
     @endphp
 
     <x-content-card>
 
         {{-- Tab --}}
-        @include('berkas-digital.document.tab-component.index')
+        <div class="row">
+            <div class="col">
+                <ul class="nav tab-minimal">
+                    <li class="nav-item py-2">
+                        <a href="?pel=ri" class="tab-link text-decoration-none {{ $tab == 'ri' ? 'active' : '' }}">Rawat
+                            Inap</a>
+                    </li>
 
-        {{-- Content Rawat Inap --}}
-        @if(request()->has('rawat_inap') || (!request()->has('rawat_inap') && !request()->has('rawat_jalan')))
-            @include('berkas-digital.document.rawat-inap')
-        @endif
+                    <li class="nav-item py-2">
+                        <a href="?pel=rj" class="tab-link text-decoration-none {{ $tab == 'rj' ? 'active' : '' }}">Rawat
+                            Jalan</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
 
-        {{-- Content Rawat Jalan --}}
-        @if(request()->has('rawat_jalan'))
-            @include('berkas-digital.document.rawat-jalan')
-        @endif
+        {{-- TABLE --}}
+        <div class="row">
+            <div class="col">
+                <div class="row mb-3">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label class="form-label" for="unit_filter">{{ $tab == 'rj' ? 'Poli' : 'Ruang' }}</label>
+                            <select class="form-select select2" id="unit_filter">
+                                <option value="">--Pilih Kamar--</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="customer_filter" class="form-label">Jenis Bayar</label>
+                            <select id="customer_filter" class="form-select select2">
+                                <option value="">--Pilih Jenis Bayar--</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="col-md-5">
+                        <label for="periode_filter" class="form-label">Periode</label>
+                        <div class="input-group input-daterange">
+                            <input type="text" class="form-control" id="startdate_filter" readonly
+                                value="{{ date('Y-m-d') }}">
+                            <div class="input-group-addon">to</div>
+                            <input type="text" class="form-control" id="enddate_filter" readonly
+                                value="{{ date('Y-m-d') }}">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table table-bordered" id="dataTable">
+                        <thead>
+                            <tr>
+                                <th style="width:5%">Aksi</th>
+                                <th>Pasien</th>
+                                <th>No RM / Tgl Masuk</th>
+                                <th>DPJP</th>
+                                <th>Alamat</th>
+                                <th>Jaminan</th>
+                                <th>Status Pelayanan</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
 
     </x-content-card>
-
 @endsection
+
+@push('js')
+    <script>
+        $(document).ready(function() {
+            $('#dataTable').DataTable();
+
+            $('.input-daterange input').each(function() {
+                $(this).datepicker({
+                    format: 'yyyy-mm-dd',
+                });
+            });
+        });
+    </script>
+@endpush
