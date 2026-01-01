@@ -21,6 +21,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class PraInduksitController extends Controller
 {
@@ -390,8 +391,8 @@ class PraInduksitController extends Controller
                            )) AS latest_price'), 'APT_OBAT.KD_PRD', '=', 'latest_price.KD_PRD')
             ->where(function ($query) use ($search) {
                 // Optimize search conditions
-                $query->where('APT_OBAT.nama_obat', 'LIKE', $search.'%')
-                    ->orWhere('APT_OBAT.nama_obat', 'LIKE', '% '.$search.'%');
+                $query->where('APT_OBAT.nama_obat', 'LIKE', $search . '%')
+                    ->orWhere('APT_OBAT.nama_obat', 'LIKE', '% ' . $search . '%');
             })
             ->select(
                 'APT_OBAT.KD_PRD as id',
@@ -405,5 +406,57 @@ class PraInduksitController extends Controller
 
 
         return response()->json($obats);
+    }
+    public function print($kd_pasien, $tgl_masuk, $urut_masuk, $id)
+    {
+        try {
+            // 1. Load Main Pra Induksi Record dan 4 Sub-Models
+            $okPraInduksi = OkPraInduksi::with([
+                'okPraInduksiEpas',
+                'okPraInduksiPsas',
+                'okPraInduksiCtkp',
+                'okPraInduksiIpb'
+            ])->findOrFail($id);
+
+            // 2. Load Kunjungan/Pasien Data
+            $dataMedis = Kunjungan::with('pasien')
+                ->where('kd_pasien', $kd_pasien)
+                ->where('kd_unit', 71)
+                ->whereDate('tgl_masuk', $tgl_masuk)
+                ->where('urut_masuk', $urut_masuk)
+                ->firstOrFail();
+
+            if ($dataMedis->pasien && $dataMedis->pasien->tgl_lahir) {
+                $dataMedis->pasien->umur = Carbon::parse($dataMedis->pasien->tgl_lahir)->age;
+            } else {
+                $dataMedis->pasien->umur = 'Tidak Diketahui';
+            }
+
+            $asesmenParent = OkAsesmen::with('userCreate.karyawan') // Load creator data
+                ->where('kd_pasien', $kd_pasien)
+                ->where('kd_unit', 71)
+                ->whereDate('tgl_masuk', $tgl_masuk)
+                ->where('urut_masuk', $urut_masuk)
+                ->first(); // Mengambil asesmen parent yang sesuai kunjungan
+
+            $namaCreator = '_________________________';
+            if ($asesmenParent && $asesmenParent->userCreate && $asesmenParent->userCreate->karyawan) {
+                $karyawan = $asesmenParent->userCreate->karyawan;
+                $namaCreator = trim((($karyawan->gelar_depan ?? '') . ' ' . ($karyawan->nama_lengkap ?? $karyawan->nama ?? '') . ' ' . ($karyawan->gelar_belakang ?? '')));
+                if ($namaCreator == '') $namaCreator = '_________________________';
+            }
+
+            return view('unit-pelayanan.operasi.pelayanan.asesmen.pra-induksi.print', compact(
+                'okPraInduksi',
+                'dataMedis',
+                'namaCreator'
+            ));
+
+            // return $pdf->stream('Pra_Induksi_' . $dataMedis->pasien->kd_pasien . '.pdf');
+        } catch (ModelNotFoundException $e) {
+            return back()->with('error', 'Data Pra Induksi tidak ditemukan.');
+        } catch (\Exception $e) {
+            return back()->with('error', 'Terjadi kesalahan saat mencetak: ' . $e->getMessage());
+        }
     }
 }

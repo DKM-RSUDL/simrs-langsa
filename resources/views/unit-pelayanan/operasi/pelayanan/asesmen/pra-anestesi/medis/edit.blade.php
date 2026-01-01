@@ -15,8 +15,7 @@
 
                 @include('components.page-header', [
                     'title' => 'Perbarui Pra Operasi Medis',
-                    'description' =>
-                        'Perbarui data pra operasi medis dengan mengisi formulir di bawah ini.',
+                    'description' => 'Perbarui data pra operasi medis dengan mengisi formulir di bawah ini.',
                 ])
                 <form method="POST"
                     action="{{ route('operasi.pelayanan.asesmen.pra-anestesi.medis.update', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, encrypt($asesmen->praOperatifMedis->id)]) }}">

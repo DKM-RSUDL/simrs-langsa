@@ -386,7 +386,8 @@
         <div class="left-column">
             <p>DPJP yang merawat</p>
             <br>
-            <img src="data:image/png;base64,{{ generateQrCode($dataMedis->dokter->nama_lengkap) }}" alt="QR Code">
+            {{-- Use SVG data URI to avoid requiring Imagick/GD; preferred for PDF rendering --}}
+            <img src="{{ generateQrCode($dataMedis->dokter->nama_lengkap, 120, 'svg_datauri') }}" alt="QR Code">
 
             <p class="name-konsulen">{{ $dataMedis->dokter->nama_lengkap }}</p>
             <p class="identity-num">

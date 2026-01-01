@@ -24,22 +24,27 @@
             </li>
 
             @php
-            $allMenus = getMenus();
+                $allMenus = getMenus();
 
                 $pelayananMenus = $allMenus->filter(function ($menu) {
                     return in_array($menu->name, ['Unit Pelayanan', 'unit pelayanan']);
                 });
                 $lainLainMenus = $allMenus->filter(function ($menu) {
-                    return in_array($menu->name, ['Transfusi Darah', 'transfusi darah']);
+                    return in_array($menu->name, ['Transfusi Darah', 'transfusi darah', 'Berkas Digital', 'berkas digital']);
                 });
+
                 $otherMenus = $allMenus->filter(function ($menu) {
                     return !in_array($menu->name, [
                         'Unit Pelayanan',
                         'unit pelayanan',
                         'Transfusi Darah',
                         'transfusi darah',
+                        'Laporan Berkas',
+                        'laporan berkas',
                     ]);
                 });
+
+
             @endphp
 
             @foreach ($otherMenus as $menu)
@@ -140,7 +145,9 @@
                 </li>
 
                 @foreach ($lainLainMenus as $menu)
+
                     @can('read ' . $menu->url)
+
                         @if ($menu->type_menu == 'parent')
                             @php
                                 $isActiveParent = false;

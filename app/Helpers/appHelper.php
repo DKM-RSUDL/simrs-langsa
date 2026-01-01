@@ -372,11 +372,11 @@ if (!function_exists('countPendingPatientRanap')) {
 
         // $result = Cache::remember($cacheKey, 300, function () use ($kd_unit) {
 
-            $count = RmeSerahTerima::where('kd_unit_tujuan', $kd_unit)
-                ->where('status', 1)
-                ->count();
+        $count = RmeSerahTerima::where('kd_unit_tujuan', $kd_unit)
+            ->where('status', 1)
+            ->count();
 
-            return $count;
+        return $count;
         // });
 
         // return $result;
@@ -642,16 +642,38 @@ if (!function_exists('carbon_parse')) {
 
 
 /*============================================*/
-        /* QR CODE GENERATE HELPER */
+/* QR CODE GENERATE HELPER */
 /*============================================*/
 
-if(!function_exists('generateQrCode')) {
-    function generateQrCode($text, $size = 100, $type = 'text')
+if (!function_exists('generateQrCode')) {
+    function generateQrCode($text, $size = 100, $type = 'svg')
     {
-        $qrCode = null;
+        try {
+            switch ($type) {
+                case 'svg':
+                    return QrCode::format('svg')->size($size)->errorCorrection('H')->generate($text);
 
-        if($type == 'text') $qrCode = base64_encode(QrCode::format('png')->size($size)->errorCorrection('H')->generate($text));
+                case 'svg_base64':
+                    $svg = QrCode::format('svg')->size($size)->errorCorrection('H')->generate($text);
+                    return base64_encode($svg);
 
-        return $qrCode;
+                case 'svg_datauri':
+                    $svg = QrCode::format('svg')->size($size)->errorCorrection('H')->generate($text);
+                    return 'data:image/svg+xml;base64,' . base64_encode($svg);
+
+                case 'png_base64':
+                    // NOTE: generating PNG may use different renderers and could require GD/Imagick.
+                    // If your environment does not have those, prefer SVG variants above.
+                    $png = QrCode::format('png')->size($size)->errorCorrection('H')->generate($text);
+                    return base64_encode($png);
+
+                default:
+                    // fallback to raw SVG
+                    return QrCode::format('svg')->size($size)->errorCorrection('H')->generate($text);
+            }
+        } catch (\Throwable $e) {
+            // Do not break callers — return null on failure and let the caller handle it
+            return null;
+        }
     }
 }
