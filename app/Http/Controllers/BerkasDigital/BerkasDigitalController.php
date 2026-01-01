@@ -23,6 +23,12 @@ class BerkasDigitalController extends Controller
 
     private function dataTableRanap($request)
     {
+        $unit_filter = $request->get('unit_filter');
+        $customer_filter = $request->get('customer_filter');
+        $status_filter = $request->get('status_filter');
+        $startdate_filter = $request->get('startdate_filter');
+        $enddate_filter = $request->get('enddate_filter');
+
         $data = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
             ->join('nginap', function ($q) {
                 $q->on('kunjungan.kd_pasien', 'nginap.kd_pasien');
@@ -36,7 +42,6 @@ class BerkasDigitalController extends Controller
                 $q->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
                 $q->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
             })
-            // ->where('nginap.kd_unit_kamar', $kd_unit)
             ->where('nginap.akhir', 1)
             ->where(function ($q) {
                 $q->whereNull('kunjungan.status_inap');
@@ -45,6 +50,26 @@ class BerkasDigitalController extends Controller
             ->whereNotNull('kunjungan.tgl_pulang')
             ->whereNotNull('kunjungan.jam_pulang')
             ->whereYear('kunjungan.tgl_masuk', '>=', 2025);
+
+        if (! empty($unit_filter)) {
+            $data->where('nginap.kd_unit_kamar', $unit_filter);
+        }
+
+        if (! empty($customer_filter)) {
+            $data->where('kunjungan.kd_customer', $customer_filter);
+        }
+
+        if (! empty($status_filter)) {
+            $data->where('kunjungan.status_klaim', $status_filter);
+        }
+
+        if (! empty($startdate_filter)) {
+            $data->whereDate('kunjungan.tgl_masuk', '>=', $startdate_filter);
+        }
+
+        if (! empty($enddate_filter)) {
+            $data->whereDate('kunjungan.tgl_masuk', '<=', $enddate_filter);
+        }
 
         return DataTables::of($data)
             ->filter(function ($query) use ($request) {
@@ -111,6 +136,12 @@ class BerkasDigitalController extends Controller
 
     private function dataTableRajal($request)
     {
+        $unit_filter = $request->get('unit_filter');
+        $customer_filter = $request->get('customer_filter');
+        $status_filter = $request->get('status_filter');
+        $startdate_filter = $request->get('startdate_filter');
+        $enddate_filter = $request->get('enddate_filter');
+
         $data = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
             ->join('transaksi as t', function ($join) {
                 $join->on('kunjungan.kd_pasien', '=', 't.kd_pasien');
@@ -123,6 +154,27 @@ class BerkasDigitalController extends Controller
             // ->whereDate('kunjungan.tgl_masuk', '<=', now()->endOfDay()->format('Y-m-d'))
             ->whereYear('kunjungan.tgl_masuk', '>=', 2025)
             ->where('t.Dilayani', 1);
+
+
+        if (! empty($unit_filter)) {
+            $data->where('kunjungan.kd_unit', $unit_filter);
+        }
+
+        if (! empty($customer_filter)) {
+            $data->where('kunjungan.kd_customer', $customer_filter);
+        }
+
+        if (! empty($status_filter)) {
+            $data->where('kunjungan.status_klaim', $status_filter);
+        }
+
+        if (! empty($startdate_filter)) {
+            $data->whereDate('kunjungan.tgl_masuk', '>=', $startdate_filter);
+        }
+
+        if (! empty($enddate_filter)) {
+            $data->whereDate('kunjungan.tgl_masuk', '<=', $enddate_filter);
+        }
 
         return DataTables::of($data)
             ->filter(function ($query) use ($request) {

@@ -70,8 +70,9 @@
 
 @section('content')
     @php
+        $tabReq = $_GET['pel'] ?? 'ri';
         $tabArr = ['ri', 'rj']; // 'ri' for Rawat Inap, 'rj' for Rawat Jalan
-        $tab = in_array($_GET['pel'], $tabArr) ? $_GET['pel'] : 'ri';
+        $tab = in_array($tabReq, $tabArr) ? $tabReq : 'ri';
     @endphp
 
     <x-content-card>
@@ -96,7 +97,7 @@
         {{-- TABLE --}}
         <div class="row">
             <div class="col">
-                <div class="row mb-3">
+                <div class="row mb-3" id="filter-section">
                     <div class="col-md-3">
                         <div class="form-group">
                             <label class="form-label" for="unit_filter">{{ $tab == 'rj' ? 'Poli' : 'Ruang' }}</label>
@@ -171,7 +172,6 @@
 @push('js')
     <script>
         $(document).ready(function() {
-
             $('.input-daterange input').each(function() {
                 $(this).datepicker({
                     format: 'yyyy-mm-dd',
@@ -183,7 +183,16 @@
             $('#dataTable').DataTable({
                 processing: true,
                 serverSide: true,
-                ajax: "{{ route('berkas-digital.dokumen.index') }}?pel={{ $tab }}",
+                ajax: {
+                    url: "{{ route('berkas-digital.dokumen.index') }}?pel={{ $tab }}",
+                    data: function(d) {
+                        d.unit_filter = $('#unit_filter').val();
+                        d.customer_filter = $('#customer_filter').val();
+                        d.status_filter = $('#status_filter').val();
+                        d.startdate_filter = $('#startdate_filter').val();
+                        d.enddate_filter = $('#enddate_filter').val();
+                    }
+                },
                 columns: [{
                         data: 'profile',
                         name: 'profile',
@@ -256,6 +265,9 @@
             });
         });
 
+        $('#filter-section select, input').on('change', function() {
+            $('#dataTable').DataTable().ajax.reload();
+        });
 
         $('#dataTable').on('click', '.btnUnggahBerkas', function() {
             let $this = $(this);
