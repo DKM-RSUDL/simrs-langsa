@@ -5,19 +5,28 @@ namespace App\Http\Controllers\BerkasDigital;
 use App\Http\Controllers\Controller;
 use App\Models\Customer;
 use App\Models\Kunjungan;
+use App\Models\MasterBerkasDigital;
+use App\Models\RmeDokumenBerkasDigital;
 use App\Models\Unit;
+use App\Services\BaseService;
+use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 use Yajra\DataTables\Facades\DataTables;
 
 class BerkasDigitalController extends Controller
 {
     private $pelArr;
     private $pel;
+    private $baseService;
 
     public function __construct(Request $request)
     {
         $this->pelArr = ['ri', 'rj']; // 'ri' for Rawat Inap, 'rj' for Rawat Jalan
         $this->pel = in_array($request->get('pel'), $this->pelArr) ? $request->get('pel') : 'ri';
+        $this->baseService = new BaseService();
     }
 
 
@@ -120,12 +129,15 @@ class BerkasDigitalController extends Controller
                     'no_transaksi' => $row->no_transaksi
                 ]);
 
+                $unit = Unit::where('kd_unit', $row->kd_unit_kamar)->first();
+                $tglMasuk = date('d-m-Y', strtotime($row->tgl_masuk));
+
                 return "<div class='text-center'>
                                 <a href='#' class='btn btn-primary mb-2'>
                                     Lihat Data Klaim
                                 </a>
 
-                                <button class='btn btn-warning btnUnggahBerkas' data-ref='$payload'>
+                                <button class='btn btn-warning btnUnggahBerkas' data-nama='{$row->pasien->nama}' data-rm='{$row->kd_pasien}' data-unit='{$unit->nama_unit}' data-tgl='{$tglMasuk}' data-ref='{$payload}'>
                                     Unggah Berkas Pasien
                                 </button>
                             </div>";
@@ -220,12 +232,14 @@ class BerkasDigitalController extends Controller
                     'no_transaksi' => $row->no_transaksi
                 ]);
 
+                $tglMasuk = date('d-m-Y', strtotime($row->tgl_masuk));
+
                 return "<div class='text-center'>
                                 <a href='#' class='btn btn-primary mb-2'>
                                     Lihat Data Klaim
                                 </a>
 
-                                <button class='btn btn-warning btnUnggahBerkas' data-ref='$payload'>
+                                <button class='btn btn-warning btnUnggahBerkas' data-nama='{$row->pasien->nama}' data-rm='{$row->kd_pasien}' data-unit='{$row->unit->nama_unit}' data-tgl='{$tglMasuk}' data-ref='{$payload}'>
                                     Unggah Berkas Pasien
                                 </button>
                             </div>";
@@ -239,6 +253,7 @@ class BerkasDigitalController extends Controller
         $kdBagian = $this->pel == 'rj' ? 2 : 1;
         $unit = Unit::where('kd_bagian', $kdBagian)->where('aktif', 1)->get();
         $customer = Customer::where('aktif', 1)->get();
+        $jenisBerkas = MasterBerkasDigital::all();
 
 
         if ($request->ajax()) {
@@ -253,6 +268,65 @@ class BerkasDigitalController extends Controller
             return response()->json(['data' => []]);
         }
 
-        return view('berkas-digital.document.index', compact('unit', 'customer'));
+        return view('berkas-digital.document.index', compact('unit', 'customer', 'jenisBerkas'));
+    }
+
+    public function storeBerkas(Request $request)
+    {
+        DB::beginTransaction();
+
+        try {
+            $ref = $request->get('ref');
+            if (empty($ref)) throw new Exception("Parameter kunjungan tidak ditemukan!");
+            $refDecrypted = decrypt($ref);
+
+            // validation request
+            $validator = Validator::make($request->all(), [
+                'jenis_berkas' => 'required|exists:rme_mr_berkas_digital,id',
+                'file_berkas' => 'required|file|mimes:pdf|max:3072',
+            ], [
+                'jenis_berkas.required' => 'Jenis berkas wajib diisi.',
+                'jenis_berkas.exists' => 'Jenis berkas tidak valid.',
+                'file_berkas.required' => 'File berkas wajib diunggah.',
+                'file_berkas.file' => 'File berkas harus berupa file yang valid.',
+                'file_berkas.mimes' => 'File berkas harus berformat PDF.',
+                'file_berkas.max' => 'Ukuran file berkas maksimal 3MB.',
+            ]);
+
+            if ($validator->fails()) {
+                $errors = $validator->errors()->all();
+                throw new Exception(implode(' ', $errors));
+            }
+
+            // get kunjungan data
+            $dataMedis = $this->baseService->getDataMedisbyTransaksi($refDecrypted['kd_kasir'], $refDecrypted['no_transaksi']);
+            if (empty($dataMedis)) throw new Exception("Data kunjungan tidak ditemukan!");
+
+            // get request
+            $jenisBerkasId = $request->jenis_berkas;
+            $fileBerkas = $request->file('file_berkas');
+
+            // get jenis berkas
+            $jenisBerkas = MasterBerkasDigital::find($jenisBerkasId);
+            if (empty($jenisBerkas)) throw new Exception("Jenis berkas tidak ditemukan!");
+
+            // store file berkas
+            $path = $fileBerkas->store("uploads/berkas_digital/$dataMedis->kd_kasir/$dataMedis->no_transaksi/$jenisBerkas->slug");
+            if (empty($path)) throw new Exception("Gagal menyimpan berkas pasien.");
+
+            RmeDokumenBerkasDigital::create([
+                'kd_kasir' => $dataMedis->kd_kasir,
+                'no_transaksi' => $dataMedis->no_transaksi,
+                'file' => $path,
+                'jenis_berkas_id' => $jenisBerkas->id,
+                'user_create' => Auth::user()->karyawan->kd_karyawan
+            ]);
+
+            DB::commit();
+            return to_route('berkas-digital.dokumen.index', $request->except(['_token', 'ref', 'jenis_berkas', 'file_berkas']))->with('success', "Berkas $jenisBerkas->nama_berkas pasien {$dataMedis->pasien->nama} berhasil diunggah.");
+        } catch (Exception $e) {
+            DB::rollBack();
+            return to_route('berkas-digital.dokumen.index', $request->except(['_token', 'ref', 'jenis_berkas', 'file_berkas']))->with('error', $e->getMessage());
+        }
     }
 }

@@ -21,6 +21,7 @@
     @php
         $idData = null;
     @endphp
+
     <x-modal id="BerkasUpdateModal" size="lg" title="Edit Berkas" confirm="{{ true }}" action="#"
         idForm="FormUpdateBerkas">
         @csrf

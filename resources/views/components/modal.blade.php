@@ -1,4 +1,5 @@
-<div class="modal fade" id="{{ $id }}" tabindex="-1" aria-labelledby="{{ $id }}Label" aria-hidden="true">
+<div class="modal fade" id="{{ $id }}" tabindex="-1" aria-labelledby="{{ $id }}Label"
+    aria-hidden="true" data-bs-backdrop="{{ $backdrop ?? '' }}">
     <div class="modal-dialog {{ $size ? 'modal-' . $size : '' }}">
         <div class="modal-content">
 
@@ -8,8 +9,9 @@
             </div>
 
             {{-- ================= BODY ================= --}}
-            @if($confirm)
-                <form id="{{ $idForm }}" {{ $attributes }} method="POST">
+            @if ($confirm)
+                <form id="{{ $idForm ?? '' }}" {{ $attributes }} method="POST" action="{{ $action ?? '#' }}"
+                    enctype="{{ $enctype ?? '' }}">
                     <div class="modal-body">
                         {{ $slot }}
                     </div>

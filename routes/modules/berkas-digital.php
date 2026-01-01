@@ -31,5 +31,6 @@ Route::prefix('setting')->name('setting.')->group(function () {
 Route::prefix('dokumen')->name('dokumen.')->group(function () {
     Route::controller(BerkasDigitalController::class)->group(function () {
         Route::get('/', 'index')->name('index');
+        Route::post('/', 'storeBerkas')->name('store');
     });
 });
