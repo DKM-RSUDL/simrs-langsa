@@ -3,8 +3,8 @@
     <link rel="stylesheet" href="{{ asset('assets/css/MedisGawatDaruratController.css') }}">
     <style>
         /* .header-background {
-                                                                                                                            background-image: url("{{ asset('assets/img/background_gawat_darurat.png') }}");
-                                                                                                                        } */
+                                                                                                                                background-image: url("{{ asset('assets/img/background_gawat_darurat.png') }}");
+                                                                                                                            } */
     </style>
 @endpush
 
@@ -46,6 +46,7 @@
                                                     <th>DOKTER RADIOLOGI</th>
                                                     <th>HASIL</th>
                                                     <th>PACS</th>
+                                                    <th width="120px">AKSI</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -61,6 +62,38 @@
                                                                     class="btn btn-sm btn-primary">
                                                                     <i class="fas fa-eye"></i>
                                                                 </a>
+                                                            @endif
+                                                        </td>
+                                                        <td align="middle">
+                                                            @if (!empty($item['file_name']))
+                                                                <x-table-action>
+                                                                    <a target="_blank"
+                                                                        href="{{ route('rawat-jalan.radiologi.preview', [
+                                                                            $item['kd_unit'],
+                                                                            $item['kd_pasien'],
+                                                                            $item['tgl_transaksi'],
+                                                                            $item['urut_masuk'],
+                                                                            'file' => $item['file_name'],
+                                                                        ]) }}"
+                                                                        class="btn btn-sm btn-success"
+                                                                        title="Print / Preview Hasil Radiologi">
+                                                                        <i class="fas fa-print"></i>
+                                                                    </a>
+
+                                                                    <a href="{{ route('rawat-jalan.radiologi.download', [
+                                                                        $item['kd_unit'],
+                                                                        $item['kd_pasien'],
+                                                                        $item['tgl_transaksi'],
+                                                                        $item['urut_masuk'],
+                                                                        'file' => $item['file_name'],
+                                                                    ]) }}"
+                                                                        class="btn btn-sm btn-primary"
+                                                                        title="Download Hasil Radiologi">
+                                                                        <i class="fas fa-download"></i>
+                                                                    </a>
+                                                                </x-table-action>
+                                                            @else
+                                                                <span class="text-muted">-</span>
                                                             @endif
                                                         </td>
                                                     </tr>

@@ -166,6 +166,10 @@ Route::prefix('rawat-inap')->group(function () {
                             Route::put('/', 'update')->name('.update');
                             Route::post('/get-rad-detail-ajax', 'getRadDetailAjax')->name('.get-rad-detail-ajax');
                             Route::delete('/', 'delete')->name('.delete');
+                            // Preview and download routes for radiology files
+                            Route::get('/preview', 'preview')->name('.preview');
+                            Route::get('/download', 'download')->name('.download');
+                            Route::get('/print-all', 'printAll')->name('.print-all');
                         });
                     });
                 });
@@ -313,6 +317,7 @@ Route::prefix('rawat-inap')->group(function () {
                             Route::put('/', 'update')->name('.update');
                             Route::delete('/', 'destroy')->name('.destroy');
                             Route::post('print', 'print')->name('.print');
+                            Route::post('print-all', 'printAll')->name('.print-all');
                         });
                     });
                 });

@@ -41,11 +41,11 @@ class RadHasil extends Model
     // Relasi dengan kunjungan
     public function kunjungan()
     {
-        return $this->belongsTo(Kunjungan::class, function ($query) {
-            $query->on('rad_hasil.kd_pasien', '=', 'kunjungan.kd_pasien')
-                ->on('rad_hasil.kd_unit', '=', 'kunjungan.kd_unit')
-                ->on('rad_hasil.tgl_masuk', '=', 'kunjungan.tgl_masuk')
-                ->on('rad_hasil.urut_masuk', '=', 'kunjungan.urut_masuk');
-        });
+        // Use simple belongsTo on the patient key. Composite-key constraints
+        // referencing the parent table (rad_hasil) can't be placed here because
+        // Eloquent may execute the related query without the parent table in
+        // scope (causing "could not be bound" SQL errors). Fetch additional
+        // matching columns in controller queries when needed.
+        return $this->belongsTo(Kunjungan::class, 'kd_pasien', 'kd_pasien');
     }
 }

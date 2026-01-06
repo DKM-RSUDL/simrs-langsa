@@ -127,6 +127,8 @@ Route::prefix('rawat-jalan')->group(function () {
                             Route::put('/', 'update')->name('.update');
                             Route::post('/get-rad-detail-ajax', 'getRadDetailAjax')->name('.get-rad-detail-ajax');
                             Route::delete('/', 'delete')->name('.delete');
+                            Route::get('/preview', 'preview')->name('.preview');
+                            Route::get('/download', 'download')->name('.download');
                         });
                     });
                 });
@@ -185,6 +187,8 @@ Route::prefix('rawat-jalan')->group(function () {
                             Route::put('/', 'update')->name('.update');
                             Route::post('/get-rad-detail-ajax', 'getRadDetailAjax')->name('.get-rad-detail-ajax');
                             Route::delete('/', 'delete')->name('.delete');
+                            Route::get('/preview', 'preview')->name('.preview');
+                            Route::get('/download', 'download')->name('.download');
                         });
                     });
                 });

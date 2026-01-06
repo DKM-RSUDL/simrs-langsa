@@ -3,8 +3,8 @@
     <link rel="stylesheet" href="{{ asset('assets/css/MedisGawatDaruratController.css') }}">
     <style>
         /* .header-background {
-                                                                                                                                background-image: url("{{ asset('assets/img/background_gawat_darurat.png') }}");
-                                                                                                                            } */
+                                                                                                                                                            background-image: url("{{ asset('assets/img/background_gawat_darurat.png') }}");
+                                                                                                                                                        } */
     </style>
 @endpush
 
@@ -48,6 +48,7 @@
                                                     <th>DOKTER RADIOLOGI</th>
                                                     <th>HASIL</th>
                                                     <th>PACS</th>
+                                                    <th>AKSI</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -64,6 +65,32 @@
                                                                     <i class="fas fa-eye"></i>
                                                                 </a>
                                                             @endif
+                                                        </td>
+                                                        <td>
+                                                            <x-table-action>
+                                                                {{-- Print / Preview via proxy route --}}
+                                                                <a target="_blank"
+                                                                    href="{{ route('radiologi.preview', [
+                                                                        $dataMedis['kd_pasien'],
+                                                                        $dataMedis['tgl_masuk'],
+                                                                        $item['file'],
+                                                                    ]) }}"
+                                                                    class="btn btn-sm btn-success"
+                                                                    title="Print / Preview Hasil Radiologi">
+                                                                    <i class="fas fa-print"></i>
+                                                                </a>
+
+                                                                {{-- Download via proxy route --}}
+                                                                <a href="{{ route('radiologi.download', [
+                                                                    $dataMedis['kd_pasien'],
+                                                                    $dataMedis['tgl_masuk'],
+                                                                    $item['file'],
+                                                                ]) }}"
+                                                                    class="btn btn-sm btn-primary"
+                                                                    title="Download Hasil Radiologi">
+                                                                    <i class="fas fa-download"></i>
+                                                                </a>
+                                                            </x-table-action>
                                                         </td>
                                                     </tr>
                                                 @endforeach

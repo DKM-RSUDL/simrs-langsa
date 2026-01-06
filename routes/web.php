@@ -41,6 +41,7 @@ Route::get('/refresh-csrf', function () {
 
 Route::middleware('ssoToken')->group(function () {
 
+
     // Route::middleware('auth')->group(function () {
 
     Route::get('/user-sso', [SsoController::class, 'getUser']);

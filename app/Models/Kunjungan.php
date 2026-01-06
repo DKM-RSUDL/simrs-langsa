@@ -113,17 +113,19 @@ class Kunjungan extends Model
 
     public function transaksi()
     {
+        // Use whereColumn to compare columns between tables so the relation
+        // works when used in queries (e.g. whereHas / eager loading).
         return $this->hasMany(Transaksi::class, 'kd_pasien', 'kd_pasien')
-            ->where('kd_unit', $this->kd_unit)
-            ->where('tgl_transaksi', $this->tgl_masuk)
-            ->where('urut_masuk', $this->urut_masuk);
+            ->whereColumn('transaksi.kd_unit', 'kunjungan.kd_unit')
+            ->whereColumn('transaksi.tgl_transaksi', 'kunjungan.tgl_masuk')
+            ->whereColumn('transaksi.urut_masuk', 'kunjungan.urut_masuk');
     }
 
     public function sjpKunjungan()
     {
         return $this->hasOne(SjpKunjungan::class, 'kd_pasien', 'kd_pasien')
-            ->where('kd_unit', $this->kd_unit)
-            ->where('tgl_masuk', $this->tgl_masuk)
-            ->where('urut_masuk', $this->urut_masuk);
+            ->whereColumn('sjp_kunjungan.kd_unit', 'kunjungan.kd_unit')
+            ->whereColumn('sjp_kunjungan.tgl_masuk', 'kunjungan.tgl_masuk')
+            ->whereColumn('sjp_kunjungan.urut_masuk', 'kunjungan.urut_masuk');
     }
 }
