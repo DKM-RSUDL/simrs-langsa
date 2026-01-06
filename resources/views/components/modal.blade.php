@@ -1,5 +1,5 @@
 <div class="modal fade" id="{{ $id }}" tabindex="-1" aria-labelledby="{{ $id }}Label"
-    aria-hidden="true" data-bs-backdrop="{{ $backdrop ?? '' }}">
+    aria-hidden="true" data-bs-backdrop="{{ $backdrop ?? 'false' }}">
     <div class="modal-dialog {{ $size ? 'modal-' . $size : '' }}">
         <div class="modal-content">
 
