@@ -13,6 +13,7 @@ use App\Models\RmeResumeDtl;
 use App\Models\SegalaOrder;
 use App\Models\SegalaOrderDet;
 use App\Models\UnitAsal;
+use App\Services\RadiologyFileService;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
@@ -176,6 +177,7 @@ class RadiologiController extends Controller
                 'rad_hasil.hasil',
                 'rad_hasil.kd_alat',
                 'rad_hasil.accession_number',
+                'rad_hasil.file',
             ])
                 ->join('transaksi as t', function ($q) {
                     $q->on('rad_hasil.kd_pasien', '=', 't.kd_pasien');
@@ -217,6 +219,13 @@ class RadiologiController extends Controller
             }
 
             $dataTransaksi[$i]['pacs'] = $pacs;
+        }
+
+        $service = new RadiologyFileService();
+
+        foreach ($dataTransaksi as $idx => $trx) {
+            $rawFile = $trx['file'] ?? null;
+            $dataTransaksi[$idx]['file_name'] = $rawFile ? $service->extractFileName($rawFile) : null;
         }
 
         return view('unit-pelayanan.rawat-jalan.pelayanan.radiologi.hasil-tab', compact(
@@ -528,5 +537,97 @@ class RadiologiController extends Controller
 
             if (empty($resumeDtl)) RmeResumeDtl::create($resumeDtlData);
         }
+    }
+
+    public function preview($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, Request $request)
+    {
+        $fileName  = $request->query('file');
+
+        $tanggal   = $tgl_masuk;
+        $kdPasien  = $kd_pasien;
+        $kdUnit    = $kd_unit;
+        $urutMasuk = $urut_masuk;
+
+        if (!$fileName) {
+            abort(404, 'File tidak ditemukan');
+        }
+
+        if (!$fileName || !$tanggal || !$kdPasien) {
+            abort(404, 'Parameter tidak lengkap');
+        }
+
+        $service = new RadiologyFileService();
+
+        $filePath = $service->buildFilePath($fileName, $tanggal);
+
+        if ($service->fileExists($filePath) && $service->isWithinMount($filePath)) {
+            $response = response()->file($filePath, [
+                'Content-Type' => 'application/pdf',
+            ]);
+
+            $response->headers->set('Content-Disposition', $response->headers->makeDisposition(
+                'inline',
+                basename($fileName)
+            ));
+
+            return $response;
+        }
+
+        $original = $service->findOriginalFilePath($fileName, $kdPasien, $tanggal, $kdUnit, (int) $urutMasuk);
+        if ($original && $service->fileExists($original)) {
+            $response = response()->file($original, [
+                'Content-Type' => 'application/pdf',
+            ]);
+
+            $response->headers->set('Content-Disposition', $response->headers->makeDisposition(
+                'inline',
+                basename($fileName)
+            ));
+
+            return $response;
+        }
+
+        abort(404, 'File hasil radiologi tidak ditemukan');
+    }
+
+    public function download($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, Request $request)
+    {
+        $fileName  = $request->query('file');
+
+        $tanggal   = $tgl_masuk;
+        $kdPasien  = $kd_pasien;
+        $kdUnit    = $kd_unit;
+        $urutMasuk = $urut_masuk;
+
+        if (!$fileName) {
+            abort(404, 'File tidak ditemukan');
+        }
+
+        if (!$fileName || !$tanggal || !$kdPasien) {
+            abort(404, 'Parameter tidak lengkap');
+        }
+
+        $service  = new RadiologyFileService();
+
+        if (!$service->validateFileOwnership($fileName, $kdPasien, $tanggal, $kdUnit, (int) $urutMasuk)) {
+            abort(403, 'Anda tidak memiliki akses ke file ini');
+        }
+
+        $filePath = $service->buildFilePath($fileName, $tanggal);
+
+        if ($service->fileExists($filePath) && $service->isWithinMount($filePath)) {
+            return response()->download($filePath, basename($fileName), [
+                'Content-Type' => 'application/pdf',
+            ]);
+        }
+
+        $original = $service->findOriginalFilePath($fileName, $kdPasien, $tanggal, $kdUnit, (int) $urutMasuk);
+        if ($original && $service->fileExists($original)) {
+            return response()->download($original, basename($fileName), [
+                'Content-Type' => 'application/pdf',
+            ]);
+        }
+
+        abort(404, 'File hasil radiologi tidak ditemukan');
     }
 }

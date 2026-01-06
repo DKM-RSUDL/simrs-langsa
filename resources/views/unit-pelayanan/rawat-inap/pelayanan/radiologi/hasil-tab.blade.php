@@ -3,8 +3,8 @@
     <link rel="stylesheet" href="{{ asset('assets/css/MedisGawatDaruratController.css') }}">
     <style>
         /* .header-background {
-                                                                                                                                                                                                            background-image: url("{{ asset('assets/img/background_gawat_darurat.png') }}");
-                                                                                                                                                                                                        } */
+                                                                                                                                                                                                                background-image: url("{{ asset('assets/img/background_gawat_darurat.png') }}");
+                                                                                                                                                                                                            } */
 
         .result-text {
             max-width: 300px;
@@ -89,6 +89,7 @@
                                                         <th>HASIL</th>
                                                         <th>KELUHAN</th>
                                                         <th width="100px">PACS</th>
+                                                        <th width="120px">AKSI</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
@@ -140,6 +141,38 @@
                                                                         class="btn btn-sm btn-primary" title="Lihat PACS">
                                                                         <i class="fas fa-eye"></i>
                                                                     </a>
+                                                                @else
+                                                                    <span class="text-muted">-</span>
+                                                                @endif
+                                                            </td>
+                                                            <td align="middle">
+                                                                @if (!empty($item->filename))
+                                                                    <x-table-action>
+                                                                        <a target="_blank"
+                                                                            href="{{ route('rawat-inap.radiologi.preview', [
+                                                                                $item->kd_unit_rad,
+                                                                                $item->kd_pasien,
+                                                                                $item->TGL_MASUK,
+                                                                                $item->urut_rad,
+                                                                                'file' => $item->filename,
+                                                                            ]) }}"
+                                                                            class="btn btn-sm btn-success"
+                                                                            title="Print / Preview Hasil Radiologi">
+                                                                            <i class="fas fa-print"></i>
+                                                                        </a>
+
+                                                                        <a href="{{ route('rawat-inap.radiologi.download', [
+                                                                            $item->kd_unit_rad,
+                                                                            $item->kd_pasien,
+                                                                            $item->TGL_MASUK,
+                                                                            $item->urut_rad,
+                                                                            'file' => $item->filename,
+                                                                        ]) }}"
+                                                                            class="btn btn-sm btn-primary"
+                                                                            title="Download Hasil Radiologi">
+                                                                            <i class="fas fa-download"></i>
+                                                                        </a>
+                                                                    </x-table-action>
                                                                 @else
                                                                     <span class="text-muted">-</span>
                                                                 @endif
