@@ -26,7 +26,7 @@ class TransferPasienController extends Controller
 
     public function __construct()
     {
-        $this->middleware('can:read unit-pelayanan/rawat-inap');
+        $this->middleware('can:read unit-pelayanan/operasi');
         $this->baseService = new BaseService();
         $this->kdUnit = 71;
     }
@@ -55,19 +55,21 @@ class TransferPasienController extends Controller
         // Query untuk data transfer pasien antar ruang
         $kdUnit = $this->kdUnit;
         $query = RmeTransferPasienAntarRuang::with(['userCreate', 'serahTerima'])
-            // where data medis ok
-            ->where(function ($q) use ($dataMedis) {
-                $q->where('kd_unit', $dataMedis->kd_unit)
-                    ->whereDate('tgl_masuk', $dataMedis->tgl_masuk)
-                    ->where('urut_masuk', $dataMedis->urut_masuk);
-            })
-            // where data medis asal
-            ->orWhere(function ($q) use ($dataMedisAsal, $kdUnit) {
-                $q->where('kd_unit', $dataMedisAsal->kd_unit)
-                    ->whereDate('tgl_masuk', $dataMedisAsal->tgl_masuk)
-                    ->where('urut_masuk', $dataMedisAsal->urut_masuk)
-                    ->whereHas('serahTerima', function ($q) use ($kdUnit) {
-                        $q->where('kd_unit_tujuan', $kdUnit);
+            ->where(function ($query) use ($dataMedis, $dataMedisAsal, $kdUnit) {
+                // where data medis ok
+                $query->where(function ($q) use ($dataMedis) {
+                    $q->where('kd_unit', $dataMedis->kd_unit)
+                        ->whereDate('tgl_masuk', $dataMedis->tgl_masuk)
+                        ->where('urut_masuk', $dataMedis->urut_masuk);
+                })
+                    // where data medis asal
+                    ->orWhere(function ($q) use ($dataMedisAsal, $kdUnit) {
+                        $q->where('kd_unit', $dataMedisAsal->kd_unit)
+                            ->whereDate('tgl_masuk', $dataMedisAsal->tgl_masuk)
+                            ->where('urut_masuk', $dataMedisAsal->urut_masuk)
+                            ->whereHas('serahTerima', function ($q) use ($kdUnit) {
+                                $q->where('kd_unit_tujuan', $kdUnit);
+                            });
                     });
             })
             ->where('kd_pasien', $dataMedis->kd_pasien);
@@ -182,6 +184,12 @@ class TransferPasienController extends Controller
                 ->first();
 
             if (empty($order)) throw new Exception('Pasien belum memiliki order atau tidak melalui RME saat order !');
+
+            if ($order->status == 2) throw new Exception('Order pasien sudah selesai, tidak dapat melakukan transfer lagi !');
+
+            OrderOK::where('kd_kasir_ok', $dataMedis->kd_kasir)
+                ->where('no_transaksi_ok', $dataMedis->no_transaksi)
+                ->update(['status' => 2]);
 
             $dataMedisAsal = $this->baseService->getDataMedisbyTransaksi($order->kd_kasir, $order->no_transaksi);
 
@@ -360,16 +368,20 @@ class TransferPasienController extends Controller
 
     public function destroy($kd_pasien, $tgl_masuk, $urut_masuk, $id)
     {
+        DB::beginTransaction();
         try {
             $transfer = RmeTransferPasienAntarRuang::findOrFail($id);
+            if (!empty($transfer->serahTerima)) $transfer->serahTerima->delete();
             $transfer->delete();
 
+            DB::commit();
             return redirect()->route('operasi.pelayanan.transfer-pasien.index', [
                 $kd_pasien,
                 $tgl_masuk,
                 $urut_masuk
             ])->with('success', 'Data transfer pasien berhasil dihapus.');
         } catch (Exception $e) {
+            DB::rollback();
             return back()->withErrors(['error' => 'Terjadi kesalahan: ' . $e->getMessage()]);
         }
     }

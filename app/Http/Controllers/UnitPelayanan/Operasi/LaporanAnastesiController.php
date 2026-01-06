@@ -12,6 +12,7 @@ use App\Models\OkLaporanAnastesiDtl;
 use App\Models\OkLaporanAnastesiDtl2;
 use App\Models\Perawat;
 use App\Models\RmeCeklistKesiapanAnesthesi;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
@@ -285,7 +286,7 @@ class LaporanAnastesiController extends Controller
     }
 
 
-    public function show($kd_pasien, $tgl_masuk, $urut_masuk, $id)
+    public function show($kd_pasien, $tgl_masuk, $urut_masuk, $id, $isPrint=false)
     {
         // Get patient data similar to create method
         $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
@@ -328,8 +329,17 @@ class LaporanAnastesiController extends Controller
         if ($laporanAnastesiDtl2 && $laporanAnastesiDtl2->penggunaan_cairan_drain) {
             $drainData = json_decode($laporanAnastesiDtl2->penggunaan_cairan_drain, true);
         }
+        if($isPrint){
+            $pdf = Pdf::loadView(
+                'unit-pelayanan.operasi.pelayanan.laporan-anastesi.print',
+                compact('dataMedis','jenisAnastesi','laporanAnastesi','laporanAnastesiDtl','laporanAnastesiDtl2','jenisAnastesi','dokterAnastesi','dokter','drainData','perawat')
+            );
 
-        return view('unit-pelayanan.operasi.pelayanan.laporan-anastesi.show', compact(
+            $fileName = 'Laporan-Operasi-' . ($pasien->kd_pasien ?? 'Unknown') . '-' . $id . '.pdf';
+
+            return $pdf->stream($fileName);
+        }else{
+            return view('unit-pelayanan.operasi.pelayanan.laporan-anastesi.show', compact(
             'dataMedis',
             'laporanAnastesi',
             'laporanAnastesiDtl',
@@ -340,6 +350,8 @@ class LaporanAnastesiController extends Controller
             'perawat',
             'drainData'
         ));
+        }
+        
     }
 
 
@@ -647,5 +659,9 @@ class LaporanAnastesiController extends Controller
                 ->orderBy('produk.deskripsi')
                 ->get();
         });
+    }
+
+    public function print($kd_pasien, $tgl_masuk, $urut_masuk, $id){
+        return $this->show($kd_pasien, $tgl_masuk, $urut_masuk, $id,true);
     }
 }

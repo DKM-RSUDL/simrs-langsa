@@ -17,6 +17,7 @@ use App\Http\Controllers\UnitPelayanan\Hemodialisa\PersetujuanTindakanHDControll
 use App\Http\Controllers\UnitPelayanan\Hemodialisa\PersetujuanTindakanMedisController;
 use App\Http\Controllers\UnitPelayanan\Hemodialisa\TravelingDialysisController;
 use App\Http\Controllers\UnitPelayanan\Hemodialisa\PersetujuanTransfusiDarahController;
+use App\Http\Controllers\UnitPelayanan\Hemodialisa\TransferPasienController;
 use App\Http\Controllers\UnitPelayanan\HemodialisaController;
 
 Route::prefix('hemodialisa')->group(function () {
@@ -275,6 +276,21 @@ Route::prefix('hemodialisa')->group(function () {
                             Route::put('/{data}', 'update')->name('.update');
                             Route::get('/{id}/print-pdf', 'generatePDF')->name('.print-pdf');
                             Route::delete('/{data}', 'destroy')->name('.destroy');
+                        });
+                    });
+                });
+
+                // TRANSFER PASIEN
+                Route::prefix('transfer-pasien')->group(function () {
+                    Route::name('.transfer-pasien')->group(function () {
+                        Route::controller(TransferPasienController::class)->group(function () {
+                            Route::get('/', 'index')->name('.index');
+                            Route::get('/create', 'create')->name('.create');
+                            Route::post('/', 'store')->name('.store');
+                            Route::get('/edit/{data}', 'edit')->name('.edit');
+                            Route::put('/{data}', 'update')->name('.update');
+                            Route::delete('/{data}', 'destroy')->name('.destroy');
+                            Route::get('/{data}', 'show')->name('.show');
                         });
                     });
                 });

@@ -22,7 +22,9 @@ class OrderHD extends Model
         'kd_kasir_hd',
         'no_transaksi_hd',
         'id_serah_terima',
-        'kd_produk'
+        'kd_produk',
+        'user_create',
+        'user_edit',
     ];
 
     public function unit_asal()

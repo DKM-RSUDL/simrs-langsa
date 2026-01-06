@@ -7,6 +7,7 @@ use App\Models\AsalIGD;
 use App\Models\DetailComponent;
 use App\Models\DetailPrsh;
 use App\Models\DetailTransaksi;
+use App\Models\Dokter;
 use App\Models\HrdKaryawan;
 use App\Models\KamarInduk;
 use App\Models\Kunjungan;
@@ -18,6 +19,7 @@ use App\Models\SjpKunjungan;
 use App\Models\Tarif;
 use App\Models\Transaksi;
 use App\Models\Unit;
+use App\Models\UnitAsal;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
@@ -428,6 +430,20 @@ class RawatInapController extends Controller
         return view('unit-pelayanan.rawat-inap.unit-pelayanan-pending', compact('unit'));
     }
 
+    private function decodeJsonFields($transfer)
+    {
+        $jsonFields = ['alasan', 'metode', 'info_medis', 'peralatan', 'gangguan', 'inkontinensia', 'terapi_data', 'alergis'];
+
+        foreach ($jsonFields as $field) {
+            if (isset($transfer->$field)) {
+                $decoded = json_decode($transfer->$field, true);
+                $transfer->$field = $decoded ?? [];
+            }
+        }
+
+        return $transfer;
+    }
+
     public function serahTerimaPasien($kd_unit, $idSerahTerima)
     {
         $serahTerima = RmeSerahTerima::with(['unitAsal', 'unitTujuan', 'petugasAsal', 'petugasTerima', 'transfer'])
@@ -446,7 +462,12 @@ class RawatInapController extends Controller
             ->where('status_peg',  1)
             ->get();
 
-        return view('unit-pelayanan.rawat-inap.pelayanan.serah-terima.index', compact('serahTerima', 'unit', 'unitTujuan', 'petugas'));
+        $dokter = Dokter::where('status', 1)->orderBy('nama', 'asc')->get();
+        $transfer = $serahTerima->transfer;
+        $transfer = $this->decodeJsonFields($transfer);
+
+
+        return view('unit-pelayanan.rawat-inap.pelayanan.serah-terima.index', compact('serahTerima', 'unit', 'unitTujuan', 'petugas', 'transfer', 'dokter'));
     }
 
     // add kunjungan baru ranap
@@ -732,6 +753,24 @@ class RawatInapController extends Controller
         $this->baseService->updateKetKunjungan($dataMedisAsal->kd_kasir, $dataMedisAsal->no_transaksi, 'Aktif', 1);
     }
 
+    private function storeProsesFromPenunjang($serahTerima)
+    {
+
+        // get asal rawat inap
+        $unitAsal = UnitAsal::where('kd_kasir', $serahTerima->kd_kasir_asal)
+            ->where('no_transaksi', $serahTerima->no_transaksi_asal)
+            ->first();
+
+        if (empty($unitAsal)) throw new Exception('Data unit asal rawat inap tidak ditemukan !');
+
+        // get kunjungan rawat inap
+        $dataMedisAsal = $this->baseService->getDataMedisbyTransaksi($unitAsal->kd_kasir_asal, $unitAsal->no_transaksi_asal);
+        if (empty($dataMedisAsal)) throw new Exception('Data kunjungan rawat inap tidak ditemukan !');
+
+        // update keterangan status kunjungan ranap
+        $this->baseService->updateKetKunjungan($dataMedisAsal->kd_kasir, $dataMedisAsal->no_transaksi, 'Aktif', 1);
+    }
+
     public function serahTerimaPasienCreate($kd_unit, $idHash, Request $request)
     {
         DB::beginTransaction();
@@ -767,12 +806,11 @@ class RawatInapController extends Controller
                 if (!$serahTerima->transfer->to_penunjang) {
                     $this->storeProsesAntarRanap($serahTerima);
                 } else {
-                    throw new Exception('Maaf, transfer dari penunjang belum dapat diproses saat ini. Silakan hubungi bagian IT untuk penanganan lebih lanjut.');
+                    $this->storeProsesFromPenunjang($serahTerima);
                 }
             } else {
-                throw new Exception('Maaf, transfer selain dari IGD belum dapat diproses saat ini. Silakan hubungi bagian IT untuk penanganan lebih lanjut.');
+                throw new Exception('Maaf, transfer belum dapat diproses saat ini. Silakan hubungi bagian IT untuk penanganan lebih lanjut.');
             }
-
 
             // update serah terima data
             $data = [

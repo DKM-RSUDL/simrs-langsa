@@ -480,7 +480,7 @@
                             <div class="col-12">
                                 <label class="fw-bold text-muted">Keterangan</label>
                                 <div class="p-3 bg-light rounded">
-                                    {{ $laporanAnastesiDtl2->keterangan ?: 'Tidak ada keterangan' }}
+                                    {{ $laporanAnastesiDtl2->keterangan ? $laporanAnastesiDtl2->keterangan : 'Tidak ada keterangan' }}
                                 </div>
                             </div>
                         </div>

@@ -65,7 +65,8 @@ class Kunjungan extends Model
         'status_kunjungan',
         'triase_id',
         'user_create',
-        'triase_proses'
+        'triase_proses',
+        'status_klaim'
     ];
 
     public function pasien()

@@ -795,7 +795,7 @@
                                     <select class="form-select" id="cairan-select" style="flex: 2;">
                                         <option value="">--Pilih Jenis Cairan--</option>
                                         <option value="Sodium Chloride 0,9%">Sodium Chloride 0,9%</option>
-                                        <option value="Glyrin">Glyrin</option>
+                                        <option value="Glysin">Glysin</option>
                                         <option value="BSS Solution">BSS Solution</option>
                                         <option value="Air Untuk Irigasi">Air Untuk Irigasi</option>
                                         <option value="Lainnya">Lainnya</option>

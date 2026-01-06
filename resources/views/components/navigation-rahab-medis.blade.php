@@ -22,6 +22,15 @@
                 'urut_masuk' => $dataMedis->urut_masuk,
             ]),
         ],
+        [
+            'icon' => 'check.svg',
+            'label' => 'Transfer Pasien',
+            'link' => route('rehab-medis.pelayanan.transfer-pasien.index', [
+                'kd_pasien' => $dataMedis->kd_pasien,
+                'tgl_masuk' => $tglMasukData,
+                'urut_masuk' => $dataMedis->urut_masuk,
+            ]),
+        ],
     ];
 @endphp
 

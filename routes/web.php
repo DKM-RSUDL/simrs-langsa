@@ -3,19 +3,15 @@
 use App\Http\Controllers\Auth\SsoController;
 use App\Http\Controllers\Bridging\Bpjs\BpjsController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\LaporanBerkasController;
 use App\Http\Controllers\NavigationController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\RoleController;
+use App\Http\Controllers\TransfusiDarah\PermintaanController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\UnitPelayanan\GawatDaruratController;
-
 // unit pelanayan
-use App\Http\Controllers\TransfusiDarah\PermintaanController;
-
-use App\Http\Middleware\AssignAdminPermissions;
-use App\Http\Middleware\CheckUnitAccess;
+use Illuminate\Support\Facades\Route;
 
 Auth::routes(['register' => false]); // Nonaktifkan register
 // Auth::routes();
@@ -27,20 +23,19 @@ Route::middleware('guest')->group(function () {
     Route::get('/callback', [SsoController::class, 'handleCallback'])->name('callback');
 });
 
-
 // Keep session alive
 Route::get('/keep-alive', function () {
     return response()->json([
         'token' => csrf_token(),
         'status' => 'alive',
-        'time' => now()->toDateTimeString()
+        'time' => now()->toDateTimeString(),
     ]);
 })->middleware('web');
 
 // Refresh CSRF token
 Route::get('/refresh-csrf', function () {
     return response()->json([
-        'token' => csrf_token()
+        'token' => csrf_token(),
     ]);
 })->middleware('web');
 
@@ -58,28 +53,28 @@ Route::middleware('ssoToken')->group(function () {
     Route::resource('permissions', PermissionController::class);
     Route::resource('users', UserController::class);
 
-    // Grup rute untuk Unit Pelayanan
+    // Grup rute untuk Unit Pelayanan\
     Route::prefix('unit-pelayanan')->group(function () {
         // Rute untuk Rawat Jalan
-        require __DIR__ . '/modules/rawat-jalan.php';
+        require __DIR__.'/modules/rawat-jalan.php';
 
         // Rute untuk Rawat Inap
-        require __DIR__ . '/modules/rawat-inap.php';
+        require __DIR__.'/modules/rawat-inap.php';
 
         // Rute untuk Gawat Darurat
-        require __DIR__ . '/modules/gawat-darurat.php';
+        require __DIR__.'/modules/gawat-darurat.php';
 
         // Rute untuk Forensik
-        require __DIR__ . '/modules/forensik.php';
+        require __DIR__.'/modules/forensik.php';
 
         // Rute untuk Rehab Medik
-        require __DIR__ . '/modules/rehab-medis.php';
+        require __DIR__.'/modules/rehab-medis.php';
 
         // Rute untuk Operasi
-        require __DIR__ . '/modules/operasi.php';
+        require __DIR__.'/modules/operasi.php';
 
         // Rute untuk Operasi
-        require __DIR__ . '/modules/hemodelisa.php';
+        require __DIR__.'/modules/hemodelisa.php';
     });
 
     // TRANSFUSI DARAH
@@ -103,6 +98,14 @@ Route::middleware('ssoToken')->group(function () {
         });
     });
 
+    Route::prefix('berkas-digital')->name('berkas-digital.')->group(function () {
+
+        Route::controller(LaporanBerkasController::class)->group(function () {
+            Route::get('/', 'index')->name('index');
+        });
+
+        require __DIR__.'/modules/berkas-digital.php';
+    });
 
     // BPJS
     Route::prefix('bpjs')->group(function () {

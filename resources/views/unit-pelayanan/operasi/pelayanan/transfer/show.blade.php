@@ -78,29 +78,23 @@
         </div>
 
         <div class="col-md-9">
-            <div class="d-flex align-items-center mb-3">
-                <a href="{{ route('rawat-inap.transfer-pasien-antar-ruang.index', [$dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk]) }}"
-                    class="btn btn-outline-primary btn-sm me-2">
-                    <i class="fas fa-arrow-left"></i> Kembali
-                </a>
-            </div>
+            <x-content-card>
+                <x-button-previous />
 
-            <div class="text-center mt-1 mb-3">
-                <h4 class="text-primary fw-bold">DETAIL FORM TRANSFER PASIEN ANTAR RUANG</h4>
-            </div>
+                @include('components.page-header', [
+                    'title' => 'DETAIL FORM TRANSFER PASIEN ANTAR RUANG',
+                    // 'description' => 'Lengkapi data edit transfer pasien ke ruang asal.',
+                ])
 
-            @if ($errors->any())
-                <div class="alert alert-danger">
-                    <ul class="mb-0">
-                        @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
-                </div>
-            @endif
-
-            <form action="" method="">
-                @csrf
+                @if ($errors->any())
+                    <div class="alert alert-danger">
+                        <ul class="mb-0">
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
 
                 <!-- Informasi Dasar Transfer -->
                 <div class="form-section">
@@ -1267,7 +1261,7 @@
                     </div>
                 </div>
 
-            </form>
+            </x-content-card>
         </div>
     </div>
 

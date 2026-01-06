@@ -608,7 +608,7 @@ class OperasiController extends Controller
 
 
             // Update Order OK
-            OrderOK::where('tgl_op', $tanggal_op)
+            OrderOK::whereDate('tgl_op', $tanggal_op)
                 ->where('jam_op', $jam_op)
                 ->where('kd_kasir', $order->kd_kasir)
                 ->where('no_transaksi', $order->no_transaksi)
@@ -626,7 +626,7 @@ class OperasiController extends Controller
                 ]);
 
 
-            // update serah terima jika ada (sederhanakan dengan null-safe update)
+            // update serah terima jika ada
             if (!empty($request->transfer_id)) {
                 $transferPasien = RmeTransferPasienAntarRuang::with('serahTerima')
                     ->find($request->transfer_id);

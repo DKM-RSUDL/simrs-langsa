@@ -943,17 +943,7 @@ class CpptController extends Controller
                 'dd' => '',
             ];
 
-            // Use updateOrCreate to avoid duplicate anamnesis rows for the same composite key
-            $anamnesisMatch = [
-                'kd_pasien' => $anamnesisInsertData['kd_pasien'],
-                'kd_unit' => $anamnesisInsertData['kd_unit'],
-                'tgl_masuk' => $anamnesisInsertData['tgl_masuk'],
-                'urut_masuk' => $anamnesisInsertData['urut_masuk'],
-                'urut_cppt' => $anamnesisInsertData['urut_cppt'],
-                'urut' => $anamnesisInsertData['urut'],
-            ];
-
-            MrAnamnesis::updateOrCreate($anamnesisMatch, $anamnesisInsertData);
+            MrAnamnesis::create($anamnesisInsertData);
 
             // Insert data to mr_konpas
             $konpasMax = MrKonpas::select(['id_konpas'])
@@ -1176,22 +1166,15 @@ class CpptController extends Controller
                 'jam' => date('H:i:s', strtotime($request->jam_masuk_edit))
             ];
 
-            // Use updateOrCreate to avoid duplicate anamnesis rows for the same composite key
-            $anamnesisMatch = [
-                'kd_pasien' => $kunjungan->kd_pasien,
-                'kd_unit' => $kunjungan->kd_unit,
-                'tgl_masuk' => $kunjungan->tgl_masuk,
-                'urut_masuk' => $kunjungan->urut_masuk,
-                'urut_cppt' => $urutCpptReq,
-            ];
-
             // Update anamnesis
-            MrAnamnesis::updateOrCreate(
-                $anamnesisMatch,
-                [
+            MrAnamnesis::where('kd_pasien', $kunjungan->kd_pasien)
+                ->where('kd_unit', $kunjungan->kd_unit)
+                ->whereDate('tgl_masuk', $kunjungan->tgl_masuk)
+                ->where('urut_masuk', $kunjungan->urut_masuk)
+                ->where('urut_cppt', $urutCpptReq)
+                ->update([
                     'anamnesis' => $request->anamnesis,
-                ]
-            );
+                ]);
 
             Cppt::where('no_transaksi', $kunjungan->no_transaksi)
                 ->where('kd_kasir', $kunjungan->kd_kasir)
