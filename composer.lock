@@ -2069,6 +2069,7 @@
         },
         {
             "name": "laravel/tinker",
+<<<<<<< HEAD
             "version": "v2.11.0",
             "source": {
                 "type": "git",
@@ -2079,6 +2080,18 @@
                 "type": "zip",
                 "url": "https://api.github.com/repos/laravel/tinker/zipball/3d34b97c9a1747a81a3fde90482c092bd8b66468",
                 "reference": "3d34b97c9a1747a81a3fde90482c092bd8b66468",
+=======
+            "version": "v2.10.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/laravel/tinker.git",
+                "reference": "3bcb5f62d6f837e0f093a601e26badafb127bd4c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/laravel/tinker/zipball/3bcb5f62d6f837e0f093a601e26badafb127bd4c",
+                "reference": "3bcb5f62d6f837e0f093a601e26badafb127bd4c",
+>>>>>>> fa398c0061f165de746bc4d620534c1918586e32
                 "shasum": ""
             },
             "require": {
@@ -2129,9 +2142,15 @@
             ],
             "support": {
                 "issues": "https://github.com/laravel/tinker/issues",
+<<<<<<< HEAD
                 "source": "https://github.com/laravel/tinker/tree/v2.11.0"
             },
             "time": "2025-12-19T19:16:45+00:00"
+=======
+                "source": "https://github.com/laravel/tinker/tree/v2.10.2"
+            },
+            "time": "2025-11-20T16:29:12+00:00"
+>>>>>>> fa398c0061f165de746bc4d620534c1918586e32
         },
         {
             "name": "laravel/ui",
@@ -2721,6 +2740,7 @@
         },
         {
             "name": "maennchen/zipstream-php",
+<<<<<<< HEAD
             "version": "3.1.2",
             "source": {
                 "type": "git",
@@ -2731,6 +2751,18 @@
                 "type": "zip",
                 "url": "https://api.github.com/repos/maennchen/ZipStream-PHP/zipball/aeadcf5c412332eb426c0f9b4485f6accba2a99f",
                 "reference": "aeadcf5c412332eb426c0f9b4485f6accba2a99f",
+=======
+            "version": "3.2.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/maennchen/ZipStream-PHP.git",
+                "reference": "682f1098a8fddbaf43edac2306a691c7ad508ec5"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/maennchen/ZipStream-PHP/zipball/682f1098a8fddbaf43edac2306a691c7ad508ec5",
+                "reference": "682f1098a8fddbaf43edac2306a691c7ad508ec5",
+>>>>>>> fa398c0061f165de746bc4d620534c1918586e32
                 "shasum": ""
             },
             "require": {
@@ -2741,7 +2773,7 @@
             "require-dev": {
                 "brianium/paratest": "^7.7",
                 "ext-zip": "*",
-                "friendsofphp/php-cs-fixer": "^3.16",
+                "friendsofphp/php-cs-fixer": "^3.86",
                 "guzzlehttp/guzzle": "^7.5",
                 "mikey179/vfsstream": "^1.6",
                 "php-coveralls/php-coveralls": "^2.5",
@@ -2787,7 +2819,11 @@
             ],
             "support": {
                 "issues": "https://github.com/maennchen/ZipStream-PHP/issues",
+<<<<<<< HEAD
                 "source": "https://github.com/maennchen/ZipStream-PHP/tree/3.1.2"
+=======
+                "source": "https://github.com/maennchen/ZipStream-PHP/tree/3.2.1"
+>>>>>>> fa398c0061f165de746bc4d620534c1918586e32
             },
             "funding": [
                 {
@@ -2795,7 +2831,11 @@
                     "type": "github"
                 }
             ],
+<<<<<<< HEAD
             "time": "2025-01-27T12:07:53+00:00"
+=======
+            "time": "2025-12-10T09:58:31+00:00"
+>>>>>>> fa398c0061f165de746bc4d620534c1918586e32
         },
         {
             "name": "markbaker/complex",
@@ -8095,6 +8135,7 @@
         },
         {
             "name": "laravel/sail",
+<<<<<<< HEAD
             "version": "v1.52.0",
             "source": {
                 "type": "git",
@@ -8105,6 +8146,18 @@
                 "type": "zip",
                 "url": "https://api.github.com/repos/laravel/sail/zipball/64ac7d8abb2dbcf2b76e61289451bae79066b0b3",
                 "reference": "64ac7d8abb2dbcf2b76e61289451bae79066b0b3",
+=======
+            "version": "v1.51.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/laravel/sail.git",
+                "reference": "1c74357df034e869250b4365dd445c9f6ba5d068"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/laravel/sail/zipball/1c74357df034e869250b4365dd445c9f6ba5d068",
+                "reference": "1c74357df034e869250b4365dd445c9f6ba5d068",
+>>>>>>> fa398c0061f165de746bc4d620534c1918586e32
                 "shasum": ""
             },
             "require": {
@@ -8154,7 +8207,11 @@
                 "issues": "https://github.com/laravel/sail/issues",
                 "source": "https://github.com/laravel/sail"
             },
+<<<<<<< HEAD
             "time": "2026-01-01T02:46:03+00:00"
+=======
+            "time": "2025-12-09T13:33:49+00:00"
+>>>>>>> fa398c0061f165de746bc4d620534c1918586e32
         },
         {
             "name": "mockery/mockery",

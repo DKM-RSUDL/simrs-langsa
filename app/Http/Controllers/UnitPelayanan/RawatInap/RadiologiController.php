@@ -631,6 +631,53 @@ class RadiologiController extends Controller
             $dataMedis->urut_masuk
         );
 
+        // Ambil hasil radiologi IGD (asal IGD) dan gabungkan dengan data unit asal lainnya
+        $dataIgdTransaksi = [];
+        $asalIgd = AsalIGD::where('kd_kasir', $dataMedis->kd_kasir)
+            ->where('no_transaksi', $dataMedis->no_transaksi)
+            ->first();
+
+        if (!empty($asalIgd)) {
+            $kunjunganIgd = $this->baseService->getDataMedisbyTransaksi($asalIgd->kd_kasir_asal, $asalIgd->no_transaksi_asal);
+
+            if (!empty($kunjunganIgd)) {
+                $dataIgdTransaksi = RadHasil::with(['produk.klas', 'kunjungan.dokter'])
+                    ->whereHas('kunjungan.transaksi', function ($query) use ($asalIgd) {
+                        $query->where('no_transaksi', $asalIgd->no_transaksi_asal)
+                            ->where('kd_kasir', $asalIgd->kd_kasir_asal);
+                    })
+                    ->where('kd_pasien', $kunjunganIgd->kd_pasien)
+                    ->where('kd_unit', 5)
+                    ->get()
+                    ->map(function ($item) {
+                        $service = new RadiologyFileService();
+                        $fileName = $item->file ? $service->extractFileName($item->file) : null;
+
+                        return [
+                            'kd_pasien'   => $item->kd_pasien,
+                            'kd_unit'     => $item->kd_unit,
+                            'tgl_transaksi' => $item->tgl_masuk,
+                            'TGL_MASUK'   => $item->tgl_masuk,
+                            'urut_masuk'  => $item->urut_masuk,
+                            'urut'        => $item->urut,
+                            'urut_rad'    => $item->urut,
+                            'kd_dokter'   => $item->kunjungan->dokter->kd_dokter ?? null,
+                            'nama_dokter' => $item->kunjungan->dokter->nama_lengkap ?? null,
+                            'kd_produk'   => $item->kd_test,
+                            'nama_produk' => $item->produk->deskripsi ?? null,
+                            'hasil'       => $item->hasil,
+                            'kd_alat'     => $item->kd_alat,
+                            'klasifikasi' => $item->produk->klas->klasifikasi ?? null,
+                            'file'        => $item->file ?? null,
+                            'filename'    => $fileName,
+                            'kd_unit_rad' => $item->kd_unit,
+                            'accession_number' => $item->accession_number ?? null,
+                        ];
+                    })
+                    ->toArray();
+            }
+        }
+
         // get data trx radiologi by trx unit asal (untuk data yang berasal dari unit lain)
         $unitAsal = UnitAsal::where('no_transaksi_asal', $dataMedis->no_transaksi)
             ->where('kd_kasir_asal', $dataMedis->kd_kasir)
@@ -697,6 +744,21 @@ class RadiologiController extends Controller
             $dataTransaksi[$i]['pacs'] = $pacs;
         }
 
+        // PACS untuk data IGD
+        for ($i = 0; $i < count($dataIgdTransaksi); $i++) {
+            $trx = $dataIgdTransaksi[$i];
+            $pacs = '';
+
+            if (!empty($trx['accession_number'])) {
+                $response = Http::post('https://e-rsudlangsa.id/api/pacs/get_order', ['acc' => intval($trx['accession_number'])]);
+                $result = $response->json();
+
+                if (isset($result['data']['UrlLink'])) $pacs = $result['data']['UrlLink'];
+            }
+
+            $dataIgdTransaksi[$i]['pacs'] = $pacs;
+        }
+
         // get pacs url untuk data radiologi lengkap
         $dataRadiologi = $dataRadiologi->map(function ($item) {
             $pacs = '';
@@ -715,6 +777,7 @@ class RadiologiController extends Controller
         return view('unit-pelayanan.rawat-inap.pelayanan.radiologi.hasil-tab', compact(
             'dataMedis',
             'dataTransaksi',
+            'dataIgdTransaksi',
             'dataRadiologi'
         ));
     }
