@@ -1312,14 +1312,20 @@ class AsesmenController extends Controller
                 break;
         }
 
+        // Ambil riwayat alergi dari tabel RmeAlergiPasien, sama seperti di show
+        $riwayatAlergi = RmeAlergiPasien::where('kd_pasien', $asesmen->kd_pasien)->get();
+
         $pdf = PDF::loadView('unit-pelayanan.gawat-darurat.action-gawat-darurat.asesmen.print', [
             'asesmen' => $asesmen,
             'triase' => [
                 'label' => $triaselabel,
                 'warna' => $triasename,
-            ]
+            ],
+            'riwayatAlergi' => $riwayatAlergi
 
         ]);
+
+        // dd($asesmen);
 
         $pdf->setPaper('a4', 'portrait');
 
