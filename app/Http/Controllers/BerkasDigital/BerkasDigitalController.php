@@ -9,10 +9,12 @@ use App\Models\MasterBerkasDigital;
 use App\Models\RmeDokumenBerkasDigital;
 use App\Models\Unit;
 use App\Services\BaseService;
+use App\Services\BerkasDigitalService;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -21,12 +23,14 @@ class BerkasDigitalController extends Controller
     private $pelArr;
     private $pel;
     private $baseService;
+    private $berkasDigitalService;
 
     public function __construct(Request $request)
     {
         $this->pelArr = ['ri', 'rj']; // 'ri' for Rawat Inap, 'rj' for Rawat Jalan
         $this->pel = in_array($request->get('pel'), $this->pelArr) ? $request->get('pel') : 'ri';
         $this->baseService = new BaseService();
+        $this->berkasDigitalService = new BerkasDigitalService();
     }
 
 
@@ -51,11 +55,11 @@ class BerkasDigitalController extends Controller
                 $q->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
                 $q->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
             })
-            ->where('nginap.akhir', 1)
-            ->where(function ($q) {
-                $q->whereNull('kunjungan.status_inap');
-                $q->orWhere('kunjungan.status_inap', 1);
-            })
+            // ->where('nginap.akhir', 1)
+            // ->where(function ($q) {
+            //     $q->whereNull('kunjungan.status_inap');
+            //     $q->orWhere('kunjungan.status_inap', 1);
+            // })
             ->whereNotNull('kunjungan.tgl_pulang')
             ->whereNotNull('kunjungan.jam_pulang')
             ->whereYear('kunjungan.tgl_masuk', '>=', 2025);
@@ -133,7 +137,7 @@ class BerkasDigitalController extends Controller
                 $tglMasuk = date('d-m-Y', strtotime($row->tgl_masuk));
 
                 return "<div class='text-center'>
-                                <a href='#' class='btn btn-primary mb-2'>
+                                <a href='/berkas-digital/dokumen/show?ref={$payload}' class='btn btn-primary mb-2'>
                                     Lihat Data Klaim
                                 </a>
 
@@ -271,6 +275,41 @@ class BerkasDigitalController extends Controller
         return view('berkas-digital.document.index', compact('unit', 'customer', 'jenisBerkas'));
     }
 
+    public function show(Request $request)
+    {
+        $ref = $request->get('ref');
+        if (empty($ref)) {
+            return abort(404, 'Parameter kunjungan tidak ditemukan');
+        }
+        try {
+            $refDecrypted = decrypt($ref);
+        } catch (\Exception $e) {
+            return abort(404, 'Parameter kunjungan tidak valid');
+        }
+
+        // Ambil data medis terkait
+        $dataMedis = $this->baseService->getDataMedisbyTransaksi($refDecrypted['kd_kasir'], $refDecrypted['no_transaksi']);
+        if (!$dataMedis) {
+            return abort(404, 'Data kunjungan tidak ditemukan');
+        }
+
+        // Ambil semua dokumen berkas digital berdasarkan transaksi
+        $listDokumen = RmeDokumenBerkasDigital::with(['jenisBerkas', 'userCreate'])
+            ->where('kd_kasir', $refDecrypted['kd_kasir'])
+            ->where('no_transaksi', $refDecrypted['no_transaksi'])
+            ->get();
+
+        $pasien = isset($dataMedis->pasien) ? $dataMedis->pasien : null;
+        $unit = isset($dataMedis->unit) ? $dataMedis->unit : null;
+        $customer = isset($dataMedis->customer) ? $dataMedis->customer : null;
+
+        // Ambil data asesmen via service
+        $asesmenData = $this->berkasDigitalService->getAsesmenData($dataMedis);
+        extract($asesmenData); // Bikin $asesmen, $triase, $riwayatAlergi tersedia
+
+        return view('berkas-digital.document.show', compact('listDokumen', 'dataMedis', 'pasien', 'unit', 'customer', 'asesmen', 'triase', 'riwayatAlergi'));
+    }
+
     public function storeBerkas(Request $request)
     {
         DB::beginTransaction();
@@ -328,5 +367,21 @@ class BerkasDigitalController extends Controller
             DB::rollBack();
             return to_route('berkas-digital.dokumen.index', $request->except(['_token', 'ref', 'jenis_berkas', 'file_berkas']))->with('error', $e->getMessage());
         }
+    }
+
+    public function destroy($id)
+    {
+        $dokumen = RmeDokumenBerkasDigital::find($id);
+        if (!$dokumen) {
+            return back()->with('error', 'Dokumen tidak ditemukan.');
+        }
+
+        // Hapus file fisik jika ada
+        if ($dokumen->file && Storage::disk('public')->exists($dokumen->file)) {
+            Storage::disk('public')->delete($dokumen->file);
+        }
+
+        $dokumen->delete();
+        return back()->with('success', 'Dokumen berhasil dihapus.');
     }
 }

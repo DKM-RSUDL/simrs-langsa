@@ -372,11 +372,7 @@
                 <td align="left" class="w-30 section-subtitle">KELUHAN UTAMA</td>
                 <td class="section-subtitle" style="width:2px;">:</td>
                 <td>
-                    @if (!empty($tindakanResusitasi['air_way']))
-                        {{ implode(', ', $tindakanResusitasi['air_way']) }}
-                    @else
-                        -
-                    @endif
+                    {{ $asesmen->anamnesis ?? '-' }}
                 </td>
             </tr>
             <tr>
@@ -387,21 +383,15 @@
             <tr>
                 <td align="left" class="w-30 section-subtitle">RIWAYAT PENYAKIT KELUARGA</td>
                 <td class="section-subtitle" style="width:2px;">:</td>
-                <td>{{ $asesmen->riwayat_penyakit ?? '-' }}</td>
+                <td>{{ $asesmen->riwayat_penyakit_keluarga ?? '-' }}</td>
             </tr>
             <tr>
                 <td align="left" class="w-30 section-subtitle">RIWAYAT ALERGI</td>
                 <td class="section-subtitle" style="width:2px;">:</td>
                 <td>
-                    @php
-                        $riwayatAlergi = is_string($asesmen->riwayat_alergi)
-                            ? json_decode($asesmen->riwayat_alergi, true)
-                            : $asesmen->riwayat_alergi;
-                    @endphp
                     @if (!empty($riwayatAlergi))
                         @foreach ($riwayatAlergi as $alergi)
-                            {{ $alergi['jenis'] }}: {{ $alergi['alergen'] }}
-                            (Reaksi: {{ $alergi['reaksi'] }}, Keparahan: {{ $alergi['keparahan'] }})
+                            {{ $alergi->nama_alergen }} ({{ $alergi->reaksi }})
                             @if (!$loop->last)
                                 <br>
                             @endif
@@ -727,10 +717,13 @@
                     <td class="signature-gap"></td>
                 </tr>
                 <tr>
-                    <td class="signature-gap"></td>
+                    <td class="signature-gap">
+                        <img src="{{ generateQrCode(($asesmen->user->karyawan->gelar_depan ?? '') . ' ' . str()->title($asesmen->user->karyawan->nama ?? '') . ' ' . ($asesmen->user->karyawan->gelar_belakang ?? ''), 100,  'svg_datauri') }}" alt="QR Petugas">
+                    </td>
                 </tr>
                 <tr>
-                    <td>{{ $asesmen->user->name ?? '_________________' }}</td>
+                    {{-- <td>{{ $asesmen->user->name ?? '_________________' }}</td> --}}
+                    <td>{{ ($asesmen->user->karyawan->gelar_depan ?? '') . ' ' . str()->title($asesmen->user->karyawan->nama ?? '') . ' ' . ($asesmen->user->karyawan->gelar_belakang ?? '') }}</td>
                 </tr>
                 <tr>
                     <td>Tanggal: {{ date('d-m-Y H:i', strtotime($asesmen->waktu_asesmen)) }}</td>
@@ -935,11 +928,14 @@
                             <td class="signature-gap"></td>
                         </tr>
                         <tr>
-                            <td class="signature-gap"></td>
+                            <td class="signature-gap">
+                                <img src="{{ generateQrCode(($asesmen->user->karyawan->gelar_depan ?? '') . ' ' . str()->title($asesmen->user->karyawan->nama ?? '') . ' ' . ($asesmen->user->karyawan->gelar_belakang ?? ''), 100,  'svg_datauri') }}" alt="QR Petugas">
+                            </td>
                         </tr>
                         <tr>
                             <td style="padding-top: 5px;">
-                                {{ $asesmen->user->name ?? '_________________' }}
+                                {{-- {{ $asesmen->user->name ?? '_________________' }} --}}
+                                {{ ($asesmen->user->karyawan->gelar_depan ?? '') . ' ' . str()->title($asesmen->user->karyawan->nama ?? '') . ' ' . ($asesmen->user->karyawan->gelar_belakang ?? '') }}
                             </td>
                         </tr>
                         <tr>
