@@ -26,6 +26,7 @@ use App\Models\RmeResumeDtl;
 use App\Models\SatsetPrognosis;
 use App\Services\AsesmenService;
 use App\Services\BaseService;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -416,7 +417,7 @@ class AsesmenKepOpthamologyController extends Controller
     }
 
 
-    public function show($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $id)
+    public function show($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $id,$print = false)
     {
         try {
             // Ambil data asesmen beserta semua relasinya
@@ -483,7 +484,7 @@ class AsesmenKepOpthamologyController extends Controller
             $satsetPrognosis = SatsetPrognosis::all();
             $user = auth()->user();
 
-            return view('unit-pelayanan.rawat-inap.pelayanan.asesmen-opthamology.show', compact(
+            $data = compact(
                 'asesmen',
                 'dataMedis',
                 'itemFisik',
@@ -498,7 +499,18 @@ class AsesmenKepOpthamologyController extends Controller
                 'rmeMasterDiagnosis',
                 'rmeMasterImplementasi',
                 'user'
-            ));
+            );
+
+           
+            if ($print === true) {
+                return $data;
+            }
+
+            return view(
+                'unit-pelayanan.rawat-inap.pelayanan.asesmen-opthamology.show',
+                $data
+            );
+ 
         } catch (ModelNotFoundException $e) {
             return back()->with('error', 'Data tidak ditemukan. Detail: ' . $e->getMessage());
         } catch (Exception $e) {
@@ -914,5 +926,13 @@ class AsesmenKepOpthamologyController extends Controller
             DB::rollBack();
             return back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
         }
+    }
+
+    public function generatePDF($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $id){
+        $data = $this->show( $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $id,true);
+        $dataMedis = json_decode(json_encode($data['dataMedis']));
+      
+        $pdf = Pdf::loadView('unit-pelayanan.rawat-inap.pelayanan.asesmen-opthamology.print', ['data'=>$data])->setPaper('a4', 'portrait');
+        return $pdf->stream('Opthamology_' . $dataMedis->pasien->nama . '_' . date('YmdHis') . '.pdf');
     }
 }
