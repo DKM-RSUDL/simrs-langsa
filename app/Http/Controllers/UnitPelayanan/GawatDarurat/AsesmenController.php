@@ -1279,6 +1279,7 @@ class AsesmenController extends Controller
             'faktorPeringan',
             'efekNyeri',
             'tindaklanjut',
+            'tindaklanjut.spri',
             'pemeriksaanFisik',
             'pemeriksaanFisik.itemFisik',
             'user'
@@ -1315,13 +1316,23 @@ class AsesmenController extends Controller
         // Ambil riwayat alergi dari tabel RmeAlergiPasien, sama seperti di show
         $riwayatAlergi = RmeAlergiPasien::where('kd_pasien', $asesmen->kd_pasien)->get();
 
+        // Ambil data laboratorium, radiologi, resep, dan retriase
+        $laborData = $this->getLabor($asesmen->kd_pasien, $asesmen->tgl_masuk, $asesmen->urut_masuk);
+        $radiologiData = $this->getRadiologi($asesmen->kd_pasien, $asesmen->tgl_masuk, $asesmen->urut_masuk);
+        $riwayatObat = $this->getRiwayatObat($asesmen->kd_pasien, $asesmen->tgl_masuk, $asesmen->urut_masuk);
+        $retriaseData = DataTriase::where('id_asesmen', $id)->get();
+
         $pdf = PDF::loadView('unit-pelayanan.gawat-darurat.action-gawat-darurat.asesmen.print', [
             'asesmen' => $asesmen,
             'triase' => [
                 'label' => $triaselabel,
                 'warna' => $triasename,
             ],
-            'riwayatAlergi' => $riwayatAlergi
+            'riwayatAlergi' => $riwayatAlergi,
+            'laborData' => $laborData,
+            'radiologiData' => $radiologiData,
+            'riwayatObat' => $riwayatObat,
+            'retriaseData' => $retriaseData
 
         ]);
 
