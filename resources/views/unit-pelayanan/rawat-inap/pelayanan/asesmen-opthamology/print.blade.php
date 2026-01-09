@@ -757,7 +757,7 @@
                         PERENCANAAN PULANG PASIEN (DISCHARGE PLANNING)
                     </td>
                 </tr>
-
+             
                 <tr>
                     <td colspan="2">
                         <table style="width: 100%; margin-top: 8px; border-collapse: collapse;">
@@ -770,12 +770,12 @@
                                 <td style="padding: 6px 8px; text-align: center;">
                                     <label style="margin-right: 30px;">
                                         <input type="checkbox"
-                                            {{ ($rencanaPulang['usia_lanjut'] ?? '0') == '1' ? 'checked' : '' }}>
+                                            {{ $data['dataMedis']->pasien->umur >  60 ? 'checked' : '' }}>
                                         Ya
                                     </label>
                                     <label>
                                         <input type="checkbox"
-                                            {{ ($rencanaPulang['usia_lanjut'] ?? '0') == '0' ? 'checked' : '' }}>
+                                            {{ $data['dataMedis']->pasien->umur   < 60 ? 'checked' : '' }}>
                                         Tidak
                                     </label>
                                 </td>
@@ -793,12 +793,12 @@
                                 <td style="padding: 6px 8px; text-align: center;">
                                     <label style="margin-right: 30px;">
                                         <input type="checkbox"
-                                            {{ ($rencanaPulang['hambatan_mobilisasi'] ?? '0') == '1' ? 'checked' : '' }}>
+                                            {{ $rencanaPulang['hambatan_mobilisasi']  == 'ya' ? 'checked' : '' }}>
                                         Ya
                                     </label>
                                     <label>
                                         <input type="checkbox"
-                                            {{ ($rencanaPulang['hambatan_mobilisasi'] ?? '0') == '0' ? 'checked' : '' }}>
+                                            {{ $rencanaPulang['hambatan_mobilisasi'] == '0' ? 'checked' : '' }}>
                                         Tidak
                                     </label>
                                 </td>
