@@ -238,7 +238,30 @@
             $painType = pathinfo($painPath, PATHINFO_EXTENSION);
             $painData = @file_get_contents($painPath);
             $painBase64 = $painData ? 'data:image/' . $painType . ';base64,' . base64_encode($painData) : null;
+
+            $boolYaTidak = function ($v) {
+                if ($v === null || $v === '') {
+                    return '-';
+                }
+
+                // boolean (false/true dari DB)
+                if (is_bool($v)) {
+                    return $v ? 'Tidak' : 'Ya';
+                }
+
+                // string / angka
+                $vv = strtolower(trim((string) $v));
+                if ($vv === '0') {
+                    return 'Ya';
+                }
+                if ($vv === '1') {
+                    return 'Tidak';
+                }
+
+                return $v;
+            };
         @endphp
+
 
         {{-- HEADER --}}
         <table class="header-table">
@@ -666,7 +689,17 @@
                 <td class="value tall">{{ $medis->rencana_pengobatan ?? '-' }}</td>
             </tr>
 
-            {{-- 9. DISCHARGE PLANNING --}}
+            {{-- 10. PROGNOSIS --}}
+            <tr>
+                <td colspan="2" class="section-title">11. PROGNOSIS</td>
+            </tr>
+            <tr>
+                <td class="label">Prognosis</td>
+                <td class="value">{{ $prognosisText ?? '-' }}</td>
+            </tr>
+
+
+            {{-- 10. DISCHARGE PLANNING --}}
             <tr>
                 <td colspan="2" class="section-title">10. PERENCANAAN PULANG PASIEN (DISCHARGE PLANNING)</td>
             </tr>
@@ -675,12 +708,18 @@
                     <table style="width: 100%; margin-top: 6px; border-collapse: collapse;" border="1">
                         <tr>
                             <td style="width:60%; font-weight:bold;">Usia lanjut (&gt; 60 th)</td>
-                            <td style="text-align:center;">{{ $medis->usia_lanjut ?? '-' }}</td>
+                            <td style="text-align:center;">
+                                {{ $boolYaTidak($medis->usia_lanjut) }}
+                            </td>
                         </tr>
+
                         <tr>
                             <td style="font-weight:bold;">Hambatan mobilisasi</td>
-                            <td style="text-align:center;">{{ $medis->hambatan_mobilisasi ?? '-' }}</td>
+                            <td style="text-align:center;">
+                                {{ $boolYaTidak($medis->hambatan_mobilisasi) }}
+                            </td>
                         </tr>
+
                         <tr>
                             <td style="font-weight:bold;">Membutuhkan pelayanan medis berkelanjutan</td>
                             <td style="text-align:center;">{{ $medis->penggunaan_media_berkelanjutan ?? '-' }}</td>
@@ -714,14 +753,7 @@
                 <td class="value tall">{{ $medis->kesimpulan_planing ?? '-' }}</td>
             </tr>
 
-            {{-- 10. PROGNOSIS --}}
-            <tr>
-                <td colspan="2" class="section-title">11. PROGNOSIS</td>
-            </tr>
-            <tr>
-                <td class="label">Prognosis</td>
-                <td class="value">{{ $prognosisText ?? '-' }}</td>
-            </tr>
+
 
             {{-- Tanda tangan --}}
             <tr>
