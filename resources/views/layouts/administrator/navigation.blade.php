@@ -39,8 +39,8 @@
                         'unit pelayanan',
                         'Transfusi Darah',
                         'transfusi darah',
-                        'Laporan Berkas',
-                        'laporan berkas',
+                        'Berkas Digital',
+                        'berkas digital'
                     ]);
                 });
 
