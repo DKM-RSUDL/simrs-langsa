@@ -9,7 +9,7 @@
             </div>
 
             {{-- ================= BODY ================= --}}
-            @if ($confirm)
+            @if ($confirm ?? false)
                 <form id="{{ $idForm ?? '' }}" {{ $attributes }} method="POST" action="{{ $action ?? '#' }}"
                     enctype="{{ $enctype ?? '' }}">
                     <div class="modal-body">

@@ -3,8 +3,8 @@
     <link rel="stylesheet" href="{{ asset('assets/css/MedisGawatDaruratController.css') }}">
     <style>
         /* .header-background {
-                                                                                                                                                                                                                background-image: url("{{ asset('assets/img/background_gawat_darurat.png') }}");
-                                                                                                                                                                                                            } */
+                                                                                                                                                                                                                    background-image: url("{{ asset('assets/img/background_gawat_darurat.png') }}");
+                                                                                                                                                                                                                } */
 
         .result-text {
             max-width: 300px;
@@ -185,11 +185,16 @@
                                     </div>
                                 @endif
 
-                                {{-- Data dari Unit Asal --}}
-                                @if (!empty($dataTransaksi))
+                                {{-- Data dari Unit Asal (termasuk IGD) --}}
+                                @php
+                                    $dataUnitAsal = array_merge($dataIgdTransaksi ?? [], $dataTransaksi ?? []);
+                                @endphp
+
+                                @if (!empty($dataUnitAsal))
                                     <div class="mb-4">
                                         <h5 class="text-secondary mb-3">
-                                            <i class="fas fa-history me-2"></i>Hasil Radiologi dari Unit Asal
+                                            <i class="fas fa-history me-2"></i>Hasil Radiologi dari Unit Asal (IGD &
+                                            lainnya)
                                         </h5>
                                         <div class="table-responsive">
                                             <table class="table table-bordered table-sm table-hover">
@@ -205,7 +210,7 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    @foreach ($dataTransaksi as $item)
+                                                    @foreach ($dataUnitAsal as $item)
                                                         <tr>
                                                             <td align="middle">{{ $loop->iteration }}</td>
                                                             <td>

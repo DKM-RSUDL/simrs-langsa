@@ -320,7 +320,16 @@
                         data: 'action',
                         name: 'action',
                         orderable: false,
-                        searchable: false
+                        searchable: false,
+                        render: function(data, type, row) {
+                            let actionHtml = data;
+                            // Jika ada id dokumen berkas digital dan ref_detail, tambahkan tombol detail dengan ref terenkripsi
+                            if (row.id_berkas_digital && row.ref_detail) {
+                                actionHtml +=
+                                    `<a href="/berkas-digital/dokumen/show?ref=${row.ref_detail}" class="btn btn-info btn-sm mt-2">Detail Berkas</a>`;
+                            }
+                            return actionHtml;
+                        }
                     },
                 ],
                 paging: true,
