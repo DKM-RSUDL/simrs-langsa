@@ -3,7 +3,11 @@
 @section('content')
     <x-content-card>
         <div style="height: 100vh; overflow-y: auto;">
-
+            @if ($asesmen)
+                @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.asesmen.print')
+            @else
+                <p>Data asesmen tidak ditemukan untuk kunjungan ini.</p>
+            @endif
         </div>
     </x-content-card>
     <x-content-card>

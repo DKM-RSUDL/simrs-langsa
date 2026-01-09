@@ -172,17 +172,19 @@
             </tr>
             <tr>
                 <th>Tanggal Masuk</th>
-                <td>{{ date('d/m/Y', strtotime($resume->tgl_masuk)) }}</td>
+                {{-- <td>{{ date('d/m/Y', strtotime($resume->tgl_masuk)) }}</td> --}}
+                <td>{{ date('d/m/Y', strtotime($dataMedis->tgl_masuk)) }}</td>
             </tr>
             <tr>
                 <th>Tanggal Keluar</th>
-                <td>{{ $resume->rmeResumeDet->tgl_pulang ? date('d/m/Y', strtotime($resume->rmeResumeDet->tgl_pulang)) : '-' }}
+                {{-- <td>{{ $resume->rmeResumeDet->tgl_pulang ? date('d/m/Y', strtotime($resume->rmeResumeDet->tgl_pulang)) : '-' }} --}}
+                <td>{{ $dataMedis->tgl_pulang ? date('d/m/Y', strtotime($dataMedis->tgl_pulang)) : '-' }}
                 </td>
             </tr>
             <tr>
                 <th>Lama Dirawat</th>
                 <td>
-                    {{ !empty($resume->rmeResumeDet->tgl_pulang) ? selisihHari($resume->tgl_masuk, $resume->rmeResumeDet->tgl_pulang) + 1 . ' Hari' : '-' }}
+                    {{ !empty($dataMedis->tgl_pulang) ? selisihHari($dataMedis->tgl_masuk, $dataMedis->tgl_pulang) + 1 . ' Hari' : '-' }}
                 </td>
             </tr>
             <tr>

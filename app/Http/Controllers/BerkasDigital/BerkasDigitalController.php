@@ -9,6 +9,7 @@ use App\Models\MasterBerkasDigital;
 use App\Models\RmeDokumenBerkasDigital;
 use App\Models\Unit;
 use App\Services\BaseService;
+use App\Services\BerkasDigitalService;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -22,12 +23,14 @@ class BerkasDigitalController extends Controller
     private $pelArr;
     private $pel;
     private $baseService;
+    private $berkasDigitalService;
 
     public function __construct(Request $request)
     {
         $this->pelArr = ['ri', 'rj']; // 'ri' for Rawat Inap, 'rj' for Rawat Jalan
         $this->pel = in_array($request->get('pel'), $this->pelArr) ? $request->get('pel') : 'ri';
         $this->baseService = new BaseService();
+        $this->berkasDigitalService = new BerkasDigitalService();
     }
 
 
@@ -52,11 +55,11 @@ class BerkasDigitalController extends Controller
                 $q->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
                 $q->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
             })
-            ->where('nginap.akhir', 1)
-            ->where(function ($q) {
-                $q->whereNull('kunjungan.status_inap');
-                $q->orWhere('kunjungan.status_inap', 1);
-            })
+            // ->where('nginap.akhir', 1)
+            // ->where(function ($q) {
+            //     $q->whereNull('kunjungan.status_inap');
+            //     $q->orWhere('kunjungan.status_inap', 1);
+            // })
             ->whereNotNull('kunjungan.tgl_pulang')
             ->whereNotNull('kunjungan.jam_pulang')
             ->whereYear('kunjungan.tgl_masuk', '>=', 2025);
@@ -300,7 +303,11 @@ class BerkasDigitalController extends Controller
         $unit = isset($dataMedis->unit) ? $dataMedis->unit : null;
         $customer = isset($dataMedis->customer) ? $dataMedis->customer : null;
 
-        return view('berkas-digital.document.show', compact('listDokumen', 'dataMedis', 'pasien', 'unit', 'customer'));
+        // Ambil data asesmen via service
+        $asesmenData = $this->berkasDigitalService->getAsesmenData($dataMedis);
+        extract($asesmenData); // Bikin $asesmen, $triase, $riwayatAlergi tersedia
+
+        return view('berkas-digital.document.show', compact('listDokumen', 'dataMedis', 'pasien', 'unit', 'customer', 'asesmen', 'triase', 'riwayatAlergi'));
     }
 
     public function storeBerkas(Request $request)

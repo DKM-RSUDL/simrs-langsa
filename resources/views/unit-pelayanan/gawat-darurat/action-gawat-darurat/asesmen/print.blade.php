@@ -717,10 +717,13 @@
                     <td class="signature-gap"></td>
                 </tr>
                 <tr>
-                    <td class="signature-gap"></td>
+                    <td class="signature-gap">
+                        <img src="{{ generateQrCode(($asesmen->user->karyawan->gelar_depan ?? '') . ' ' . str()->title($asesmen->user->karyawan->nama ?? '') . ' ' . ($asesmen->user->karyawan->gelar_belakang ?? ''), 100,  'svg_datauri') }}" alt="QR Petugas">
+                    </td>
                 </tr>
                 <tr>
-                    <td>{{ $asesmen->user->name ?? '_________________' }}</td>
+                    {{-- <td>{{ $asesmen->user->name ?? '_________________' }}</td> --}}
+                    <td>{{ ($asesmen->user->karyawan->gelar_depan ?? '') . ' ' . str()->title($asesmen->user->karyawan->nama ?? '') . ' ' . ($asesmen->user->karyawan->gelar_belakang ?? '') }}</td>
                 </tr>
                 <tr>
                     <td>Tanggal: {{ date('d-m-Y H:i', strtotime($asesmen->waktu_asesmen)) }}</td>
@@ -925,11 +928,14 @@
                             <td class="signature-gap"></td>
                         </tr>
                         <tr>
-                            <td class="signature-gap"></td>
+                            <td class="signature-gap">
+                                <img src="{{ generateQrCode(($asesmen->user->karyawan->gelar_depan ?? '') . ' ' . str()->title($asesmen->user->karyawan->nama ?? '') . ' ' . ($asesmen->user->karyawan->gelar_belakang ?? ''), 100,  'svg_datauri') }}" alt="QR Petugas">
+                            </td>
                         </tr>
                         <tr>
                             <td style="padding-top: 5px;">
-                                {{ $asesmen->user->name ?? '_________________' }}
+                                {{-- {{ $asesmen->user->name ?? '_________________' }} --}}
+                                {{ ($asesmen->user->karyawan->gelar_depan ?? '') . ' ' . str()->title($asesmen->user->karyawan->nama ?? '') . ' ' . ($asesmen->user->karyawan->gelar_belakang ?? '') }}
                             </td>
                         </tr>
                         <tr>
