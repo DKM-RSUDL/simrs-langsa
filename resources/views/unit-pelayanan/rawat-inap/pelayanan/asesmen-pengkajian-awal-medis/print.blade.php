@@ -356,7 +356,6 @@
 
             {{-- 3. RIWAYAT PENGGUNAAN OBAT --}}
             @php
-                // Normalisasi data obat (json dari $medis->riwayat_penggunaan_obat)
                 $obatRows = collect($riwayatObat ?? [])
                     ->map(function ($o) {
                         $nama = $o['namaObat'] ?? ($o['nama_obat'] ?? ($o['nama'] ?? ''));
@@ -364,21 +363,20 @@
                         $satuan = $o['satuan'] ?? '';
                         $frekuensi = $o['frekuensi'] ?? '';
                         $keterangan = $o['keterangan'] ?? '';
-
-                        // Aturan pakai bisa disimpan beda key
                         $aturan = $o['aturan_pakai'] ?? ($o['aturanPakai'] ?? '');
 
-                        // Bentuk dosis seperti di show: "300 Tablet" (dosis + satuan)
                         $dosisText = trim($dosis . ' ' . $satuan);
                         if ($frekuensi !== '') {
                             $dosisText = trim($dosisText . ' ' . $frekuensi);
                         }
 
-                        // Aturan pakai: kalau ada badge/angka di show, biasanya disimpan sebagai "3" + "Sesudah makan"
-                        // jadi gabungkan aturan + keterangan bila ada
                         $aturanText = trim($aturan);
                         if ($keterangan !== '') {
                             $aturanText = $aturanText !== '' ? $aturanText . ' — ' . $keterangan : $keterangan;
+                        }
+
+                        if (trim($nama . $dosisText . $aturanText) === '') {
+                            return null;
                         }
 
                         return [
@@ -387,10 +385,10 @@
                             'aturan' => $aturanText !== '' ? $aturanText : '-',
                         ];
                     })
+                    ->filter()
                     ->values();
 
                 $hasObat = $obatRows->count() > 0;
-                $minRowsObat = 3;
             @endphp
 
             <tr>
@@ -429,31 +427,17 @@
                                         <td>{{ $row['aturan'] }}</td>
                                     </tr>
                                 @endforeach
-
-                                {{-- Tambah baris kosong sampai minRows --}}
-                                @if ($obatRows->count() < $minRowsObat)
-                                    @for ($x = $obatRows->count(); $x < $minRowsObat; $x++)
-                                        <tr>
-                                            <td>&nbsp;</td>
-                                            <td>&nbsp;</td>
-                                            <td>&nbsp;</td>
-                                        </tr>
-                                    @endfor
-                                @endif
                             @else
-                                @for ($x = 0; $x < $minRowsObat; $x++)
-                                    <tr>
-                                        <td>&nbsp;</td>
-                                        <td>&nbsp;</td>
-                                        <td>&nbsp;</td>
-                                    </tr>
-                                @endfor
+                                <tr>
+                                    <td>&nbsp;</td>
+                                    <td>&nbsp;</td>
+                                    <td>&nbsp;</td>
+                                </tr>
                             @endif
                         </tbody>
                     </table>
                 </td>
             </tr>
-
 
             {{-- 4. RIWAYAT ALERGI --}}
             @php
@@ -489,17 +473,26 @@
 
                 $alergiRows = collect($alergiList)
                     ->map(function ($a) {
+                        $jenis = $a['jenis_alergi'] ?? ($a['jenisAlergi'] ?? ($a['jenis'] ?? ''));
+                        $alergen = $a['alergen'] ?? ($a['nama_alergi'] ?? ($a['namaAlergi'] ?? ''));
+                        $reaksi = $a['reaksi'] ?? '';
+                        $tingkat = $a['tingkat_keparahan'] ?? ($a['tingkatKeparahan'] ?? '');
+
+                        if (trim($jenis . $alergen . $reaksi . $tingkat) === '') {
+                            return null;
+                        }
+
                         return [
-                            'jenis' => $a['jenis_alergi'] ?? ($a['jenisAlergi'] ?? ($a['jenis'] ?? '-')),
-                            'alergen' => $a['alergen'] ?? ($a['nama_alergi'] ?? ($a['namaAlergi'] ?? '-')),
-                            'reaksi' => $a['reaksi'] ?? '-',
-                            'tingkat' => $a['tingkat_keparahan'] ?? ($a['tingkatKeparahan'] ?? '-'),
+                            'jenis' => $jenis !== '' ? $jenis : '-',
+                            'alergen' => $alergen !== '' ? $alergen : '-',
+                            'reaksi' => $reaksi !== '' ? $reaksi : '-',
+                            'tingkat' => $tingkat !== '' ? $tingkat : '-',
                         ];
                     })
+                    ->filter()
                     ->values();
 
                 $hasAlergi = $alergiRows->count() > 0;
-                $minRows = 5;
             @endphp
 
             <tr>
@@ -542,34 +535,20 @@
                                         <td>{{ $row['tingkat'] }}</td>
                                     </tr>
                                 @endforeach
-                                @if ($alergiRows->count() < $minRows)
-                                    @for ($x = $alergiRows->count(); $x < $minRows; $x++)
-                                        <tr>
-                                            <td style="text-align:center;">{{ $x + 1 }}</td>
-                                            <td>&nbsp;</td>
-                                            <td>&nbsp;</td>
-                                            <td>&nbsp;</td>
-                                            <td>&nbsp;</td>
-                                        </tr>
-                                    @endfor
-                                @endif
                             @else
-                                @for ($x = 0; $x < $minRows; $x++)
-                                    <tr>
-                                        <td style="text-align:center;">{{ $x + 1 }}</td>
-                                        <td>&nbsp;</td>
-                                        <td>&nbsp;</td>
-                                        <td>&nbsp;</td>
-                                        <td>&nbsp;</td>
-                                    </tr>
-                                @endfor
+                                {{-- kalau tidak ada data, tampilkan 1 baris kosong saja --}}
+                                <tr>
+                                    <td style="text-align:center;">1</td>
+                                    <td>&nbsp;</td>
+                                    <td>&nbsp;</td>
+                                    <td>&nbsp;</td>
+                                    <td>&nbsp;</td>
+                                </tr>
                             @endif
                         </tbody>
                     </table>
                 </td>
             </tr>
-
-
 
             {{-- 5. STATUS PRESENT --}}
             <tr>
@@ -668,17 +647,39 @@
             </tr>
 
             {{-- 8. DIAGNOSIS --}}
+            @php
+                $formatDiag = function ($raw) {
+                    if ($raw === null || $raw === '') {
+                        return '-';
+                    }
+                    if (is_array($raw)) {
+                        $raw = array_values(array_filter($raw, fn($x) => $x !== null && $x !== ''));
+                        return count($raw) ? implode('; ', $raw) : '-';
+                    }
+                    $decoded = json_decode($raw, true);
+                    if (json_last_error() === JSON_ERROR_NONE && is_array($decoded)) {
+                        $decoded = array_values(array_filter($decoded, fn($x) => $x !== null && $x !== ''));
+                        return count($decoded) ? implode('; ', $decoded) : '-';
+                    }
+                    return $raw;
+                };
+
+                $diagBandingText = $formatDiag($medis->diagnosis_banding ?? null);
+                $diagKerjaText = $formatDiag($medis->diagnosis_kerja ?? null);
+            @endphp
+
             <tr>
                 <td colspan="2" class="section-title">8. DIAGNOSIS</td>
             </tr>
             <tr>
                 <td class="label">Diagnosis Banding</td>
-                <td class="value tall">{{ $medis->diagnosis_banding ?? '-' }}</td>
+                <td class="value tall">{{ $diagBandingText }}</td>
             </tr>
             <tr>
                 <td class="label">Diagnosis Kerja</td>
-                <td class="value tall">{{ $medis->diagnosis_kerja ?? '-' }}</td>
+                <td class="value tall">{{ $diagKerjaText }}</td>
             </tr>
+
 
             {{-- 8. RENCANA PENATALAKSANAAN --}}
             <tr>
