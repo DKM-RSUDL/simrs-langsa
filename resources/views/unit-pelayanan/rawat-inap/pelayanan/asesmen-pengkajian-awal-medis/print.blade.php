@@ -768,8 +768,8 @@
                                 {{ $jamIsi ? \Carbon\Carbon::parse($jamIsi)->format('H:i') : date('H:i') }}
                                 <br><br>
                                 Dokter yang memeriksa
-                                <br><br><br><br>
-                                ( .................................................. )
+                                <br><br>
+                                <img src="{{ generateQrCode($dokterNama, 120, 'svg_datauri') }}" alt="QR Code">
                                 <br>
                                 {{ $dokterNama }}
                             </td>
