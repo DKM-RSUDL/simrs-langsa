@@ -18,6 +18,7 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class AsesmenPengkajianAwalMedis extends Controller
 {
@@ -310,38 +311,62 @@ class AsesmenPengkajianAwalMedis extends Controller
         }
     }
 
-    public function show($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $id)
+    public function show($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $id, $print = false)
     {
-        try {
-            // Load data utama dengan relationships
-            $asesmen = RmeAsesmen::with([
-                'asesmenMedisRanap',
-                'asesmenMedisRanapFisik',
-            ])->findOrFail($id);
-        } catch (Exception $e) {
-            $asesmen = RmeAsesmen::findOrFail($id);
-        }
+        $asesmen = RmeAsesmen::with([
+            'asesmenMedisRanap',
+            'asesmenMedisRanapFisik',
+        ])->findOrFail($id);
 
         $dataMedis = $this->getDataMedis($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
-
-        if (! $dataMedis) {
-            abort(404, 'Data tidak ditemukan');
-        }
+        if (!$dataMedis) abort(404, 'Data tidak ditemukan');
 
         $masterData = $this->getMasterData($kd_pasien);
 
-        return view(
-            'unit-pelayanan.rawat-inap.pelayanan.asesmen-pengkajian-awal-medis.edit',
-            array_merge([
-                'kd_unit' => $kd_unit,
-                'kd_pasien' => $kd_pasien,
-                'tgl_masuk' => $tgl_masuk,
-                'urut_masuk' => $urut_masuk,
-                'dataMedis' => $dataMedis,
-                'asesmen' => $asesmen,
-                'readonly' => true,
-            ], $masterData)
-        );
+        $payload = array_merge([
+            'kd_unit' => $kd_unit,
+            'kd_pasien' => $kd_pasien,
+            'tgl_masuk' => $tgl_masuk,
+            'urut_masuk' => $urut_masuk,
+            'dataMedis' => $dataMedis,
+            'asesmen' => $asesmen,
+            'readonly' => true,
+        ], $masterData);
+
+        if ($print) return $payload;
+
+        return view('unit-pelayanan.rawat-inap.pelayanan.asesmen-pengkajian-awal-medis.edit', $payload);
+    }
+
+    public function generatePDF($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $id)
+    {
+        $asesmen = RmeAsesmen::with([
+            'asesmenMedisRanap',
+            'asesmenMedisRanapFisik',
+        ])->findOrFail($id);
+
+        $dataMedis = $this->getDataMedis($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
+        if (!$dataMedis) abort(404, 'Data tidak ditemukan');
+
+        $masterData = $this->getMasterData($kd_pasien);
+
+        $data = array_merge([
+            'kd_unit' => $kd_unit,
+            'kd_pasien' => $kd_pasien,
+            'tgl_masuk' => $tgl_masuk,
+            'urut_masuk' => $urut_masuk,
+            'dataMedis' => $dataMedis,
+            'asesmen' => $asesmen,
+            'readonly' => true,
+        ], $masterData);
+
+        $pdf = Pdf::loadView(
+            'unit-pelayanan.rawat-inap.pelayanan.asesmen-pengkajian-awal-medis.print',
+            ['data' => $data]
+        )->setPaper('a4', 'portrait');
+
+        $nama = $dataMedis->pasien->nama ?? 'Pasien';
+        return $pdf->stream('PengkajianAwalMedis_' . $nama . '_' . date('YmdHis') . '.pdf');
     }
 
     public function edit($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $id)
