@@ -64,7 +64,7 @@
             display: inline-block;
         }
 
-   
+
 
         input[type="checkbox"]:checked {
             background: #fff;
@@ -133,7 +133,7 @@
             vertical-align: middle;
         }
 
-       
+
 
         .brand-table {
             border-collapse: collapse;
@@ -175,7 +175,7 @@
             margin: 0;
         }
 
-      
+
 
         .unit-box {
             background-color: #bbbbbb;
@@ -192,7 +192,7 @@
         }
 
 
-        
+
     </style>
 </head>
     <body>
@@ -211,9 +211,9 @@
 
                 $statusPresent = $data['asesmen']->rmeAsesmenKepOphtamologyFisik;
                 $faktorpemberat = $data['faktorpemberat']
-            
+
             @endphp
-             
+
             <table class="header-table">
                 <tr>
                     <td class="td-left">
@@ -247,7 +247,7 @@
                     </td>
                 </tr>
             </table>
-            
+
              <table class="patient-table">
                 <tr>
                     <th>No. RM</th>
@@ -263,7 +263,7 @@
                     <td>{{ $data['dataMedis']->pasien->umur ?? '-' }} Tahun</td>
                 </tr>
             </table>
-         
+
 
             <table>
                 <!-- Header Anamnesis -->
@@ -299,7 +299,7 @@
                         {{ $asesmen->riwayat_penyakit_sekarang ?? '–' }}
                     </td>
                 </tr> --}}
-            
+
                 <!-- Riwayat Penyakit Dahulu -->
                 <tr>
                     <td  class="label">Riwayat penyakit terdahulu:</td>
@@ -308,7 +308,7 @@
                     </td>
                 </tr>
                 <tr>
-                    
+
                 </tr>
 
                 <!-- Riwayat Keluarga -->
@@ -319,7 +319,7 @@
                     </td>
                 </tr>
                 <tr>
-                    
+
                 </tr>
             <!-- Riwayat Pengobatan -->
             <tr>
@@ -438,9 +438,9 @@
                         <td colspan="2" class="value" style="height: 10px; border-bottom: 1px dotted #444;"></td>
                     </tr>
                 @endif
-            
 
-              
+
+
                <!-- Status Oftalmologi / Pemeriksaan Mata -->
                 <tr>
                     <td colspan="2" class="label" style="padding-top: 12px; font-size: 11pt;">STATUS OFTALMOLOGI</td>
@@ -522,8 +522,8 @@
                             <tr>
                                 <td class="label" style="padding: 4px 8px;">Tekanan darah</td>
                                 <td class="value">
-                                    {{ ($statusPresent['sistole'] ?? '') && ($statusPresent['diastole'] ?? '') 
-                                        ? $statusPresent['sistole'].'/'.$statusPresent['diastole'].' mmHg' 
+                                    {{ ($statusPresent['sistole'] ?? '') && ($statusPresent['diastole'] ?? '')
+                                        ? $statusPresent['sistole'].'/'.$statusPresent['diastole'].' mmHg'
                                         : '' }}
                                 </td>
 
@@ -572,11 +572,11 @@
                     </td>
                 </tr>
                 <!-- Pemeriksaan Oftalmologi Komprehensif -->
-             
+
                 <tr>
                     <td colspan="2">
                        <table border="1">
-                            <tr> 
+                            <tr>
                                 <th style="width:35%; text-align:center;">Pengkajian Awal Medis Opthamology/ Mata</th>
                                 <th style="width:30%; text-align:center;">SMF: PENYAKIT MATA</th>
                                 <th style="width:35%; text-align:center;">NO RM: {{ $data['dataMedis']->kd_pasien }}</th>
@@ -604,7 +604,7 @@
                                     $dataImage = file_get_contents($path);
                                     $eyeBase64 = 'data:image/' . $type . ';base64,' . base64_encode($dataImage);
                                 @endphp
-                        
+
                                 <tr>
                                     <td class="value" style="text-align:left; padding:6px; border-bottom:1px solid #999;">
                                         <img src="{{ $eyeBase64 }}" width="150px" alt="Eye">
@@ -669,7 +669,7 @@
                     <tr>
                         <td colspan="2">
                         <table border="1">
-                                <tr> 
+                                <tr>
                                     <th style="width:35%; text-align:center;">Pengkajian Awal Medis Opthamology/ Mata</th>
                                     <th style="width:30%; text-align:center;">SMF: PENYAKIT MATA</th>
                                     <th style="width:35%; text-align:center;">NO RM: {{ $data['dataMedis']->kd_pasien }}</th>
@@ -728,7 +728,7 @@
                         <td class="label" style="padding:16px 6px 10px;">
                             PROGNOSIS
                         </td>
-                       
+
                         <td class="value" style="padding:16px 6px 10px;">
                             {{ $asesmen_kep_ophtamology->paru_prognosis ?? '–' }}
                         </td>
@@ -741,8 +741,8 @@
                     <!-- PERENCANAAN PULANG PASIEN (DISCHARGE PLANNING) -->
                 @php
                     // Ambil data rencana pulang
-               
-                 
+
+
 
                     // Logika ketergantungan
                     $ketergantungan = (
@@ -757,7 +757,7 @@
                         PERENCANAAN PULANG PASIEN (DISCHARGE PLANNING)
                     </td>
                 </tr>
-             
+
                 <tr>
                     <td colspan="2">
                         <table style="width: 100%; margin-top: 8px; border-collapse: collapse;">
@@ -869,7 +869,7 @@
                                     Rencana Tanggal Pulang :
                                 </td>
                                 <td class="value" style="height: 40px;">
-                                    {{ isset($rencanaPulang['rencana_pulang']) 
+                                    {{ isset($rencanaPulang['rencana_pulang'])
                                         ? \Carbon\Carbon::parse($rencanaPulang['rencana_pulang'])->translatedFormat('d F Y')
                                         : '' }}
                                 </td>
@@ -890,8 +890,9 @@
                                     Jam: {{ date('H:i', strtotime($asesmen_kep_ophtamology->waktu_masuk)) }}
                                     <br><br>
                                     Dokter yang memeriksa
-                                    <br><br><br><br>
-                                    ( .................................................. )
+                                    <br><br>
+                                    <img src="{{ generateQrCode($data['dataMedis']->dokter->nama_lengkap, 120, 'svg_datauri') }}" alt="QR Code">
+                                    <br>
                                     <br>
                                     {{ $data['dataMedis']->dokter->nama_lengkap     }}
                                 </td>

@@ -169,12 +169,14 @@ class AsesmenKepOpthamologyController extends Controller
             $dataOphtamology->barang_berharga = $request->barang_berharga;
             $dataOphtamology->diagnosis_banding = $request->diagnosis_banding ?? '[]';
             $dataOphtamology->diagnosis_kerja = $request->diagnosis_kerja ?? '[]';
-            $dataOphtamology->prognosis = $request->prognosis;
-            $dataOphtamology->observasi = $request->observasi;
-            $dataOphtamology->terapeutik = $request->terapeutik;
-            $dataOphtamology->edukasi = $request->edukasi;
-            $dataOphtamology->kolaborasi = $request->kolaborasi;
-            $dataOphtamology->evaluasi = $request->evaluasi_keperawatan;
+            $dataOphtamology->paru_prognosis = $request->paru_prognosis;
+            $dataOphtamology->rencana_pengobatan = $request->rencana_pengobatan;
+            // $dataOphtamology->prognosis = $request->prognosis;
+            // $dataOphtamology->observasi = $request->observasi;
+            // $dataOphtamology->terapeutik = $request->terapeutik;
+            // $dataOphtamology->edukasi = $request->edukasi;
+            // $dataOphtamology->kolaborasi = $request->kolaborasi;
+            // $dataOphtamology->evaluasi = $request->evaluasi_keperawatan;
             $dataOphtamology->penyakit_yang_diderita = $request->penyakit_diderita ?? '[]';
             $dataOphtamology->riwayat_penyakit_keluarga = $request->riwayat_kesehatan_keluarga ?? '[]';
             $dataOphtamology->riwayat_penggunaan_obat = $request->riwayat_penggunaan_obat ?? '[]';
@@ -501,7 +503,7 @@ class AsesmenKepOpthamologyController extends Controller
                 'user'
             );
 
-           
+
             if ($print === true) {
                 return $data;
             }
@@ -510,7 +512,7 @@ class AsesmenKepOpthamologyController extends Controller
                 'unit-pelayanan.rawat-inap.pelayanan.asesmen-opthamology.show',
                 $data
             );
- 
+
         } catch (ModelNotFoundException $e) {
             return back()->with('error', 'Data tidak ditemukan. Detail: ' . $e->getMessage());
         } catch (Exception $e) {
@@ -679,16 +681,19 @@ class AsesmenKepOpthamologyController extends Controller
             $asesmenKepOpthamology->barang_berharga = $request->barang_berharga;
             $asesmenKepOpthamology->diagnosis_banding = $request->diagnosis_banding ?? '[]';
             $asesmenKepOpthamology->diagnosis_kerja = $request->diagnosis_kerja ?? '[]';
-            $asesmenKepOpthamology->prognosis = $request->prognosis;
-            $asesmenKepOpthamology->observasi = $request->observasi;
-            $asesmenKepOpthamology->terapeutik = $request->terapeutik;
-            $asesmenKepOpthamology->edukasi = $request->edukasi;
-            $asesmenKepOpthamology->kolaborasi = $request->kolaborasi;
-            $asesmenKepOpthamology->evaluasi = $request->evaluasi_keperawatan;
+            // $asesmenKepOpthamology->diagnosis_banding = json_decode($request->diagnosis_banding, true) ?? '[]';
+            // $asesmenKepOpthamology->diagnosis_kerja = json_decode($request->diagnosis_kerja, true) ?? '[]';
+            // $asesmenKepOpthamology->prognosis = $request->prognosis;
+            // $asesmenKepOpthamology->observasi = $request->observasi;
+            // $asesmenKepOpthamology->terapeutik = $request->terapeutik;
+            // $asesmenKepOpthamology->edukasi = $request->edukasi;
+            // $asesmenKepOpthamology->kolaborasi = $request->kolaborasi;
+            // $asesmenKepOpthamology->evaluasi = $request->evaluasi_keperawatan;
             $asesmenKepOpthamology->penyakit_yang_diderita = $request->penyakit_diderita ?? '[]';
             $asesmenKepOpthamology->riwayat_penyakit_keluarga = $request->riwayat_kesehatan_keluarga ?? '[]';
             $asesmenKepOpthamology->riwayat_penggunaan_obat = $request->riwayat_penggunaan_obat ?? '[]';
             $asesmenKepOpthamology->paru_prognosis = $request->paru_prognosis;
+            $asesmenKepOpthamology->rencana_pengobatan = $request->rencana_pengobatan;
             $asesmenKepOpthamology->save();
 
 
@@ -931,7 +936,7 @@ class AsesmenKepOpthamologyController extends Controller
     public function generatePDF($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $id){
         $data = $this->show( $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $id,true);
         $dataMedis = json_decode(json_encode($data['dataMedis']));
-      
+
         $pdf = Pdf::loadView('unit-pelayanan.rawat-inap.pelayanan.asesmen-opthamology.print', ['data'=>$data])->setPaper('a4', 'portrait');
         return $pdf->stream('Opthamology_' . $dataMedis->pasien->nama . '_' . date('YmdHis') . '.pdf');
     }
