@@ -2,7 +2,7 @@
 
 @section('content')
     <x-content-card>
-        <div style="height: 100vh; overflow-y: auto;">
+        <div style="height: 150vh; overflow-y: auto; display: flex; flex-direction: column; gap: 50px;">
             @if ($asesmen)
                 @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.asesmen.print')
             @else
@@ -33,6 +33,8 @@
 
             @if (!empty($resume))
                 @include('unit-pelayanan.rawat-inap.pelayanan.resume.resume-medis.print')
+            @else
+                <p>Data resume medis tidak ditemukan untuk kunjungan ini.</p>
             @endif
         </div>
     </x-content-card>
