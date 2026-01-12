@@ -30,6 +30,10 @@
             @else
                 <p>Data pengkajian awal medis tidak ditemukan untuk kunjungan ini.</p>
             @endif
+
+            @if (!empty($resume))
+                @include('unit-pelayanan.rawat-inap.pelayanan.resume.resume-medis.print')
+            @endif
         </div>
     </x-content-card>
     <x-content-card>
