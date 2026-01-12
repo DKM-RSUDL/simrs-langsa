@@ -6,6 +6,9 @@ use App\Models\RmeAsesmen;
 use App\Models\DataTriase;
 use App\Models\RmeAlergiPasien;
 use App\Models\SegalaOrder;
+use App\Models\RmeMasterDiagnosis;
+use App\Models\RmeMasterImplementasi;
+use App\Models\SatsetPrognosis;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Carbon;
 
@@ -284,4 +287,52 @@ class BerkasDigitalService
                 return '<span class="text-secondary">Unknown</span>';
         }
     }
-}
+    /**
+     * Get Pengkajian Awal Medis (Rawat Inap) data
+     * Untuk ditampilkan di berkas digital dokumen
+     */
+    public function getPengkajianAwalMedisData($dataMedis)
+    {
+        // Tentukan tanggal masuk
+        $tglMasuk = isset($dataMedis->tgl_transaksi) ? $dataMedis->tgl_transaksi : $dataMedis->tgl_masuk;
+        
+        // Ambil data pengkajian awal medis rawat inap (kategori=1, sub_kategori=1)
+        $pengkajianAsesmen = RmeAsesmen::with([
+            'pasien',
+            'asesmenMedisRanap',
+            'asesmenMedisRanapFisik',
+            'user'
+        ])
+            ->where('kd_pasien', $dataMedis->kd_pasien)
+            ->whereDate('tgl_masuk', date('Y-m-d', strtotime($tglMasuk)))
+            ->where('urut_masuk', $dataMedis->urut_masuk)
+            ->where('kategori', 1) // Kategori Medis
+            ->where('sub_kategori', 1) // Sub kategori Pengkajian Awal
+            ->orderBy('waktu_asesmen', 'desc')
+            ->first();
+
+        // Jika tidak ada, return data kosong
+        if (!$pengkajianAsesmen) {
+            return [
+                'pengkajianAsesmen' => null,
+                'rmeMasterDiagnosis' => collect([]),
+                'rmeMasterImplementasi' => collect([]),
+                'satsetPrognosis' => collect([]),
+                'alergiPasien' => collect([]),
+            ];
+        }
+
+        // Ambil master data yang diperlukan untuk print pengkajian awal medis
+        $rmeMasterDiagnosis = RmeMasterDiagnosis::all();
+        $rmeMasterImplementasi = RmeMasterImplementasi::all();
+        $satsetPrognosis = SatsetPrognosis::all();
+        $alergiPasien = RmeAlergiPasien::where('kd_pasien', $dataMedis->kd_pasien)->get();
+
+        return compact(
+            'pengkajianAsesmen',
+            'rmeMasterDiagnosis',
+            'rmeMasterImplementasi',
+            'satsetPrognosis',
+            'alergiPasien'
+        );
+    }}

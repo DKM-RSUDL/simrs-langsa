@@ -8,6 +8,21 @@
             @else
                 <p>Data asesmen tidak ditemukan untuk kunjungan ini.</p>
             @endif
+
+            @if ($pengkajianAsesmen)
+                @include('unit-pelayanan.rawat-inap.pelayanan.asesmen-pengkajian-awal-medis.print', [
+                    'data' => [
+                        'asesmen' => $pengkajianAsesmen,
+                        'dataMedis' => $dataMedis,
+                        'rmeMasterDiagnosis' => $rmeMasterDiagnosis,
+                        'rmeMasterImplementasi' => $rmeMasterImplementasi,
+                        'satsetPrognosis' => $satsetPrognosis,
+                        'alergiPasien' => $alergiPasien,
+                    ]
+                ])
+            @else
+                <p>Data pengkajian awal medis tidak ditemukan untuk kunjungan ini.</p>
+            @endif
         </div>
     </x-content-card>
     <x-content-card>
