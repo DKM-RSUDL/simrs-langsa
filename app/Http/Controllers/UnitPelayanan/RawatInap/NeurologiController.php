@@ -150,8 +150,6 @@ class NeurologiController extends Controller
                 );
             }
 
-            dd($request->riwayat_alergi);
-
             $asesmenNeurologi = new RmeAsesmenNeurologi;
             $asesmenNeurologi->id_asesmen = $asesmen->id;
             $asesmenNeurologi->keluhan_utama = $request->keluhan_utama;
