@@ -1010,15 +1010,15 @@
                                 @php
                                     // Parse existing diagnosis data from database
                                     $diagnosisBanding = !empty(
-                                        $asesmen->rmeAsesmenKepOphtamology[0]->diagnosis_banding
+                                        $asesmen->rmeAsesmenKepOphtamology->diagnosis_banding
                                     )
                                         ? json_decode(
-                                            $asesmen->rmeAsesmenKepOphtamology[0]->diagnosis_banding,
+                                            $asesmen->rmeAsesmenKepOphtamology->diagnosis_banding,
                                             true,
                                         )
                                         : [];
-                                    $diagnosisKerja = !empty($asesmen->rmeAsesmenKepOphtamology[0]->diagnosis_kerja)
-                                        ? json_decode($asesmen->rmeAsesmenKepOphtamology[0]->diagnosis_kerja, true)
+                                    $diagnosisKerja = !empty($asesmen->rmeAsesmenKepOphtamology->diagnosis_kerja)
+                                        ? json_decode($asesmen->rmeAsesmenKepOphtamology->diagnosis_kerja, true)
                                         : [];
                                 @endphp
 
