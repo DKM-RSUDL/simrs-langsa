@@ -19,6 +19,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use App\Services\AsesmenService;
 use App\Services\BaseService;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Exception;
 
 class AsesmenMedisAnakController extends Controller
@@ -495,6 +496,38 @@ class AsesmenMedisAnakController extends Controller
         );
     }
 
+    public function generatePDF($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $id)
+    {
+        $asesmen = RmeAsesmen::with([
+            'asesmenMedisAnak',
+            'asesmenMedisAnakFisik',
+            'asesmenMedisAnakDtl'
+        ])->findOrFail($id);
+
+        $dataMedis = $this->getDataMedis($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
+        if (!$dataMedis) abort(404, 'Data tidak ditemukan');
+
+        $masterData = $this->getMasterData($kd_pasien);
+
+        $data = array_merge([
+            'kd_unit' => $kd_unit,
+            'kd_pasien' => $kd_pasien,
+            'tgl_masuk' => $tgl_masuk,
+            'urut_masuk' => $urut_masuk,
+            'dataMedis' => $dataMedis,
+            'asesmen' => $asesmen,
+            'readonly' => true,
+        ], $masterData);
+
+        // Load view print yang baru
+        $pdf = Pdf::loadView(
+            'unit-pelayanan.rawat-inap.pelayanan.asesmen-medis-anak.print',
+            ['data' => $data]
+        )->setPaper('a4', 'portrait');
+
+        $nama = $dataMedis->pasien->nama ?? 'Pasien_Anak';
+        return $pdf->stream('AsesmenMedisAnak_' . $nama . '_' . date('YmdHis') . '.pdf');
+    }
     public function update(Request $request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $id)
     {
         DB::beginTransaction();
@@ -507,7 +540,6 @@ class AsesmenMedisAnakController extends Controller
             $riwayatObat = $this->processJsonData($request->riwayat_penggunaan_obat);
             $riwayatImunisasi = $request->input('riwayat_imunisasi', []);
 
-            // Process vital signs
             $vitalSign = [
                 'gcs' => $request->input('vital_sign.gcs'),
                 'sistole' => $request->sistole,
