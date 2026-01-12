@@ -417,7 +417,7 @@
         <tr>
             <td><strong>Irama</strong></td>
             <td>
-              
+
                 @if($asesmen->rmeAsesmenObstetriPemeriksaanFisik->kontraksi_irama)
                     @if($asesmen->rmeAsesmenObstetriPemeriksaanFisik->kontraksi_irama == 1)
                         Memanjang
@@ -569,7 +569,7 @@
                         @endif
                 @else
                     -
-                @endif      
+                @endif
             </td>
         </tr>
 
@@ -648,8 +648,8 @@
             <td><strong>Pembukaan (Cm)</strong></td>
             <td>{{ $asesmen->rmeAsesmenObstetriPemeriksaanFisik->panggul_pembukaan_cm ?? '-' }}</td>
         </tr>
-       
-      
+
+
 
         <tr>
             <td colspan="4" style="background-color: #f5f5f5; font-weight: bold;">Antropometri</td>
@@ -1223,7 +1223,7 @@
         <tr>
             <td colspan="2" style="background-color: #f5f5f5; font-weight: bold;">Rencana Penatalaksanaan dan Pengobatan</td>
         </tr>
-      
+
         <tr>
             <td colspan="2" style="vertical-align: top;">
                 @if(isset($asesmen->asesmenObstetri->rencana_pengobatan ))
@@ -1257,7 +1257,7 @@
 
 
     <div class="section-title mt-3">10. Evaluasi</div>
-    
+
     <table class="detail-table">
         <tr>
             <td colspan="4" style="background-color:#f5f5f5; font-weight:bold;">
@@ -1315,9 +1315,9 @@
     <div class="sign-area">
         <div class="sign-box">
             <p>Perawat yang Melakukan Asesmen Awal Medis Obstetri</p>
-            <br><br><br>
-            <p>( _________________________ )</p>
-            <p>{{ $asesmen->user->name ?? '.............................' }}</p>
+            <br>
+            <img src="{{ generateQrCode(($asesmen->user->karyawan->gelar_depan ?? ' ') . str()->title($asesmen->user->karyawan->nama ?? ' ') . ($asesmen->user->karyawan->gelar_belakang ?? ' '), 120, 'svg_datauri') }}" alt="QR Code">
+            <p>{{ (($asesmen->user->karyawan->gelar_depan ?? ' ') . str()->title($asesmen->user->karyawan->nama ?? ' ') . ($asesmen->user->karyawan->gelar_belakang ?? ' ')) ?? '.............................' }}</p>
         </div>
         <div class="clear"></div>
     </div>

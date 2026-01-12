@@ -134,17 +134,6 @@ class AsesmenObstetriMaternitas extends Controller
 
 
             // 5. Simpan ke tabel obstetri (contoh)
-            $asesmenObstetri = new RmeAsesmenObstetri;
-            $asesmenObstetri->id_asesmen = $asesmen->id;
-            $asesmenObstetri->tgl_masuk = "$request->tgl_masuk $request->jam_masuk";
-            $asesmenObstetri->antenatal_rs = $request->antenatal_rs;
-            $asesmenObstetri->antenatal_rs_count = $request->antenatal_rs_count;
-            $asesmenObstetri->antenatal_lain = $request->antenatal_lain;
-            $asesmenObstetri->antenatal_lain_count = $request->antenatal_lain_count;
-            $asesmenObstetri->nama_pemeriksa = Auth::user()->name;
-            $asesmenObstetri->anamnesis_anamnesis = $request->anamnesis_anamnesis;
-            $asesmenObstetri->evaluasi_evaluasi = $request->evaluasi_evaluasi;
-            $asesmenObstetri->save();
 
             $asesmenObstetri = new RmeAsesmenObstetri;
             $asesmenObstetri->id_asesmen = $asesmen->id;
