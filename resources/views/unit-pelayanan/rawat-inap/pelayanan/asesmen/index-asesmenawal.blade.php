@@ -315,6 +315,11 @@
                         class="btn btn-sm btn-info">
                         <i class="fas fa-eye me-1"></i> Lihat
                     </a>
+                    <a id="btnPrintAsesmen"
+                        href="{{ route('rawat-inap.asesmen.keperawatan.opthamology.print', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
+                        target="_blank" class="btn btn-primary btn-sm">
+                        <i class="bi bi-printer"></i> Print
+                    </a>
 
                     <a href="{{ route('rawat-inap.asesmen.keperawatan.opthamology.edit', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
                         class="btn btn-sm btn-secondary">
@@ -376,7 +381,11 @@
                         class="btn btn-sm btn-info">
                         <i class="fas fa-eye me-1"></i> Lihat
                     </a>
-
+                    <a id="btnPrintAsesmen"
+                        href="{{ route('rawat-inap.asesmen.medis.pengkajian-awal-medis.print', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
+                        target="_blank" class="btn btn-primary btn-sm">
+                        <i class="bi bi-printer"></i> Print
+                    </a>
                     <a href="{{ route('rawat-inap.asesmen.medis.pengkajian-awal-medis.edit', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
                         class="btn btn-sm btn-secondary">
                         <i class="fas fa-edit"></i> Edit
@@ -434,7 +443,11 @@
                         class="btn btn-sm btn-info">
                         <i class="fas fa-eye me-1"></i> Lihat
                     </a>
-
+                    <a id="btnPrintAsesmen"
+                        href="{{ route('rawat-inap.asesmen.medis.neurologi.print-pdf', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
+                        target="_blank" class="btn btn-primary btn-sm">
+                        <i class="bi bi-printer"></i> Print
+                    </a>
                     <a href="{{ route('rawat-inap.asesmen.medis.neurologi.edit', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
                         class="btn btn-sm btn-secondary">
                         <i class="fas fa-edit"></i> Edit
@@ -482,7 +495,9 @@
             <!-- Action Buttons -->
             <div class="d-flex gap-2">
                 @if ($itemIGD->kategori == 1)
-                    <button type="button" onclick="showAsesmen('{{ $itemIGD->id }}')" {{-- data-url="{{ url('unit-pelayanan/gawat-darurat/pelayanan/' . $transaksiIGD->kd_pasien . '/' . \Carbon\Carbon::parse($transaksiIGD->tgl_transaksi)->format('Y-m-d') . '/' . $transaksiIGD->urut_masuk . '/asesmen/' . $itemIGD->id) }}" --}}
+                    <button type="button" onclick="showAsesmen('{{ $itemIGD->id }}')" {{--
+                        data-url="{{ url('unit-pelayanan/gawat-darurat/pelayanan/' . $transaksiIGD->kd_pasien . '/' . \Carbon\Carbon::parse($transaksiIGD->tgl_transaksi)->format('Y-m-d') . '/' . $transaksiIGD->urut_masuk . '/asesmen/' . $itemIGD->id) }}"
+                        --}}
                         data-url="{{ route('rawat-inap.asesmen.medis.umum.medis-igd', [$dataMedis->kd_unit, $transaksiIGD->kd_pasien, date('Y-m-d', strtotime($transaksiIGD->tgl_transaksi)), $transaksiIGD->urut_masuk, $itemIGD->id]) }}"
                         class="btn btn-info btn-sm px-3">
                         <i class="fas fa-eye me-1"></i> Lihat

@@ -611,6 +611,7 @@ Route::prefix('rawat-inap')->group(function () {
                                             Route::get('/{id}', 'show')->name('.show');
                                             Route::get('/{id}/edit', 'edit')->name('.edit');
                                             Route::put('/{id}', 'update')->name('.update');
+                                            Route::get('/{id}/print-pdf', 'generatePDF')->name('.print');
                                         });
                                     });
                                 });
@@ -681,6 +682,7 @@ Route::prefix('rawat-inap')->group(function () {
                                             Route::get('/{id}', 'show')->name('.show');
                                             Route::get('/{id}/edit', 'edit')->name('.edit');
                                             Route::put('/{id}', 'update')->name('.update');
+                                            Route::get('/{id}/print-pdf', 'generatePDF')->name('.print');
                                         });
                                     });
                                 });
@@ -698,7 +700,7 @@ Route::prefix('rawat-inap')->group(function () {
                                 });
 
                                 Route::prefix('terminal')->group(function () {
-                                    Route::name('.terminal')->group(function () {
+                                    Route::name('.terminal')->group(callback: function () {
                                         Route::controller(AsesmenTerminalController::class)->group(function () {
                                             Route::get('/', 'index')->name('.index');
                                             Route::post('/', 'store')->name('.store');

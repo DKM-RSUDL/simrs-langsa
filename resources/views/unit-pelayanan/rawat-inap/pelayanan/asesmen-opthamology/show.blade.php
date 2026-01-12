@@ -863,13 +863,16 @@
                                                                 <tr>
                                                                     <th>No</th>
                                                                     <th>Nama Obat</th>
+                                                                    <th>Frekuensi</th>
                                                                 </tr>
                                                             </thead>
                                                             <tbody>
                                                                 @foreach ($riwayatObat as $index => $obat)
+
                                                                     <tr>
                                                                         <td>{{ $index + 1 }}</td>
-                                                                        <td>{{ $obat }}</td>
+                                                                        <td>{{ $obat['namaObat'] }}</td>
+                                                                        <td>{{ $obat['frekuensi'] }}</td>
                                                                     </tr>
                                                                 @endforeach
                                                             </tbody>

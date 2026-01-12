@@ -25,4 +25,10 @@ class RmeDokumenBerkasDigital extends Model
     {
         return $this->belongsTo(MasterBerkasDigital::class, 'jenis_berkas_id');
     }
+
+    // Relationship dengan User untuk user_create
+    public function userCreate()
+    {
+        return $this->belongsTo(User::class, 'user_create', 'id');
+    }
 }
