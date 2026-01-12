@@ -19,7 +19,8 @@ class BerkasDigitalService
         // Jika dataMedis dari Transaksi, gunakan tgl_transaksi
         // Jika dataMedis dari Kunjungan, gunakan tgl_masuk
         $tglMasuk = isset($dataMedis->tgl_transaksi) ? $dataMedis->tgl_transaksi : $dataMedis->tgl_masuk;
-        $kdUnit = isset($dataMedis->kd_unit) ? $dataMedis->kd_unit : $this->kdUnit;
+        // Selalu gunakan unit IGD untuk berkas digital
+        $kdUnit = $this->kdUnit;
 
         // Ambil data asesmen IGD dengan semua relasi yang diperlukan
         $asesmen = RmeAsesmen::with([
@@ -38,10 +39,7 @@ class BerkasDigitalService
         ])
             ->where('kd_pasien', $dataMedis->kd_pasien)
             ->where('kd_unit', $kdUnit)
-            ->where(function($q) use ($tglMasuk) {
-                $q->whereDate('tgl_masuk', date('Y-m-d', strtotime($tglMasuk)))
-                  ->orWhere('tgl_masuk', $tglMasuk);
-            })
+            ->whereDate('tgl_masuk', date('Y-m-d', strtotime($tglMasuk)))
             ->where('urut_masuk', $dataMedis->urut_masuk)
             ->orderBy('waktu_asesmen', 'desc')
             ->first();
@@ -136,25 +134,9 @@ class BerkasDigitalService
             ->leftJoin('MR_RESEPDTL', 'MR_RESEP.ID_MRRESEP', '=', 'MR_RESEPDTL.ID_MRRESEP')
             ->leftJoin('APT_OBAT', 'MR_RESEPDTL.KD_PRD', '=', 'APT_OBAT.KD_PRD')
             ->where('MR_RESEP.KD_PASIEN', $kd_pasien)
-            ->whereRaw('CAST(MR_RESEP.tgl_masuk AS DATE) = ?', [$tglMasukFormatted])
+            ->whereDate('MR_RESEP.tgl_masuk', $tglMasukFormatted)
             ->where('MR_RESEP.urut_masuk', $urut_masuk)
             ->where('MR_RESEP.kd_unit', $this->kdUnit)
-            ->select(
-                'MR_RESEP.TGL_ORDER',
-                'DOKTER.NAMA_LENGKAP as NAMA_DOKTER',
-                'MR_RESEP.ID_MRRESEP',
-                'MR_RESEP.STATUS',
-                'MR_RESEPDTL.CARA_PAKAI',
-                'MR_RESEPDTL.JUMLAH',
-                'MR_RESEPDTL.KET',
-                'MR_RESEPDTL.JUMLAH_TAKARAN',
-                'MR_RESEPDTL.SATUAN_TAKARAN',
-                'APT_OBAT.NAMA_OBAT'
-            )
-            ->distinct()
-            ->orderBy('MR_RESEP.TGL_ORDER', 'desc')
-            ->get();
-    }
             ->select(
                 'MR_RESEP.TGL_ORDER',
                 'DOKTER.NAMA_LENGKAP as NAMA_DOKTER',
@@ -237,18 +219,13 @@ class BerkasDigitalService
     private function getLabor($kd_pasien, $tgl_masuk, $urut_masuk)
     {
         // Mengambil data hasil pemeriksaan laboratorium
-        $tglMasukFormatted = date('Y-m-d', strtotime($tgl_masuk));
         $dataLabor = SegalaOrder::with(['details.produk', 'produk.labHasil'])
             ->where('kd_pasien', $kd_pasien)
-            ->where(function($q) use ($tglMasukFormatted, $tgl_masuk) {
-                $q->whereDate('tgl_masuk', $tglMasukFormatted)
-                  ->orWhereRaw('CAST(tgl_masuk AS DATE) = ?', [$tglMasukFormatted])
-                  ->orWhere('tgl_masuk', $tgl_masuk);
-            })
+            ->whereDate('tgl_masuk', date('Y-m-d', strtotime($tgl_masuk)))
             ->where('urut_masuk', $urut_masuk)
             ->where('kd_unit', $this->kdUnit)
             ->whereHas('details.produk', function ($query) {
-                $query->where('kategori', 'LB');
+                $query->where('KD_KAT', 'LB');
             })
             ->orderBy('tgl_order', 'desc')
             ->get();
@@ -275,11 +252,7 @@ class BerkasDigitalService
         $tglMasukFormatted = date('Y-m-d', strtotime($tgl_masuk));
         return SegalaOrder::with(['details.produk', 'dokter'])
             ->where('kd_pasien', $kd_pasien)
-            ->where(function($q) use ($tglMasukFormatted, $tgl_masuk) {
-                $q->whereDate('tgl_masuk', $tglMasukFormatted)
-                  ->orWhereRaw('CAST(tgl_masuk AS DATE) = ?', [$tglMasukFormatted])
-                  ->orWhere('tgl_masuk', $tgl_masuk);
-            })
+            ->whereDate('tgl_masuk', $tglMasukFormatted)
             ->where('urut_masuk', $urut_masuk)
             ->where('kd_unit', $this->kdUnit)
             ->where('kategori', 'RD')
