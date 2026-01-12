@@ -781,7 +781,6 @@ class RawatInapController extends Controller
             $serahTerima = RmeSerahTerima::with(['unitAsal', 'unitTujuan', 'petugasAsal', 'petugasTerima', 'transfer'])
                 ->where('id', $id)
                 ->first();
-            dd($serahTerima);
 
             if (empty($serahTerima)) throw new Exception('Data serah terima tidak ditemukan !');
 

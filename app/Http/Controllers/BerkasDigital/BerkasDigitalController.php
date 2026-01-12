@@ -55,11 +55,11 @@ class BerkasDigitalController extends Controller
                 $q->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
                 $q->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
             })
-            // ->where('nginap.akhir', 1)
-            // ->where(function ($q) {
-            //     $q->whereNull('kunjungan.status_inap');
-            //     $q->orWhere('kunjungan.status_inap', 1);
-            // })
+            ->where('nginap.akhir', 1)
+            ->where(function ($q) {
+                $q->whereNull('kunjungan.status_inap');
+                $q->orWhere('kunjungan.status_inap', 1);
+            })
             ->whereNotNull('kunjungan.tgl_pulang')
             ->whereNotNull('kunjungan.jam_pulang')
             ->whereYear('kunjungan.tgl_masuk', '>=', 2025);
