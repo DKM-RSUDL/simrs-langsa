@@ -278,7 +278,7 @@
 
                                 <div class="form-group mb-3">
                                     <label class="d-block mb-2" style="min-width: 200px;">Irama</label>
-                                    <select class="form-select" name="kontraksi_letak_janin">
+                                    <select class="form-select" name="kontraksi_irama">
                                         <option value="">pilih</option>
                                         <option value="1"
                                             {{ ($asesmen->rmeAsesmenObstetriPemeriksaanFisik->kontraksi_irama ?? '') == '1' ? 'selected' : '' }}>

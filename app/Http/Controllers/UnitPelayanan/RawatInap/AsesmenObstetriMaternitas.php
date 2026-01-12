@@ -636,6 +636,8 @@ class AsesmenObstetriMaternitas extends Controller
             }
             $asesmenObstetri->save();
 
+
+
             $asesmenObstetriPemeriksaanFisik = RmeAsesmenObstetriPemeriksaanFisik::firstOrNew(['id_asesmen' => $asesmen->id]);
             $asesmenObstetriPemeriksaanFisik->id_asesmen = $asesmen->id;
             $asesmenObstetriPemeriksaanFisik->keadaan_umum = $request->keadaan_umum;
@@ -929,6 +931,7 @@ class AsesmenObstetriMaternitas extends Controller
             }
 
             $itemFisik = MrItemFisik::whereIn('id', $itemFisikIds)->get()->keyBy('id');
+              $satsetPrognosis = SatsetPrognosis::all();
 
             // Load view and generate PDF
             $pdf = PDF::loadView('unit-pelayanan.rawat-inap.pelayanan.asesmen-obstetri-maternitas.print', [
@@ -943,6 +946,7 @@ class AsesmenObstetriMaternitas extends Controller
                 'rmeAsesmenObstetriDischargePlanning' => optional($asesmen)->rmeAsesmenObstetriDischargePlanning,
                 'rmeAsesmenObstetriDiagnosisImplementasi' => optional($asesmen)->rmeAsesmenObstetriDiagnosisImplementasi,
                 'itemFisik' => $itemFisik,
+                'satsetPrognosis' => $satsetPrognosis
             ]);
 
             $pdf->setPaper('a4', 'portrait');
