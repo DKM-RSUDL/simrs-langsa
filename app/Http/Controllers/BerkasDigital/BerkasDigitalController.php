@@ -303,11 +303,12 @@ class BerkasDigitalController extends Controller
         $unit = isset($dataMedis->unit) ? $dataMedis->unit : null;
         $customer = isset($dataMedis->customer) ? $dataMedis->customer : null;
 
-        // Ambil data asesmen via service
+        // Ambil data asesmen via service dengan semua data yang diperlukan
         $asesmenData = $this->berkasDigitalService->getAsesmenData($dataMedis);
-        extract($asesmenData); // Bikin $asesmen, $triase, $riwayatAlergi tersedia
+        // Extract akan membuat variabel: $asesmen, $triase, $riwayatAlergi, $laborData, $radiologiData, $riwayatObat, $retriaseData
+        extract($asesmenData);
 
-        return view('berkas-digital.document.show', compact('listDokumen', 'dataMedis', 'pasien', 'unit', 'customer', 'asesmen', 'triase', 'riwayatAlergi'));
+        return view('berkas-digital.document.show', compact('listDokumen', 'dataMedis', 'pasien', 'unit', 'customer', 'asesmen', 'triase', 'riwayatAlergi', 'laborData', 'radiologiData', 'riwayatObat', 'retriaseData'));
     }
 
     public function storeBerkas(Request $request)
