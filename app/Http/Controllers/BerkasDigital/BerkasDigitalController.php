@@ -55,11 +55,11 @@ class BerkasDigitalController extends Controller
                 $q->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
                 $q->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
             })
-            // ->where('nginap.akhir', 1)
-            // ->where(function ($q) {
-            //     $q->whereNull('kunjungan.status_inap');
-            //     $q->orWhere('kunjungan.status_inap', 1);
-            // })
+            ->where('nginap.akhir', 1)
+            ->where(function ($q) {
+                $q->whereNull('kunjungan.status_inap');
+                $q->orWhere('kunjungan.status_inap', 1);
+            })
             ->whereNotNull('kunjungan.tgl_pulang')
             ->whereNotNull('kunjungan.jam_pulang')
             ->whereYear('kunjungan.tgl_masuk', '>=', 2025);
@@ -303,11 +303,22 @@ class BerkasDigitalController extends Controller
         $unit = isset($dataMedis->unit) ? $dataMedis->unit : null;
         $customer = isset($dataMedis->customer) ? $dataMedis->customer : null;
 
-        // Ambil data asesmen via service
+        // Ambil data asesmen via service dengan semua data yang diperlukan
         $asesmenData = $this->berkasDigitalService->getAsesmenData($dataMedis);
-        extract($asesmenData); // Bikin $asesmen, $triase, $riwayatAlergi tersedia
+        // Extract akan membuat variabel: $asesmen, $triase, $riwayatAlergi, $laborData, $radiologiData, $riwayatObat, $retriaseData
+        extract($asesmenData);
 
-        return view('berkas-digital.document.show', compact('listDokumen', 'dataMedis', 'pasien', 'unit', 'customer', 'asesmen', 'triase', 'riwayatAlergi'));
+        // Ambil data pengkajian awal medis (rawat inap)
+        $pengkajianData = $this->berkasDigitalService->getPengkajianAwalMedisData($dataMedis);
+        // Extract akan membuat variabel: $pengkajianAsesmen, $rmeMasterDiagnosis, $rmeMasterImplementasi, $satsetPrognosis, $alergiPasien
+        extract($pengkajianData);
+
+        // Ambil data triase IGD (untuk ditampilkan terpisah di view)
+        $triaseIGDData = $this->berkasDigitalService->getTriaseIGD($dataMedis);
+        // Extract akan membuat variabel: $triase (dari IGD)
+        $triaseIGD = $triaseIGDData['triase'] ?? null;
+
+        return view('berkas-digital.document.show', compact('listDokumen', 'dataMedis', 'pasien', 'unit', 'customer', 'asesmen', 'triase', 'riwayatAlergi', 'laborData', 'radiologiData', 'riwayatObat', 'retriaseData', 'pengkajianAsesmen', 'rmeMasterDiagnosis', 'rmeMasterImplementasi', 'satsetPrognosis', 'alergiPasien', 'triaseIGD'));
     }
 
     public function storeBerkas(Request $request)

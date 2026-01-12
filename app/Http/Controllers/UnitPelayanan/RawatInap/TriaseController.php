@@ -7,9 +7,7 @@ use App\Models\AsalIGD;
 use App\Models\DataTriase;
 use App\Services\AsesmenService;
 use App\Services\BaseService;
-use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
-use App\Models\SjpKunjungan;
 
 class TriaseController extends Controller
 {
