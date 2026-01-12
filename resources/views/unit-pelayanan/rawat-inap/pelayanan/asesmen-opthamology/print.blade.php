@@ -339,69 +339,42 @@
                     </td>
                 </tr>
                 @endforeach
-            @else
-                <!-- Jika tidak ada obat, beri ruang untuk tulis tangan -->
-                <tr>
-                    <td colspan="2" class="value" style="height: 20px; border-bottom: 1px dotted #444;"></td>
-                </tr>
             @endif
 
-                @if(!empty($riwayat_penggunaan_obat))
-                    @foreach($riwayat_penggunaan_obat as $obat)
-                    <tr>
-                        <td colspan="2" class="obat-item">
-                            • {{ $obat->namaObat ?? '-' }}
-                            {{ $obat->dosis ?? '' }} {{ $obat->satuan ?? '' }},
-                            {{ $obat->frekuensi ?? '' }}
-                            {{ !empty($obat->keterangan) ? ' — ' . $obat->keterangan : '' }}
-                        </td>
-                    </tr>
-                    @endforeach
-                @else
-                    <tr><td colspan="2" class="value" style="height:20px;"></td></tr>
-                @endif
+               
+            <!-- Riwayat Alergi -->
+            <tr>
+                <td colspan="2" class="label" style="padding-top: 0px;">Riwayat Alergi:</td>
+            </tr>
 
-                <!-- Riwayat Alergi -->
-                <tr>
-                    <td colspan="2" class="label" style="padding-top: 0px;">Riwayat Alergi:</td>
-                </tr>
-
-                <tr>
-                    <td colspan="2" class="checkbox-group" style="padding: 6px 0 10px 0;">
-                        <label style="display: inline-flex; align-items: center; margin-right: 40px;">
-                            <input type="checkbox" {{ empty($riwayat_alergi) ? 'checked' : '' }} style="margin-right: 6px;">
-                            Tidak ada
-                        </label>
-                        <label style="display: inline-flex; align-items: center;">
-                            <input type="checkbox" {{ !empty($riwayat_alergi) ? 'checked' : '' }} style="margin-right: 6px;">
+            <tr>
+                <td colspan="2" class="checkbox-group" style="padding: 6px 0 10px 0;">
+                    <label style="display: inline-flex; align-items: center; margin-right: 40px;">
+                        <input type="checkbox" {{ empty($riwayat_alergi) ? 'checked' : '' }} style="margin-right: 6px;">
+                        Tidak ada
+                    </label>
+                    <label style="display: inline-flex; align-items: center;">
+                         <input type="checkbox" {{ !empty($riwayat_alergi) ? 'checked' : '' }} style="margin-right: 6px;">
                             Ada, sebutkan:
-                        </label>
-                    </td>
-                </tr>
+                    </label>
+                </td>
+            </tr>
 
-                @if(!empty($riwayat_alergi))
-                    @foreach($riwayat_alergi as $index => $alergi)
-                    <tr>
-                        <td class="label" style="padding-left: 30px; font-weight: normal; width: 10%;">
+            @if(!empty($riwayat_alergi))
+                @foreach($riwayat_alergi as $index => $alergi)
+                <tr>
+                    <td class="label" style="padding-left: 30px; font-weight: normal; width: 10%;">
                             {{ $index + 1 }}.
-                        </td>
-                        <td class="value" style="border-bottom: 1px dotted #444; padding: 0px;">
+                    </td>
+                    <td class="value" style="border-bottom: 1px dotted #444; padding: 0px;">
                             <strong>{{ $alergi['alergen'] ?? '-' }}</strong>
                             (Jenis: {{ $alergi['jenis'] ?? '-' }})
                             — Reaksi: {{ $alergi['reaksi'] ?? '-' }}
                             — Keparahan: {{ $alergi['keparahan'] ?? '-' }}
-                        </td>
-                    </tr>
-                    @endforeach
-
-                  
-
-                @else
-                    <!-- Jika tidak ada alergi, beri ruang tulis tangan -->
-                    <tr>
-                        <td colspan="2" class="value" style="height: 10px; border-bottom: 1px dotted #444;"></td>
-                    </tr>
-                @endif
+                    </td>
+                </tr>
+                @endforeach
+            @endif
 
 
 
