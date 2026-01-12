@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\AsalIGD;
 use App\Models\RmeAsesmen;
 use App\Models\DataTriase;
 use App\Models\RmeAlergiPasien;
@@ -335,5 +336,48 @@ class BerkasDigitalService
             'satsetPrognosis',
             'alergiPasien'
         );
+    }
+
+    /**
+     * Get Triase IGD data untuk ditampilkan di berkas digital
+     * Fungsi ini mengambil data triase dari IGD berdasarkan asal IGD rawat inap
+     */
+    public function getTriaseIGD($dataMedis)
+    {
+        try {
+            // GET ASAL IGD - Cari asal IGD berdasarkan kd_kasir dan no_transaksi rawat inap
+            $asalIGD = AsalIGD::where('kd_kasir', $dataMedis->kd_kasir)
+                ->where('no_transaksi', $dataMedis->no_transaksi)
+                ->first();
+
+            if (!$asalIGD) {
+                return ['triase' => null];
+            }
+
+            // Get data kunjungan IGD dari asal IGD
+            $baseService = new BaseService();
+            $kunjunganIGD = $baseService->getDataMedisbyTransaksi($asalIGD->kd_kasir_asal, $asalIGD->no_transaksi_asal);
+
+            if (!$kunjunganIGD) {
+                return ['triase' => null];
+            }
+
+            // Get data triase dari IGD dengan dokter
+            $triase = DataTriase::with(['dokter'])
+                ->find($kunjunganIGD->triase_id);
+
+            if (!$triase) {
+                return ['triase' => null];
+            }
+
+            // Decode JSON data
+            $triase->triase = json_decode($triase->triase, true) ?? [];
+            $triase->vital_sign = json_decode($triase->vital_sign, true) ?? [];
+
+            return compact('triase');
+        } catch (\Exception $e) {
+            // Return null data jika ada error
+            return ['triase' => null];
+        }
     }
 }

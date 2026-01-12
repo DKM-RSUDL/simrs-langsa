@@ -313,7 +313,12 @@ class BerkasDigitalController extends Controller
         // Extract akan membuat variabel: $pengkajianAsesmen, $rmeMasterDiagnosis, $rmeMasterImplementasi, $satsetPrognosis, $alergiPasien
         extract($pengkajianData);
 
-        return view('berkas-digital.document.show', compact('listDokumen', 'dataMedis', 'pasien', 'unit', 'customer', 'asesmen', 'triase', 'riwayatAlergi', 'laborData', 'radiologiData', 'riwayatObat', 'retriaseData', 'pengkajianAsesmen', 'rmeMasterDiagnosis', 'rmeMasterImplementasi', 'satsetPrognosis', 'alergiPasien'));
+        // Ambil data triase IGD (untuk ditampilkan terpisah di view)
+        $triaseIGDData = $this->berkasDigitalService->getTriaseIGD($dataMedis);
+        // Extract akan membuat variabel: $triase (dari IGD)
+        $triaseIGD = $triaseIGDData['triase'] ?? null;
+
+        return view('berkas-digital.document.show', compact('listDokumen', 'dataMedis', 'pasien', 'unit', 'customer', 'asesmen', 'triase', 'riwayatAlergi', 'laborData', 'radiologiData', 'riwayatObat', 'retriaseData', 'pengkajianAsesmen', 'rmeMasterDiagnosis', 'rmeMasterImplementasi', 'satsetPrognosis', 'alergiPasien', 'triaseIGD'));
     }
 
     public function storeBerkas(Request $request)

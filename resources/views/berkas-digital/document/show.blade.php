@@ -9,6 +9,13 @@
                 <p>Data asesmen tidak ditemukan untuk kunjungan ini.</p>
             @endif
 
+            @if ($triaseIGD)
+                @include('unit-pelayanan.rawat-inap.pelayanan.triase.print', [
+                    'dataMedis' => $dataMedis,
+                    'triase' => $triaseIGD,
+                ])
+            @endif
+
             @if ($pengkajianAsesmen)
                 @include('unit-pelayanan.rawat-inap.pelayanan.asesmen-pengkajian-awal-medis.print', [
                     'data' => [
