@@ -687,7 +687,7 @@ class NeurologiController extends Controller
 
     public function generatePDF($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $id)
     {
-        try {
+        // try {
             // Get assessment data
             $asesmen = RmeAsesmen::with([
                 'user',
@@ -741,8 +741,7 @@ class NeurologiController extends Controller
             $alergiPasien = RmeAlergiPasien::where('kd_pasien', $kd_pasien)->get();
 
             $prognosis = SatsetPrognosis::select('value')
-                ->where('prognosis_id', $asesmen->rmeAsesmenNeurologiIntensitasNyeri->neurologi_prognosis)->get();
-            $prognosis = $prognosis[0]['value'];
+                ->where('prognosis_id', $asesmen->rmeAsesmenNeurologiIntensitasNyeri->neurologi_prognosis)->first();
 
             // Load view and generate PDF
             $pdf = PDF::loadView('unit-pelayanan.rawat-inap.pelayanan.neurologi.print', [
@@ -767,13 +766,13 @@ class NeurologiController extends Controller
             ]);
 
             return $pdf->stream("asesmen-obstetri-maternitas-{$id}-print-pdf.pdf");
-        } catch (\Exception $e) {
+        // } catch (\Exception $e) {
 
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Gagal generate PDF: '.$e->getMessage(),
-            ], 500);
-        }
+        //     return response()->json([
+        //         'status' => 'error',
+        //         'message' => 'Gagal generate PDF: '.$e->getMessage(),
+        //     ], 500);
+        // }
     }
 
     public function createResume($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $data)

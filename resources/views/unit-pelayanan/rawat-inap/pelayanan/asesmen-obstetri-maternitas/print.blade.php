@@ -309,7 +309,7 @@
             <td style="width: 25%"><strong>Tek Darah (mmHg)</strong></td>
             <td style="width: 25%">
                 Sistole: {{ $asesmen->rmeAsesmenObstetriPemeriksaanFisik->tekanan_darah_sistole ?? '-' }}<br>
-                Diastole: {{ $asesmen->rmeAsesmenObstetriPemeriksaanFisik->tekanan_darah_sistole ?? '-' }}
+                Diastole: {{ $asesmen->rmeAsesmenObstetriPemeriksaanFisik->tekanan_darah_diastole ?? '-' }}
             </td>
         </tr>
         <tr>
