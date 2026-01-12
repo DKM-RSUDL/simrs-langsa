@@ -323,6 +323,32 @@ class BerkasDigitalController extends Controller
         // Extract akan membuat variabel: $resume, $hasilKonpas, $labor, $radiologi, $tindakan, $pemeriksaanFisik, $resepRawat, $resepPulang
         extract($resumeData);
 
+        // Ambil data Asesmen Keperawatan (IGD)
+        $asesmenKeperawatanData = $this->berkasDigitalService->getAsesmenKeperawatanData($dataMedis);
+        // Extract akan membuat variabel untuk asesmen keperawatan
+        // Gunakan prefix untuk menghindari konflik dengan variabel asesmen medis yang sudah ada
+        $asesmenKeperawatan = $asesmenKeperawatanData['asesmen'];
+        $asesmenKepUmum = $asesmenKeperawatanData['asesmenKepUmum'];
+        $asesmenBreathing = $asesmenKeperawatanData['asesmenBreathing'];
+        $asesmenCirculation = $asesmenKeperawatanData['asesmenCirculation'];
+        $asesmenDisability = $asesmenKeperawatanData['asesmenDisability'];
+        $asesmenExposure = $asesmenKeperawatanData['asesmenExposure'];
+        $asesmenSkalaNyeri = $asesmenKeperawatanData['asesmenSkalaNyeri'];
+        $asesmenRisikoJatuh = $asesmenKeperawatanData['asesmenRisikoJatuh'];
+        $asesmenSosialEkonomi = $asesmenKeperawatanData['asesmenSosialEkonomi'];
+        $asesmenStatusGizi = $asesmenKeperawatanData['asesmenStatusGizi'];
+        $asesmenTanggal = $asesmenKeperawatanData['asesmenTanggal'];
+        $tglMasukFormatted = $asesmenKeperawatanData['tglMasukFormatted'];
+        $faktorPemberatData = $asesmenKeperawatanData['faktorPemberatData'];
+        $kualitasNyeriData = $asesmenKeperawatanData['kualitasNyeriData'];
+        $menjalarData = $asesmenKeperawatanData['menjalarData'];
+        $faktorPeringanData = $asesmenKeperawatanData['faktorPeringanData'];
+        $frekuensiNyeriData = $asesmenKeperawatanData['frekuensiNyeriData'];
+        $jenisNyeriData = $asesmenKeperawatanData['jenisNyeriData'];
+        $pekerjaanData = $asesmenKeperawatanData['pekerjaanData'];
+        $agamaData = $asesmenKeperawatanData['agamaData'];
+        $pendidikanData = $asesmenKeperawatanData['pendidikanData'];
+
         return view('berkas-digital.document.show', compact(
             'listDokumen',
             'dataMedis',
@@ -350,7 +376,29 @@ class BerkasDigitalController extends Controller
             'tindakan',
             'pemeriksaanFisik',
             'resepRawat',
-            'resepPulang'
+            'resepPulang',
+            // asesmen keperawatan
+            'asesmenKeperawatan',
+            'asesmenKepUmum',
+            'asesmenBreathing',
+            'asesmenCirculation',
+            'asesmenDisability',
+            'asesmenExposure',
+            'asesmenSkalaNyeri',
+            'asesmenRisikoJatuh',
+            'asesmenSosialEkonomi',
+            'asesmenStatusGizi',
+            'asesmenTanggal',
+            'tglMasukFormatted',
+            'faktorPemberatData',
+            'kualitasNyeriData',
+            'menjalarData',
+            'faktorPeringanData',
+            'frekuensiNyeriData',
+            'jenisNyeriData',
+            'pekerjaanData',
+            'agamaData',
+            'pendidikanData'
         ));
     }
 

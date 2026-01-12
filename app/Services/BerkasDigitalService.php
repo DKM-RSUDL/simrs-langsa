@@ -13,6 +13,15 @@ use App\Models\SatsetPrognosis;
 use App\Models\RMEResume;
 use App\Models\ListTindakanPasien;
 use App\Models\RmeAsesmenPemeriksaanFisik;
+use App\Models\RmeFaktorPemberat;
+use App\Models\RmeFaktorPeringan;
+use App\Models\RmeFrekuensiNyeri;
+use App\Models\RmeJenisNyeri;
+use App\Models\RmeKualitasNyeri;
+use App\Models\RmeMenjalar;
+use App\Models\Agama;
+use App\Models\Pendidikan;
+use App\Models\Pekerjaan;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Carbon;
 use App\Services\AsesmenService;
@@ -541,5 +550,160 @@ class BerkasDigitalService
             // Return null data jika ada error
             return ['triase' => null];
         }
+    }
+
+    /**
+     * Get Asesmen Keperawatan (IGD) data untuk ditampilkan di berkas digital
+     * Menyusun variabel yang diperlukan oleh blade print-pdf keperawatan
+     */
+    public function getAsesmenKeperawatanData($dataMedis)
+    {
+        try {
+            // GET ASAL IGD - Cari asal IGD berdasarkan kd_kasir dan no_transaksi rawat inap
+            $asalIGD = AsalIGD::where('kd_kasir', $dataMedis->kd_kasir)
+                ->where('no_transaksi', $dataMedis->no_transaksi)
+                ->first();
+
+            // Jika tidak ada asal IGD, return null
+            if (!$asalIGD) {
+                return $this->emptyAsesmenKeperawatanData($dataMedis);
+            }
+
+            // Get data kunjungan IGD dari asal IGD
+            $baseService = new BaseService();
+            $kunjunganIGD = $baseService->getDataMedisbyTransaksi($asalIGD->kd_kasir_asal, $asalIGD->no_transaksi_asal);
+
+            if (!$kunjunganIGD) {
+                return $this->emptyAsesmenKeperawatanData($dataMedis);
+            }
+
+            $tglMasuk = $kunjunganIGD->tgl_transaksi;
+            $kdUnit = 3; // IGD
+
+            // Ambil asesmen keperawatan dengan semua relasi
+            $asesmen = RmeAsesmen::with([
+                'asesmenKepUmum',
+                'asesmenKepUmumBreathing',
+                'asesmenKepUmumCirculation',
+                'asesmenKepUmumDisability',
+                'asesmenKepUmumExposure',
+                'asesmenKepUmumSkalaNyeri',
+                'asesmenKepUmumRisikoJatuh',
+                'asesmenKepUmumSosialEkonomi',
+                'asesmenKepUmumGizi'
+            ])
+                ->where('kd_pasien', $kunjunganIGD->kd_pasien)
+                ->where('kd_unit', $kdUnit)
+                ->whereDate('tgl_masuk', date('Y-m-d', strtotime($tglMasuk)))
+                ->where('urut_masuk', $kunjunganIGD->urut_masuk)
+                ->where('kategori', 2) // Kategori Keperawatan
+                ->where('sub_kategori', 1) // Sub kategori Pengkajian Awal
+                ->orderBy('waktu_asesmen', 'desc')
+                ->first();
+
+            if (!$asesmen) {
+                return $this->emptyAsesmenKeperawatanData($dataMedis);
+            }
+
+            // Ambil master data yang diperlukan (cache untuk performa)
+            $faktorPemberatData = cache()->remember('faktor_pemberat', 3600, function () {
+                return RmeFaktorPemberat::select('id', 'name')->pluck('name', 'id');
+            });
+
+            $kualitasNyeriData = cache()->remember('kualitas_nyeri', 3600, function () {
+                return RmeKualitasNyeri::select('id', 'name')->pluck('name', 'id');
+            });
+
+            $menjalarData = cache()->remember('menjalar', 3600, function () {
+                return RmeMenjalar::select('id', 'name')->pluck('name', 'id');
+            });
+
+            $faktorPeringanData = cache()->remember('faktor_peringan', 3600, function () {
+                return RmeFaktorPeringan::select('id', 'name')->pluck('name', 'id');
+            });
+
+            $frekuensiNyeriData = cache()->remember('frekuensi_nyeri', 3600, function () {
+                return RmeFrekuensiNyeri::select('id', 'name')->pluck('name', 'id');
+            });
+
+            $jenisNyeriData = cache()->remember('jenis_nyeri', 3600, function () {
+                return RmeJenisNyeri::select('id', 'name')->pluck('name', 'id');
+            });
+
+            $pekerjaanData = cache()->remember('pekerjaan', 3600, function () {
+                return Pekerjaan::select('kd_pekerjaan', 'pekerjaan')->pluck('pekerjaan', 'kd_pekerjaan');
+            });
+
+            $agamaData = cache()->remember('agama', 3600, function () {
+                return Agama::select('kd_agama', 'agama')->pluck('agama', 'kd_agama');
+            });
+
+            $pendidikanData = cache()->remember('pendidikan', 3600, function () {
+                return Pendidikan::select('kd_pendidikan', 'pendidikan')->pluck('pendidikan', 'kd_pendidikan');
+            });
+
+            $asesmenTanggal = $asesmen->created_at ?? now();
+            $tglMasukFormatted = $kunjunganIGD->tgl_masuk ?? now();
+
+            return [
+                'asesmen' => $asesmen,
+                'pasien' => $kunjunganIGD->pasien ?? $dataMedis->pasien ?? null,
+                'dataMedis' => $kunjunganIGD,
+                'asesmenKepUmum' => $asesmen->asesmenKepUmum ?? null,
+                'asesmenBreathing' => $asesmen->asesmenKepUmumBreathing ?? null,
+                'asesmenCirculation' => $asesmen->asesmenKepUmumCirculation ?? null,
+                'asesmenDisability' => $asesmen->asesmenKepUmumDisability ?? null,
+                'asesmenExposure' => $asesmen->asesmenKepUmumExposure ?? null,
+                'asesmenSkalaNyeri' => $asesmen->asesmenKepUmumSkalaNyeri ?? null,
+                'asesmenRisikoJatuh' => $asesmen->asesmenKepUmumRisikoJatuh ?? null,
+                'asesmenSosialEkonomi' => $asesmen->asesmenKepUmumSosialEkonomi ?? null,
+                'asesmenStatusGizi' => $asesmen->asesmenKepUmumGizi ?? null,
+                'asesmenTanggal' => $asesmenTanggal,
+                'tglMasukFormatted' => $tglMasukFormatted,
+                'faktorPemberatData' => $faktorPemberatData,
+                'kualitasNyeriData' => $kualitasNyeriData,
+                'menjalarData' => $menjalarData,
+                'faktorPeringanData' => $faktorPeringanData,
+                'frekuensiNyeriData' => $frekuensiNyeriData,
+                'jenisNyeriData' => $jenisNyeriData,
+                'pekerjaanData' => $pekerjaanData,
+                'agamaData' => $agamaData,
+                'pendidikanData' => $pendidikanData,
+            ];
+        } catch (\Exception $e) {
+            return $this->emptyAsesmenKeperawatanData($dataMedis);
+        }
+    }
+
+    /**
+     * Return empty data structure untuk asesmen keperawatan
+     */
+    private function emptyAsesmenKeperawatanData($dataMedis)
+    {
+        return [
+            'asesmen' => null,
+            'pasien' => $dataMedis->pasien ?? null,
+            'dataMedis' => $dataMedis,
+            'asesmenKepUmum' => null,
+            'asesmenBreathing' => null,
+            'asesmenCirculation' => null,
+            'asesmenDisability' => null,
+            'asesmenExposure' => null,
+            'asesmenSkalaNyeri' => null,
+            'asesmenRisikoJatuh' => null,
+            'asesmenSosialEkonomi' => null,
+            'asesmenStatusGizi' => null,
+            'asesmenTanggal' => null,
+            'tglMasukFormatted' => null,
+            'faktorPemberatData' => collect([]),
+            'kualitasNyeriData' => collect([]),
+            'menjalarData' => collect([]),
+            'faktorPeringanData' => collect([]),
+            'frekuensiNyeriData' => collect([]),
+            'jenisNyeriData' => collect([]),
+            'pekerjaanData' => collect([]),
+            'agamaData' => collect([]),
+            'pendidikanData' => collect([]),
+        ];
     }
 }

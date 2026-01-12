@@ -36,6 +36,12 @@
             @else
                 <p>Data resume medis tidak ditemukan untuk kunjungan ini.</p>
             @endif
+
+            @if ($asesmenKeperawatan)
+                @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.asesmen-keperawatan.print-pdf')
+            @else
+                <p>Data asesmen keperawatan tidak ditemukan untuk kunjungan ini.</p>
+            @endif
         </div>
     </x-content-card>
     <x-content-card>
