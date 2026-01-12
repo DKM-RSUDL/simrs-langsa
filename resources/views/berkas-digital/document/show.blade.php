@@ -42,6 +42,20 @@
             @else
                 <p>Data asesmen keperawatan tidak ditemukan untuk kunjungan ini.</p>
             @endif
+
+            @if ($asesmenNeurologi)
+                @include('unit-pelayanan.rawat-inap.pelayanan.neurologi.print', [
+                    'asesmen' => $asesmenNeurologi,
+                    'dataMedis' => $dataMedis,
+                    'rmeMasterDiagnosis' => $rmeMasterDiagnosisNeurologi,
+                    'rmeMasterImplementasi' => $rmeMasterImplementasiNeurologi,
+                    'satsetPrognosis' => $satsetPrognosisNeurologi,
+                    'alergiPasien' => $alergiPasienNeurologi,
+                    'itemFisik' => $itemFisik,
+                ])
+            @else
+                <p>Data asesmen neurologi tidak ditemukan untuk kunjungan ini.</p>
+            @endif
         </div>
     </x-content-card>
     <x-content-card>

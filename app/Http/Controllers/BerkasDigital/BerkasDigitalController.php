@@ -349,6 +349,15 @@ class BerkasDigitalController extends Controller
         $agamaData = $asesmenKeperawatanData['agamaData'];
         $pendidikanData = $asesmenKeperawatanData['pendidikanData'];
 
+        // Ambil data Asesmen Neurologi (Rawat Inap)
+        $asesmenNeurologiData = $this->berkasDigitalService->getAsesmenNeurologiData($dataMedis);
+        $asesmenNeurologi = $asesmenNeurologiData['asesmen'];
+        $rmeMasterDiagnosisNeurologi = $asesmenNeurologiData['rmeMasterDiagnosis'];
+        $rmeMasterImplementasiNeurologi = $asesmenNeurologiData['rmeMasterImplementasi'];
+        $satsetPrognosisNeurologi = $asesmenNeurologiData['satsetPrognosis'];
+        $alergiPasienNeurologi = $asesmenNeurologiData['alergiPasien'];
+        $itemFisik = $asesmenNeurologiData['itemFisik'];
+
         return view('berkas-digital.document.show', compact(
             'listDokumen',
             'dataMedis',
@@ -398,7 +407,14 @@ class BerkasDigitalController extends Controller
             'jenisNyeriData',
             'pekerjaanData',
             'agamaData',
-            'pendidikanData'
+            'pendidikanData',
+            // asesmen neurologi
+            'asesmenNeurologi',
+            'rmeMasterDiagnosisNeurologi',
+            'rmeMasterImplementasiNeurologi',
+            'satsetPrognosisNeurologi',
+            'alergiPasienNeurologi',
+            'itemFisik'
         ));
     }
 

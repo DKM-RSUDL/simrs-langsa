@@ -22,6 +22,7 @@ use App\Models\RmeMenjalar;
 use App\Models\Agama;
 use App\Models\Pendidikan;
 use App\Models\Pekerjaan;
+use App\Models\MrItemFisik;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Carbon;
 use App\Services\AsesmenService;
@@ -704,6 +705,75 @@ class BerkasDigitalService
             'pekerjaanData' => collect([]),
             'agamaData' => collect([]),
             'pendidikanData' => collect([]),
+        ];
+    }
+
+    /**
+     * Get Asesmen Neurologi (Rawat Inap) data untuk ditampilkan di berkas digital
+     * Menyusun variabel yang diperlukan oleh blade print neurologi
+     */
+    public function getAsesmenNeurologiData($dataMedis)
+    {
+        try {
+            $tglMasuk = $dataMedis->tgl_masuk;
+            $kdUnit = $dataMedis->kd_unit;
+
+            // Ambil asesmen neurologi dengan semua relasi (kategori 1, sub_kategori 3)
+            $asesmen = RmeAsesmen::with([
+                'rmeAsesmenNeurologi',
+                'rmeAsesmenNeurologiSistemSyaraf',
+                'rmeAsesmenNeurologiIntensitasNyeri',
+                'rmeAsesmenNeurologiDischargePlanning',
+                'pemeriksaanFisik',
+                'pemeriksaanFisik.itemFisik'
+            ])
+                ->where('kd_pasien', $dataMedis->kd_pasien)
+                ->where('kd_unit', $kdUnit)
+                ->whereDate('tgl_masuk', date('Y-m-d', strtotime($tglMasuk)))
+                ->where('urut_masuk', $dataMedis->urut_masuk)
+                ->where('kategori', 1) // Kategori Medis
+                ->where('sub_kategori', 3) // Sub kategori Neurologi
+                ->orderBy('waktu_asesmen', 'desc')
+                ->first();
+
+            if (!$asesmen) {
+                return $this->emptyAsesmenNeurologiData($dataMedis);
+            }
+
+            // Ambil master data yang diperlukan
+            $rmeMasterDiagnosis = RmeMasterDiagnosis::all();
+            $rmeMasterImplementasi = RmeMasterImplementasi::all();
+            $satsetPrognosis = SatsetPrognosis::all();
+            $alergiPasien = RmeAlergiPasien::where('kd_pasien', $dataMedis->kd_pasien)->get();
+            $itemFisik = MrItemFisik::orderby('urut')->get();
+
+            return [
+                'asesmen' => $asesmen,
+                'dataMedis' => $dataMedis,
+                'rmeMasterDiagnosis' => $rmeMasterDiagnosis,
+                'rmeMasterImplementasi' => $rmeMasterImplementasi,
+                'satsetPrognosis' => $satsetPrognosis,
+                'alergiPasien' => $alergiPasien,
+                'itemFisik' => $itemFisik,
+            ];
+        } catch (\Exception $e) {
+            return $this->emptyAsesmenNeurologiData($dataMedis);
+        }
+    }
+
+    /**
+     * Return empty data structure untuk asesmen neurologi
+     */
+    private function emptyAsesmenNeurologiData($dataMedis)
+    {
+        return [
+            'asesmen' => null,
+            'dataMedis' => $dataMedis,
+            'rmeMasterDiagnosis' => collect([]),
+            'rmeMasterImplementasi' => collect([]),
+            'satsetPrognosis' => collect([]),
+            'alergiPasien' => collect([]),
+            'itemFisik' => collect([]),
         ];
     }
 }
