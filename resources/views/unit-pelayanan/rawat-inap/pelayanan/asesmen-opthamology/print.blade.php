@@ -272,25 +272,12 @@
                     <td class="value">{{ $asesmen->anamnesis ?? '-' }}</td>
                 </tr>
 
-                <!-- Keluhan Utama -->
-                <tr>
-                    <td class="label">Keluhan utama :</td>
-                    <td class="value">
-                        {{ $asesmen->keluhan_utama ?? implode(', ', $penyakit_yang_diderita) ?: '–' }}
-                    </td>
-                </tr>
+              
                 <tr>
                     <td class="label">Lama keluhan:</td>
                     <td class="value">{{ $asesmen->lama_keluhan ?? '' }}</td>
                 </tr>
-                <tr>
-                    <td class="label">Pencetus / Faktor pemberat:</td>
-                    <td class="value">
-                        @foreach ($faktorpemberat as $value )
-                            <label for="">{{ $value->name . ',' }}</label>
-                        @endforeach
-                    </td>
-                </tr>
+               
 
                 <!-- Riwayat Penyakit Sekarang -->
                 {{-- <tr>
