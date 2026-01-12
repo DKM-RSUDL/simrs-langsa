@@ -287,7 +287,7 @@
                             - {{ $asesmen->rmeAsesmenNeurologi->riwayat_pengobatan_keterangan }}
                         @endif
                     @else
-                        Tidak Diketahui
+                        -
                     @endif
                 @else
                     -
@@ -295,7 +295,7 @@
             </td>
         </tr>
     </table>
-   
+
     <!-- 3. Riwayat Alergi -->
     <div class="section-title">Riwayat Alergi</div>
     @php
@@ -310,9 +310,9 @@
                 $alergiData = [];
             }
         }
-      
+
     @endphp
-    
+
 
     @if (!empty($alergiData))
         <table class="detail-table">
@@ -344,7 +344,7 @@
     <table class="detail-table">
         <tr>
             <td width="25%" style="font-weight: bold;">Tekanan Darah</td>
-            <td width="25%">{{ $asesmen->rmeAsesmenNeurologi->darah_sistole ?? '-' }} mmHg</td>
+            <td width="25%">{{ $asesmen->rmeAsesmenNeurologi->darah_sistole ?? '-' }}/{{ $asesmen->rmeAsesmenNeurologi->darah_diastole ?? '-' }} mmHg</td>
             <td width="25%" style="font-weight: bold;">Suhu</td>
             <td width="25%">{{ $asesmen->rmeAsesmenNeurologi->suhu ?? '-' }} °C</td>
         </tr>
@@ -738,7 +738,7 @@
         <tr>
             <td colspan="2" style="background-color: #f5f5f5; font-weight: bold;">Rencana Penatalaksanaan</td>
         </tr>
-      
+
         <tr>
             <td width="100%" style="vertical-align: top; padding: 0;">
                 <!-- Observasi -->
@@ -763,16 +763,15 @@
     </table>
 
     <!-- Prognosis -->
-    
+
     <table class="detail-table" style="margin-top: 10px; page-break-inside: avoid;">
         <tr>
             <td colspan="2" style="font-weight: bold; background-color: #f9f9f9;">Prognosis</td>
         </tr>
-        dd($prognosis);
 
         @if (!empty($prognosis))
             <tr>
-                <td colspan="2" width="10%">{{ $prognosis }}</td>
+                <td colspan="2" width="10%">{{ $prognosis->value ?? '' }}</td>
             </tr>
         @else
             <tr>
@@ -835,9 +834,9 @@
     <div class="sign-area">
         <div class="sign-box">
             <p>Perawat yang Melakukan Asesmen Neurologi</p>
-            <br><br><br>
-            <p>( _________________________ )</p>
-            <p>{{ $asesmen->user->name ?? '.............................' }}</p>
+            <br>
+            <img src="{{ generateQrCode(($asesmen->user->karyawan->gelar_depan ?? ' ') . str()->title($asesmen->user->karyawan->nama ?? ' ') . ($asesmen->user->karyawan->gelar_belakang ?? ' '), 120, 'svg_datauri') }}" alt="QR Code">
+            <p>{{ (($asesmen->user->karyawan->gelar_depan ?? ' ') . str()->title($asesmen->user->karyawan->nama ?? ' ') . ($asesmen->user->karyawan->gelar_belakang ?? ' ')) ?? '.............................' }}</p>
         </div>
         <div class="clear"></div>
     </div>
