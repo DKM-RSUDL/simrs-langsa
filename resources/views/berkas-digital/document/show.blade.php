@@ -18,7 +18,7 @@
                         'rmeMasterImplementasi' => $rmeMasterImplementasi,
                         'satsetPrognosis' => $satsetPrognosis,
                         'alergiPasien' => $alergiPasien,
-                    ]
+                    ],
                 ])
             @else
                 <p>Data pengkajian awal medis tidak ditemukan untuk kunjungan ini.</p>

@@ -295,7 +295,7 @@ class BerkasDigitalService
     {
         // Tentukan tanggal masuk
         $tglMasuk = isset($dataMedis->tgl_transaksi) ? $dataMedis->tgl_transaksi : $dataMedis->tgl_masuk;
-        
+
         // Ambil data pengkajian awal medis rawat inap (kategori=1, sub_kategori=1)
         $pengkajianAsesmen = RmeAsesmen::with([
             'pasien',
@@ -335,4 +335,5 @@ class BerkasDigitalService
             'satsetPrognosis',
             'alergiPasien'
         );
-    }}
+    }
+}
