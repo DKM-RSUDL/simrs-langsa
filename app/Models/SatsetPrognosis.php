@@ -12,5 +12,5 @@ class SatsetPrognosis extends Model
     protected $table = 'SATSET_PROGNOSIS';
     public $timestamps = false;
 
-    protected $guarded = ['PROGNOSIS_ID'];
+    protected $guarded = ['SatsetPrognosis'];
 }

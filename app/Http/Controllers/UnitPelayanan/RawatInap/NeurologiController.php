@@ -19,23 +19,24 @@ use App\Models\RmeResumeDtl;
 use App\Models\SatsetPrognosis;
 use App\Services\AsesmenService;
 use App\Services\BaseService;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
-use Barryvdh\DomPDF\Facade\Pdf;
-use Exception;
 use Illuminate\Support\Facades\DB;
 
 class NeurologiController extends Controller
 {
     protected $asesmenService;
+
     private $baseService;
 
     public function __construct()
     {
-        $this->asesmenService = new AsesmenService();
-        $this->baseService = new BaseService();
+        $this->asesmenService = new AsesmenService;
+        $this->baseService = new BaseService;
         $this->middleware('can:read unit-pelayanan/rawat-inap');
     }
 
@@ -68,7 +69,7 @@ class NeurologiController extends Controller
             $dataMedis->pasien->umur = 'Tidak Diketahui';
         }
 
-        if (!$dataMedis) {
+        if (! $dataMedis) {
             abort(404, 'Data not found');
         }
 
@@ -90,9 +91,11 @@ class NeurologiController extends Controller
 
         try {
             $dataMedis = $this->baseService->getDataMedis($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
-            if (empty($dataMedis)) throw new Exception("Data kunjungan tidak ditemukan");
+            if (empty($dataMedis)) {
+                throw new Exception('Data kunjungan tidak ditemukan');
+            }
 
-            $asesmen = new RmeAsesmen();
+            $asesmen = new RmeAsesmen;
             $asesmen->kd_pasien = $request->kd_pasien;
             $asesmen->kd_unit = $request->kd_unit;
             $asesmen->tgl_masuk = $request->tgl_masuk;
@@ -105,27 +108,27 @@ class NeurologiController extends Controller
 
             // Prepare vital sign data (hanya field yang ada input)
             $vitalSignInput = [
-                'sistole'        => $request->darah_sistole,
-                'diastole'       => $request->darah_diastole,
-                'nadi'           => $request->nadi,
-                'respiration'    => $request->respirasi,
-                'suhu'           => $request->suhu,
-                'spo2_tanpa_o2'  => $request->spo_o2_tanpa,
+                'sistole' => $request->darah_sistole,
+                'diastole' => $request->darah_diastole,
+                'nadi' => $request->nadi,
+                'respiration' => $request->respirasi,
+                'suhu' => $request->suhu,
+                'spo2_tanpa_o2' => $request->spo_o2_tanpa,
                 'spo2_dengan_o2' => $request->spo_o2_dengan,
-                'tinggi_badan'   => $request->tinggi_badan,
-                'berat_badan'    => $request->berat_badan,
+                'tinggi_badan' => $request->tinggi_badan,
+                'berat_badan' => $request->berat_badan,
             ];
 
             $mapping = [
-                'sistole'        => 'int',
-                'diastole'       => 'int',
-                'nadi'           => 'int',
-                'respiration'    => 'int',
-                'suhu'           => 'float',
-                'spo2_tanpa_o2'  => 'int',
+                'sistole' => 'int',
+                'diastole' => 'int',
+                'nadi' => 'int',
+                'respiration' => 'int',
+                'suhu' => 'float',
+                'spo2_tanpa_o2' => 'int',
                 'spo2_dengan_o2' => 'int',
-                'tinggi_badan'   => 'int',
-                'berat_badan'    => 'int',
+                'tinggi_badan' => 'int',
+                'berat_badan' => 'int',
             ];
 
             $vitalSignData = [];
@@ -138,7 +141,7 @@ class NeurologiController extends Controller
             }
 
             // Save vital signs using service (hanya field yang terisi)
-            if (!empty($vitalSignData)) {
+            if (! empty($vitalSignData)) {
                 $this->asesmenService->store(
                     $vitalSignData,
                     $kd_pasien,
@@ -147,8 +150,9 @@ class NeurologiController extends Controller
                 );
             }
 
+            dd($request->riwayat_alergi);
 
-            $asesmenNeurologi = new RmeAsesmenNeurologi();
+            $asesmenNeurologi = new RmeAsesmenNeurologi;
             $asesmenNeurologi->id_asesmen = $asesmen->id;
             $asesmenNeurologi->keluhan_utama = $request->keluhan_utama;
             $asesmenNeurologi->riwayat_penyakit_sekarang = $request->riwayat_penyakit_sekarang;
@@ -166,23 +170,25 @@ class NeurologiController extends Controller
             $asesmenNeurologi->evaluasi_evaluasi_keperawatan = $request->evaluasi_evaluasi_keperawatan;
             $asesmenNeurologi->save();
 
-            //Simpan ke table RmePemeriksaanFisik
+            // Simpan ke table RmePemeriksaanFisik
             $itemFisik = MrItemFisik::all();
             foreach ($itemFisik as $item) {
                 $itemName = strtolower($item->nama);
-                $isNormal = $request->has($item->id . '-normal') ? 1 : 0;
-                $keterangan = $request->input($item->id . '_keterangan');
-                if ($isNormal) $keterangan = '';
+                $isNormal = $request->has($item->id.'-normal') ? 1 : 0;
+                $keterangan = $request->input($item->id.'_keterangan');
+                if ($isNormal) {
+                    $keterangan = '';
+                }
 
                 RmeAsesmenPemeriksaanFisik::create([
                     'id_asesmen' => $asesmen->id,
                     'id_item_fisik' => $item->id,
                     'is_normal' => $isNormal,
-                    'keterangan' => $keterangan
+                    'keterangan' => $keterangan,
                 ]);
             }
 
-            $asesmenNeurologiSistemSyaraf = new RmeAsesmenNeurologiSistemSyaraf();
+            $asesmenNeurologiSistemSyaraf = new RmeAsesmenNeurologiSistemSyaraf;
             $asesmenNeurologiSistemSyaraf->id_asesmen = $asesmen->id;
             $asesmenNeurologiSistemSyaraf->kesadaran_kulitatif = $request->kesadaran_kulitatif;
             $asesmenNeurologiSistemSyaraf->kesadaran_kulitatif_e = $request->kesadaran_kulitatif_e;
@@ -237,7 +243,7 @@ class NeurologiController extends Controller
             $asesmenNeurologiSistemSyaraf->defekasi = $request->defekasi;
             $asesmenNeurologiSistemSyaraf->save();
 
-            $asesmenNeurologiIntensitasNyeri = new RmeAsesmenNeurologiIntensitasNyeri();
+            $asesmenNeurologiIntensitasNyeri = new RmeAsesmenNeurologiIntensitasNyeri;
             $asesmenNeurologiIntensitasNyeri->id_asesmen = $asesmen->id;
             $asesmenNeurologiIntensitasNyeri->skala_nyeri = $request->skala_nyeri;
             $asesmenNeurologiIntensitasNyeri->diagnosis_banding = $request->diagnosis_banding;
@@ -251,14 +257,14 @@ class NeurologiController extends Controller
             $asesmenNeurologiIntensitasNyeri->rencana_pengobatan = $request->rencana_pengobatan;
             $asesmenNeurologiIntensitasNyeri->save();
 
-            //Simpan Diagnosa ke Master
+            // Simpan Diagnosa ke Master
             $diagnosisBandingList = json_decode($request->diagnosis_banding ?? '[]', true);
             $diagnosisKerjaList = json_decode($request->diagnosis_kerja ?? '[]', true);
             $allDiagnoses = array_merge($diagnosisBandingList, $diagnosisKerjaList);
             foreach ($allDiagnoses as $diagnosa) {
                 $existingDiagnosa = RmeMasterDiagnosis::where('nama_diagnosis', $diagnosa)->first();
-                if (!$existingDiagnosa) {
-                    $masterDiagnosa = new RmeMasterDiagnosis();
+                if (! $existingDiagnosa) {
+                    $masterDiagnosa = new RmeMasterDiagnosis;
                     $masterDiagnosa->nama_diagnosis = $diagnosa;
                     $masterDiagnosa->save();
                 }
@@ -277,9 +283,9 @@ class NeurologiController extends Controller
                     // Cek apakah sudah ada entri
                     $existingImplementasi = RmeMasterImplementasi::where($column, $item)->first();
 
-                    if (!$existingImplementasi) {
+                    if (! $existingImplementasi) {
                         // Jika tidak ada, buat record baru
-                        $masterImplementasi = new RmeMasterImplementasi();
+                        $masterImplementasi = new RmeMasterImplementasi;
                         $masterImplementasi->$column = $item;
                         $masterImplementasi->save();
                     }
@@ -293,7 +299,7 @@ class NeurologiController extends Controller
             saveToColumn($edukasiList, 'edukasi');
             saveToColumn($kolaborasiList, 'kolaborasi');
 
-            $asesmenNeurologiDischargePlanning = new RmeAsesmenNeurologiDischargePlanning();
+            $asesmenNeurologiDischargePlanning = new RmeAsesmenNeurologiDischargePlanning;
             $asesmenNeurologiDischargePlanning->id_asesmen = $asesmen->id;
             $asesmenNeurologiDischargePlanning->usia_lanjut = $request->usia_lanjut;
             $asesmenNeurologiDischargePlanning->hambatan_mobilisasi = $request->hambatan_mobilisasi;
@@ -305,36 +311,35 @@ class NeurologiController extends Controller
             $asesmenNeurologiDischargePlanning->save();
 
             $vitalSignStore = [
-                'sistole'        => (int) $request->darah_sistole ?? null,
-                'diastole'       => (int) $request->darah_diastole ?? null,
-                'nadi'           => (int)$request->nadi ?? null,
-                'respiration'    => (int) $request->respirasi ?? null,
-                'suhu'           => (float) $request->suhu ?? null,
+                'sistole' => (int) $request->darah_sistole ?? null,
+                'diastole' => (int) $request->darah_diastole ?? null,
+                'nadi' => (int) $request->nadi ?? null,
+                'respiration' => (int) $request->respirasi ?? null,
+                'suhu' => (float) $request->suhu ?? null,
             ];
 
             // create resume
             $resumeData = [
-                'anamnesis'             => $request->keluhan_utama,
-                'diagnosis'             => $allDiagnoses,
+                'anamnesis' => $request->keluhan_utama,
+                'diagnosis' => $allDiagnoses,
 
-                'konpas'                =>
-                [
-                    'sistole'   => [
-                        'hasil' => $vitalSignStore['sistole'] ?? null
+                'konpas' => [
+                    'sistole' => [
+                        'hasil' => $vitalSignStore['sistole'] ?? null,
                     ],
-                    'distole'   => [
-                        'hasil' => $vitalSignStore['diastole'] ?? null
+                    'distole' => [
+                        'hasil' => $vitalSignStore['diastole'] ?? null,
                     ],
-                    'respiration_rate'   => [
-                        'hasil' => $vitalSignStore['respiration'] ?? null
+                    'respiration_rate' => [
+                        'hasil' => $vitalSignStore['respiration'] ?? null,
                     ],
-                    'suhu'   => [
-                        'hasil' => $vitalSignStore['suhu'] ?? null
+                    'suhu' => [
+                        'hasil' => $vitalSignStore['suhu'] ?? null,
                     ],
-                    'nadi'   => [
-                        'hasil' => $vitalSignStore['nadi'] ?? null
-                    ]
-                ]
+                    'nadi' => [
+                        'hasil' => $vitalSignStore['nadi'] ?? null,
+                    ],
+                ],
             ];
 
             $this->baseService->updateResumeMedis($dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk, $resumeData);
@@ -349,6 +354,7 @@ class NeurologiController extends Controller
             ])->with(['success' => 'Berhasil menambah asesmen Neurologi !']);
         } catch (Exception $e) {
             DB::rollBack();
+
             return back()->with('error', $e->getMessage());
         }
     }
@@ -386,9 +392,9 @@ class NeurologiController extends Controller
                 'satsetPrognosis'
             ));
         } catch (ModelNotFoundException $e) {
-            return back()->with('error', 'Data tidak ditemukan. Detail: ' . $e->getMessage());
+            return back()->with('error', 'Data tidak ditemukan. Detail: '.$e->getMessage());
         } catch (\Exception $e) {
-            return back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
+            return back()->with('error', 'Terjadi kesalahan: '.$e->getMessage());
         }
     }
 
@@ -437,7 +443,7 @@ class NeurologiController extends Controller
         } catch (\Exception $e) {
             // Tangani error dan berikan pesan yang jelas
             return redirect()->back()
-                ->with('error', 'Terjadi kesalahan saat mengambil data asesmen: ' . $e->getMessage());
+                ->with('error', 'Terjadi kesalahan saat mengambil data asesmen: '.$e->getMessage());
         }
     }
 
@@ -447,7 +453,9 @@ class NeurologiController extends Controller
 
         try {
             $dataMedis = $this->baseService->getDataMedis($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
-            if (empty($dataMedis)) throw new Exception("Data kunjungan tidak ditemukan");
+            if (empty($dataMedis)) {
+                throw new Exception('Data kunjungan tidak ditemukan');
+            }
 
             $asesmen = RmeAsesmen::findOrFail($id);
             $asesmen->kd_pasien = $request->kd_pasien;
@@ -482,18 +490,20 @@ class NeurologiController extends Controller
             $itemFisik = MrItemFisik::all();
             foreach ($itemFisik as $item) {
                 $itemName = strtolower($item->nama);
-                $isNormal = $request->has($item->id . '-normal') ? 1 : 0;
-                $keterangan = $request->input($item->id . '_keterangan');
-                if ($isNormal) $keterangan = '';
+                $isNormal = $request->has($item->id.'-normal') ? 1 : 0;
+                $keterangan = $request->input($item->id.'_keterangan');
+                if ($isNormal) {
+                    $keterangan = '';
+                }
 
                 RmeAsesmenPemeriksaanFisik::updateOrCreate(
                     [
                         'id_asesmen' => $asesmen->id,
-                        'id_item_fisik' => $item->id
+                        'id_item_fisik' => $item->id,
                     ],
                     [
                         'is_normal' => $isNormal,
-                        'keterangan' => $keterangan
+                        'keterangan' => $keterangan,
                     ]
                 );
             }
@@ -567,14 +577,14 @@ class NeurologiController extends Controller
             $asesmenNeurologiIntensitasNyeri->rencana_pengobatan = $request->rencana_pengobatan;
             $asesmenNeurologiIntensitasNyeri->save();
 
-            //Simpan Diagnosa ke Master
+            // Simpan Diagnosa ke Master
             $diagnosisBandingList = json_decode($request->diagnosis_banding ?? '[]', true);
             $diagnosisKerjaList = json_decode($request->diagnosis_kerja ?? '[]', true);
             $allDiagnoses = array_merge($diagnosisBandingList, $diagnosisKerjaList);
             foreach ($allDiagnoses as $diagnosa) {
                 $existingDiagnosa = RmeMasterDiagnosis::where('nama_diagnosis', $diagnosa)->first();
-                if (!$existingDiagnosa) {
-                    $masterDiagnosa = new RmeMasterDiagnosis();
+                if (! $existingDiagnosa) {
+                    $masterDiagnosa = new RmeMasterDiagnosis;
                     $masterDiagnosa->nama_diagnosis = $diagnosa;
                     $masterDiagnosa->save();
                 }
@@ -593,9 +603,9 @@ class NeurologiController extends Controller
                     // Cek apakah sudah ada entri
                     $existingImplementasi = RmeMasterImplementasi::where($column, $item)->first();
 
-                    if (!$existingImplementasi) {
+                    if (! $existingImplementasi) {
                         // Jika tidak ada, buat record baru
-                        $masterImplementasi = new RmeMasterImplementasi();
+                        $masterImplementasi = new RmeMasterImplementasi;
                         $masterImplementasi->$column = $item;
                         $masterImplementasi->save();
                     }
@@ -620,11 +630,11 @@ class NeurologiController extends Controller
             $asesmenNeurologiDischargePlanning->save();
 
             $vitalSignStore = [
-                'sistole'        => (int) $request->darah_sistole ?? null,
-                'diastole'       => (int) $request->darah_diastole ?? null,
-                'nadi'           => (int)$request->nadi ?? null,
-                'respiration'    => (int) $request->respirasi ?? null,
-                'suhu'           => (float) $request->suhu ?? null,
+                'sistole' => (int) $request->darah_sistole ?? null,
+                'diastole' => (int) $request->darah_diastole ?? null,
+                'nadi' => (int) $request->nadi ?? null,
+                'respiration' => (int) $request->respirasi ?? null,
+                'suhu' => (float) $request->suhu ?? null,
             ];
 
             $this->asesmenService->store(
@@ -636,27 +646,26 @@ class NeurologiController extends Controller
 
             // create resume
             $resumeData = [
-                'anamnesis'             => $request->keluhan_utama,
-                'diagnosis'             => $allDiagnoses,
+                'anamnesis' => $request->keluhan_utama,
+                'diagnosis' => $allDiagnoses,
 
-                'konpas'                =>
-                [
-                    'sistole'   => [
-                        'hasil' => $vitalSignStore['sistole'] ?? null
+                'konpas' => [
+                    'sistole' => [
+                        'hasil' => $vitalSignStore['sistole'] ?? null,
                     ],
-                    'distole'   => [
-                        'hasil' => $vitalSignStore['diastole'] ?? null
+                    'distole' => [
+                        'hasil' => $vitalSignStore['diastole'] ?? null,
                     ],
-                    'respiration_rate'   => [
-                        'hasil' => $vitalSignStore['respiration'] ?? null
+                    'respiration_rate' => [
+                        'hasil' => $vitalSignStore['respiration'] ?? null,
                     ],
-                    'suhu'   => [
-                        'hasil' => $vitalSignStore['suhu'] ?? null
+                    'suhu' => [
+                        'hasil' => $vitalSignStore['suhu'] ?? null,
                     ],
-                    'nadi'   => [
-                        'hasil' => $vitalSignStore['nadi'] ?? null
-                    ]
-                ]
+                    'nadi' => [
+                        'hasil' => $vitalSignStore['nadi'] ?? null,
+                    ],
+                ],
             ];
 
             $this->baseService->updateResumeMedis($dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk, $resumeData);
@@ -671,7 +680,8 @@ class NeurologiController extends Controller
             ])->with(['success' => 'Berhasil mengupdate asesmen Neurologi!']);
         } catch (\Exception $e) {
             DB::rollBack();
-            return back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
+
+            return back()->with('error', 'Terjadi kesalahan: '.$e->getMessage());
         }
     }
 
@@ -688,10 +698,10 @@ class NeurologiController extends Controller
                 'rmeAsesmenNeurologiDischargePlanning',
             ])->where('id', $id)->first();
 
-            if (!$asesmen) {
+            if (! $asesmen) {
                 return response()->json([
-                    'status'  => 'error',
-                    'message' => 'Data asesmen tidak ditemukan'
+                    'status' => 'error',
+                    'message' => 'Data asesmen tidak ditemukan',
                 ], 404);
             }
 
@@ -707,13 +717,13 @@ class NeurologiController extends Controller
 
             // If we can't find the data medis, try getting the patient directly
             $pasien = null;
-            if (!$dataMedis || !$dataMedis->pasien) {
+            if (! $dataMedis || ! $dataMedis->pasien) {
                 $pasien = DB::table('pasien')->where('kd_pasien', $kd_pasien)->first();
 
-                if (!$pasien) {
+                if (! $pasien) {
                     return response()->json([
-                        'status'  => 'error',
-                        'message' => 'Data pasien tidak ditemukan'
+                        'status' => 'error',
+                        'message' => 'Data pasien tidak ditemukan',
                     ], 404);
                 }
             } else {
@@ -728,32 +738,40 @@ class NeurologiController extends Controller
 
             $itemFisik = MrItemFisik::whereIn('id', $itemFisikIds)->get()->keyBy('id');
 
+            $alergiPasien = RmeAlergiPasien::where('kd_pasien', $kd_pasien)->get();
+
+            $prognosis = SatsetPrognosis::select('value')
+                ->where('prognosis_id', $asesmen->rmeAsesmenNeurologiIntensitasNyeri->neurologi_prognosis)->get();
+            $prognosis = $prognosis[0]['value'];
+
             // Load view and generate PDF
             $pdf = PDF::loadView('unit-pelayanan.rawat-inap.pelayanan.neurologi.print', [
-                'asesmen'    => $asesmen,
+                'asesmen' => $asesmen,
                 'pasien' => $pasien,
                 'dataMedis' => $dataMedis,
-                'rmeAsesmenNeurologi'                     => optional($asesmen)->rmeAsesmenNeurologi ?? null,
-                'rmeAsesmenNeurologiSistemSyaraf'     => optional($asesmen)->rmeAsesmenNeurologiSistemSyaraf ?? null,
-                'pemeriksaanFisik'                  => optional($asesmen)->pemeriksaanFisik ?? null,
+                'rmeAsesmenNeurologi' => optional($asesmen)->rmeAsesmenNeurologi ?? null,
+                'rmeAsesmenNeurologiSistemSyaraf' => optional($asesmen)->rmeAsesmenNeurologiSistemSyaraf ?? null,
+                'pemeriksaanFisik' => optional($asesmen)->pemeriksaanFisik ?? null,
                 'rmeAsesmenNeurologiIntensitasNyeri' => optional($asesmen)->rmeAsesmenNeurologiIntensitasNyeri ?? null,
-                'rmeAsesmenNeurologiDischargePlanning'    => optional($asesmen)->rmeAsesmenNeurologiDischargePlanning ?? null,
+                'rmeAsesmenNeurologiDischargePlanning' => optional($asesmen)->rmeAsesmenNeurologiDischargePlanning ?? null,
                 'itemFisik' => $itemFisik,
+                'alergiPasien' => $alergiPasien,
+                'prognosis' => $prognosis,
             ]);
 
             $pdf->setPaper('a4', 'portrait');
             $pdf->setOptions([
                 'isHtml5ParserEnabled' => true,
-                'isRemoteEnabled'      => true,
-                'defaultFont'          => 'sans-serif'
+                'isRemoteEnabled' => true,
+                'defaultFont' => 'sans-serif',
             ]);
 
             return $pdf->stream("asesmen-obstetri-maternitas-{$id}-print-pdf.pdf");
         } catch (\Exception $e) {
 
             return response()->json([
-                'status'  => 'error',
-                'message' => 'Gagal generate PDF: ' . $e->getMessage()
+                'status' => 'error',
+                'message' => 'Gagal generate PDF: '.$e->getMessage(),
             ], 500);
         }
     }
@@ -768,24 +786,24 @@ class NeurologiController extends Controller
             ->first();
 
         $resumeDtlData = [
-            'tindak_lanjut_code'    => $data['tindak_lanjut_code'],
-            'tindak_lanjut_name'    => $data['tindak_lanjut_name'],
-            'tgl_kontrol_ulang'     => $data['tgl_kontrol_ulang'],
-            'unit_rujuk_internal'   => $data['unit_rujuk_internal'],
-            'rs_rujuk'              => $data['rs_rujuk'],
-            'rs_rujuk_bagian'       => $data['rs_rujuk_bagian'],
+            'tindak_lanjut_code' => $data['tindak_lanjut_code'],
+            'tindak_lanjut_name' => $data['tindak_lanjut_name'],
+            'tgl_kontrol_ulang' => $data['tgl_kontrol_ulang'],
+            'unit_rujuk_internal' => $data['unit_rujuk_internal'],
+            'rs_rujuk' => $data['rs_rujuk'],
+            'rs_rujuk_bagian' => $data['rs_rujuk_bagian'],
         ];
 
         if (empty($resume)) {
             $resumeData = [
-                'kd_pasien'     => $kd_pasien,
-                'kd_unit'       => $kd_unit,
-                'tgl_masuk'     => $tgl_masuk,
-                'urut_masuk'    => $urut_masuk,
-                'anamnesis'     => $data['anamnesis'],
-                'konpas'        => $data['konpas'],
-                'diagnosis'     => $data['diagnosis'],
-                'status'        => 0
+                'kd_pasien' => $kd_pasien,
+                'kd_unit' => $kd_unit,
+                'tgl_masuk' => $tgl_masuk,
+                'urut_masuk' => $urut_masuk,
+                'anamnesis' => $data['anamnesis'],
+                'konpas' => $data['konpas'],
+                'diagnosis' => $data['diagnosis'],
+                'status' => 0,
             ];
 
             $newResume = RMEResume::create($resumeData);
@@ -807,12 +825,12 @@ class NeurologiController extends Controller
             if (empty($resumeDtl)) {
                 RmeResumeDtl::create($resumeDtlData);
             } else {
-                $resumeDtl->tindak_lanjut_code  = $data['tindak_lanjut_code'];
-                $resumeDtl->tindak_lanjut_name  = $data['tindak_lanjut_name'];
-                $resumeDtl->tgl_kontrol_ulang   = $data['tgl_kontrol_ulang'];
+                $resumeDtl->tindak_lanjut_code = $data['tindak_lanjut_code'];
+                $resumeDtl->tindak_lanjut_name = $data['tindak_lanjut_name'];
+                $resumeDtl->tgl_kontrol_ulang = $data['tgl_kontrol_ulang'];
                 $resumeDtl->unit_rujuk_internal = $data['unit_rujuk_internal'];
-                $resumeDtl->rs_rujuk            = $data['rs_rujuk'];
-                $resumeDtl->rs_rujuk_bagian     = $data['rs_rujuk_bagian'];
+                $resumeDtl->rs_rujuk = $data['rs_rujuk'];
+                $resumeDtl->rs_rujuk_bagian = $data['rs_rujuk_bagian'];
                 $resumeDtl->save();
             }
         }
