@@ -3,1257 +3,1043 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>Asesmen THT</title>
+
     <style>
+        * {
+            box-sizing: border-box;
+            font-family: "DejaVu Sans", "Helvetica", "Arial", sans-serif !important;
+            font-size: 8.5pt;
+        }
+
         @page {
-            margin: 0.5cm 1cm;
+            size: A4;
+            margin: 3mm 6mm;
         }
 
         body {
-            font-family: Arial, sans-serif;
-            font-size: 11px;
-            line-height: 1.4;
-            color: #333;
             margin: 0;
             padding: 0;
         }
 
-        header {
+        .a4 {
             width: 100%;
-            display: table;
-            padding-bottom: 20px;
-            border-bottom: 2px solid black;
-            margin-bottom: 20px;
+            max-width: 100%;
         }
 
-        .left-column {
-            float: left;
-            width: 20%;
-            text-align: center;
-        }
-
-        .center-column {
-            float: left;
-            width: 40%;
-            text-align: center;
-            padding: 10px 0;
-        }
-
-        .right-column {
-            float: right;
-            width: 35%;
-        }
-
-        .header-logo {
-            width: 80px;
-            margin-bottom: 5px;
-        }
-
-        .info-table {
+        table {
             width: 100%;
             border-collapse: collapse;
         }
 
-        .info-table td {
-            padding: 4px;
-            border: 1px solid #333;
+        td,
+        th {
+            padding: 4px 6px;
+            vertical-align: top;
         }
 
-        .clear {
-            clear: both;
+        .header-table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: #f0f0f0;
+            padding: 0;
+            position: relative;
         }
 
-        .content-section {
-            margin-top: 20px;
+        .td-left {
+            width: 40%;
+            text-align: left;
+            vertical-align: middle;
+        }
+
+        .td-center {
+            width: 40%;
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        .td-right {
+            width: 20%;
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        .brand-table {
+            border-collapse: collapse;
+            background-color: transparent;
+        }
+
+        .va-middle {
+            vertical-align: middle;
+        }
+
+        .brand-name {
+            font-weight: 700;
+            margin: 0;
+            font-size: 14px;
+        }
+
+        .brand-info {
+            margin: 0;
+            font-size: 7px;
+        }
+
+        .title-main {
+            display: block;
+            font-size: 16px;
+            font-weight: bold;
+            margin: 0;
+        }
+
+        .title-sub {
+            display: block;
+            font-size: 14px;
+            font-weight: bold;
+            margin: 0;
+        }
+
+        .unit-box {
+            background-color: #bbbbbb;
+            padding: 15px 0px;
+            width: 100%;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .unit-text {
+            font-size: 18px;
+            font-weight: bold;
+            color: #ffffff;
+        }
+
+        .patient-table {
+            width: 100%;
+            margin-top: 15px;
+            border-collapse: collapse;
+        }
+
+        .patient-table th,
+        .patient-table td {
+            border: 1px solid #ccc;
+            padding: 5px 7px;
+            font-size: 9pt;
+        }
+
+        .patient-table th {
+            background-color: #f2f2f2;
+            text-align: left;
+            width: 130px;
         }
 
         .section-title {
-            background: #f5f5f5;
-            padding: 5px;
             font-weight: bold;
-            border-left: 3px solid #333;
-            margin-bottom: 10px;
+            font-size: 11pt;
+            padding-top: 12px;
         }
 
-        .detail-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 15px;
+        .label {
+            font-weight: bold;
+            width: 38%;
+            padding-right: 8px;
         }
 
-        .detail-table th,
-        .detail-table td {
-            padding: 5px;
-            border: 1px solid #333;
-            font-size: 10px;
+        .value {
+            border-bottom: 1px solid #000;
+            min-height: 22px;
         }
 
-        .sign-area {
-            margin-top: 30px;
-            page-break-inside: avoid;
+        .value.tall {
+            min-height: 32px;
         }
 
-        .sign-box {
-            float: right;
-            width: 200px;
-            text-align: center;
+        .value.empty-space {
+            min-height: 60px;
         }
 
-        .sign-box p {
-            margin: 5px 0;
-        }
-
-        /* 9. Diangnosis */
-        @media print {
-            .print-section-header {
-                page-break-inside: avoid;
-                margin-top: 15px;
-                margin-bottom: 10px;
-                border-bottom: 1px solid #dee2e6;
-                padding-bottom: 5px;
-            }
-
-            /* Perbaikan untuk layout kolom saat print */
-            .row {
-                display: flex !important;
-                flex-wrap: wrap !important;
-            }
-
-            .print-column {
-                width: 50% !important;
-                float: left !important;
-                page-break-inside: avoid;
-                padding: 0 10px !important;
-                box-sizing: border-box !important;
-            }
-
-            .print-card {
-                margin-bottom: 15px !important;
-                border: 1px solid #dee2e6 !important;
-                border-radius: 4px !important;
-            }
-
-            .print-card-header {
-                background-color: #f8f9fa !important;
-                -webkit-print-color-adjust: exact;
-                print-color-adjust: exact;
-                color-adjust: exact;
-                border-bottom: 1px solid #dee2e6 !important;
-                padding: 8px 12px !important;
-            }
-
-            .print-table {
-                width: 100% !important;
-                border-collapse: collapse !important;
-                margin-bottom: 0 !important;
-            }
-
-            .print-table th,
-            .print-table td {
-                padding: 6px !important;
-                border: 1px solid #000 !important;
-            }
-
-            .print-table thead th {
-                background-color: #f8f9fa !important;
-                -webkit-print-color-adjust: exact;
-                print-color-adjust: exact;
-                color-adjust: exact;
-                font-weight: bold !important;
-            }
-
-            .print-table-responsive {
-                overflow: visible !important;
-            }
-
-            /* Perbaikan untuk text yang terpotong */
-            h5,
-            h6 {
-                font-weight: bold !important;
-                margin: 0 0 5px 0 !important;
-            }
-
-            small {
-                font-size: 80% !important;
-            }
+        .checkbox-group label {
+            margin-right: 28px;
+            display: inline-block;
         }
     </style>
 </head>
 
 <body>
-    <header>
-        <div class="left-column">
-            <img src="data:image/png;base64,{{ base64_encode(file_get_contents(public_path('assets/img/Logo-RSUD-Langsa-1.png'))) }}"
-                class="header-logo" alt="Logo">
-            <p>RSUD Langsa</p>
-            <p>Jl. Jend. A. Yani No.1 Kota Langsa</p>
-        </div>
-        <div class="center-column">
-            <h1 style="font-size: 16px;">Formulir Asesmen THT</h1>
-        </div>
-        <div class="right-column">
-            <table class="info-table">
-                <tr>
-                    <td><strong>No RM</strong></td>
-                    <td>{{ optional($pasien)->kd_pasien ?? '-' }}</td>
-                </tr>
-                <tr>
-                    <td><strong>Nama</strong></td>
-                    <td>{{ optional($pasien)->nama ? str()->title(optional($pasien)->nama) : '-' }}</td>
-                </tr>
-                <tr>
-                    <td><strong>Jenis Kelamin</strong></td>
-                    <td>
-                        @php
-                            $gender = '-';
+    <div class="a4">
 
-                            if ($pasien->jenis_kelamin == 1) {
-                                $gender = 'Laki-Laki';
-                            }
-                            if ($pasien->jenis_kelamin == 0) {
-                                $gender = 'Perempuan';
-                            }
-
-                            echo $gender;
-                        @endphp
-                    </td>
-                </tr>
-                <tr>
-                    <td><strong>Tanggal Lahir</strong></td>
-                    <td>{{ optional($pasien)->tgl_lahir ? date('d/m/Y', strtotime(optional($pasien)->tgl_lahir)) : '-' }}
-                    </td>
-                </tr>
-            </table>
-        </div>
-
-        <div class="clear"></div>
-    </header>
-
-    <div class="section-title mt-3">1. Data masuk</div>
-    <table class="detail-table">
-        <tr>
-            <td class="col-header">kondisi Masuk :</td>
-            <td>:
-                @php
-                    $kondisiMasuk = $rmeAsesmenTht->kondisi_masuk ?? '-';
-                    $kondisiMasukText = match ($kondisiMasuk) {
-                        '1' => 'Mandiri',
-                        '2' => 'Kursi Roda',
-                        '3' => 'Brankar',
-                        default => $kondisiMasuk,
-                    };
-                    echo $kondisiMasukText;
-                @endphp
-            </td>
-            <td class="col-header">Ruang</td>
-            <td>: {{ $asesmen->rmeAsesmenTht->ruang == 1 ? 'Ya' : 'Tidak' ?? '-' }}</td>
-        </tr>
-        <tr>
-            <td class="col-header">Tanggal Masuk :</td>
-            <td>{{ date('d M Y', strtotime($asesmen->rmeAsesmenTht->tgl_masuk)) ?? '-' }}</td>
-            <td class="col-header">Jam Masuk :</td>
-            <td>{{ date('H:i', strtotime($asesmen->rmeAsesmenTht->tgl_masuk)) ?? '-' }}</td>
-        </tr>
-    </table>
-
-    <div class="section-title mt-3">2. Anamnesis</div>
-    <table class="detail-table">
-        <tr>
-            <td class="col-header">Anamnesis :</td>
-            <td>: {{ $asesmen->rmeAsesmenTht->anamnesis_anamnesis ?? '-' }}</td>
-        </tr>
-    </table>
-
-    <div class="section-title mt-3">3. Pemeriksaan fisik</div>
-    <table class="detail-table">
-        <tr>
-            <td class="col-header">Tek. Darah (mmHg) : <br>
-                <span>- Sistole</span><br>
-                <span>- Diastole</span>
-            </td>
-            <td><br>
-                :
-                {{ json_decode($asesmen->rmeAsesmenThtPemeriksaanFisik, true)[0]['darah_sistole'] ?? '-' }}
-                mmHg
-                <br>
-                :
-                {{ json_decode($asesmen->rmeAsesmenThtPemeriksaanFisik, true)[0]['darah_diastole'] ?? '-' }}
-                mmHg
-            </td>
-            <td class="col-header">Nadi (Per Menit)</td>
-            <td>:
-                {{ json_decode($asesmen->rmeAsesmenThtPemeriksaanFisik, true)[0]['nadi'] ?? '-' }}
-                Menit
-            </td>
-        </tr>
-        <tr>
-            <td class="col-header">Nafas (Per Menit) :</td>
-            <td>:
-                {{ json_decode($asesmen->rmeAsesmenThtPemeriksaanFisik, true)[0]['nafas'] ?? '-' }}
-                Menit
-            </td>
-            <td class="col-header">Suhu (C) :</td>
-            <td>:
-                {{ json_decode($asesmen->rmeAsesmenThtPemeriksaanFisik, true)[0]['suhu'] ?? '-' }}
-                °C
-            </td>
-        </tr>
-        <tr>
-            <td class="col-header">Sensorium :</td>
-            <td>: {{ json_decode($asesmen->rmeAsesmenThtPemeriksaanFisik, true)[0]['sensorium'] ?? '-' }}
-            </td>
-            <td class="col-header">KU/KP/KG :</td>
-            <td>: {{ json_decode($asesmen->rmeAsesmenThtPemeriksaanFisik, true)[0]['ku_kp_kg'] ?? '-' }}</td>
-        </tr>
-        <tr>
-            <td class="col-header">AVPU :</td>
-            <td colspan="3">:
-                @php
-                    $avpu = json_decode($asesmen->rmeAsesmenThtPemeriksaanFisik, true)[0]['avpu'] ?? null;
-                    $avpuOptions = [
-                        '0' => 'Sadar Baik/Alert : 0',
-                        '1' => 'Berespon dengan kata-kata/Voice: 1',
-                        '2' => 'Hanya berespon jika dirangsang nyeri/pain: 2',
-                        '3' => 'Pasien tidak sadar/unresponsive: 3',
-                        '4' => 'Gelisah atau bingung: 4',
-                        '5' => 'Acute Confusional States: 5',
-                    ];
-                @endphp
-                {{ $avpuOptions[$avpu] ?? '-' }}
-            </td>
-        </tr>
-        <tr>
-            <td colspan="4" style="font-weight: bold;">Pemeriksaan Fisik Koprehensif Laringoskopi Indirex</td>
-        </tr>
-        <tr>
-            <td class="col-header">Pangkal Lidah :</td>
-            <td>:
-                {{ json_decode($asesmen->rmeAsesmenThtPemeriksaanFisik, true)[0]['pangkal_lidah'] ?? '-' }}
-            </td>
-            <td class="col-header">Tonsil Lidah :</td>
-            <td>:
-                {{ json_decode($asesmen->rmeAsesmenThtPemeriksaanFisik, true)[0]['tonsil_lidah'] ?? '-' }}
-            </td>
-        </tr>
-        <tr>
-            <td class="col-header">Epiglotis :</td>
-            <td>:
-                {{ json_decode($asesmen->rmeAsesmenThtPemeriksaanFisik, true)[0]['epiglotis'] ?? '-' }}
-            </td>
-            <td class="col-header">Pita Suara :</td>
-            <td>:
-                {{ json_decode($asesmen->rmeAsesmenThtPemeriksaanFisik, true)[0]['pita_suara'] ?? '-' }}
-            </td>
-        </tr>
-        <tr>
-            <td colspan="4" style="font-weight: bold;">Daun Telinga</td>
-        </tr>
-        <tr>
-            <td class="col-header">Nanah :<br>
-                <span>- Kanan</span> <br>
-                <span>- Kiri</span>
-            </td>
-            <td><br>:
-                {{ json_decode($asesmen->rmeAsesmenThtPemeriksaanFisik, true)[0]['daun_telinga_nanah_kana'] ?? '-' }}
-                <br>:
-                {{ json_decode($asesmen->rmeAsesmenThtPemeriksaanFisik, true)[0]['daun_telinga_nanah_kiri'] ?? '-' }}
-            </td>
-            <td class="col-header">Darah :<br>
-                <span>- Kanan</span> <br>
-                <span>- Kiri</span>
-            </td>
-            <td><br>:
-                {{ json_decode($asesmen->rmeAsesmenThtPemeriksaanFisik, true)[0]['daun_telinga_darah_kanan'] ?? '-' }}
-                <br>:
-                {{ json_decode($asesmen->rmeAsesmenThtPemeriksaanFisik, true)[0]['daun_telinga_darah_kiri'] ?? '-' }}
-            </td>
-        </tr>
-        <tr>
-            <td class="col-header">Lainnya :<br>
-                <span>- Kanan</span> <br>
-                <span>- Kiri</span>
-            </td>
-            <td colspan="3"><br>:
-                {{ json_decode($asesmen->rmeAsesmenThtPemeriksaanFisik, true)[0]['daun_telinga_lainnya_kanan'] ?? '-' }}
-                <br>:
-                {{ json_decode($asesmen->rmeAsesmenThtPemeriksaanFisik, true)[0]['daun_telinga_lainnya_kiri'] ?? '-' }}
-            </td>
-        </tr>
-        <tr>
-            <td colspan="4" style="font-weight: bold;">Liang Telinga</td>
-        </tr>
-        <tr>
-            <td class="col-header">Darah :<br>
-                <span>- Kanan</span> <br>
-                <span>- Kiri</span>
-            </td>
-            <td><br>:
-                {{ json_decode($asesmen->rmeAsesmenThtPemeriksaanFisik, true)[0]['liang_telinga_darah_kanan'] ?? '-' }}
-                <br>:
-                {{ json_decode($asesmen->rmeAsesmenThtPemeriksaanFisik, true)[0]['liang_telinga_darah_kiri'] ?? '-' }}
-            </td>
-            <td class="col-header">Nanah :<br>
-                <span>- Kanan</span> <br>
-                <span>- Kiri</span>
-            </td>
-            <td><br>:
-                {{ json_decode($asesmen->rmeAsesmenThtPemeriksaanFisik, true)[0]['liang_telinga_nanah_kanan'] ?? '-' }}
-                <br>:
-                {{ json_decode($asesmen->rmeAsesmenThtPemeriksaanFisik, true)[0]['liang_telinga_nanah_kiri'] ?? '-' }}
-            </td>
-        </tr>
-        <tr>
-            <td class="col-header">Berbau :<br>
-                <span>- Kanan</span> <br>
-                <span>- Kiri</span>
-            </td>
-            <td><br>:
-                {{ json_decode($asesmen->rmeAsesmenThtPemeriksaanFisik, true)[0]['liang_telinga_berbau_kanan'] ?? '-' }}
-                <br>:
-                {{ json_decode($asesmen->rmeAsesmenThtPemeriksaanFisik, true)[0]['liang_telinga_berbau_kiri'] ?? '-' }}
-            </td>
-            <td class="col-header">Lainnya :<br>
-                <span>- Kanan</span> <br>
-                <span>- Kiri</span>
-            </td>
-            <td><br>:
-                {{ json_decode($asesmen->rmeAsesmenThtPemeriksaanFisik, true)[0]['liang_telinga_lainnya_kanan'] ?? '-' }}
-                <br>:
-                {{ json_decode($asesmen->rmeAsesmenThtPemeriksaanFisik, true)[0]['liang_telinga_lainnya_kiri'] ?? '-' }}
-            </td>
-        </tr>
-        <tr>
-            <td colspan="4" style="font-weight: bold;">Tes Pendengaran</td>
-        </tr>
-        <tr>
-            <td class="col-header">Renne Tes :<br>
-                <span>- Kanan</span> <br>
-                <span>- Kiri</span>
-            </td>
-            <td><br>:
-                {{ json_decode($asesmen->rmeAsesmenThtPemeriksaanFisik, true)[0]['tes_pendengaran_renne_res_kanan'] ?? '-' }}
-                <br>:
-                {{ json_decode($asesmen->rmeAsesmenThtPemeriksaanFisik, true)[0]['tes_pendengaran_renne_res_kiri'] ?? '-' }}
-            </td>
-            <td class="col-header">Weber Tes :<br>
-                <span>- Kanan</span> <br>
-                <span>- Kiri</span>
-            </td>
-            <td><br>:
-                {{ json_decode($asesmen->rmeAsesmenThtPemeriksaanFisik, true)[0]['tes_pendengaran_weber_tes_kanan'] ?? '-' }}
-                <br>:
-                {{ json_decode($asesmen->rmeAsesmenThtPemeriksaanFisik, true)[0]['tes_pendengaran_weber_tes_kiri'] ?? '-' }}
-            </td>
-        </tr>
-        <tr>
-            <td class="col-header">Schwabach Test :<br>
-                <span>- Kanan</span> <br>
-                <span>- Kiri</span>
-            </td>
-            <td><br>:
-                {{ json_decode($asesmen->rmeAsesmenThtPemeriksaanFisik, true)[0]['tes_pendengaran_schwabach_test_kanan'] ?? '-' }}
-                <br>:
-                {{ json_decode($asesmen->rmeAsesmenThtPemeriksaanFisik, true)[0]['tes_pendengaran_schwabach_test_kiri'] ?? '-' }}
-            </td>
-            <td class="col-header">Bebisik :<br>
-                <span>- Kanan</span> <br>
-                <span>- Kiri</span>
-            </td>
-            <td><br>:
-                {{ json_decode($asesmen->rmeAsesmenThtPemeriksaanFisik, true)[0]['tes_pendengaran_bebisik_kanan'] ?? '-' }}
-                <br>:
-                {{ json_decode($asesmen->rmeAsesmenThtPemeriksaanFisik, true)[0]['tes_pendengaran_bebisik_kiri'] ?? '-' }}
-            </td>
-        </tr>
-        <tr>
-            <td colspan="4" style="font-weight: bold;">Paranatal Sinus Senus Frontalis</td>
-        </tr>
-        <tr>
-            <td class="col-header">Nyeri Tekan :<br>
-                <span>- Kanan</span> <br>
-                <span>- Kiri</span>
-            </td>
-            <td><br>:
-                {{ json_decode($asesmen->rmeAsesmenThtPemeriksaanFisik, true)[0]['senus_frontalis_nyeri_tekan_kanan'] ?? '-' }}
-                <br>:
-                {{ json_decode($asesmen->rmeAsesmenThtPemeriksaanFisik, true)[0]['senus_frontalis_nyeri_tekan_kiri'] ?? '-' }}
-            </td>
-            <td class="col-header">Transluminasi :<br>
-                <span>- Kanan</span> <br>
-                <span>- Kiri</span>
-            </td>
-            <td><br>:
-                {{ json_decode($asesmen->rmeAsesmenThtPemeriksaanFisik, true)[0]['senus_frontalis_transluminasi_kanan'] ?? '-' }}
-                <br>:
-                {{ json_decode($asesmen->rmeAsesmenThtPemeriksaanFisik, true)[0]['senus_frontalis_transluminasi_kiri'] ?? '-' }}
-            </td>
-        </tr>
-        <tr>
-            <td colspan="4" style="font-weight: bold;">Sinus Maksinasi</td>
-        </tr>
-        <tr>
-            <td class="col-header">Nyeri Tekan :<br>
-                <span>- Kanan</span> <br>
-                <span>- Kiri</span>
-            </td>
-            <td><br>:
-                {{ json_decode($asesmen->rmeAsesmenThtPemeriksaanFisik, true)[0]['sinus_maksinasi_nyari_tekan_kanan'] ?? '-' }}
-                <br>:
-                {{ json_decode($asesmen->rmeAsesmenThtPemeriksaanFisik, true)[0]['sinus_maksinasi_nyari_tekan_kiri'] ?? '-' }}
-            </td>
-            <td class="col-header">Transluminasi :<br>
-                <span>- Kanan</span> <br>
-                <span>- Kiri</span>
-            </td>
-            <td><br>:
-                {{ json_decode($asesmen->rmeAsesmenThtPemeriksaanFisik, true)[0]['sinus_maksinasi_transluminasi_kanan'] ?? '-' }}
-                <br>:
-                {{ json_decode($asesmen->rmeAsesmenThtPemeriksaanFisik, true)[0]['sinus_maksinasi_transluminasi_kiri'] ?? '-' }}
-            </td>
-        </tr>
-        <tr>
-            <td colspan="4" style="font-weight: bold;">Rhinoscopi Anterior</td>
-        </tr>
-        <tr>
-            <td class="col-header">Nyeri Tekan :<br>
-                <span>- Kanan</span> <br>
-                <span>- Kiri</span>
-            </td>
-            <td><br>:
-                {{ json_decode($asesmen->rmeAsesmenThtPemeriksaanFisik, true)[0]['rhinoscopi_anterior_cavun_nasi_kanan'] ?? '-' }}
-                <br>:
-                {{ json_decode($asesmen->rmeAsesmenThtPemeriksaanFisik, true)[0]['rhinoscopi_anterior_cavun_nasi_kiri'] ?? '-' }}
-            </td>
-            <td class="col-header">Konka Inferior :<br>
-                <span>- Kanan</span> <br>
-                <span>- Kiri</span>
-            </td>
-            <td><br>:
-                {{ json_decode($asesmen->rmeAsesmenThtPemeriksaanFisik, true)[0]['rhinoscopi_anterior_konka_inferior_kanan'] ?? '-' }}
-                <br>:
-                {{ json_decode($asesmen->rmeAsesmenThtPemeriksaanFisik, true)[0]['rhinoscopi_anterior_konka_inferior_kiri'] ?? '-' }}
-            </td>
-        </tr>
-        <tr>
-            <td class="col-header">Septum Nasi :<br>
-                <span>- Kanan</span> <br>
-                <span>- Kiri</span>
-            </td>
-            <td colspan="3"><br>:
-                {{ json_decode($asesmen->rmeAsesmenThtPemeriksaanFisik, true)[0]['rhinoscopi_anterior_septum_nasi_kanan'] ?? '-' }}
-                <br>:
-                {{ json_decode($asesmen->rmeAsesmenThtPemeriksaanFisik, true)[0]['rhinoscopi_anterior_septum_nasi_kiri'] ?? '-' }}
-            </td>
-        </tr>
-        <tr>
-            <td colspan="4" style="font-weight: bold;">Rhinoscopi Pasterior</td>
-        </tr>
-        <tr>
-            <td class="col-header">Septum Nasi :<br>
-                <span>- Kanan</span> <br>
-                <span>- Kiri</span>
-            </td>
-            <td colspan="3"><br>:
-                {{ json_decode($asesmen->rmeAsesmenThtPemeriksaanFisik, true)[0]['rhinoscopi_pasterior_septum_nasi_kanan'] ?? '-' }}
-                <br>:
-                {{ json_decode($asesmen->rmeAsesmenThtPemeriksaanFisik, true)[0]['rhinoscopi_pasterior_septum_nasi_kiri'] ?? '-' }}
-            </td>
-        </tr>
-        <tr>
-            <td colspan="4" style="font-weight: bold;">Meatus Nasi</td>
-        </tr>
-        <tr>
-            <td class="col-header">Superior :<br>
-                <span>- Kanan</span> <br>
-                <span>- Kiri</span>
-            </td>
-            <td><br>:
-                {{ json_decode($asesmen->rmeAsesmenThtPemeriksaanFisik, true)[0]['meatus_nasi_superior_kanan'] ?? '-' }}
-                <br>:
-                {{ json_decode($asesmen->rmeAsesmenThtPemeriksaanFisik, true)[0]['meatus_nasi_superior_kiri'] ?? '-' }}
-            </td>
-            <td class="col-header">Media :<br>
-                <span>- Kanan</span> <br>
-                <span>- Kiri</span>
-            </td>
-            <td><br>:
-                {{ json_decode($asesmen->rmeAsesmenThtPemeriksaanFisik, true)[0]['meatus_nasi_media_kanan'] ?? '-' }}
-                <br>:
-                {{ json_decode($asesmen->rmeAsesmenThtPemeriksaanFisik, true)[0]['meatus_nasi_media_kiri'] ?? '-' }}
-            </td>
-        </tr>
-        <tr>
-            <td class="col-header">Inferior :<br>
-                <span>- Kanan</span> <br>
-                <span>- Kiri</span>
-            </td>
-            <td colspan="3"><br>:
-                {{ json_decode($asesmen->rmeAsesmenThtPemeriksaanFisik, true)[0]['meatus_nasi_inferior_kanan'] ?? '-' }}
-                <br>:
-                {{ json_decode($asesmen->rmeAsesmenThtPemeriksaanFisik, true)[0]['meatus_nasi_inferior_kiri'] ?? '-' }}
-            </td>
-        </tr>
-        <tr>
-            <td colspan="4" style="font-weight: bold;">Membran Tympani</td>
-        </tr>
-        <tr>
-            <td class="col-header">Warna :<br>
-                <span>- Kanan</span> <br>
-                <span>- Kiri</span>
-            </td>
-            <td><br>:
-                {{ json_decode($asesmen->rmeAsesmenThtPemeriksaanFisik, true)[0]['membran_tympani_warna_kanan'] ?? '-' }}
-                <br>:
-                {{ json_decode($asesmen->rmeAsesmenThtPemeriksaanFisik, true)[0]['membran_tympani_warna_kiri'] ?? '-' }}
-            </td>
-            <td class="col-header">Perforasi :<br>
-                <span>- Kanan</span> <br>
-                <span>- Kiri</span>
-            </td>
-            <td><br>:
-                {{ json_decode($asesmen->rmeAsesmenThtPemeriksaanFisik, true)[0]['membran_tympani_perforasi_kanan'] ?? '-' }}
-                <br>:
-                {{ json_decode($asesmen->rmeAsesmenThtPemeriksaanFisik, true)[0]['membran_tympani_perforasi_kiri'] ?? '-' }}
-            </td>
-        </tr>
-        <tr>
-            <td class="col-header">lainnya :<br>
-                <span>- Kanan</span> <br>
-                <span>- Kiri</span>
-            </td>
-            <td colspan="3"><br>:
-                {{ json_decode($asesmen->rmeAsesmenThtPemeriksaanFisik, true)[0]['membran_tympani_lainnya_kanan'] ?? '-' }}
-                <br>:
-                {{ json_decode($asesmen->rmeAsesmenThtPemeriksaanFisik, true)[0]['membran_tympani_lainnya_kiri'] ?? '-' }}
-            </td>
-        </tr>
-        <tr>
-            <td colspan="4" style="font-weight: bold;">Hidung</td>
-        </tr>
-        <tr>
-            <td class="col-header">Bentuk :<br>
-                <span>- Kanan</span> <br>
-                <span>- Kiri</span>
-            </td>
-            <td><br>:
-                {{ json_decode($asesmen->rmeAsesmenThtPemeriksaanFisik, true)[0]['hidung_bentuk_kanan'] ?? '-' }}
-                <br>:
-                {{ json_decode($asesmen->rmeAsesmenThtPemeriksaanFisik, true)[0]['hidung_bentuk_kiri'] ?? '-' }}
-            </td>
-            <td class="col-header">Luka :<br>
-                <span>- Kanan</span> <br>
-                <span>- Kiri</span>
-            </td>
-            <td><br>:
-                {{ json_decode($asesmen->rmeAsesmenThtPemeriksaanFisik, true)[0]['hidung_luka_kanan'] ?? '-' }}
-                <br>:
-                {{ json_decode($asesmen->rmeAsesmenThtPemeriksaanFisik, true)[0]['hidung_luka_kiri'] ?? '-' }}
-            </td>
-        </tr>
-        <tr>
-            <td class="col-header">Bisul :<br>
-                <span>- Kanan</span> <br>
-                <span>- Kiri</span>
-            </td>
-            <td><br>:
-                {{ json_decode($asesmen->rmeAsesmenThtPemeriksaanFisik, true)[0]['hidung_bisul_kanan'] ?? '-' }}
-                <br>:
-                {{ json_decode($asesmen->rmeAsesmenThtPemeriksaanFisik, true)[0]['hidung_bisul_kiri'] ?? '-' }}
-            </td>
-            <td class="col-header">Fissare :<br>
-                <span>- Kanan</span> <br>
-                <span>- Kiri</span>
-            </td>
-            <td><br>:
-                {{ json_decode($asesmen->rmeAsesmenThtPemeriksaanFisik, true)[0]['hidung_fissare_kanan'] ?? '-' }}
-                <br>:
-                {{ json_decode($asesmen->rmeAsesmenThtPemeriksaanFisik, true)[0]['hidung_fissare_kiri'] ?? '-' }}
-            </td>
-        </tr>
-        <tr>
-            <td colspan="4" style="font-weight: bold;">Antropometri</td>
-        </tr>
-        <tr>
-            <td class="col-header">Tinggi Badan :</td>
-            <td>
-                {{ json_decode($asesmen->rmeAsesmenThtPemeriksaanFisik, true)[0]['antropometri_tinggi_badan'] ?? '-' }}
-            </td>
-            <td class="col-header">Berat Badan :</td>
-            <td>
-                {{ json_decode($asesmen->rmeAsesmenThtPemeriksaanFisik, true)[0]['antropometr_berat_badan'] ?? '-' }}
-            </td>
-        </tr>
-        <tr>
-            <td class="col-header">Indeks Massa Tubuh (IMT) :</td>
-            <td>:
-                {{ json_decode($asesmen->rmeAsesmenThtPemeriksaanFisik, true)[0]['antropometri_imt'] ?? '-' }}
-            </td>
-            <td class="col-header">Luas Permukaan Tubuh (LPT) :</td>
-            <td>:
-                {{ json_decode($asesmen->rmeAsesmenThtPemeriksaanFisik, true)[0]['antropometri_lpt'] ?? '-' }}
-            </td>
-        </tr>
-        <tr>
-            <td colspan="4">
-                <span style="font-weight: bold;">Pemeriksaan Fisik </span>
-                <br>
-                Centang normal jika fisik yang dinilai normal. Jika tidak dipilih, maka pemeriksaan tidak dilakukan.
-            </td>
-        </tr>
         @php
-            $pemeriksaanFisikData = json_decode($asesmen->pemeriksaanFisik, true) ?: [];
-            $totalItems = count($pemeriksaanFisikData);
-            $halfCount = ceil($totalItems / 2);
-            $firstColumn = array_slice($pemeriksaanFisikData, 0, $halfCount);
-            $secondColumn = array_slice($pemeriksaanFisikData, $halfCount);
-            $maxRows = max(count($firstColumn), count($secondColumn));
+            // pola variabel
+            $asesmen = $asesmen ?? ($data['asesmen'] ?? null);
+
+            // pasien
+            $pasien = $pasien ?? ($data['dataMedis']->pasien ?? ($asesmen->pasien ?? null));
+
+            // user/perawat
+            $userName = $asesmen->user->name ?? ($user->name ?? '.............................');
+
+            // logo base64 (dompdf-friendly)
+            $logoPath = public_path('assets/img/Logo-RSUD-Langsa-1.png');
+            $logoType = pathinfo($logoPath, PATHINFO_EXTENSION);
+            $logoData = @file_get_contents($logoPath);
+            $logoBase64 = $logoData ? 'data:image/' . $logoType . ';base64,' . base64_encode($logoData) : null;
+
+            // Helper: ambil 1 record dari relasi (Model / Collection / array)
+            $firstRel = function ($rel) {
+                if ($rel instanceof \Illuminate\Support\Collection) {
+                    return $rel->first();
+                }
+                if (is_array($rel)) {
+                    return $rel[0] ?? null;
+                }
+                return $rel; // Model atau null
+            };
+
+            // Relasi utama
+            $rmeTht = $firstRel($asesmen->rmeAsesmenTht ?? null);
+            $pfTht = $firstRel($asesmen->rmeAsesmenThtPemeriksaanFisik ?? null);
+            $rk = $firstRel($asesmen->rmeAsesmenThtRiwayatKesehatanObatAlergi ?? null);
+            $dp = $firstRel($asesmen->rmeAsesmenThtDischargePlanning ?? null);
+            $dxImpl = $firstRel($asesmen->rmeAsesmenThtDiagnosisImplementasi ?? null);
+
+            // Data masuk
+            $tglMasuk = $rmeTht->tgl_masuk ?? null;
+
+            // kondisi masuk mapping
+            $kondisiMasuk = $rmeTht->kondisi_masuk ?? '-';
+            $kondisiMasukText = match ((string) $kondisiMasuk) {
+                '1' => 'Mandiri',
+                '2' => 'Kursi Roda',
+                '3' => 'Brankar',
+                default => $kondisiMasuk,
+            };
+
+            // Helper aman json decode list
+            $decodeList = function ($val) {
+                if (empty($val)) {
+                    return [];
+                }
+                $d = is_string($val) ? json_decode($val, true) : $val;
+                return is_array($d) ? $d : [];
+            };
+
+            // obat & alergi & riwayat penyakit
+            $riwayatObat = $decodeList($rk->riwayat_penggunaan_obat ?? null);
+            $riwayatAlergi = $decodeList($rk->alergi ?? null);
+            $penyakitDiderita = $decodeList($rk->riwayat_kesehatan_penyakit_diderita ?? null);
+            $penyakitKeluarga = $decodeList($rk->riwayat_kesehatan_penyakit_keluarga ?? null);
+
+            // diagnosis & implementasi
+            $diagnosisBanding = $decodeList($dxImpl->diagnosis_banding ?? null);
+            $diagnosisKerja = $decodeList($dxImpl->diagnosis_kerja ?? null);
+
+            $observasi = $decodeList($dxImpl->observasi ?? null);
+            $terapeutik = $decodeList($dxImpl->terapeutik ?? null);
+            $edukasi = $decodeList($dxImpl->edukasi ?? null);
+            $kolaborasi = $decodeList($dxImpl->kolaborasi ?? null);
+
+            // Prognosis (label dari SatsetPrognosis)
+            $prognosisLabel = '-';
+            if (!empty($dxImpl->tht_prognosis ?? null)) {
+                $pid = (string) $dxImpl->tht_prognosis;
+
+                // Prefer data dari controller kalau tersedia
+                if (isset($satsetPrognosis) && $satsetPrognosis instanceof \Illuminate\Support\Collection) {
+                    $found = $satsetPrognosis->firstWhere('prognosis_id', $pid);
+                    $prognosisLabel = $found->value ?? $pid;
+                } else {
+                    // fallback query
+                    $prognosisLabel = \App\Models\SatsetPrognosis::where('prognosis_id', $pid)->value('value') ?? $pid;
+                }
+            }
+
+            // waktu isi (ambil dari waktu asesmen kalau ada)
+            $waktuIsi = $asesmen->waktu_asesmen ?? null;
+            $tglIsi = $waktuIsi ? \Carbon\Carbon::parse($waktuIsi)->format('Y-m-d') : null;
+            $jamIsi = $waktuIsi ? \Carbon\Carbon::parse($waktuIsi)->format('H:i') : null;
+
+            $dokterNama =
+                $data['dataMedis']->dokter->nama_lengkap ??
+                ($data['dataMedis']->dokter->NAMA ?? ($data['dataMedis']->nama_dokter ?? '-'));
+
+            // AVPU map
+            $avpu = $pfTht->avpu ?? null;
+            $avpuOptions = [
+                '0' => 'Sadar Baik/Alert : 0',
+                '1' => 'Berespon dengan kata-kata/Voice: 1',
+                '2' => 'Hanya berespon jika dirangsang nyeri/pain: 2',
+                '3' => 'Pasien tidak sadar/unresponsive: 3',
+                '4' => 'Gelisah atau bingung: 4',
+                '5' => 'Acute Confusional States: 5',
+            ];
         @endphp
 
-        @for ($i = 0; $i < $maxRows; $i++)
+        <table class="header-table">
             <tr>
-                <td class="col-header">
-                    @if (isset($firstColumn[$i]))
-                        Keterangan:
-                    @else
-                        &nbsp;
-                    @endif
-                </td>
-                <td>
-                    @if (isset($firstColumn[$i]))
-                        : {{ $firstColumn[$i]['keterangan'] ?? '-' }}<br>
-                        <strong>Status:</strong>
-                        @php $status = $firstColumn[$i]['is_normal'] ?? null; @endphp
-                        @if ($status === '0' || $status === 0)
-                            Tidak Normal
-                        @elseif($status === '1' || $status === 1)
-                            Normal
-                        @else
-                            Tidak Diperiksa
-                        @endif
-                    @else
-                        &nbsp;
-                    @endif
+                <td class="td-left">
+                    <table class="brand-table">
+                        <tr>
+                            <td class="va-middle">
+                                @if ($logoBase64)
+                                    <img src="{{ $logoBase64 }}" style="width:70px; height:auto;">
+                                @endif
+                            </td>
+                            <td class="va-middle">
+                                <p class="brand-name">RSUD Langsa</p>
+                                <p class="brand-info">Jl. Jend. A. Yani No.1 Kota Langsa</p>
+                                <p class="brand-info">Telp. 0641-22051, email: rsulangsa@gmail.com</p>
+                                <p class="brand-info">www.rsud.langsakota.go.id</p>
+                            </td>
+                        </tr>
+                    </table>
                 </td>
 
-                <td class="col-header">
-                    @if (isset($secondColumn[$i]))
-                        Keterangan:
-                    @else
-                        &nbsp;
-                    @endif
+                <td class="td-center">
+                    <span class="title-main">ASESMEN THT</span>
+                    <span class="title-sub">FORMULIR ASESMEN THT</span>
                 </td>
+
+                <td class="td-right">
+                    <div class="unit-box">
+                        <span class="unit-text" style="font-size: 14px; margin-top: 10px;">RAWAT INAP</span>
+                    </div>
+                </td>
+            </tr>
+        </table>
+        <table class="patient-table">
+            <tr>
+                <th>No. RM</th>
+                <td>{{ $pasien->kd_pasien ?? '-' }}</td>
+                <th>Tgl. Lahir</th>
                 <td>
-                    @if (isset($secondColumn[$i]))
-                        : {{ $secondColumn[$i]['keterangan'] ?? '-' }}<br>
-                        <strong>Status:</strong>
-                        @php $status = $secondColumn[$i]['is_normal'] ?? null; @endphp
-                        @if ($status === '0' || $status === 0)
-                            Tidak Normal
-                        @elseif($status === '1' || $status === 1)
-                            Normal
-                        @else
-                            Tidak Diperiksa
-                        @endif
+                    {{ !empty($pasien->tgl_lahir) ? date('d M Y', strtotime($pasien->tgl_lahir)) : '-' }}
+                </td>
+            </tr>
+            <tr>
+                <th>Nama Pasien</th>
+                <td>{{ $pasien->nama ?? '-' }}</td>
+                <th>Jenis Kelamin</th>
+                <td>
+                    @php
+                        $gender = '-';
+                        if (isset($pasien->jenis_kelamin)) {
+                            $gender = (string) $pasien->jenis_kelamin === '1' ? 'Laki-Laki' : 'Perempuan';
+                        }
+                    @endphp
+                    {{ $gender }}
+                </td>
+            </tr>
+        </table>
+
+        <br>
+
+        <table>
+            {{-- 1. DATA MASUK --}}
+            <tr>
+                <td colspan="2" class="section-title">1. DATA MASUK</td>
+            </tr>
+            <tr>
+                <td class="label">Tanggal Masuk</td>
+                <td class="value">{{ $tglMasuk ? date('d M Y', strtotime($tglMasuk)) : '-' }}</td>
+            </tr>
+            <tr>
+                <td class="label">Jam Masuk</td>
+                <td class="value">{{ $tglMasuk ? date('H:i', strtotime($tglMasuk)) : '-' }}</td>
+            </tr>
+            <tr>
+                <td class="label">Kondisi Masuk</td>
+                <td class="value">{{ $kondisiMasukText ?? '-' }}</td>
+            </tr>
+
+            {{-- 2. ANAMNESIS --}}
+            <tr>
+                <td colspan="2" class="section-title">2. ANAMNESIS</td>
+            </tr>
+            <tr>
+                <td class="label">Anamnesis</td>
+                <td class="value tall">{{ $rmeTht->anamnesis_anamnesis ?? '-' }}</td>
+            </tr>
+            <tr>
+                <td class="label">Riwayat penyakit sekarang</td>
+                <td class="value tall">{{ $rmeTht->penyakit_sekarang ?? '-' }}</td>
+            </tr>
+            <tr>
+                <td class="label">Riwayat penyakit terdahulu</td>
+                <td class="value tall">{{ $rmeTht->penyakit_terdahulu ?? '-' }}</td>
+            </tr>
+
+            {{-- 3. RIWAYAT OBAT --}}
+            <tr>
+                <td colspan="2" class="section-title">3. RIWAYAT PENGGUNAAN OBAT</td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    @php
+                        $hasObat = !empty($riwayatObat);
+                    @endphp
+
+                    <div class="checkbox-group" style="padding: 6px 0 10px 0;">
+                        <label style="display:inline-flex; align-items:center; margin-right: 40px;">
+                            <input type="checkbox" {{ !$hasObat ? 'checked' : '' }} style="margin-right:6px;">
+                            Tidak ada
+                        </label>
+                        <label style="display:inline-flex; align-items:center;">
+                            <input type="checkbox" {{ $hasObat ? 'checked' : '' }} style="margin-right:6px;">
+                            Ada, sebutkan:
+                        </label>
+                    </div>
+
+                    <table style="width:100%; border-collapse:collapse;" border="1">
+                        <thead>
+                            <tr>
+                                <th style="width:35%; text-align:left;">Nama Obat</th>
+                                <th style="width:20%; text-align:left;">Dosis</th>
+                                <th style="width:20%; text-align:left;">Frekuensi</th>
+                                <th style="width:25%; text-align:left;">Keterangan</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if ($hasObat)
+                                @foreach ($riwayatObat as $obat)
+                                    <tr>
+                                        <td>{{ $obat['namaObat'] ?? '-' }}</td>
+                                        <td>{{ trim(($obat['dosis'] ?? '-') . ' ' . ($obat['satuan'] ?? '')) }}</td>
+                                        <td>{{ $obat['frekuensi'] ?? '-' }}</td>
+                                        <td>{{ $obat['keterangan'] ?? '-' }}</td>
+                                    </tr>
+                                @endforeach
+                            @else
+                                <tr>
+                                    <td colspan="4" style="text-align:center;">Tidak ada data</td>
+                                </tr>
+                            @endif
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+
+            {{-- 4. ALERGI --}}
+            <tr>
+                <td colspan="2" class="section-title">4. ALERGI</td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    @php
+
+                        $riwayatAlergi = $decodeList($rk->alergi ?? null);
+
+                        if (empty($riwayatAlergi) && isset($alergiPasien)) {
+                            $riwayatAlergi = collect($alergiPasien)
+                                ->map(function ($a) {
+                                    return [
+                                        'alergen' => $a->nama_alergi ?? ($a->alergen ?? '-'),
+                                        'reaksi' => $a->reaksi ?? '-',
+                                        'severe' => $a->tingkat_keparahan ?? ($a->severe ?? '-'),
+                                    ];
+                                })
+                                ->toArray();
+                        }
+
+                        $hasAlergi = !empty($riwayatAlergi);
+                    @endphp
+
+                    <div class="checkbox-group" style="padding: 6px 0 10px 0;">
+                        <label style="display:inline-flex; align-items:center; margin-right: 40px;">
+                            <input type="checkbox" {{ !$hasAlergi ? 'checked' : '' }} style="margin-right:6px;">
+                            Tidak ada
+                        </label>
+                        <label style="display:inline-flex; align-items:center;">
+                            <input type="checkbox" {{ $hasAlergi ? 'checked' : '' }} style="margin-right:6px;">
+                            Ada, sebutkan:
+                        </label>
+                    </div>
+
+                    <table style="width:100%; border-collapse:collapse;" border="1">
+                        <thead>
+                            <tr>
+                                <th style="width:5%; text-align:center;">No</th>
+                                <th style="width:30%; text-align:left;">Alergen</th>
+                                <th style="width:45%; text-align:left;">Reaksi</th>
+                                <th style="width:20%; text-align:left;">Severe</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if ($hasAlergi)
+                                @foreach ($riwayatAlergi as $i => $aler)
+                                    <tr>
+                                        <td style="text-align:center;">{{ $i + 1 }}</td>
+                                        <td>{{ is_array($aler) ? $aler['alergen'] ?? '-' : $aler ?? '-' }}</td>
+                                        <td>{{ is_array($aler) ? $aler['reaksi'] ?? '-' : '-' }}</td>
+                                        <td>{{ is_array($aler) ? $aler['severe'] ?? '-' : '-' }}</td>
+                                    </tr>
+                                @endforeach
+                            @else
+                                <tr>
+                                    <td colspan="4" style="text-align:center;">Tidak ada data</td>
+                                </tr>
+                            @endif
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+
+            {{-- 6. PEMERIKSAAN FISIK --}}
+            <tr>
+                <td colspan="2" class="section-title">6. PEMERIKSAAN FISIK</td>
+            </tr>
+
+            <tr>
+                <td colspan="2">
+                    <table style="width:100%; border-collapse:collapse; margin-top:6px;" border="1">
+                        <tbody>
+                            <tr>
+                                <td style="width:30%; font-weight:bold;">Tekanan Darah</td>
+                                <td style="width:20%;">
+                                    {{ $pfTht->darah_sistole ?? '-' }} / {{ $pfTht->darah_diastole ?? '-' }} mmHg
+                                </td>
+                                <td style="width:20%; font-weight:bold;">Nadi</td>
+                                <td>{{ $pfTht->nadi ?? '-' }} /menit</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight:bold;">Nafas</td>
+                                <td>{{ $pfTht->nafas ?? '-' }} /menit</td>
+                                <td style="font-weight:bold;">Suhu</td>
+                                <td>{{ $pfTht->suhu ?? '-' }} °C</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight:bold;">Sensorium</td>
+                                <td>{{ $pfTht->sensorium ?? '-' }}</td>
+                                <td style="font-weight:bold;">KU/KP/KG</td>
+                                <td>{{ $pfTht->ku_kp_kg ?? '-' }}</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight:bold;">AVPU</td>
+                                <td colspan="3">{{ $avpuOptions[(string) $avpu] ?? '-' }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+
+            {{-- Sub pemeriksaan THT panjang: tetap tabel border 1 (biar rapi & konsisten) --}}
+            <tr>
+                <td colspan="2" style="padding-top:8px;">
+                    <table style="width:100%; border-collapse:collapse;" border="1">
+                        <tbody>
+                            <tr>
+                                <td colspan="4" style="font-weight:bold;">Laringoskopi
+                                    Indirek</td>
+                            </tr>
+                            <tr>
+                                <td style="width:25%; font-weight:bold;">Pangkal Lidah</td>
+                                <td style="width:25%;">{{ $pfTht->pangkal_lidah ?? '-' }}</td>
+                                <td style="width:25%; font-weight:bold;">Tonsil Lidah</td>
+                                <td style="width:25%;">{{ $pfTht->tonsil_lidah ?? '-' }}</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight:bold;">Epiglotis</td>
+                                <td>{{ $pfTht->epiglotis ?? '-' }}</td>
+                                <td style="font-weight:bold;">Pita Suara</td>
+                                <td>{{ $pfTht->pita_suara ?? '-' }}</td>
+                            </tr>
+                            <tr>
+                                <td colspan="4" style="font-weight:bold;">Plica Vokalis</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight:bold;">Bentuk (Kanan/Kiri)</td>
+                                <td>{{ $pfTht->plica_vokalis_bentuk_kanan ?? '-' }} /
+                                    {{ $pfTht->plica_vokalis_bentuk_kiri ?? '-' }}</td>
+                                <td style="font-weight:bold;">Warna (Kanan/Kiri)</td>
+                                <td>{{ $pfTht->plica_vokalis_warna_kanan ?? '-' }} /
+                                    {{ $pfTht->plica_vokalis_warna_kiri ?? '-' }}</td>
+                            </tr>
+
+
+                            <tr>
+                                <td colspan="4" style="font-weight:bold;">Daun Telinga</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight:bold;">Nanah (Kanan/Kiri)</td>
+                                <td>{{ $pfTht->daun_telinga_nanah_kana ?? '-' }} /
+                                    {{ $pfTht->daun_telinga_nanah_kiri ?? '-' }}</td>
+                                <td style="font-weight:bold;">Darah (Kanan/Kiri)</td>
+                                <td>{{ $pfTht->daun_telinga_darah_kanan ?? '-' }} /
+                                    {{ $pfTht->daun_telinga_darah_kiri ?? '-' }}</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight:bold;">Lainnya (Kanan/Kiri)</td>
+                                <td colspan="3">{{ $pfTht->daun_telinga_lainnya_kanan ?? '-' }} /
+                                    {{ $pfTht->daun_telinga_lainnya_kiri ?? '-' }}</td>
+                            </tr>
+
+                            <tr>
+                                <td colspan="4" style="font-weight:bold;">Liang Telinga</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight:bold;">Darah (Kanan/Kiri)</td>
+                                <td>{{ $pfTht->liang_telinga_darah_kanan ?? '-' }} /
+                                    {{ $pfTht->liang_telinga_darah_kiri ?? '-' }}</td>
+                                <td style="font-weight:bold;">Nanah (Kanan/Kiri)</td>
+                                <td>{{ $pfTht->liang_telinga_nanah_kanan ?? '-' }} /
+                                    {{ $pfTht->liang_telinga_nanah_kiri ?? '-' }}</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight:bold;">Berbau (Kanan/Kiri)</td>
+                                <td>{{ $pfTht->liang_telinga_berbau_kanan ?? '-' }} /
+                                    {{ $pfTht->liang_telinga_berbau_kiri ?? '-' }}</td>
+                                <td style="font-weight:bold;">Lainnya (Kanan/Kiri)</td>
+                                <td>{{ $pfTht->liang_telinga_lainnya_kanan ?? '-' }} /
+                                    {{ $pfTht->liang_telinga_lainnya_kiri ?? '-' }}</td>
+                            </tr>
+
+                            <tr>
+                                <td colspan="4" style="font-weight:bold;">Tes Pendengaran</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight:bold;">Rinne (Kanan/Kiri)</td>
+                                <td>{{ $pfTht->tes_pendengaran_renne_res_kanan ?? '-' }} /
+                                    {{ $pfTht->tes_pendengaran_renne_res_kiri ?? '-' }}</td>
+                                <td style="font-weight:bold;">Weber (Kanan/Kiri)</td>
+                                <td>{{ $pfTht->tes_pendengaran_weber_tes_kanan ?? '-' }} /
+                                    {{ $pfTht->tes_pendengaran_weber_tes_kiri ?? '-' }}</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight:bold;">Schwabach (Kanan/Kiri)</td>
+                                <td>{{ $pfTht->tes_pendengaran_schwabach_test_kanan ?? '-' }} /
+                                    {{ $pfTht->tes_pendengaran_schwabach_test_kiri ?? '-' }}</td>
+                                <td style="font-weight:bold;">Bebisik (Kanan/Kiri)</td>
+                                <td>{{ $pfTht->tes_pendengaran_bebisik_kanan ?? '-' }} /
+                                    {{ $pfTht->tes_pendengaran_bebisik_kiri ?? '-' }}</td>
+                            </tr>
+
+                            <tr>
+                                <td colspan="4" style="font-weight:bold;">Sinus Frontalis</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight:bold;">Nyeri Tekan (Kanan/Kiri)</td>
+                                <td>{{ $pfTht->senus_frontalis_nyeri_tekan_kanan ?? '-' }} /
+                                    {{ $pfTht->senus_frontalis_nyeri_tekan_kiri ?? '-' }}</td>
+                                <td style="font-weight:bold;">Transluminasi (Kanan/Kiri)</td>
+                                <td>{{ $pfTht->senus_frontalis_transluminasi_kanan ?? '-' }} /
+                                    {{ $pfTht->senus_frontalis_transluminasi_kiri ?? '-' }}</td>
+                            </tr>
+
+                            <tr>
+                                <td colspan="4" style="font-weight:bold;">Sinus Maksilaris</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight:bold;">Nyeri Tekan (Kanan/Kiri)</td>
+                                <td>{{ $pfTht->sinus_maksinasi_nyari_tekan_kanan ?? '-' }} /
+                                    {{ $pfTht->sinus_maksinasi_nyari_tekan_kiri ?? '-' }}</td>
+                                <td style="font-weight:bold;">Transluminasi (Kanan/Kiri)</td>
+                                <td>{{ $pfTht->sinus_maksinasi_transluminasi_kanan ?? '-' }} /
+                                    {{ $pfTht->sinus_maksinasi_transluminasi_kiri ?? '-' }}</td>
+                            </tr>
+
+                            <tr>
+                                <td colspan="4" style="font-weight:bold;">Rhinoskopi Anterior</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight:bold;">Cavum Nasi (Kanan/Kiri)</td>
+                                <td>{{ $pfTht->rhinoscopi_anterior_cavun_nasi_kanan ?? '-' }} /
+                                    {{ $pfTht->rhinoscopi_anterior_cavun_nasi_kiri ?? '-' }}</td>
+                                <td style="font-weight:bold;">Konka Inferior (Kanan/Kiri)</td>
+                                <td>{{ $pfTht->rhinoscopi_anterior_konka_inferior_kanan ?? '-' }} /
+                                    {{ $pfTht->rhinoscopi_anterior_konka_inferior_kiri ?? '-' }}</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight:bold;">Septum Nasi (Kanan/Kiri)</td>
+                                <td colspan="3">{{ $pfTht->rhinoscopi_anterior_septum_nasi_kanan ?? '-' }} /
+                                    {{ $pfTht->rhinoscopi_anterior_septum_nasi_kiri ?? '-' }}</td>
+                            </tr>
+
+                            <tr>
+                                <td colspan="4" style="font-weight:bold;">Rhinoskopi Posterior</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight:bold;">Septum Nasi (Kanan/Kiri)</td>
+                                <td colspan="3">{{ $pfTht->rhinoscopi_pasterior_septum_nasi_kanan ?? '-' }} /
+                                    {{ $pfTht->rhinoscopi_pasterior_septum_nasi_kiri ?? '-' }}</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight:bold;">Superior (Kanan/Kiri)</td>
+                                <td>{{ $pfTht->rhinoscopi_superior_kanan ?? '-' }} /
+                                    {{ $pfTht->rhinoscopi_superior_kiri ?? '-' }}</td>
+                                <td style="font-weight:bold;">Media (Kanan/Kiri)</td>
+                                <td>{{ $pfTht->rhinoscopi_media_kanan ?? '-' }} /
+                                    {{ $pfTht->rhinoscopi_media_kiri ?? '-' }}</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight:bold;">Fasso Rosenmuler (Kanan/Kiri)</td>
+                                <td colspan="3">{{ $pfTht->rhinoscopi_fasso_rossenmuler_kanan ?? '-' }} /
+                                    {{ $pfTht->rhinoscopi_fasso_rossenmuler_kiri ?? '-' }}</td>
+                            </tr>
+
+
+                            <tr>
+                                <td colspan="4" style="font-weight:bold;">Meatus Nasi</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight:bold;">Superior (Kanan/Kiri)</td>
+                                <td>{{ $pfTht->meatus_nasi_superior_kanan ?? '-' }} /
+                                    {{ $pfTht->meatus_nasi_superior_kiri ?? '-' }}</td>
+                                <td style="font-weight:bold;">Media (Kanan/Kiri)</td>
+                                <td>{{ $pfTht->meatus_nasi_media_kanan ?? '-' }} /
+                                    {{ $pfTht->meatus_nasi_media_kiri ?? '-' }}</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight:bold;">Inferior (Kanan/Kiri)</td>
+                                <td colspan="3">{{ $pfTht->meatus_nasi_inferior_kanan ?? '-' }} /
+                                    {{ $pfTht->meatus_nasi_inferior_kiri ?? '-' }}</td>
+                            </tr>
+
+                            <tr>
+                                <td colspan="4" style="font-weight:bold;">Membran Timpani</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight:bold;">Warna (Kanan/Kiri)</td>
+                                <td>{{ $pfTht->membran_tympani_warna_kanan ?? '-' }} /
+                                    {{ $pfTht->membran_tympani_warna_kiri ?? '-' }}</td>
+                                <td style="font-weight:bold;">Perforasi (Kanan/Kiri)</td>
+                                <td>{{ $pfTht->membran_tympani_perforasi_kanan ?? '-' }} /
+                                    {{ $pfTht->membran_tympani_perforasi_kiri ?? '-' }}</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight:bold;">Lainnya (Kanan/Kiri)</td>
+                                <td colspan="3">{{ $pfTht->membran_tympani_lainnya_kanan ?? '-' }} /
+                                    {{ $pfTht->membran_tympani_lainnya_kiri ?? '-' }}</td>
+                            </tr>
+
+                            <tr>
+                                <td colspan="4" style="font-weight:bold;">Hidung</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight:bold;">Bentuk (Kanan/Kiri)</td>
+                                <td>{{ $pfTht->hidung_bentuk_kanan ?? '-' }} / {{ $pfTht->hidung_bentuk_kiri ?? '-' }}
+                                </td>
+                                <td style="font-weight:bold;">Luka (Kanan/Kiri)</td>
+                                <td>{{ $pfTht->hidung_luka_kanan ?? '-' }} / {{ $pfTht->hidung_luka_kiri ?? '-' }}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight:bold;">Bisul (Kanan/Kiri)</td>
+                                <td>{{ $pfTht->hidung_bisul_kanan ?? '-' }} / {{ $pfTht->hidung_bisul_kiri ?? '-' }}
+                                </td>
+                                <td style="font-weight:bold;">Fissare (Kanan/Kiri)</td>
+                                <td>{{ $pfTht->hidung_fissare_kanan ?? '-' }} /
+                                    {{ $pfTht->hidung_fissare_kiri ?? '-' }}</td>
+                            </tr>
+
+                            <tr>
+                                <td colspan="4" style="font-weight:bold;">Antropometri</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight:bold;">Tinggi Badan</td>
+                                <td>{{ $pfTht->antropometri_tinggi_badan ?? '-' }}</td>
+                                <td style="font-weight:bold;">Berat Badan</td>
+                                <td>{{ $pfTht->antropometr_berat_badan ?? '-' }}</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight:bold;">IMT</td>
+                                <td>{{ $pfTht->antropometri_imt ?? '-' }}</td>
+                                <td style="font-weight:bold;">LPT</td>
+                                <td>{{ $pfTht->antropometri_lpt ?? '-' }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+
+            <td colspan="2" style="padding-top:8px;">
+                <div style="font-weight:bold;">Pemeriksaan Fisik</div>
+                <div>Centang normal jika fisik yang dinilai normal. Jika tidak dipilih, maka pemeriksaan tidak
+                    dilakukan.</div>
+
+                @php
+                    $pfItems = $pemeriksaanFisik ?? ($asesmen->pemeriksaanFisik ?? []);
+                    if ($pfItems instanceof \Illuminate\Support\Collection) {
+                        $pfItems = $pfItems->all();
+                    }
+                @endphp
+
+                <table style="width:100%; border-collapse:collapse; margin-top:6px;" border="1">
+                    <thead>
+                        <tr>
+                            <th style="width:35%; text-align:left;">Item</th>
+                            <th style="width:65%; text-align:left;">Hasil</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @forelse($pfItems as $it)
+                            @php
+                                $nama =
+                                    $it->itemFisik->nama ??
+                                    ($it->mrItemFisik->nama ?? ($it->item->nama ?? ($it->nama ?? '-')));
+                                $isNormal = $it->is_normal ?? null;
+                                $ket = $it->keterangan ?? '';
+                            @endphp
+                            <tr>
+                                <td>{{ $nama }}</td>
+                                <td>
+                                    @if ($isNormal === 1 || $isNormal === '1')
+                                        Normal
+                                    @elseif($isNormal === 0 || $isNormal === '0')
+                                        Tidak normal{{ $ket ? ' - ' . $ket : '' }}
+                                    @else
+                                        Tidak diperiksa
+                                    @endif
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="2">Tidak ada</td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </td>
+            </tr>
+
+            {{-- 5. RIWAYAT KESEHATAN --}}
+            <tr>
+                <td colspan="2" class="section-title">5. RIWAYAT KESEHATAN</td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <table style="width:100%; border-collapse:collapse; margin-top:6px;" border="1">
+                        <thead>
+                            <tr>
+                                <th style="width:50%; text-align:left;">Penyakit Yang Pernah Diderita</th>
+                                <th style="width:50%; text-align:left;">Riwayat Penyakit Keluarga</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    @if (!empty($penyakitDiderita))
+                                        <ol style="margin:0; padding-left:16px;">
+                                            @foreach ($penyakitDiderita as $item)
+                                                <li>{{ $item }}</li>
+                                            @endforeach
+                                        </ol>
+                                    @else
+                                        Tidak ada
+                                    @endif
+                                </td>
+                                <td>
+                                    @if (!empty($penyakitKeluarga))
+                                        <ol style="margin:0; padding-left:16px;">
+                                            @foreach ($penyakitKeluarga as $item)
+                                                <li>{{ $item }}</li>
+                                            @endforeach
+                                        </ol>
+                                    @else
+                                        Tidak ada
+                                    @endif
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+
+            {{-- 7. HASIL LABORATORIUM --}}
+            <tr>
+                <td colspan="2" class="section-title">7. HASIL LABORATORIUM</td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <table style="width:100%; border-collapse:collapse; margin-top:6px;" border="1">
+                        <tbody>
+                            <tr>
+                                <td style="width:30%; font-weight:bold;">Darah</td>
+                                <td style="width:70%;">{{ $rmeTht->darah ?? '-' }}</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight:bold;">Urine</td>
+                                <td>{{ $rmeTht->urine ?? '-' }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+
+
+            {{-- 7. HASIL PEMERIKSAAN PENUNJANG --}}
+            <tr>
+                <td colspan="2" class="section-title">7. HASIL PEMERIKSAAN PENUNJANG</td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <table style="width:100%; border-collapse:collapse; margin-top:6px;" border="1">
+                        <tbody>
+                            <tr>
+                                <td style="width:25%; font-weight:bold;">Rontgent</td>
+                                <td style="width:75%;">{{ $rmeTht->rontgent ?? '-' }}</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight:bold;">Gistopatology</td>
+                                <td>{{ $rmeTht->gistopatology ?? '-' }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+
+            {{-- 9. DIAGNOSIS --}}
+            <tr>
+                <td colspan="2" class="section-title">9. DIAGNOSIS</td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <table style="width:100%; border-collapse:collapse; margin-top:6px;" border="1">
+                        <thead>
+                            <tr>
+                                <th style="width:50%; text-align:left;">Diagnosis Banding</th>
+                                <th style="width:50%; text-align:left;">Diagnosis Kerja</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    @if (!empty($diagnosisBanding))
+                                        <ul style="margin:0; padding-left:16px;">
+                                            @foreach ($diagnosisBanding as $d)
+                                                <li>{{ $d }}</li>
+                                            @endforeach
+                                        </ul>
+                                    @else
+                                        Tidak ada
+                                    @endif
+                                </td>
+                                <td>
+                                    @if (!empty($diagnosisKerja))
+                                        <ul style="margin:0; padding-left:16px;">
+                                            @foreach ($diagnosisKerja as $d)
+                                                <li>{{ $d }}</li>
+                                            @endforeach
+                                        </ul>
+                                    @else
+                                        Tidak ada
+                                    @endif
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2" class="section-title">10. RENCANA PENATALAKSANAAN DAN PENGOBATAN</td>
+            </tr>
+            <tr>
+                <td class="label">Rencana</td>
+                <td class="value tall">{{ $rmeTht->rencana_penatalaksanaan ?? '-' }}</td>
+            </tr>
+
+            <tr>
+                <td colspan="2" class="section-title">11. PROGNOSIS</td>
+            </tr>
+            <tr>
+                <td class="label">Prognosis</td>
+                <td class="value tall">{{ $prognosisLabel }}</td>
+            </tr>
+
+            {{-- 8. DISCHARGE PLANNING --}}
+            <tr>
+                <td colspan="2" class="section-title">8. DISCHARGE PLANNING</td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <table style="width:100%; border-collapse:collapse; margin-top:6px;" border="1">
+                        <tbody>
+                            <tr>
+                                <td style="width:70%; font-weight:bold;">Usia lanjut</td>
+                                <td style="text-align:center;">
+                                    @php
+                                        $v = $dp->dp_usia_lanjut ?? null;
+                                        echo $v === '1' || $v === 1 ? 'Ya' : ($v === '0' || $v === 0 ? 'Tidak' : '-');
+                                    @endphp
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight:bold;">Hambatan mobilisasi</td>
+                                <td style="text-align:center;">
+                                    @php
+                                        $v = $dp->dp_hambatan_mobilisasi ?? null;
+                                        echo $v === '1' || $v === 1 ? 'Ya' : ($v === '0' || $v === 0 ? 'Tidak' : '-');
+                                    @endphp
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight:bold;">Membutuhkan pelayanan medis berkelanjutan</td>
+                                <td style="text-align:center;">
+                                    @php
+                                        $v = $dp->dp_layanan_medis_lanjutan ?? null;
+                                        echo $v === '1' || $v === 1 ? 'Ya' : ($v === '0' || $v === 0 ? 'Tidak' : '-');
+                                    @endphp
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight:bold;">Ketergantungan aktivitas harian</td>
+                                <td style="text-align:center;">
+                                    @php
+                                        $v = $dp->dp_tergantung_orang_lain ?? null;
+                                        echo $v === '1' || $v === 1 ? 'Ya' : ($v === '0' || $v === 0 ? 'Tidak' : '-');
+                                    @endphp
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td class="label">Perkiraan lama hari dirawat</td>
+                <td class="value">{{ $dp->dp_lama_dirawat ?? '-' }} Hari</td>
+            </tr>
+            <tr>
+                <td class="label">Rencana Pulang</td>
+                <td class="value tall">{{ $dp->dp_rencana_pulang ?? '-' }}</td>
+            </tr>
+            <tr>
+                <td class="label">Kesimpulan</td>
+                <td class="value tall">{{ $dp->dp_kesimpulan ?? '-' }}</td>
+            </tr>
+
+
+            {{-- TANDA TANGAN (Dokter yang memeriksa + QR) --}}
+            <tr>
+                <td style="width: 60%;"></td>
+                <td style="text-align: center; padding: 8px;">
+                    Tanggal:
+                    {{ $tglIsi ? \Carbon\Carbon::parse($tglIsi)->format('d-m-Y') : date('d-m-Y') }}
+                    Jam:
+                    {{ $jamIsi ? \Carbon\Carbon::parse($jamIsi)->format('H:i') : date('H:i') }}
+                    <br><br>
+                    Dokter yang memeriksa
+                    <br><br>
+
+                    @php
+                        $namaDokter =
+                            ($asesmen->user->karyawan->gelar_depan ?? '') .
+                            ' ' .
+                            str()->title($asesmen->user->karyawan->nama ?? '') .
+                            ' ' .
+                            ($asesmen->user->karyawan->gelar_belakang ?? '');
+                        $namaDokter = trim($namaDokter);
+                    @endphp
+
+                    @if ($namaDokter !== '')
+                        <img src="{{ generateQrCode($namaDokter, 120, 'svg_datauri') }}" alt="QR Code">
+                        <br>
+                        {{ $namaDokter }}
                     @else
-                        &nbsp;
+                        ( _________________________ )
+                        <br>
+                        -
                     @endif
                 </td>
             </tr>
-        @endfor
-    </table>
 
-    <div class="section-title mt-3">4. Riwayat Kesehatan</div>
-    <table class="detail-table">
-        <tr>
-            <td class="col-header">Penyakit Yang Pernah Diderita</td>
-            <td>
-                @php
-                    $penyakit = json_decode(
-                        $asesmen->rmeAsesmenThtRiwayatKesehatanObatAlergi[0]['riwayat_kesehatan_penyakit_diderita'],
-                        true,
-                    );
-                @endphp
 
-                @if (!empty($penyakit))
-                    <ol>
-                        @foreach ($penyakit as $item)
-                            <li>{{ $item }}</li>
-                        @endforeach
-                    </ol>
-                @else
-                    <span>Tidak ada</span>
-                @endif
-            </td>
-            <td class="col-header">Riwayat Penyakit Keluarga</td>
-            <td>
-                @php
-                    $Keluarga = json_decode(
-                        $asesmen->rmeAsesmenThtRiwayatKesehatanObatAlergi[0]['riwayat_kesehatan_penyakit_keluarga'],
-                        true,
-                    );
-                @endphp
-
-                @if (!empty($Keluarga))
-                    <ol>
-                        @foreach ($Keluarga as $item)
-                            <li>{{ $item }}</li>
-                        @endforeach
-                    </ol>
-                @else
-                    <span>Tidak ada</span>
-                @endif
-            </td>
-        </tr>
-    </table>
-
-    <div class="section-title mt-3">5. Riwayat Penggunaan Obat</div>
-    @php
-        $riwayatObat = json_decode(
-            $asesmen->rmeAsesmenThtRiwayatKesehatanObatAlergi[0]['riwayat_penggunaan_obat'],
-            true,
-        );
-    @endphp
-
-    @if (!empty($riwayatObat))
-        <table class="detail-table">
-            <thead class="table-light">
-                <tr>
-                    <th>No</th>
-                    <th>Nama Obat</th>
-                    <th>Dosis</th>
-                    <th>Frekuensi</th>
-                    <th>Keterangan</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach ($riwayatObat as $obat)
-                    <tr>
-                        <td>{{ $loop->iteration }}</td>
-                        <td>{{ $obat['namaObat'] ?? '-' }}</td>
-                        <td>{{ ($obat['dosis'] ?? '-') . ' ' . ($obat['satuan'] ?? '') }}
-                        </td>
-                        <td>{{ $obat['frekuensi'] ?? '-' }}</td>
-                        <td>{{ $obat['keterangan'] ?? '-' }}</td>
-                    </tr>
-                @endforeach
-            </tbody>
         </table>
-    @else
-        <p>
-            <span>Tidak ada</span>
-        </p>
-    @endif
-
-    <div class="section-title mt-3">6. Alergi</div>
-    @php
-        $riwayatAlergi = json_decode($asesmen->rmeAsesmenThtRiwayatKesehatanObatAlergi[0]['alergi'], true);
-    @endphp
-
-    @if (!empty($riwayatAlergi))
-        <table class="detail-table">
-            <thead class="table-light">
-                <tr>
-                    <th>No</th>
-                    <th>Alergen</th>
-                    <th>Reaksi</th>
-                    <th>Severe</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach ($riwayatAlergi as $aler)
-                    <tr>
-                        <td>{{ $loop->iteration }}</td>
-                        <td>{{ $aler['alergen'] ?? '-' }}</td>
-                        <td>{{ ($aler['reaksi'] ?? '-') . ' ' . ($obat['satuan'] ?? '') }}
-                        </td>
-                        <td>{{ $aler['severe'] ?? '-' }}</td>
-                    </tr>
-                @endforeach
-            </tbody>
-        </table>
-    @else
-        <p>
-            <span>Tidak ada</span>
-        </p>
-    @endif
-
-    <div class="section-title mt-3">7. Hasil Pemeriksaan Penunjang</div>
-    <table class="detail-table">
-        <tr>
-            <td class="col-header">Darah</td>
-            <td>
-                @if ($asesmen->rmeAsesmenTht->hasil_pemeriksaan_penunjang_darah)
-                    @php
-                        $filePath =
-                            'storage/uploads/gawat-inap/asesmen-tht/' .
-                            $asesmen->rmeAsesmenTht->hasil_pemeriksaan_penunjang_darah;
-                        $fileExtension = pathinfo(
-                            $asesmen->rmeAsesmenTht->hasil_pemeriksaan_penunjang_darah,
-                            PATHINFO_EXTENSION,
-                        );
-                        $isPdf = strtolower($fileExtension) === 'pdf';
-                    @endphp
-
-                    <span>Hasil Pemeriksaan Darah</span> <br>
-
-                    <a href="{{ asset($filePath) }}" target="_blank">
-                        Lihat Lengkap
-                    </a>
-                @else
-                    <span>Tidak ada file</span>
-                @endif
-            </td>
-            <td class="col-header">Urine</td>
-            <td>
-                @if ($asesmen->rmeAsesmenTht->hasil_pemeriksaan_penunjang_urine)
-                    @php
-                        $filePath =
-                            'storage/uploads/gawat-inap/asesmen-tht/' .
-                            $asesmen->rmeAsesmenTht->hasil_pemeriksaan_penunjang_urine;
-                        $fileExtension = pathinfo(
-                            $asesmen->rmeAsesmenTht->hasil_pemeriksaan_penunjang_urine,
-                            PATHINFO_EXTENSION,
-                        );
-                        $isPdf = strtolower($fileExtension) === 'pdf';
-                    @endphp
-
-                    <span>Hasil Pemeriksaan Urine</span> <br>
-
-                    <a href="{{ asset($filePath) }}" target="_blank">
-                        Lihat Lengkap
-                    </a>
-                @else
-                    <span>Tidak ada file</span>
-                @endif
-            </td>
-        </tr>
-        <tr>
-            <td class="col-header">Rontgent</td>
-            <td>
-                @if ($asesmen->rmeAsesmenTht->hasil_pemeriksaan_penunjang_rontgent)
-                    @php
-                        $filePath =
-                            'storage/uploads/gawat-inap/asesmen-tht/' .
-                            $asesmen->rmeAsesmenTht->hasil_pemeriksaan_penunjang_rontgent;
-                        $fileExtension = pathinfo(
-                            $asesmen->rmeAsesmenTht->hasil_pemeriksaan_penunjang_rontgent,
-                            PATHINFO_EXTENSION,
-                        );
-                        $isPdf = strtolower($fileExtension) === 'pdf';
-                    @endphp
-
-                    <span>Hasil Pemeriksaan Rontgent</span> <br>
-
-                    <a href="{{ asset($filePath) }}" target="_blank">
-                        Lihat Lengkap
-                    </a>
-                @else
-                    <span>Tidak ada file</span>
-                @endif
-            </td>
-            <td class="col-header">Histopatology</td>
-            <td>
-                @if ($asesmen->rmeAsesmenTht->hasil_pemeriksaan_penunjang_histopatology)
-                    @php
-                        $filePath =
-                            'storage/uploads/gawat-inap/asesmen-tht/' .
-                            $asesmen->rmeAsesmenTht->hasil_pemeriksaan_penunjang_histopatology;
-                        $fileExtension = pathinfo(
-                            $asesmen->rmeAsesmenTht->hasil_pemeriksaan_penunjang_histopatology,
-                            PATHINFO_EXTENSION,
-                        );
-                        $isPdf = strtolower($fileExtension) === 'pdf';
-                    @endphp
-
-                    <span>Hasil Pemeriksaan Histopatology</span> <br>
-
-                    <a href="{{ asset($filePath) }}" target="_blank">
-                        Lihat Lengkap
-                    </a>
-                @else
-                    <span>Tidak ada file</span>
-                @endif
-            </td>
-        </tr>
-    </table>
-
-    <div class="section-title mt-3">8. Discharge Planning</div>
-    <table class="detail-table">
-        <tr>
-            <td class="col-header">Diagnosis medis</td>
-            <td>:
-                {{ json_decode($asesmen->rmeAsesmenThtDischargePlanning, true)[0]['dp_diagnosis_medis'] ?? '-' }}
-            </td>
-            <td class="col-header">Usia lanjut</td>
-            <td>:
-                @php
-                    $usiaLanjut =
-                        json_decode($asesmen->rmeAsesmenThtDischargePlanning, true)[0]['dp_usia_lanjut'] ?? '-';
-                    if ($usiaLanjut == 1) {
-                        echo 'Ya';
-                    } elseif ($usiaLanjut == 0) {
-                        echo 'Tidak';
-                    } else {
-                        echo '-';
-                    }
-                @endphp
-            </td>
-        </tr>
-        <tr>
-            <td class="col-header">Hambatan mobilisasi</td>
-            <td>:
-                @php
-                    $mobilisasi =
-                        json_decode($asesmen->rmeAsesmenThtDischargePlanning, true)[0]['dp_hambatan_mobilisasi'] ?? '-';
-                    if ($mobilisasi == 1) {
-                        echo 'Ya';
-                    } elseif ($mobilisasi == 0) {
-                        echo 'Tidak';
-                    } else {
-                        echo '-';
-                    }
-                @endphp
-            </td>
-            <td class="col-header">Membutuhkan pelayanan medis berkelanjutan</td>
-            <td>:
-                @php
-                    $layananMedisLanjutan =
-                        json_decode($asesmen->rmeAsesmenThtDischargePlanning, true)[0]['dp_layanan_medis_lanjutan'] ??
-                        '-';
-                    if ($layananMedisLanjutan == 1) {
-                        echo 'Ya';
-                    } elseif ($layananMedisLanjutan == 0) {
-                        echo 'Tidak';
-                    } else {
-                        echo '-';
-                    }
-                @endphp
-            </td>
-        </tr>
-        <tr>
-            <td class="col-header">Ketergantungan dengan orang lain dalam
-                aktivitas harian</td>
-            <td>:
-                @php
-                    $tergantungOrangLain =
-                        json_decode($asesmen->rmeAsesmenThtDischargePlanning, true)[0]['dp_tergantung_orang_lain'] ??
-                        '-';
-                    if ($tergantungOrangLain == 1) {
-                        echo 'Ya';
-                    } elseif ($tergantungOrangLain == 0) {
-                        echo 'Tidak';
-                    } else {
-                        echo '-';
-                    }
-                @endphp
-            </td>
-            <td class="col-header">Perkiraan lama hari dirawat</td>
-            <td>:
-                {{ json_decode($asesmen->rmeAsesmenThtDischargePlanning, true)[0]['dp_lama_dirawat'] ?? '-' }}
-                Hari
-            </td>
-        </tr>
-        <tr>
-            <td class="col-header">Rencana Pulang</td>
-            <td>:
-                {{ json_decode($asesmen->rmeAsesmenThtDischargePlanning, true)[0]['dp_rencana_pulang'] ?? '-' }}
-            </td>
-            <td class="col-header">Kesimpulan</td>
-            <td>:
-                {{ json_decode($asesmen->rmeAsesmenThtDischargePlanning, true)[0]['dp_kesimpulan'] ?? '-' }}
-            </td>
-        </tr>
-    </table>
-
-    <div class="section-title mt-3">9. Diagnosis</div>
-    <table class="detail-table">
-        <tr>
-            <td class="col-header">Diagnosis Banding</td>
-            <td>
-                @php
-                    $diagnosisBanding = json_decode(
-                        $asesmen->rmeAsesmenThtDiagnosisImplementasi[0]['diagnosis_banding'] ?? '[]',
-                        true,
-                    );
-                @endphp
-
-                @if (!empty($diagnosisBanding))
-                    @foreach ($diagnosisBanding as $diagnosis)
-                        <ul>
-                            <li>{{ $diagnosis }}</li>
-                            <hr>
-                        </ul>
-                    @endforeach
-                @else
-                    <p>Tidak ada</p>
-                @endif
-            </td>
-            <td>Diagnosis Kerja</td>
-            <td>
-                @php
-                    $diagnosisKerja = json_decode(
-                        $asesmen->rmeAsesmenThtDiagnosisImplementasi[0]['diagnosis_kerja'] ?? '[]',
-                        true,
-                    );
-                @endphp
-
-                @if (!empty($diagnosisKerja))
-                    @foreach ($diagnosisKerja as $diagnosis)
-                        <ul>
-                            <li>{{ $diagnosis }}</li>
-                            <hr>
-                        </ul>
-                    @endforeach
-                @else
-                    <p>Tidak ada</p>
-                @endif
-            </td>
-        </tr>
-    </table>
-
-    <div class="section-title mt-3">10. Implementasi</div>
-    <table class="detail-table">
-        <tr>
-            <td colspan="4" style="text-weight">Rencana Penatalaksanaan dan Pengobatan</td>
-        </tr>
-        <tr>
-            <td colspan="4">Pilih tanda dokumen untuk mencari
-                rencana, apabila tidak ada, Pilih tanda tambah untuk menambah keterangan
-                rencana Penatalaksanaan dan Pengobatan kerja yang tidak ditemukan.</td>
-        </tr>
-        <tr>
-            <td class="col-header">Observasi</td>
-            <td>
-                @php
-                    $observasi = json_decode(
-                        $asesmen->rmeAsesmenThtDiagnosisImplementasi[0]['observasi'] ?? '[]',
-                        true,
-                    );
-                @endphp
-
-                @if (!empty($observasi))
-                    @foreach ($observasi as $diagnosis)
-                        <ul>
-                            <li>{{ $diagnosis }}</li>
-                            <hr>
-                        </ul>
-                    @endforeach
-                @else
-                    <p>Tidak ada</p>
-                @endif
-            </td>
-            <td>Terapeutik</td>
-            <td>
-                @php
-                    $terapeutik = json_decode(
-                        $asesmen->rmeAsesmenThtDiagnosisImplementasi[0]['terapeutik'] ?? '[]',
-                        true,
-                    );
-                @endphp
-
-                @if (!empty($terapeutik))
-                    @foreach ($terapeutik as $diagnosis)
-                        <ul>
-                            <li>{{ $diagnosis }}</li>
-                            <hr>
-                        </ul>
-                    @endforeach
-                @else
-                    <p>Tidak ada</p>
-                @endif
-            </td>
-        </tr>
-        <tr>
-            <td class="col-header">Edukasi</td>
-            <td>
-                @php
-                    $edukasi = json_decode($asesmen->rmeAsesmenThtDiagnosisImplementasi[0]['edukasi'] ?? '[]', true);
-                @endphp
-
-                @if (!empty($edukasi))
-                    @foreach ($edukasi as $diagnosis)
-                        <ul>
-                            <li>{{ $diagnosis }}</li>
-                            <hr>
-                        </ul>
-                    @endforeach
-                @else
-                    <p>Tidak ada</p>
-                @endif
-            </td>
-            <td>Kolaborasi</td>
-            <td>
-                @php
-                    $kolaborasi = json_decode(
-                        $asesmen->rmeAsesmenThtDiagnosisImplementasi[0]['kolaborasi'] ?? '[]',
-                        true,
-                    );
-                @endphp
-
-                @if (!empty($kolaborasi))
-                    @foreach ($kolaborasi as $diagnosis)
-                        <ul>
-                            <li>{{ $diagnosis }}</li>
-                            <hr>
-                        </ul>
-                    @endforeach
-                @else
-                    <p>Tidak ada</p>
-                @endif
-            </td>
-        </tr>
-        <tr>
-            <td colspan="4">
-                Pilih tanda dokumen untuk mencari
-                Prognosis, apabila tidak ada, Pilih tanda tambah untuk menambah
-                keterangan
-                Prognosis yang tidak ditemukan.
-            </td>
-        </tr>
-        <tr>
-            <td>Prognosis</td>
-            <td colspan="3">
-                @php
-                    $prognosis = json_decode(
-                        $asesmen->rmeAsesmenThtDiagnosisImplementasi[0]['prognosis'] ?? '[]',
-                        true,
-                    );
-                @endphp
-
-                @if (!empty($prognosis))
-                    @foreach ($prognosis as $diagnosis)
-                        <ul>
-                            <li>{{ $diagnosis }}</li>
-                            <hr>
-                        </ul>
-                    @endforeach
-                @else
-                    <p>Tidak ada</p>
-                @endif
-            </td>
-        </tr>
-    </table>
-
-    <div class="section-title mt-3">11. Evaluasi</div>
-    <table class="detail-table">
-        <tr>
-            <td class="col-header">Diagnosis medis</td>
-            <td>:
-                {{ $asesmen->rmeAsesmenTht->evaluasi_evaluasi_keperawatan ?? '-' }}
-            </td>
-        </tr>
-    </table>
-
-
-    <div class="sign-area">
-        <div class="sign-box">
-            <p>Perawat yang Melakukan Asesmen THT</p>
-            <br><br><br>
-            <p>( _________________________ )</p>
-            <p>{{ $asesmen->user->name ?? '.............................' }}</p>
-        </div>
-        <div class="clear"></div>
     </div>
 </body>
 

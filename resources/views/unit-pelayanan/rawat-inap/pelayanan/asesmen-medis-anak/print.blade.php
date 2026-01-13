@@ -629,7 +629,8 @@
                         Pernah dirawat: {{ $dtl->pernah_dirawat ?? 0 ? 'Ya' : 'Tidak' }}<br>
                         Tanggal:
                         {{ $dtl->tanggal_dirawat ?? false ? \Carbon\Carbon::parse($dtl->tanggal_dirawat)->format('d-m-Y') : '-' }}
-                        | Jam: {{ $dtl->jam_dirawat ?? '-' }}<br>
+                        | Jam:
+                        {{ !empty($dtl->jam_dirawat) ? \Carbon\Carbon::parse($dtl->jam_dirawat)->format('H:i') : '-' }}<br>
                         Keterangan (Jaundice/RDS/PJB): {{ $dtl->jaundice_rds_pjb ?? '-' }}
                     </td>
                 </tr>
