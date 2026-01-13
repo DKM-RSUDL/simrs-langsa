@@ -2,7 +2,7 @@
 
 @section('content')
     <x-content-card>
-        <div style="height: 100vh; overflow-y: auto;">
+        <div style="height: 150vh; overflow-y: auto; display: flex; flex-direction: column; gap: 50px;">
             @if ($asesmen)
                 @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.asesmen.print')
             @else
@@ -29,6 +29,32 @@
                 ])
             @else
                 <p>Data pengkajian awal medis tidak ditemukan untuk kunjungan ini.</p>
+            @endif
+
+            @if (!empty($resume))
+                @include('unit-pelayanan.rawat-inap.pelayanan.resume.resume-medis.print')
+            @else
+                <p>Data resume medis tidak ditemukan untuk kunjungan ini.</p>
+            @endif
+
+            @if ($asesmenKeperawatan)
+                @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.asesmen-keperawatan.print-pdf')
+            @else
+                <p>Data asesmen keperawatan tidak ditemukan untuk kunjungan ini.</p>
+            @endif
+
+            @if ($asesmenNeurologi)
+                @include('unit-pelayanan.rawat-inap.pelayanan.neurologi.print', [
+                    'asesmen' => $asesmenNeurologi,
+                    'dataMedis' => $dataMedis,
+                    'rmeMasterDiagnosis' => $rmeMasterDiagnosisNeurologi,
+                    'rmeMasterImplementasi' => $rmeMasterImplementasiNeurologi,
+                    'satsetPrognosis' => $satsetPrognosisNeurologi,
+                    'alergiPasien' => $alergiPasienNeurologi,
+                    'itemFisik' => $itemFisik,
+                ])
+            @else
+                <p>Data asesmen neurologi tidak ditemukan untuk kunjungan ini.</p>
             @endif
         </div>
     </x-content-card>

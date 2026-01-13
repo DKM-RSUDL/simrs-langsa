@@ -318,7 +318,104 @@ class BerkasDigitalController extends Controller
         // Extract akan membuat variabel: $triase (dari IGD)
         $triaseIGD = $triaseIGDData['triase'] ?? null;
 
-        return view('berkas-digital.document.show', compact('listDokumen', 'dataMedis', 'pasien', 'unit', 'customer', 'asesmen', 'triase', 'riwayatAlergi', 'laborData', 'radiologiData', 'riwayatObat', 'retriaseData', 'pengkajianAsesmen', 'rmeMasterDiagnosis', 'rmeMasterImplementasi', 'satsetPrognosis', 'alergiPasien', 'triaseIGD'));
+        // Ambil data Resume Medis (Rawat Inap)
+        $resumeData = $this->berkasDigitalService->getResumeMedisData($dataMedis);
+        // Extract akan membuat variabel: $resume, $hasilKonpas, $labor, $radiologi, $tindakan, $pemeriksaanFisik, $resepRawat, $resepPulang
+        extract($resumeData);
+
+        // Ambil data Asesmen Keperawatan (IGD)
+        $asesmenKeperawatanData = $this->berkasDigitalService->getAsesmenKeperawatanData($dataMedis);
+        // Extract akan membuat variabel untuk asesmen keperawatan
+        // Gunakan prefix untuk menghindari konflik dengan variabel asesmen medis yang sudah ada
+        $asesmenKeperawatan = $asesmenKeperawatanData['asesmen'];
+        $asesmenKepUmum = $asesmenKeperawatanData['asesmenKepUmum'];
+        $asesmenBreathing = $asesmenKeperawatanData['asesmenBreathing'];
+        $asesmenCirculation = $asesmenKeperawatanData['asesmenCirculation'];
+        $asesmenDisability = $asesmenKeperawatanData['asesmenDisability'];
+        $asesmenExposure = $asesmenKeperawatanData['asesmenExposure'];
+        $asesmenSkalaNyeri = $asesmenKeperawatanData['asesmenSkalaNyeri'];
+        $asesmenRisikoJatuh = $asesmenKeperawatanData['asesmenRisikoJatuh'];
+        $asesmenSosialEkonomi = $asesmenKeperawatanData['asesmenSosialEkonomi'];
+        $asesmenStatusGizi = $asesmenKeperawatanData['asesmenStatusGizi'];
+        $asesmenTanggal = $asesmenKeperawatanData['asesmenTanggal'];
+        $tglMasukFormatted = $asesmenKeperawatanData['tglMasukFormatted'];
+        $faktorPemberatData = $asesmenKeperawatanData['faktorPemberatData'];
+        $kualitasNyeriData = $asesmenKeperawatanData['kualitasNyeriData'];
+        $menjalarData = $asesmenKeperawatanData['menjalarData'];
+        $faktorPeringanData = $asesmenKeperawatanData['faktorPeringanData'];
+        $frekuensiNyeriData = $asesmenKeperawatanData['frekuensiNyeriData'];
+        $jenisNyeriData = $asesmenKeperawatanData['jenisNyeriData'];
+        $pekerjaanData = $asesmenKeperawatanData['pekerjaanData'];
+        $agamaData = $asesmenKeperawatanData['agamaData'];
+        $pendidikanData = $asesmenKeperawatanData['pendidikanData'];
+
+        // Ambil data Asesmen Neurologi (Rawat Inap)
+        $asesmenNeurologiData = $this->berkasDigitalService->getAsesmenNeurologiData($dataMedis);
+        $asesmenNeurologi = $asesmenNeurologiData['asesmen'];
+        $rmeMasterDiagnosisNeurologi = $asesmenNeurologiData['rmeMasterDiagnosis'];
+        $rmeMasterImplementasiNeurologi = $asesmenNeurologiData['rmeMasterImplementasi'];
+        $satsetPrognosisNeurologi = $asesmenNeurologiData['satsetPrognosis'];
+        $alergiPasienNeurologi = $asesmenNeurologiData['alergiPasien'];
+        $itemFisik = $asesmenNeurologiData['itemFisik'];
+
+        return view('berkas-digital.document.show', compact(
+            'listDokumen',
+            'dataMedis',
+            'pasien',
+            'unit',
+            'customer',
+            'asesmen',
+            'triase',
+            'riwayatAlergi',
+            'laborData',
+            'radiologiData',
+            'riwayatObat',
+            'retriaseData',
+            'pengkajianAsesmen',
+            'rmeMasterDiagnosis',
+            'rmeMasterImplementasi',
+            'satsetPrognosis',
+            'alergiPasien',
+            'triaseIGD',
+            // resume medis
+            'resume',
+            'hasilKonpas',
+            'labor',
+            'radiologi',
+            'tindakan',
+            'pemeriksaanFisik',
+            'resepRawat',
+            'resepPulang',
+            // asesmen keperawatan
+            'asesmenKeperawatan',
+            'asesmenKepUmum',
+            'asesmenBreathing',
+            'asesmenCirculation',
+            'asesmenDisability',
+            'asesmenExposure',
+            'asesmenSkalaNyeri',
+            'asesmenRisikoJatuh',
+            'asesmenSosialEkonomi',
+            'asesmenStatusGizi',
+            'asesmenTanggal',
+            'tglMasukFormatted',
+            'faktorPemberatData',
+            'kualitasNyeriData',
+            'menjalarData',
+            'faktorPeringanData',
+            'frekuensiNyeriData',
+            'jenisNyeriData',
+            'pekerjaanData',
+            'agamaData',
+            'pendidikanData',
+            // asesmen neurologi
+            'asesmenNeurologi',
+            'rmeMasterDiagnosisNeurologi',
+            'rmeMasterImplementasiNeurologi',
+            'satsetPrognosisNeurologi',
+            'alergiPasienNeurologi',
+            'itemFisik'
+        ));
     }
 
     public function storeBerkas(Request $request)

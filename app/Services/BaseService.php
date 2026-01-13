@@ -60,7 +60,7 @@ class BaseService
     // Get data medis
     public function getDataMedisbyTransaksi($kd_kasir, $no_transaksi)
     {
-        $dataMedis =  Transaksi::with(['pasien', 'unit'])
+        $dataMedis =  Transaksi::with(['pasien', 'dokter', 'dokter.detail', 'customer', 'unit'])
             ->join('kunjungan as k', function ($join) {
                 $join->on('k.kd_pasien', '=', 'transaksi.kd_pasien');
                 $join->on('k.kd_unit', '=', 'transaksi.kd_unit');

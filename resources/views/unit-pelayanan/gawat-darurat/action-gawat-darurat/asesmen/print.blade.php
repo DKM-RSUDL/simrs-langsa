@@ -558,14 +558,12 @@
                         <th>Tanggal</th>
                         <th>Nama Pemeriksaan</th>
                     </tr>
+
                     @foreach ($radiologiData as $radio)
-                        @foreach ($radio->details as $detail)
-                            <tr>
-                                <td>{{ $radio->tgl_order ? date('d M Y H:i', strtotime($radio->tgl_order)) : '-' }}
-                                </td>
-                                <td>{{ $detail->produk->deskripsi ?? 'Pemeriksaan Radiologi' }}</td>
-                            </tr>
-                        @endforeach
+                        <tr>
+                            <td>{{ $radio['Tanggal-Jam'] ?? '-' }}</td>
+                            <td>{{ $radio['Nama Pemeriksaan'] ?? '-' }}</td>
+                        </tr>
                     @endforeach
                 </table>
             @else
@@ -599,8 +597,8 @@
                     </tr>
                     @foreach ($riwayatObat as $resep)
                         <tr>
-                            <td>{{ $resep->NAMA_OBAT ?? 'Tidak ada informasi' }}</td>
-                            <td>{{ explode(',', $resep->CARA_PAKAI)[1] ?? '' }}</td>
+                            <td>{{ $resep->nama_obat ?? 'Tidak ada informasi' }}</td>
+                            <td>{{ explode(',', $resep->cara_pakai)[1] ?? '' }}</td>
                         </tr>
                     @endforeach
                 </table>

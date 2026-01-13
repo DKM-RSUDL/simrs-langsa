@@ -1322,6 +1322,8 @@ class AsesmenController extends Controller
         $riwayatObat = $this->getRiwayatObat($asesmen->kd_pasien, $asesmen->tgl_masuk, $asesmen->urut_masuk);
         $retriaseData = DataTriase::where('id_asesmen', $id)->get();
 
+        // dd($radiologiData[0]['Tanggal-Jam']);
+
         $pdf = PDF::loadView('unit-pelayanan.gawat-darurat.action-gawat-darurat.asesmen.print', [
             'asesmen' => $asesmen,
             'triase' => [
@@ -1335,8 +1337,6 @@ class AsesmenController extends Controller
             'retriaseData' => $retriaseData
 
         ]);
-
-        // dd($asesmen);
 
         $pdf->setPaper('a4', 'portrait');
 

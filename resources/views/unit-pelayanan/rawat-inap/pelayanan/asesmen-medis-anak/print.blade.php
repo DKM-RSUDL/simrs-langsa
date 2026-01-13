@@ -629,7 +629,8 @@
                         Pernah dirawat: {{ $dtl->pernah_dirawat ?? 0 ? 'Ya' : 'Tidak' }}<br>
                         Tanggal:
                         {{ $dtl->tanggal_dirawat ?? false ? \Carbon\Carbon::parse($dtl->tanggal_dirawat)->format('d-m-Y') : '-' }}
-                        | Jam: {{ $dtl->jam_dirawat ?? '-' }}<br>
+                        | Jam:
+                        {{ !empty($dtl->jam_dirawat) ? \Carbon\Carbon::parse($dtl->jam_dirawat)->format('H:i') : '-' }}<br>
                         Keterangan (Jaundice/RDS/PJB): {{ $dtl->jaundice_rds_pjb ?? '-' }}
                     </td>
                 </tr>
@@ -728,7 +729,7 @@
 
                 $kodePrognosis = $dtl->paru_prognosis ?? '-';
                 $prognosisText = $kodePrognosis;
-                
+
                 if (!empty($data['satsetPrognosis']) && !empty($kodePrognosis)) {
                     $found = collect($data['satsetPrognosis'])->firstWhere('prognosis_id', $kodePrognosis);
 
@@ -793,9 +794,10 @@
                         <br>
                         Dokter Penanggung Jawab Pelayanan (DPJP)
                         <br>
-                        <img src="{{ generateQrCode($dokter->nama_lengkap, 120, 'svg_datauri') }}" alt="QR Code">
+                        <img src="{{ generateQrCode(($asesmen->user->karyawan->gelar_depan ?? '') . ' ' . str()->title($asesmen->user->karyawan->nama ?? '') . ' ' . ($asesmen->user->karyawan->gelar_belakang ?? ''), 100, 'svg_datauri') }}"
+                                    alt="QR Petugas">
                         <br>
-                        ( {{ $dokter->nama_lengkap ?? ($dokter->NAMA ?? '..........................') }} )
+                        {{ ($asesmen->user->karyawan->gelar_depan ?? '') . ' ' . str()->title($asesmen->user->karyawan->nama ?? '') . ' ' . ($asesmen->user->karyawan->gelar_belakang ?? '') }}
                     </td>
                 </tr>
             </table>
