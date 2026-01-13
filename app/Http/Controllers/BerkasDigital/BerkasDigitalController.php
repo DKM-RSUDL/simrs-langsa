@@ -304,8 +304,8 @@ class BerkasDigitalController extends Controller
         $customer = isset($dataMedis->customer) ? $dataMedis->customer : null;
 
         // Ambil data asesmen via service dengan semua data yang diperlukan
+        // PERBAIKAN: Sekarang akan mengambil data dari IGD jika ada asal IGD
         $asesmenData = $this->berkasDigitalService->getAsesmenData($dataMedis);
-        // Extract akan membuat variabel: $asesmen, $triase, $riwayatAlergi, $laborData, $radiologiData, $riwayatObat, $retriaseData
         extract($asesmenData);
 
         // Ambil data pengkajian awal medis (rawat inap)

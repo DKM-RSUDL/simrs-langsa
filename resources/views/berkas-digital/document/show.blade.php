@@ -4,9 +4,17 @@
     <x-content-card>
         <div style="height: 150vh; overflow-y: auto; display: flex; flex-direction: column; gap: 50px;">
             @if ($asesmen)
-                @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.asesmen.print')
+                @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.asesmen.print', [
+                    'asesmen' => $asesmen,
+                    'triase' => $triase,
+                    'riwayatAlergi' => $riwayatAlergi,
+                    'laborData' => $laborData,
+                    'radiologiData' => $radiologiData,
+                    'riwayatObat' => $riwayatObat,
+                    'retriaseData' => $retriaseData,
+                ])
             @else
-                <p>Data asesmen tidak ditemukan untuk kunjungan ini.</p>
+                <p>Data asesmen IGD tidak ditemukan untuk kunjungan ini.</p>
             @endif
 
             @if ($triaseIGD)

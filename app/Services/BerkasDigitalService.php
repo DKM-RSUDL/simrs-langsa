@@ -33,14 +33,193 @@ class BerkasDigitalService
 
     public function getAsesmenData($dataMedis)
     {
-        // Tentukan field tanggal yang akan digunakan
-        // Jika dataMedis dari Transaksi, gunakan tgl_transaksi
-        // Jika dataMedis dari Kunjungan, gunakan tgl_masuk
-        $tglMasuk = isset($dataMedis->tgl_transaksi) ? $dataMedis->tgl_transaksi : $dataMedis->tgl_masuk;
-        // Selalu gunakan unit IGD untuk berkas digital
-        $kdUnit = $this->kdUnit;
+        try {
+            // Cek apakah ini rawat inap dengan asal IGD
+            $asalIGD = AsalIGD::where('kd_kasir', $dataMedis->kd_kasir)
+                ->where('no_transaksi', $dataMedis->no_transaksi)
+                ->first();
 
-        // Ambil data asesmen IGD dengan semua relasi yang diperlukan
+            // Jika ada asal IGD, ambil data dari kunjungan IGD
+            if ($asalIGD) {
+                $baseService = new BaseService();
+                $kunjunganIGD = $baseService->getDataMedisbyTransaksi(
+                    $asalIGD->kd_kasir_asal,
+                    $asalIGD->no_transaksi_asal
+                );
+
+                if ($kunjunganIGD) {
+                    // Gunakan data dari kunjungan IGD
+                    $tglMasuk = $kunjunganIGD->tgl_transaksi ?? $kunjunganIGD->tgl_masuk;
+                    $kdPasien = $kunjunganIGD->kd_pasien;
+                    $urutMasuk = $kunjunganIGD->urut_masuk;
+                    $kdUnit = $this->kdUnit;
+                } else {
+                    return $this->getAsesmenDataFallback($dataMedis);
+                }
+            } else {
+                // Tidak ada asal IGD, gunakan data medis langsung (untuk kunjungan IGD langsung)
+                $tglMasuk = isset($dataMedis->tgl_transaksi) ? $dataMedis->tgl_transaksi : $dataMedis->tgl_masuk;
+                $kdPasien = $dataMedis->kd_pasien;
+                $urutMasuk = $dataMedis->urut_masuk;
+                $kdUnit = $this->kdUnit;
+            }
+
+            // STRATEGI 1: Cari dengan urut_masuk dan tanpa filter kategori
+            $asesmen = RmeAsesmen::with([
+                'pasien',
+                'menjalar',
+                'frekuensiNyeri',
+                'kualitasNyeri',
+                'faktorPemberat',
+                'faktorPeringan',
+                'efekNyeri',
+                'tindaklanjut',
+                'tindaklanjut.spri',
+                'pemeriksaanFisik',
+                'pemeriksaanFisik.itemFisik',
+                'user'
+            ])
+                ->where('kd_pasien', $kdPasien)
+                ->where('kd_unit', $kdUnit)
+                ->whereDate('tgl_masuk', date('Y-m-d', strtotime($tglMasuk)))
+                ->where('urut_masuk', $urutMasuk)
+                ->orderBy('waktu_asesmen', 'desc')
+                ->first();
+
+            // STRATEGI 2: Jika tidak ada, cari tanpa urut_masuk
+            if (!$asesmen) {
+                $asesmen = RmeAsesmen::with([
+                    'pasien',
+                    'menjalar',
+                    'frekuensiNyeri',
+                    'kualitasNyeri',
+                    'faktorPemberat',
+                    'faktorPeringan',
+                    'efekNyeri',
+                    'tindaklanjut',
+                    'tindaklanjut.spri',
+                    'pemeriksaanFisik',
+                    'pemeriksaanFisik.itemFisik',
+                    'user'
+                ])
+                    ->where('kd_pasien', $kdPasien)
+                    ->where('kd_unit', $kdUnit)
+                    ->whereDate('tgl_masuk', date('Y-m-d', strtotime($tglMasuk)))
+                    ->orderBy('waktu_asesmen', 'desc')
+                    ->first();
+            }
+
+            // STRATEGI 3: Cari di semua unit untuk pasien ini pada tanggal tersebut
+            if (!$asesmen) {
+                $asesmen = RmeAsesmen::with([
+                    'pasien',
+                    'menjalar',
+                    'frekuensiNyeri',
+                    'kualitasNyeri',
+                    'faktorPemberat',
+                    'faktorPeringan',
+                    'efekNyeri',
+                    'tindaklanjut',
+                    'tindaklanjut.spri',
+                    'pemeriksaanFisik',
+                    'pemeriksaanFisik.itemFisik',
+                    'user'
+                ])
+                    ->where('kd_pasien', $kdPasien)
+                    ->whereDate('tgl_masuk', date('Y-m-d', strtotime($tglMasuk)))
+                    ->orderBy('waktu_asesmen', 'desc')
+                    ->first();
+            }
+
+            // STRATEGI 4: Ambil asesmen terbaru untuk pasien ini (tanpa batasan tanggal)
+            if (!$asesmen) {
+                $asesmen = RmeAsesmen::with([
+                    'pasien',
+                    'menjalar',
+                    'frekuensiNyeri',
+                    'kualitasNyeri',
+                    'faktorPemberat',
+                    'faktorPeringan',
+                    'efekNyeri',
+                    'tindaklanjut',
+                    'tindaklanjut.spri',
+                    'pemeriksaanFisik',
+                    'pemeriksaanFisik.itemFisik',
+                    'user'
+                ])
+                    ->where('kd_pasien', $kdPasien)
+                    ->where('kd_unit', $kdUnit)
+                    ->orderBy('waktu_asesmen', 'desc')
+                    ->first();
+            }
+
+            // Jika asesmen ditemukan tapi data inti kosong, cari asesmen lain yang memiliki data
+            if ($asesmen && $this->isAsesmenCoreEmpty($asesmen)) {
+                $asesmenWithData = RmeAsesmen::with([
+                    'pasien',
+                    'menjalar',
+                    'frekuensiNyeri',
+                    'kualitasNyeri',
+                    'faktorPemberat',
+                    'faktorPeringan',
+                    'efekNyeri',
+                    'tindaklanjut',
+                    'tindaklanjut.spri',
+                    'pemeriksaanFisik',
+                    'pemeriksaanFisik.itemFisik',
+                    'user'
+                ])
+                    ->where('kd_pasien', $kdPasien)
+                    ->where('kd_unit', $kdUnit)
+                    ->whereDate('tgl_masuk', date('Y-m-d', strtotime($tglMasuk)))
+                    ->where('urut_masuk', $urutMasuk)
+                    ->where(function ($query) {
+                        $query->whereNotNull('tindakan_resusitasi')
+                            ->orWhereNotNull('anamnesis');
+                    })
+                    ->orderBy('waktu_asesmen', 'desc')
+                    ->first();
+
+                if ($asesmenWithData) {
+                    $asesmen = $asesmenWithData;
+                }
+            }
+
+            // Jika masih tidak ada data asesmen
+            if (!$asesmen) {
+                return $this->emptyAsesmenData($dataMedis);
+            }
+
+            // Format triase data
+            $triase = $this->getTriaseData($dataMedis, $asesmen);
+
+            // Ambil riwayat alergi dari tabel RmeAlergiPasien
+            $riwayatAlergi = RmeAlergiPasien::where('kd_pasien', $asesmen->kd_pasien)->get();
+
+            // Ambil data laboratorium
+            $laborData = $this->getLabor($kdPasien, $tglMasuk, $urutMasuk);
+
+            // Ambil data radiologi
+            $radiologiData = $this->getRadiologi($kdPasien, $tglMasuk, $urutMasuk);
+
+            // Ambil riwayat obat
+            $riwayatObat = $this->getRiwayatObat($kdPasien, $tglMasuk, $urutMasuk);
+
+            $retriaseData = DataTriase::where('id_asesmen', $asesmen->id)->get();
+
+            return compact('asesmen', 'triase', 'riwayatAlergi', 'laborData', 'radiologiData', 'riwayatObat', 'retriaseData');
+        } catch (\Exception $e) {
+            \Log::error('Error in getAsesmenData: ' . $e->getMessage());
+            \Log::error('Stack trace: ' . $e->getTraceAsString());
+            return $this->emptyAsesmenData($dataMedis);
+        }
+    }
+
+    private function getAsesmenDataFallback($dataMedis)
+    {
+        $tglMasuk = isset($dataMedis->tgl_transaksi) ? $dataMedis->tgl_transaksi : $dataMedis->tgl_masuk;
+
+        // Coba cari asesmen di unit rawat inap
         $asesmen = RmeAsesmen::with([
             'pasien',
             'menjalar',
@@ -56,57 +235,55 @@ class BerkasDigitalService
             'user'
         ])
             ->where('kd_pasien', $dataMedis->kd_pasien)
-            ->where('kd_unit', $kdUnit)
             ->whereDate('tgl_masuk', date('Y-m-d', strtotime($tglMasuk)))
             ->where('urut_masuk', $dataMedis->urut_masuk)
             ->orderBy('waktu_asesmen', 'desc')
             ->first();
 
-        // Jika tidak ada asesmen dengan urut_masuk, cari yang paling baru untuk pasien ini
         if (!$asesmen) {
-            $asesmen = RmeAsesmen::with([
-                'pasien',
-                'menjalar',
-                'frekuensiNyeri',
-                'kualitasNyeri',
-                'faktorPemberat',
-                'faktorPeringan',
-                'efekNyeri',
-                'tindaklanjut',
-                'tindaklanjut.spri',
-                'pemeriksaanFisik',
-                'pemeriksaanFisik.itemFisik',
-                'user'
-            ])
-                ->where('kd_pasien', $dataMedis->kd_pasien)
-                ->where('kd_unit', $kdUnit)
-                ->orderBy('waktu_asesmen', 'desc')
-                ->first();
+            return $this->emptyAsesmenData($dataMedis);
         }
 
-        // Format triase data
         $triase = $this->getTriaseData($dataMedis, $asesmen);
-
-        // Ambil riwayat alergi dari tabel RmeAlergiPasien
-        $riwayatAlergi = [];
-        if ($asesmen) {
-            $riwayatAlergi = RmeAlergiPasien::where('kd_pasien', $asesmen->kd_pasien)->get();
-        }
-
-        // Ambil data laboratorium
+        $riwayatAlergi = RmeAlergiPasien::where('kd_pasien', $asesmen->kd_pasien)->get();
         $laborData = $this->getLabor($dataMedis->kd_pasien, $tglMasuk, $dataMedis->urut_masuk);
-
-        // Ambil data radiologi
         $radiologiData = $this->getRadiologi($dataMedis->kd_pasien, $tglMasuk, $dataMedis->urut_masuk);
-
-        // Ambil riwayat obat
         $riwayatObat = $this->getRiwayatObat($dataMedis->kd_pasien, $tglMasuk, $dataMedis->urut_masuk);
-        $retriaseData = collect([]);
-        if ($asesmen) {
-            $retriaseData = DataTriase::where('id_asesmen', $asesmen->id)->get();
-        }
+        $retriaseData = DataTriase::where('id_asesmen', $asesmen->id)->get();
 
         return compact('asesmen', 'triase', 'riwayatAlergi', 'laborData', 'radiologiData', 'riwayatObat', 'retriaseData');
+    }
+
+    /**
+     * Return empty data structure untuk asesmen
+     */
+    private function emptyAsesmenData($dataMedis)
+    {
+        return [
+            'asesmen' => null,
+            'triase' => ['label' => '-', 'warna' => '-'],
+            'riwayatAlergi' => collect([]),
+            'laborData' => collect([]),
+            'radiologiData' => collect([]),
+            'riwayatObat' => collect([]),
+            'retriaseData' => collect([]),
+        ];
+    }
+
+    // Cek apakah data inti asesmen kosong sehingga perlu fallback
+    private function isAsesmenCoreEmpty($asesmen)
+    {
+        if (!$asesmen) {
+            return true;
+        }
+
+        $tindakan = $asesmen->tindakan_resusitasi;
+        $anamnesis = $asesmen->anamnesis;
+
+        $tindakanEmpty = empty($tindakan) || $tindakan === '{}' || $tindakan === '[]';
+        $anamnesisEmpty = is_null($anamnesis) || trim((string) $anamnesis) === '';
+
+        return $tindakanEmpty && $anamnesisEmpty;
     }
 
     private function getTriaseData($dataMedis, $asesmen = null)
