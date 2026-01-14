@@ -553,8 +553,7 @@
             </tr>
             
             <tr>
-                <td class="col-header fw-bold">e. Thoraks</td>
-                <td></td>
+                <td colspan="2" class="col-header fw-bold">e. Thoraks</td>
             </tr>
             
             <tr>
