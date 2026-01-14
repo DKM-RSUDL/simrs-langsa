@@ -358,6 +358,21 @@ class BerkasDigitalController extends Controller
         $alergiPasienNeurologi = $asesmenNeurologiData['alergiPasien'];
         $itemFisik = $asesmenNeurologiData['itemFisik'];
 
+        // Ambil data Asesmen Opthamology (Rawat Inap)
+        $asesmenOpthamologyData = $this->berkasDigitalService->getAsesmenOpthamologyData($dataMedis);
+        $asesmenOpthamology = $asesmenOpthamologyData['asesmenOpthamology'];
+        $faktorpemberatOpthamology = $asesmenOpthamologyData['faktorpemberat'];
+        $menjalarOpthamology = $asesmenOpthamologyData['menjalar'];
+        $frekuensinyeriOpthamology = $asesmenOpthamologyData['frekuensinyeri'];
+        $kualitasnyeriOpthamology = $asesmenOpthamologyData['kualitasnyeri'];
+        $faktorperinganOpthamology = $asesmenOpthamologyData['faktorperingan'];
+        $efeknyeriOpthamology = $asesmenOpthamologyData['efeknyeri'];
+        $jenisnyeriOpthamology = $asesmenOpthamologyData['jenisnyeri'];
+        $itemFisikOpthamology = $asesmenOpthamologyData['itemFisik'];
+        $rmeMasterDiagnosisOpthamology = $asesmenOpthamologyData['rmeMasterDiagnosis'];
+        $rmeMasterImplementasiOpthamology = $asesmenOpthamologyData['rmeMasterImplementasi'];
+        $satsetPrognosisOpthamology = $asesmenOpthamologyData['satsetPrognosis'];
+
         return view('berkas-digital.document.show', compact(
             'listDokumen',
             'dataMedis',
@@ -414,7 +429,20 @@ class BerkasDigitalController extends Controller
             'rmeMasterImplementasiNeurologi',
             'satsetPrognosisNeurologi',
             'alergiPasienNeurologi',
-            'itemFisik'
+            'itemFisik',
+            // asesmen opthamology
+            'asesmenOpthamology',
+            'faktorpemberatOpthamology',
+            'menjalarOpthamology',
+            'frekuensinyeriOpthamology',
+            'kualitasnyeriOpthamology',
+            'faktorperinganOpthamology',
+            'efeknyeriOpthamology',
+            'jenisnyeriOpthamology',
+            'itemFisikOpthamology',
+            'rmeMasterDiagnosisOpthamology',
+            'rmeMasterImplementasiOpthamology',
+            'satsetPrognosisOpthamology'
         ));
     }
 

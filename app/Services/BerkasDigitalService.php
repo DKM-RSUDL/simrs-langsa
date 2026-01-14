@@ -19,6 +19,7 @@ use App\Models\RmeFrekuensiNyeri;
 use App\Models\RmeJenisNyeri;
 use App\Models\RmeKualitasNyeri;
 use App\Models\RmeMenjalar;
+use App\Models\RmeEfekNyeri;
 use App\Models\Agama;
 use App\Models\Pendidikan;
 use App\Models\Pekerjaan;
@@ -947,10 +948,137 @@ class BerkasDigitalService
             'asesmen' => null,
             'dataMedis' => $dataMedis,
             'rmeMasterDiagnosis' => collect([]),
+        ];
+    }
+
+    /**
+     * Get Asesmen Opthamology (Rawat Inap) data untuk ditampilkan di berkas digital
+     * Menyusun variabel yang diperlukan oleh blade print opthamology
+     */
+    public function getAsesmenOpthamologyData($dataMedis)
+    {
+        try {
+            // Tentukan tanggal masuk
+            $tglMasuk = isset($dataMedis->tgl_transaksi) ? $dataMedis->tgl_transaksi : $dataMedis->tgl_masuk;
+
+            $asesmenOpthamology = RmeAsesmen::with([
+                'rmeAsesmenKepOphtamology',
+                'rmeAsesmenKepOphtamologyKomprehensif',
+                'rmeAsesmenKepOphtamologyFisik',
+                'rmeAsesmenKepOphtamologyRencanaPulang',
+                'user'
+            ])
+                ->where('kd_pasien', $dataMedis->kd_pasien)
+                ->where('kd_unit', $dataMedis->kd_unit)
+                ->whereDate('tgl_masuk', $tglMasuk)
+                ->where('urut_masuk', $dataMedis->urut_masuk)
+                ->where('kategori', 1)
+                ->where('sub_kategori', 6)
+                ->first();
+
+            if (!$asesmenOpthamology) {
+                $asesmenOpthamology = RmeAsesmen::with([
+                    'rmeAsesmenKepOphtamology',
+                    'rmeAsesmenKepOphtamologyKomprehensif',
+                    'rmeAsesmenKepOphtamologyFisik',
+                    'rmeAsesmenKepOphtamologyRencanaPulang',
+                    'user'
+                ])
+                    ->where('kd_pasien', $dataMedis->kd_pasien)
+                    ->where('kd_unit', $dataMedis->kd_unit)
+                    ->whereDate('tgl_masuk', $tglMasuk)
+                    ->where('kategori', 1)
+                    ->where('sub_kategori', 6)
+                    ->orderBy('created_at', 'desc')
+                    ->first();
+            }
+
+            if (!$asesmenOpthamology) {
+                $asesmenOpthamology = RmeAsesmen::with([
+                    'rmeAsesmenKepOphtamology',
+                    'rmeAsesmenKepOphtamologyKomprehensif',
+                    'rmeAsesmenKepOphtamologyFisik',
+                    'rmeAsesmenKepOphtamologyRencanaPulang',
+                    'user'
+                ])
+                    ->where('kd_pasien', $dataMedis->kd_pasien)
+                    ->whereDate('tgl_masuk', $tglMasuk)
+                    ->where('kategori', 1)
+                    ->where('sub_kategori', 6)
+                    ->orderBy('created_at', 'desc')
+                    ->first();
+            }
+
+            if (!$asesmenOpthamology) {
+                $asesmenOpthamology = RmeAsesmen::with([
+                    'rmeAsesmenKepOphtamology',
+                    'rmeAsesmenKepOphtamologyKomprehensif',
+                    'rmeAsesmenKepOphtamologyFisik',
+                    'rmeAsesmenKepOphtamologyRencanaPulang',
+                    'user'
+                ])
+                    ->where('kd_pasien', $dataMedis->kd_pasien)
+                    ->where('kategori', 1)
+                    ->where('sub_kategori', 6)
+                    ->orderBy('created_at', 'desc')
+                    ->first();
+            }
+
+            // Jika masih tidak ada, return data kosong
+            if (!$asesmenOpthamology) {
+                return $this->emptyAsesmenOpthamologyData($dataMedis);
+            }
+
+            // Ambil data tambahan seperti di controller opthamologi
+            $faktorpemberat = RmeFaktorPemberat::all();
+            $menjalar = RmeMenjalar::all();
+            $frekuensinyeri = RmeFrekuensiNyeri::all();
+            $kualitasnyeri = RmeKualitasNyeri::all();
+            $faktorperingan = RmeFaktorPeringan::all();
+            $efeknyeri = RmeEfekNyeri::all();
+            $jenisnyeri = RmeJenisNyeri::all();
+            $itemFisik = MrItemFisik::orderby('urut')->get();
+            $rmeMasterDiagnosis = RmeMasterDiagnosis::all();
+            $rmeMasterImplementasi = RmeMasterImplementasi::all();
+            $satsetPrognosis = SatsetPrognosis::all();
+
+            return compact(
+                'asesmenOpthamology',
+                'faktorpemberat',
+                'menjalar',
+                'frekuensinyeri',
+                'kualitasnyeri',
+                'faktorperingan',
+                'efeknyeri',
+                'jenisnyeri',
+                'itemFisik',
+                'rmeMasterDiagnosis',
+                'rmeMasterImplementasi',
+                'satsetPrognosis'
+            );
+        } catch (\Exception $e) {
+            return $this->emptyAsesmenOpthamologyData($dataMedis);
+        }
+    }
+
+    /**
+     * Return empty data structure untuk asesmen opthamology
+     */
+    private function emptyAsesmenOpthamologyData($dataMedis)
+    {
+        return [
+            'asesmenOpthamology' => null,
+            'faktorpemberat' => collect([]),
+            'menjalar' => collect([]),
+            'frekuensinyeri' => collect([]),
+            'kualitasnyeri' => collect([]),
+            'faktorperingan' => collect([]),
+            'efeknyeri' => collect([]),
+            'jenisnyeri' => collect([]),
+            'itemFisik' => collect([]),
+            'rmeMasterDiagnosis' => collect([]),
             'rmeMasterImplementasi' => collect([]),
             'satsetPrognosis' => collect([]),
-            'alergiPasien' => collect([]),
-            'itemFisik' => collect([]),
         ];
     }
 }

@@ -64,6 +64,28 @@
             @else
                 <p>Data asesmen neurologi tidak ditemukan untuk kunjungan ini.</p>
             @endif
+
+            @if ($asesmenOpthamology)
+                @include('unit-pelayanan.rawat-inap.pelayanan.asesmen-opthamology.print', [
+                    'data' => [
+                        'asesmen' => $asesmenOpthamology,
+                        'faktorpemberat' => $faktorpemberatOpthamology,
+                        'menjalar' => $menjalarOpthamology,
+                        'frekuensinyeri' => $frekuensinyeriOpthamology,
+                        'kualitasnyeri' => $kualitasnyeriOpthamology,
+                        'faktorperingan' => $faktorperinganOpthamology,
+                        'efeknyeri' => $efeknyeriOpthamology,
+                        'jenisnyeri' => $jenisnyeriOpthamology,
+                        'itemFisik' => $itemFisikOpthamology,
+                        'rmeMasterDiagnosis' => $rmeMasterDiagnosisOpthamology,
+                        'rmeMasterImplementasi' => $rmeMasterImplementasiOpthamology,
+                        'satsetPrognosis' => $satsetPrognosisOpthamology,
+                        'dataMedis' => $dataMedis,
+                    ],
+                ])
+            @else
+                <p>Data asesmen opthamology tidak ditemukan untuk kunjungan ini.</p>
+            @endif
         </div>
     </x-content-card>
     <x-content-card>
