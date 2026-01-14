@@ -244,8 +244,10 @@
         <table>
             <tr>
                 <td class="label">Tanggal & Jam Pengisian</td>
-                <td class="value">{{ !empty($ginek->tanggal) ? date('d-m-Y', strtotime($ginek->tanggal)) : '-' }} /
-                    {{ $ginek->jam_masuk ?? '-' }}</td>
+                <td class="value">
+                    {{ !empty($ginek->tanggal) ? date('d-m-Y', strtotime($ginek->tanggal)) : '-' }} /
+                    {{ !empty($ginek->jam_masuk) ? date('H:i', strtotime($ginek->jam_masuk)) : '-' }}
+                </td>
             </tr>
             <tr>
                 <td class="label">Kondisi Masuk</td>
@@ -277,15 +279,15 @@
                 <td class="value">{{ $ginek->riwayat_penyakit ?? '-' }}</td>
             </tr>
             <tr>
-                <td colspan="2" style="padding: 5px 0;">
-                    <strong>Riwayat Haid:</strong> Siklus: {{ $ginek->siklus ?? '-' }} Hari |
+                <td class="label">Riwayat Haid</td>
+                <td class="value">Siklus: {{ $ginek->siklus ?? '-' }} Hari |
                     HPHT: {{ !empty($ginek->hpht) ? date('d-m-Y', strtotime($ginek->hpht)) : '-' }} |
                     Usia Kehamilan: {{ $ginek->usia_kehamilan_display ?? '-' }}
                 </td>
             </tr>
             <tr>
-                <td colspan="2">
-                    <strong>Perkawinan:</strong> Jumlah: {{ $ginek->jumlah ?? '0' }} Kali |
+                <td class="label">Perkawinan</td>
+                <td class="value">Jumlah: {{ $ginek->jumlah ?? '0' }} Kali |
                     Dengan Suami Sekarang: {{ $ginek->tahun ?? '-' }} |
                     Jumlah Suami: {{ $ginek->jumlah_suami ?? '0' }}
                 </td>
@@ -295,21 +297,27 @@
         <div class="section-title">4. RIWAYAT OBSTETRIK</div>
         <table class="table-border">
             <tr class="bg-gray">
-                <th>Keadaan</th>
+                <th>Keadaan Kehamilan</th>
                 <th>Cara Persalinan</th>
-                <th>Nifas</th>
-                <th>Tgl Lahir</th>
+                <th>Keadaan Nifas</th>
+                <th>Tanggal Lahir</th>
                 <th>Keadaan Anak</th>
-                <th>Penolong</th>
+                <th>Tempat dan Penolong</th>
             </tr>
-            @forelse($decode($ginek->riwayat_obstetrik) as $obs)
+            @php
+                // Pastikan didecode secara eksplisit jika helper $decode belum berjalan sempurna
+                $riwayatObs = json_decode($ginek->riwayat_obstetrik, true) ?? [];
+            @endphp
+            @forelse($riwayatObs as $obs)
                 <tr>
                     <td>{{ $obs['keadaan'] ?? '-' }}</td>
-                    <td>{{ $obs['cara_persalinan'] ?? '-' }}</td>
-                    <td>{{ $obs['keadaan_nifas'] ?? '-' }}</td>
-                    <td>{{ $obs['tanggal_lahir'] ?? '-' }}</td>
-                    <td>{{ $obs['keadaan_anak'] ?? '-' }}</td>
-                    <td>{{ $obs['tempat_penolong'] ?? '-' }}</td>
+                    <td>{{ $obs['caraPersalinan'] ?? '-' }}</td>
+                    <td>{{ $obs['keadaanNifas'] ?? '-' }}</td>
+                    <td>
+                        {{ !empty($obs['tanggalLahir']) ? date('d M Y', strtotime($obs['tanggalLahir'])) : '-' }}
+                    </td>
+                    <td>{{ $obs['keadaanAnak'] ?? '-' }}</td>
+                    <td>{{ $obs['tempatPenolong'] ?? '-' }}</td>
                 </tr>
             @empty
                 <tr>
@@ -319,7 +327,7 @@
         </table>
 
         <div class="section-title">5. RIWAYAT PENYAKIT DAHULU (Termasuk Operasi & KB)</div>
-        <div style="min-height: 40px; border: 0.5px solid #ccc; padding: 5px;">
+        <div style="min-height: 40px; border: 1px solid #ccc; padding: 5px;">
             {{ $ginek->riwayat_penyakit_dahulu ?? '-' }}</div>
 
         <div class="section-title">6. TANDA VITAL</div>
