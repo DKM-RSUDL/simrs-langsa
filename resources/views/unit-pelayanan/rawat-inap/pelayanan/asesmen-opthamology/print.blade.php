@@ -6,12 +6,6 @@
     <title>Form Anamnesis - Ophthalmology</title>
 
     <style>
-        * {
-            box-sizing: border-box;
-            font-family: "DejaVu Sans", "Helvetica", "Arial", sans-serif !important;
-            font-size: 8.5pt;
-        }
-
         @page {
             size: A4;
             margin: 3mm 6mm;
@@ -20,6 +14,9 @@
         body {
             margin: 0;
             padding: 0;
+            box-sizing: border-box;
+            font-family: "DejaVu Sans", "Helvetica", "Arial", sans-serif !important;
+            font-size: 8.5pt;
         }
 
         .a4 {
