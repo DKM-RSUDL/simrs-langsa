@@ -328,6 +328,9 @@
         </table>
     </div>
 
+    {{-- @php
+        dd($KebiasaanData)
+    @endphp --}}
     <!-- 4. Kebiasaan -->
     <div class="content-section">
         <div class="section-title">4. KEBIASAAN</div>
@@ -336,41 +339,70 @@
                 <td class="col-header">a. Merokok</td>
                 <td>
                     <span class="checkbox-group">
-                        <input type="checkbox" {{ optional($asesmen->rmeAsesmenParu)->merokok == 'tidak' ? 'checked' : '' }} disabled> Tidak
+                        <input type="checkbox" {{ $KebiasaanData['merokok']['status'] == 'tidak' ? 'checked' : '' }} disabled>
+                        Tidak
                     </span>
+
                     <span class="checkbox-group">
-                        <input type="checkbox" {{ optional($asesmen->rmeAsesmenParu)->merokok == 'ya' ? 'checked' : '' }}
-                            disabled> ya, jumlah:
-                        {{ optional($asesmen->rmeAsesmenParu)->merokok_jumlah ?? '.....' }} batang/hari
-                        Lama: {{ optional($asesmen->rmeAsesmenParu)->merokok_lama ?? '.....' }} tahun
+                        <input type="checkbox" {{ $KebiasaanData['merokok']['status'] == 'ya' ? 'checked' : '' }} disabled>
+                        Ya
                     </span>
+
+                    @if($KebiasaanData['merokok']['status'] == 'ya' && !empty($KebiasaanData['merokok']['detail']))
+                        <table class="detail-table" style="margin-top:6px;">
+                            <tr>
+                                <th>Jenis</th>
+                                <th>Jumlah (batang/hari)</th>
+                                <th>Lama (tahun)</th>
+                            </tr>
+                            @foreach($KebiasaanData['merokok']['detail'] as $item)
+                                <tr>
+                                    <td>{{ $item['jenis'] ?? '-' }}</td>
+                                    <td>{{ $item['jml'] ?? '-' }}</td>
+                                    <td>{{ $item['lama'] ?? '-' }}</td>
+                                </tr>
+                            @endforeach
+                        </table>
+                    @endif
                 </td>
             </tr>
+
             <tr>
                 <td class="col-header">b. Alkohol</td>
                 <td>
                     <span class="checkbox-group">
-                        <input type="checkbox" {{ optional($asesmen->rmeAsesmenParu)->alkohol == 'tidak' ? 'checked' : '' }} disabled> Tidak
+                        <input type="checkbox" {{ $KebiasaanData['alkohol']['status'] == 'tidak' ? 'checked' : '' }} disabled>
+                        Tidak
                     </span>
+
                     <span class="checkbox-group">
-                        <input type="checkbox" {{ optional($asesmen->rmeAsesmenParu)->alkohol == 'ya' ? 'checked' : '' }}
-                            disabled> ya, jumlah:
-                        {{ optional($asesmen->rmeAsesmenParu)->alkohol_jumlah ?? '.....' }}
+                        <input type="checkbox" {{ $KebiasaanData['alkohol']['status'] == 'ya' ? 'checked' : '' }} disabled>
+                        Ya
+                        @if(!empty($KebiasaanData['alkohol']['jenis']))
+                            , Jenis: {{ $KebiasaanData['alkohol']['jenis'] }}
+                        @endif
                     </span>
                 </td>
             </tr>
+
             <tr>
                 <td class="col-header">c. Obat-obatan</td>
                 <td>
                     <span class="checkbox-group">
-                        <input type="checkbox" {{ optional($asesmen->rmeAsesmenParu)->obat_obatan == 'tidak' ? 'checked' : '' }} disabled> Tidak
+                        <input type="checkbox" {{ $KebiasaanData['obat']['status'] == 'tidak' ? 'checked' : '' }} disabled>
+                        Tidak
                     </span>
+
                     <span class="checkbox-group">
-                        <input type="checkbox" {{ optional($asesmen->rmeAsesmenParu)->obat_obatan == 'ya' ? 'checked' : '' }} disabled> ya
-                        @if(optional($asesmen->rmeAsesmenParu)->obat_jenis)
-                            - Jenis: {{ $asesmen->rmeAsesmenParu->obat_jenis }}
-                        @endif
+                        <input type="checkbox" {{ $KebiasaanData['obat']['status'] == 'ya' ? 'checked' : '' }} disabled>
+                        Ya
                     </span>
+                    <span>Jenis obat : </span>
+                    @if($KebiasaanData['obat']['status'] == 'ya' && !empty($KebiasaanData['obat']['detail']))
+                            @foreach($KebiasaanData['obat']['detail'] as $obat)
+                                <span>{{ $obat }} , </li>
+                            @endforeach
+                    @endif
                 </td>
             </tr>
         </table>
@@ -468,105 +500,132 @@
     <div class="page-break"></div>
 
     <!-- 6. Pemeriksaan Fisik -->
-<div class="content-section">
-    <div class="section-title">6. PEMERIKSAAN FISIK</div>
-    <table class="detail-table">
-        <tr>
-            <td colspan="4">
-                <span style="font-weight: bold;">Pemeriksaan Fisik</span>
-                <br>
-                Centang normal jika fisik yang dinilai normal. Jika tidak dipilih, maka pemeriksaan tidak dilakukan.
-            </td>
-        </tr>
+    <div class="content-section">
+        <div class="section-title">PEMERIKSAAN FISIK</div>
+
         @php
-            // Fetch all physical examination items from MrItemFisik
-            $fisikItems = \App\Models\MrItemFisik::orderBy('urut')->get()->pluck('nama', 'id')->toArray();
-
-            // Create mapping of pemeriksaan fisik by id_item_fisik
-            $pemeriksaanFisikMap = [];
-            foreach ($pemeriksaanFisik ?? [] as $item) {
-                $pemeriksaanFisikMap[$item->id_item_fisik] = $item;
-            }
-
-            // Split items into two columns
-            $totalItems = count($fisikItems);
-            $halfCount = ceil($totalItems / 2);
-            $firstColumn = array_slice($fisikItems, 0, $halfCount, true);
-            $secondColumn = array_slice($fisikItems, $halfCount, null, true);
-            $maxRows = max(count($firstColumn), count($secondColumn));
+            $pemeriksaanFisikParu = $asesmen->rmeAsesmenParuPemeriksaanFisik->first();
         @endphp
-
-        @for ($i = 0; $i < $maxRows; $i++)
+        
+        <table class="detail-table" border="1" cellpadding="6" cellspacing="0">
             <tr>
-                <!-- First Column -->
-                <td class="col-header" style="width: 25%;">
-                    @if (isset($firstColumn[array_keys($firstColumn)[$i]]))
-                        @php
-                            $itemId = array_keys($firstColumn)[$i];
-                            $itemName = $firstColumn[$itemId];
-                            $pemeriksaan = $pemeriksaanFisikMap[$itemId] ?? null;
-                            $status = optional($pemeriksaan)->is_normal;
-                            $keterangan = optional($pemeriksaan)->keterangan;
-                            $prefix = chr(97 + array_key_first($firstColumn) + $i); // a, b, c, ...
-                        @endphp
-                        {{ $prefix }}. {{ $itemName }}
-                    @else
-                        &nbsp;
-                    @endif
-                </td>
-                <td style="width: 25%;">
-                    @if (isset($firstColumn[array_keys($firstColumn)[$i]]))
-                        @if($status === 1 || $status === '1')
-                            Normal
-                        @elseif($status === 0 || $status === '0')
-                            Tidak Normal
-                            @if($keterangan)
-                                - {{ $keterangan }}
-                            @endif
-                        @else
-                            Tidak Diperiksa
-                        @endif
-                    @else
-                        &nbsp;
-                    @endif
-                </td>
-
-                <!-- Second Column -->
-                <td class="col-header" style="width: 25%;">
-                    @if (isset($secondColumn[array_keys($secondColumn)[$i]]))
-                        @php
-                            $itemId = array_keys($secondColumn)[$i];
-                            $itemName = $secondColumn[$itemId];
-                            $pemeriksaan = $pemeriksaanFisikMap[$itemId] ?? null;
-                            $status = optional($pemeriksaan)->is_normal;
-                            $keterangan = optional($pemeriksaan)->keterangan;
-                            $prefix = chr(97 + array_key_first($secondColumn) + $i); // continues from first column
-                        @endphp
-                        {{ $prefix }}. {{ $itemName }}
-                    @else
-                        &nbsp;
-                    @endif
-                </td>
-                <td style="width: 25%;">
-                    @if (isset($secondColumn[array_keys($secondColumn)[$i]]))
-                        @if($status === 1 || $status === '1')
-                            Normal
-                        @elseif($status === 0 || $status === '0')
-                            Tidak Normal
-                            @if($keterangan)
-                                - {{ $keterangan }}
-                            @endif
-                        @else
-                            Tidak Diperiksa
-                        @endif
-                    @else
-                        &nbsp;
+                <td colspan="2" class="text-center fw-bold bg-light">PEMERIKSAAN FISIK</td>
+            </tr>
+            
+            <tr>
+                <td class="col-header fw-bold">a. Kepala:</td>
+                <td>
+                    {{ ($pemeriksaanFisikParu->paru_kepala ?? 1) == 1 ? 'Normal' : 'Tidak Normal' }}
+                    @if(($pemeriksaanFisikParu->paru_kepala ?? 1) == 0 && $pemeriksaanFisikParu->paru_kepala_keterangan)
+                        <br><small class="text-muted">Keterangan: {{ $pemeriksaanFisikParu->paru_kepala_keterangan }}</small>
                     @endif
                 </td>
             </tr>
-        @endfor
-    </table>
-</div>
+            
+            <tr>
+                <td class="col-header fw-bold">b. Mata:</td>
+                <td>
+                    {{ ($pemeriksaanFisikParu->paru_mata ?? 1) == 1 ? 'Normal' : 'Tidak Normal' }}
+                    @if(($pemeriksaanFisikParu->paru_mata ?? 1) == 0 && $pemeriksaanFisikParu->paru_mata_keterangan)
+                        <br><small class="text-muted">Keterangan: {{ $pemeriksaanFisikParu->paru_mata_keterangan }}</small>
+                    @endif
+                </td>
+            </tr>
+            
+            <tr>
+                <td class="col-header fw-bold">c. THT:</td>
+                <td>
+                    {{ ($pemeriksaanFisikParu->paru_tht ?? 1) == 1 ? 'Normal' : 'Tidak Normal' }}
+                    @if(($pemeriksaanFisikParu->paru_tht ?? 1) == 0 && $pemeriksaanFisikParu->paru_tht_keterangan)
+                        <br><small class="text-muted">Keterangan: {{ $pemeriksaanFisikParu->paru_tht_keterangan }}</small>
+                    @endif
+                </td>
+            </tr>
+            
+            <tr>
+                <td class="col-header fw-bold">d. Leher:</td>
+                <td>
+                    {{ ($pemeriksaanFisikParu->paru_leher ?? 1) == 1 ? 'Normal' : 'Tidak Normal' }}
+                    @if(($pemeriksaanFisikParu->paru_leher ?? 1) == 0 && $pemeriksaanFisikParu->paru_leher_keterangan)
+                        <br><small class="text-muted">Keterangan: {{ $pemeriksaanFisikParu->paru_leher_keterangan }}</small>
+                    @endif
+                </td>
+            </tr>
+            
+            <tr>
+                <td colspan="2" class="col-header fw-bold">e. Thoraks</td>
+            </tr>
+            
+            <tr>
+                <td class="ps-4 fw-bold">Jantung:</td>
+                <td>
+                    {{ ($pemeriksaanFisikParu->paru_jantung ?? 1) == 1 ? 'Normal' : 'Tidak Normal' }}
+                    @if(($pemeriksaanFisikParu->paru_jantung ?? 1) == 0 && $pemeriksaanFisikParu->paru_jantung_keterangan)
+                        <br><small class="text-muted">Keterangan: {{ $pemeriksaanFisikParu->paru_jantung_keterangan }}</small>
+                    @endif
+                </td>
+            </tr>
+            
+            <tr>
+                <td class="ps-4 fw-bold align-top">Paru:</td>
+                <td>
+                    <table style="width:100%; border:0;" border="0">
+                        <tr>
+                            <td style="width:140px;" class="fw-bold">Inspeksi</td>
+                            <td style="width:20px;">:</td>
+                            <td>
+                                {{ ucfirst($pemeriksaanFisikParu->paru_inspeksi ?? 'simetris') }}
+                                @if($pemeriksaanFisikParu->paru_inspeksi_keterangan)
+                                    - {{ $pemeriksaanFisikParu->paru_inspeksi_keterangan }}
+                                @endif
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="fw-bold">Palpasi</td>
+                            <td>:</td>
+                            <td>{{ $pemeriksaanFisikParu->paru_palpasi ?? '-' }}</td>
+                        </tr>
+                        <tr>
+                            <td class="fw-bold">Perkusi</td>
+                            <td>:</td>
+                            <td>{{ $pemeriksaanFisikParu->paru_perkusi ?? '-' }}</td>
+                        </tr>
+                        <tr>
+                            <td class="fw-bold">Auskultasi</td>
+                            <td>:</td>
+                            <td>{{ $pemeriksaanFisikParu->paru_auskultasi ?? '-' }}</td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+            
+            <tr>
+                <td colspan="2" class="ps-5 py-2">
+                    <strong>Suara Pernafasan (SP):</strong> 
+                    @php
+                        $sp = json_decode($pemeriksaanFisikParu->paru_suara_pernafasan ?? '[]', true) ?: [];
+                        $sp_display = array_map(function($item) {
+                            return ucwords(str_replace('_', ' ', $item));
+                        }, $sp);
+                    @endphp
+                    {{ implode(', ', $sp_display) ?: '-' }}
+                </td>
+            </tr>
+            
+            <tr>
+                <td colspan="2" class="ps-5 py-2">
+                    <strong>Suara Tambahan (ST):</strong> 
+                    @php
+                        $st = json_decode($pemeriksaanFisikParu->paru_suara_tambahan ?? '[]', true) ?: [];
+                        $st_display = array_map(function($item) {
+                            return ucwords(str_replace('_', ' ', $item));
+                        }, $st);
+                    @endphp
+                    {{ implode(', ', $st_display) ?: '-' }}
+                </td>
+            </tr>
+        </table>
+    </div>
 
     <!-- 7. Rencana Kerja dan Penatalaksanaan -->
     <div class="content-section">
@@ -819,9 +878,9 @@
             </tr>
         </table>
     </div>
-
-    <!-- Gambar Radiologi Paru -->
-    <div class="content-section">
+   
+    {{-- <!-- Gambar Radiologi Paru -->
+    <div class="content-section page-break">
         <div class="section-title">GAMBAR RADIOLOGI PARU</div>
         <div style="height: 120px; border: 1px solid #333; text-align: center; padding: 50px;">
             @if(optional($asesmen->rmeAsesmenParuDiagnosisImplementasi)->gambar_radiologi_paru)
@@ -831,7 +890,7 @@
                 [Area untuk gambar radiologi paru]
             @endif
         </div>
-    </div>
+    </div> --}}
 
     <!-- 10. Implementasi -->
     <div class="content-section">
@@ -845,66 +904,34 @@
         @endphp
 
         <div class="two-column">
-            <h6 style="font-weight: bold; margin-bottom: 10px;">Observasi:</h6>
-            @if(is_array($observasi) && !empty($observasi))
-                @foreach($observasi as $index => $item)
-                    {{ $index + 1 }}. {{ $item }}<br>
-                @endforeach
-            @else
-                .....................................<br><br><br>
-            @endif
-
-            <h6 style="font-weight: bold; margin: 20px 0 10px 0;">Edukasi:</h6>
-            @if(is_array($edukasi) && !empty($edukasi))
-                @foreach($edukasi as $index => $item)
-                    {{ $index + 1 }}. {{ $item }}<br>
-                @endforeach
-            @else
-                .....................................<br><br><br>
-            @endif
+          {{ old('rencana_pengobatan', isset($asesmen->rmeAsesmenParu) ? $asesmen->rmeAsesmenParu->rencana_pengobatan : '') }}
         </div>
 
-        <div class="two-column">
-            <h6 style="font-weight: bold; margin-bottom: 10px;">Terapeutik:</h6>
-            @if(is_array($terapeutik) && !empty($terapeutik))
-                @foreach($terapeutik as $index => $item)
-                    {{ $index + 1 }}. {{ $item }}<br>
-                @endforeach
-            @else
-                .....................................<br><br><br>
-            @endif
-
-            <h6 style="font-weight: bold; margin: 20px 0 10px 0;">Kolaborasi:</h6>
-            @if(is_array($kolaborasi) && !empty($kolaborasi))
-                @foreach($kolaborasi as $index => $item)
-                    {{ $index + 1 }}. {{ $item }}<br>
-                @endforeach
-            @else
-                .....................................<br><br><br>
-            @endif
-        </div>
+       
         <div class="clear"></div>
     </div>
 
+  
     <!-- Prognosis -->
     <div class="content-section">
         <div class="section-title">PROGNOSIS</div>
         <div>
-            @if(optional($asesmen->rmeAsesmenParuDiagnosisImplementasi)->prognosis)
-                @php
-                    $prognosis = json_decode($asesmen->rmeAsesmenParuDiagnosisImplementasi->prognosis, true);
-                @endphp
-                @if(is_array($prognosis) && !empty($prognosis))
-                    @foreach($prognosis as $index => $item)
-                        {{ $index + 1 }}. {{ $item }}<br>
-                    @endforeach
-                @else
-                    {{ $asesmen->rmeAsesmenParuDiagnosisImplementasi->prognosis }}
-                @endif
-            @else
-                .....................................................................
-            @endif
+            @php
+                  
+                    $prognosisData = $satsetPrognosis;
+                  
+                    $valuePrognosis = null;
+
+                    foreach ($prognosisData as $item) {
+                        if ($item->prognosis_id ==  $asesmen->rmeAsesmenParu->paru_prognosis) {
+                            $valuePrognosis = $item->value;
+                            break;
+                        }
+                    }
+            @endphp
         </div>
+       
+        <p> {{ $valuePrognosis ?? '-' }}</p>
     </div>
 
     <!-- Tanda Tangan -->
