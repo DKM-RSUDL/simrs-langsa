@@ -86,6 +86,21 @@
             @else
                 <p>Data asesmen opthamology tidak ditemukan untuk kunjungan ini.</p>
             @endif
+
+            @if ($asesmenMedisAnak)
+                @include('unit-pelayanan.rawat-inap.pelayanan.asesmen-medis-anak.print', [
+                    'data' => [
+                        'asesmen' => $asesmenMedisAnak,
+                        'dataMedis' => $dataMedis,
+                        'rmeMasterDiagnosis' => $rmeMasterDiagnosisMedisAnak,
+                        'rmeMasterImplementasi' => $rmeMasterImplementasiMedisAnak,
+                        'satsetPrognosis' => $satsetPrognosisMedisAnak,
+                        'alergiPasien' => $alergiPasienMedisAnak,
+                    ],
+                ])
+            @else
+                <p>Data asesmen medis anak tidak ditemukan untuk kunjungan ini.</p>
+            @endif
         </div>
     </x-content-card>
     <x-content-card>

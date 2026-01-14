@@ -373,6 +373,22 @@ class BerkasDigitalController extends Controller
         $rmeMasterImplementasiOpthamology = $asesmenOpthamologyData['rmeMasterImplementasi'];
         $satsetPrognosisOpthamology = $asesmenOpthamologyData['satsetPrognosis'];
 
+        // Ambil data Asesmen Medis Anak (Rawat Inap)
+        $asesmenMedisAnakData = $this->berkasDigitalService->getAsesmenMedisAnakData($dataMedis);
+        if ($asesmenMedisAnakData) {
+            extract($asesmenMedisAnakData);
+            $rmeMasterDiagnosisMedisAnak = $rmeMasterDiagnosis;
+            $rmeMasterImplementasiMedisAnak = $rmeMasterImplementasi;
+            $satsetPrognosisMedisAnak = $satsetPrognosis;
+            $alergiPasienMedisAnak = $alergiPasien;
+        } else {
+            $asesmenMedisAnak = null;
+            $rmeMasterDiagnosisMedisAnak = collect([]);
+            $rmeMasterImplementasiMedisAnak = collect([]);
+            $satsetPrognosisMedisAnak = collect([]);
+            $alergiPasienMedisAnak = collect([]);
+        }
+
         return view('berkas-digital.document.show', compact(
             'listDokumen',
             'dataMedis',
@@ -442,7 +458,13 @@ class BerkasDigitalController extends Controller
             'itemFisikOpthamology',
             'rmeMasterDiagnosisOpthamology',
             'rmeMasterImplementasiOpthamology',
-            'satsetPrognosisOpthamology'
+            'satsetPrognosisOpthamology',
+            // asesmen medis anak
+            'asesmenMedisAnak',
+            'rmeMasterDiagnosisMedisAnak',
+            'rmeMasterImplementasiMedisAnak',
+            'satsetPrognosisMedisAnak',
+            'alergiPasienMedisAnak'
         ));
     }
 
