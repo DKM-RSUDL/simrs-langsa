@@ -234,7 +234,7 @@
         <div class="clear"></div>
     </header>
 
-    <div class="section-title mt-3">1. Data masuk</div>
+    <div class="section-title">1. Data masuk</div>
     <table class="detail-table">
         <tr>
             <td style="width: 25%"><strong>Petugas</strong></td>
@@ -309,7 +309,7 @@
             <td style="width: 25%"><strong>Tek Darah (mmHg)</strong></td>
             <td style="width: 25%">
                 Sistole: {{ $asesmen->rmeAsesmenObstetriPemeriksaanFisik->tekanan_darah_sistole ?? '-' }}<br>
-                Diastole: {{ $asesmen->rmeAsesmenObstetriPemeriksaanFisik->tekanan_darah_sistole ?? '-' }}
+                Diastole: {{ $asesmen->rmeAsesmenObstetriPemeriksaanFisik->tekanan_darah_diastole ?? '-' }}
             </td>
         </tr>
         <tr>
@@ -359,8 +359,8 @@
             <td colspan="4" style="background-color: #f5f5f5; font-weight: bold;">Pemeriksaan Fisik Komprehensif</td>
         </tr>
         <tr>
-            <td><strong>Posisi Janin</strong></td>
-            <td>
+            <td colspan=""><strong>Posisi Janin</strong></td>
+            <td colspan="">
                 @if(isset($asesmen->rmeAsesmenObstetriPemeriksaanFisik->komprehensif_posisi_janin))
                     @if($asesmen->rmeAsesmenObstetriPemeriksaanFisik->komprehensif_posisi_janin == 1)
                         Ya
@@ -373,25 +373,10 @@
                     -
                 @endif
             </td>
-            <td><strong>Presentasi Janin</strong></td>
-            <td>
-                @if(isset($asesmen->rmeAsesmenObstetriPemeriksaanFisik->kontraksi_presentasi_janin))
-                    @if($asesmen->rmeAsesmenObstetriPemeriksaanFisik->kontraksi_presentasi_janin == 1)
-                        Ya
-                    @elseif($asesmen->rmeAsesmenObstetriPemeriksaanFisik->kontraksi_presentasi_janin == 0)
-                        Tidak
-                    @else
-                        {{ $asesmen->rmeAsesmenObstetriPemeriksaanFisik->kontraksi_presentasi_janin }}
-                    @endif
-                @else
-                    -
-                @endif
-            </td>
-        </tr>
-        <tr>
             <td><strong>Tinggi Fundus Uteri (Cm)</strong></td>
-            <td colspan="3">{{ $asesmen->rmeAsesmenObstetriPemeriksaanFisik->komprehensif_tinggi_fundus ?? '-' }}</td>
+            <td >{{ $asesmen->rmeAsesmenObstetriPemeriksaanFisik->komprehensif_tinggi_fundus ?? '-' }}</td>
         </tr>
+     
 
         <tr>
             <td colspan="4" style="background-color: #f5f5f5; font-weight: bold;">Kontraksi (HIS)</td>
@@ -415,13 +400,28 @@
             </td>
         </tr>
         <tr>
+            <td><strong>Presentasi Janin</strong></td>
+            <td>
+                @if(isset($asesmen->rmeAsesmenObstetriPemeriksaanFisik->kontraksi_presentasi_janin))
+                    @if($asesmen->rmeAsesmenObstetriPemeriksaanFisik->kontraksi_presentasi_janin == 1)
+                        Ya
+                    @elseif($asesmen->rmeAsesmenObstetriPemeriksaanFisik->kontraksi_presentasi_janin == 0)
+                        Tidak
+                    @else
+                        {{ $asesmen->rmeAsesmenObstetriPemeriksaanFisik->kontraksi_presentasi_janin }}
+                    @endif
+                @else
+                    -
+                @endif
+            </td>
             <td><strong>Irama</strong></td>
             <td>
-                @if(isset($asesmen->rmeAsesmenObstetriPemeriksaanFisik->kontraksi_irama))
+
+                @if($asesmen->rmeAsesmenObstetriPemeriksaanFisik->kontraksi_irama)
                     @if($asesmen->rmeAsesmenObstetriPemeriksaanFisik->kontraksi_irama == 1)
-                        Ya
+                        Memanjang
                     @elseif($asesmen->rmeAsesmenObstetriPemeriksaanFisik->kontraksi_irama == 0)
-                        Tidak
+                        Lintang
                     @else
                         {{ $asesmen->rmeAsesmenObstetriPemeriksaanFisik->kontraksi_irama }}
                     @endif
@@ -429,8 +429,11 @@
                     -
                 @endif
             </td>
-            <td><strong>Sikap Janin</strong></td>
-            <td>
+            
+        </tr>
+        <tr>
+            <td colspan="2"><strong>Sikap Janin</strong></td>
+            <td colspan="2">
                 @if(isset($asesmen->rmeAsesmenObstetriPemeriksaanFisik->kontraksi_sikap_janin))
                     @if($asesmen->rmeAsesmenObstetriPemeriksaanFisik->kontraksi_sikap_janin == 1)
                         Ya
@@ -455,9 +458,9 @@
             <td>
                 @if(isset($asesmen->rmeAsesmenObstetriPemeriksaanFisik->djj_irama))
                     @if($asesmen->rmeAsesmenObstetriPemeriksaanFisik->djj_irama == 1)
-                        Ya
+                        Teratur
                     @elseif($asesmen->rmeAsesmenObstetriPemeriksaanFisik->djj_irama == 0)
-                        Tidak
+                        Tidak Teratur
                     @else
                         {{ $asesmen->rmeAsesmenObstetriPemeriksaanFisik->djj_irama }}
                     @endif
@@ -473,13 +476,13 @@
         <tr>
             <td><strong>Konsistensi</strong></td>
             <td>
-                @if(isset($asesmen->rmeAsesmenObstetriPemeriksaanFisik->Konsistensi))
-                    @if($asesmen->rmeAsesmenObstetriPemeriksaanFisik->Konsistensi == 1)
-                        Ya
-                    @elseif($asesmen->rmeAsesmenObstetriPemeriksaanFisik->Konsistensi == 0)
-                        Tidak
+                @if($asesmen->rmeAsesmenObstetriPemeriksaanFisik->serviks_konsistensi)
+                    @if($asesmen->rmeAsesmenObstetriPemeriksaanFisik->serviks_konsistensi == 1)
+                        Lunak
+                    @elseif($asesmen->rmeAsesmenObstetriPemeriksaanFisik->serviks_konsistensi == 0)
+                        Kaku
                     @else
-                        {{ $asesmen->rmeAsesmenObstetriPemeriksaanFisik->Konsistensi }}
+                        {{ $asesmen->rmeAsesmenObstetriPemeriksaanFisik->serviks_konsistensi }}
                     @endif
                 @else
                     -
@@ -491,13 +494,13 @@
         <tr>
             <td><strong>Penurunan</strong></td>
             <td>{{ $asesmen->rmeAsesmenObstetriPemeriksaanFisik->serviks_penurunan ?? '-' }}</td>
-            <td><strong>Pembukaan</strong></td>
+            <td><strong>Pendataran</strong></td>
             <td>
                 {{ $asesmen->rmeAsesmenObstetriPemeriksaanFisik->serviks_pembukaan ?? '-' }}
                 <br>
                 jam:
                 @if(isset($asesmen->rmeAsesmenObstetriPemeriksaanFisik->serviks_jam_pembukaan))
-                    {{ \Carbon\Carbon::parse($asesmen->rmeAsesmenObstetriPemeriksaanFisik->serviks_jam_pembukaan)->format('H:i') }}
+                    {{ $asesmen->rmeAsesmenObstetriPemeriksaanFisik->serviks_jam_pembukaan }}
                 @else
                     -
                 @endif
@@ -510,12 +513,62 @@
             <td>
                 @if(isset($asesmen->rmeAsesmenObstetriPemeriksaanFisik->serviks_irama))
                     @if($asesmen->rmeAsesmenObstetriPemeriksaanFisik->serviks_irama == 1)
-                        Ya
+                        Teratur
                     @elseif($asesmen->rmeAsesmenObstetriPemeriksaanFisik->serviks_irama == 0)
-                        Tidak
+                        Tidak Teratur
                     @else
                         {{ $asesmen->rmeAsesmenObstetriPemeriksaanFisik->serviks_irama }}
                     @endif
+                @else
+                    -
+                @endif
+            </td>
+        </tr>
+        <tr>
+            <td><strong>Selaput Ketuban</strong></td>
+            <td>
+                @if (isset($asesmen->rmeAsesmenObstetriPemeriksaanFisik->panggul_selaput_ketuban))
+                    @if($asesmen->rmeAsesmenObstetriPemeriksaanFisik->panggul_selaput_ketuban  == 'Utuh')
+                            Utuh
+                    @elseif($asesmen->rmeAsesmenObstetriPemeriksaanFisik->panggul_selaput_ketuban  == 'Pecah')
+                                Pecah
+                    @else
+                            -
+                    @endif
+                @endif
+            </td>
+            <td><strong>Air Ketuban</strong></td>
+            <td>
+                @if(isset($asesmen->rmeAsesmenObstetriPemeriksaanFisik->panggul_air_ketuban))
+                    @if($asesmen->rmeAsesmenObstetriPemeriksaanFisik->panggul_air_ketuban  == 'Jernih')
+                        Jernih
+                    @elseif($asesmen->rmeAsesmenObstetriPemeriksaanFisik->panggul_air_ketuban  == 'Keruh')
+                        Keruh
+                    @elseif($asesmen->rmeAsesmenObstetriPemeriksaanFisik->panggul_air_ketuban  == 'Bau')
+                        Bau
+                    @else
+                       -
+                    @endif
+                @else
+                    -
+                @endif
+            </td>
+        </tr>
+         <tr>
+            <td colspan="2"><strong>Presentasi</strong></td>
+            <td colspan="2">
+                 @if(isset($asesmen->rmeAsesmenObstetriPemeriksaanFisik->panggul_presentasi))
+                        @if($asesmen->rmeAsesmenObstetriPemeriksaanFisik->panggul_presentasi  == 'Belakang Kepala')
+                            Belakang Kepala
+                        @elseif($asesmen->rmeAsesmenObstetriPemeriksaanFisik->panggul_presentasi  == 'Puncak')
+                            Puncak
+                        @elseif($asesmen->rmeAsesmenObstetriPemeriksaanFisik->panggul_presentasi  == 'Dahi')
+                            Dahi
+                        @elseif($asesmen->rmeAsesmenObstetriPemeriksaanFisik->panggul_presentasi  == 'Muka')
+                            Muka
+                        @else
+                        -
+                        @endif
                 @else
                     -
                 @endif
@@ -530,9 +583,9 @@
             <td>
                 @if(isset($asesmen->rmeAsesmenObstetriPemeriksaanFisik->panggul_promontorium))
                     @if($asesmen->rmeAsesmenObstetriPemeriksaanFisik->panggul_promontorium == 1)
-                        Ya
+                        Teraba
                     @elseif($asesmen->rmeAsesmenObstetriPemeriksaanFisik->panggul_promontorium == 0)
-                        Tidak
+                        Tidak Teraba
                     @else
                         {{ $asesmen->rmeAsesmenObstetriPemeriksaanFisik->panggul_promontorium }}
                     @endif
@@ -540,29 +593,13 @@
                     -
                 @endif
             </td>
-            <td><strong>Spina Ischiadika</strong></td>
-            <td>
-                @if(isset($asesmen->rmeAsesmenObstetriPemeriksaanFisik->panggul_spina_ischiadika))
-                    @if($asesmen->rmeAsesmenObstetriPemeriksaanFisik->panggul_spina_ischiadika == 1)
-                        Ya
-                    @elseif($asesmen->rmeAsesmenObstetriPemeriksaanFisik->panggul_spina_ischiadika == 0)
-                        Tidak
-                    @else
-                        {{ $asesmen->rmeAsesmenObstetriPemeriksaanFisik->panggul_spina_ischiadika }}
-                    @endif
-                @else
-                    -
-                @endif
-            </td>
-        </tr>
-        <tr>
             <td><strong>Line Terminalis</strong></td>
             <td>
                 @if(isset($asesmen->rmeAsesmenObstetriPemeriksaanFisik->panggul_line_terminalis))
                     @if($asesmen->rmeAsesmenObstetriPemeriksaanFisik->panggul_line_terminalis == 1)
-                        Ya
+                        Teraba 2/3
                     @elseif($asesmen->rmeAsesmenObstetriPemeriksaanFisik->panggul_line_terminalis == 0)
-                        Tidak
+                        Tidak Teraba
                     @else
                         {{ $asesmen->rmeAsesmenObstetriPemeriksaanFisik->panggul_line_terminalis }}
                     @endif
@@ -570,8 +607,37 @@
                     -
                 @endif
             </td>
+           
+        </tr>
+        <tr>
+            <td><strong>Spina Ischiadika</strong></td>
+            <td>
+                @if(isset($asesmen->rmeAsesmenObstetriPemeriksaanFisik->panggul_spina_ischiadika))
+                    @if($asesmen->rmeAsesmenObstetriPemeriksaanFisik->panggul_spina_ischiadika == 1)
+                        Menonjol
+                    @elseif($asesmen->rmeAsesmenObstetriPemeriksaanFisik->panggul_spina_ischiadika == 0)
+                        Tidak Menonjol
+                    @else
+                        {{ $asesmen->rmeAsesmenObstetriPemeriksaanFisik->panggul_spina_ischiadika }}
+                    @endif
+                @else
+                    -
+                @endif
+            </td>
             <td><strong>Arkus Pubis</strong></td>
-            <td>{{ $asesmen->rmeAsesmenObstetriPemeriksaanFisik->panggul_arkus_pubis ?? '-' }}</td>
+            <td>
+                @if(isset($asesmen->rmeAsesmenObstetriPemeriksaanFisik->panggul_arkus_pubis))
+                    @if($asesmen->rmeAsesmenObstetriPemeriksaanFisik->panggul_arkus_pubis == 'lancip')
+                       Lancip
+                    @elseif($asesmen->rmeAsesmenObstetriPemeriksaanFisik->panggul_arkus_pubis == 'tumpul')
+                        Tumpul
+                    @else
+                        {{ $asesmen->rmeAsesmenObstetriPemeriksaanFisik->panggul_arkus_pubis }}
+                    @endif
+                @else
+                    -
+                @endif
+            </td>
         </tr>
         <tr>
             <td><strong>Lengkung Sakrum</strong></td>
@@ -585,16 +651,8 @@
             <td><strong>Pembukaan (Cm)</strong></td>
             <td>{{ $asesmen->rmeAsesmenObstetriPemeriksaanFisik->panggul_pembukaan_cm ?? '-' }}</td>
         </tr>
-        <tr>
-            <td><strong>Selaput Ketuban</strong></td>
-            <td>{{ $asesmen->rmeAsesmenObstetriPemeriksaanFisik->panggul_selaput_ketuban ?? '-' }}</td>
-            <td><strong>Air Ketuban</strong></td>
-            <td>{{ $asesmen->rmeAsesmenObstetriPemeriksaanFisik->panggul_air_ketuban ?? '-' }}</td>
-        </tr>
-        <tr>
-            <td><strong>Presentasi</strong></td>
-            <td colspan="3">{{ $asesmen->rmeAsesmenObstetriPemeriksaanFisik->panggul_presentasi ?? '-' }}</td>
-        </tr>
+
+
 
         <tr>
             <td colspan="4" style="background-color: #f5f5f5; font-weight: bold;">Antropometri</td>
@@ -816,9 +874,6 @@
         </tr>
 
         <tr>
-            <td colspan="4" style="background-color: #f5f5f5; font-weight: bold;">Riwayat Kehamilan Sekarang</td>
-        </tr>
-        <tr>
             <td><strong>Riwayat Kehamilan Sekarang</strong></td>
             <td colspan="3">
                 @if(isset($asesmen->rmeAsesmenObstetriRiwayatKesehatan->riwayat_kehamilan_sekarang) && $asesmen->rmeAsesmenObstetriRiwayatKesehatan->riwayat_kehamilan_sekarang)
@@ -842,8 +897,6 @@
             </td>
         </tr>
         <tr>
-            <td><strong>Penambahan BB Selama Hamil (Kg)</strong></td>
-            <td>{{ $asesmen->rmeAsesmenObstetriRiwayatKesehatan->penambahan_bb ?? '-' }}</td>
             <td><strong>Kebiasaan Ibu Sewaktu Hamil</strong></td>
             <td>
                 @if(isset($asesmen->rmeAsesmenObstetriRiwayatKesehatan->kebiasaan_ibu_hamil) && $asesmen->rmeAsesmenObstetriRiwayatKesehatan->kebiasaan_ibu_hamil)
@@ -865,63 +918,44 @@
                     -
                 @endif
             </td>
+            <td><strong>Penambahan BB Selama Hamil (Kg)</strong></td>
+            <td>{{ $asesmen->rmeAsesmenObstetriRiwayatKesehatan->penambahan_bb ?? '-' }}</td>
         </tr>
 
+     
         <tr>
-            <td colspan="4" style="background-color: #f5f5f5; font-weight: bold;">Dukungan Sosial</td>
-        </tr>
-        <tr>
-            <td><strong>Dukungan Sosial</strong></td>
-            <td>
-                @if(isset($asesmen->rmeAsesmenObstetriStatusNyeri->dukungan_sosial))
-                    @if($asesmen->rmeAsesmenObstetriStatusNyeri->dukungan_sosial == 1)
-                        Ya
-                    @elseif($asesmen->rmeAsesmenObstetriStatusNyeri->dukungan_sosial == 0)
-                        Tidak
-                    @else
-                        {{ $asesmen->rmeAsesmenObstetriStatusNyeri->dukungan_sosial }}
-                    @endif
-                @else
-                    -
-                @endif
-            </td>
             <td><strong>Kehamilan Diinginkan</strong></td>
             <td>
-                @if(isset($asesmen->rmeAsesmenObstetriStatusNyeri->kehamilan_diinginkan))
-                    @if($asesmen->rmeAsesmenObstetriStatusNyeri->kehamilan_diinginkan == 1)
+                @if(isset($asesmen->rmeAsesmenObstetriRiwayatKesehatan->kehamilan_diinginkan))
+                    @if($asesmen->rmeAsesmenObstetriRiwayatKesehatan->kehamilan_diinginkan == 1)
                         Ya
-                    @elseif($asesmen->rmeAsesmenObstetriStatusNyeri->kehamilan_diinginkan == 0)
+                    @elseif($asesmen->rmeAsesmenObstetriRiwayatKesehatan->kehamilan_diinginkan == 0)
                         Tidak
                     @else
-                        {{ $asesmen->rmeAsesmenObstetriStatusNyeri->kehamilan_diinginkan }}
+                        {{ $asesmen->rmeAsesmenObstetriRiwayatKesehatan->kehamilan_diinginkan }}
                     @endif
                 @else
                     -
                 @endif
             </td>
+            <td><strong>Dukungan Sosial</strong></td>
+            <td>
+                @if(isset($asesmen->rmeAsesmenObstetriRiwayatKesehatan->dukungan_sosial))
+                    @if($asesmen->rmeAsesmenObstetriRiwayatKesehatan->dukungan_sosial == 1)
+                        Ya
+                    @elseif($asesmen->rmeAsesmenObstetriRiwayatKesehatan->dukungan_sosial == 0)
+                        Tidak
+                    @else
+                        {{ $asesmen->rmeAsesmenObstetriRiwayatKesehatan->dukungan_sosial }}
+                    @endif
+                @else
+                    -
+                @endif
+            </td>
+            
+            
         </tr>
         <tr>
-            <td><strong>Pendamping</strong></td>
-            <td>
-                @if(isset($asesmen->rmeAsesmenObstetriRiwayatKesehatan->pendamping) && $asesmen->rmeAsesmenObstetriRiwayatKesehatan->pendamping)
-                    @php
-                        $pendamping = is_string($asesmen->rmeAsesmenObstetriRiwayatKesehatan->pendamping) ?
-                            json_decode($asesmen->rmeAsesmenObstetriRiwayatKesehatan->pendamping, true) :
-                            $asesmen->rmeAsesmenObstetriRiwayatKesehatan->pendamping;
-                    @endphp
-                    @if(is_array($pendamping))
-                        <ul style="margin: 0; padding-left: 15px;">
-                            @foreach($pendamping as $item)
-                                <li style="font-size: 9px;">{{ $item }}</li>
-                            @endforeach
-                        </ul>
-                    @else
-                        {{ $pendamping }}
-                    @endif
-                @else
-                    -
-                @endif
-            </td>
             <td><strong>Pengambilan Keputusan</strong></td>
             <td>
                 @if(isset($asesmen->rmeAsesmenObstetriRiwayatKesehatan->pengambilan_keputusan) && $asesmen->rmeAsesmenObstetriRiwayatKesehatan->pengambilan_keputusan)
@@ -943,23 +977,45 @@
                     -
                 @endif
             </td>
+            <td><strong>Pendamping</strong></td>
+            <td>
+                @if(isset($asesmen->rmeAsesmenObstetriRiwayatKesehatan->pendamping) && $asesmen->rmeAsesmenObstetriRiwayatKesehatan->pendamping)
+                    @php
+                        $pendamping = is_string($asesmen->rmeAsesmenObstetriRiwayatKesehatan->pendamping) ?
+                            json_decode($asesmen->rmeAsesmenObstetriRiwayatKesehatan->pendamping, true) :
+                            $asesmen->rmeAsesmenObstetriRiwayatKesehatan->pendamping;
+                    @endphp
+                    @if(is_array($pendamping))
+                        <ul style="margin: 0; padding-left: 15px;">
+                            @foreach($pendamping as $item)
+                                <li style="font-size: 9px;">{{ $item }}</li>
+                            @endforeach
+                        </ul>
+                    @else
+                        {{ $pendamping }}
+                    @endif
+                @else
+                    -
+                @endif
+            </td>
+            
         </tr>
-
         <tr>
-            <td colspan="4" style="background-color: #f5f5f5; font-weight: bold;">Riwayat Kesehatan</td>
-        </tr>
-        <tr>
-            <td><strong>Eliminasi (Defekasi)</strong></td>
+            <td><strong>Eliminasi </strong></td>
             <td>{{ $asesmen->rmeAsesmenObstetriRiwayatKesehatan->eliminasi ?? '-' }}</td>
+            <td><strong>Defaksi </strong></td>
+            <td>{{ $asesmen->rmeAsesmenObstetriRiwayatKesehatan->defaksi ?? '-' }}</td>
+        </tr>
+        <tr>
             <td><strong>Riwayat Rawat Inap</strong></td>
             <td>
-                @if(isset($asesmen->rmeAsesmenObstetriStatusNyeri->riwayat_rawat_inap))
-                    @if($asesmen->rmeAsesmenObstetriStatusNyeri->riwayat_rawat_inap == 1)
+                @if(isset($asesmen->rmeAsesmenObstetriRiwayatKesehatan->riwayat_rawat_inap))
+                    @if($asesmen->rmeAsesmenObstetriRiwayatKesehatan->riwayat_rawat_inap == 1)
                         Ya
-                    @elseif($asesmen->rmeAsesmenObstetriStatusNyeri->riwayat_rawat_inap == 0)
+                    @elseif($asesmen->rmeAsesmenObstetriRiwayatKesehatan->riwayat_rawat_inap == 0)
                         Tidak
                     @else
-                        {{ $asesmen->rmeAsesmenObstetriStatusNyeri->riwayat_rawat_inap }}
+                        {{ $asesmen->rmeAsesmenObstetriRiwayatKesehatan->riwayat_rawat_inap }}
                     @endif
                     <br>
                     Tanggal: {{ $asesmen->rmeAsesmenObstetriRiwayatKesehatan->tanggal_rawat ?? '-' }}
@@ -967,42 +1023,25 @@
                     -
                 @endif
             </td>
-        </tr>
-        <tr>
             <td><strong>Konsumsi Obat-Obatan</strong></td>
             <td>
-                @if(isset($asesmen->rmeAsesmenObstetriStatusNyeri->konsumsi_obat))
-                    @if($asesmen->rmeAsesmenObstetriStatusNyeri->konsumsi_obat == 1)
+                @if(isset($asesmen->rmeAsesmenObstetriRiwayatKesehatan->konsumsi_obat))
+                    @if($asesmen->rmeAsesmenObstetriRiwayatKesehatan->konsumsi_obat == 1)
                         Ya
-                    @elseif($asesmen->rmeAsesmenObstetriStatusNyeri->konsumsi_obat == 0)
+                    @elseif($asesmen->rmeAsesmenObstetriRiwayatKesehatan->konsumsi_obat == 0)
                         Tidak
                     @else
-                        {{ $asesmen->rmeAsesmenObstetriStatusNyeri->konsumsi_obat }}
+                        {{ $asesmen->rmeAsesmenObstetriRiwayatKesehatan->konsumsi_obat }}
                     @endif
                 @else
                     -
                 @endif
             </td>
-            <td><strong>Pemeriksaan antenatal di tempat lain</strong></td>
-            <td>
-                @if(isset($asesmen->rmeAsesmenObstetriStatusNyeri->antenatal_lain))
-                    @if($asesmen->rmeAsesmenObstetriStatusNyeri->antenatal_lain == 1)
-                        Ya
-                    @elseif($asesmen->rmeAsesmenObstetriStatusNyeri->antenatal_lain == 0)
-                        Tidak
-                    @else
-                        {{ $asesmen->rmeAsesmenObstetriStatusNyeri->antenatal_lain }}
-                    @endif
-                    <br>
-                    Berapa kali: {{ $asesmen->rmeAsesmenObstetriRiwayatKesehatan->berapa_kali ?? '-' }}
-                @else
-                    -
-                @endif
-            </td>
+           
         </tr>
         <tr>
-            <td><strong>Riwayat Penyakit Keluarga</strong></td>
-            <td colspan="3">
+             <td><strong>Riwayat Penyakit Keluarga</strong></td>
+            <td >
                 @if(isset($asesmen->rmeAsesmenObstetriRiwayatKesehatan->riwayat_penyakin_keluarwa) && $asesmen->rmeAsesmenObstetriRiwayatKesehatan->riwayat_penyakin_keluarwa)
                     @php
                         $riwayatPenyakitKeluarga = is_string($asesmen->rmeAsesmenObstetriRiwayatKesehatan->riwayat_penyakin_keluarwa) ?
@@ -1022,6 +1061,23 @@
                     -
                 @endif
             </td>
+            <td><strong>Pemeriksaan antenatal di tempat lain</strong></td>
+            <td>
+                @if(isset($asesmen->rmeAsesmenObstetriRiwayatKesehatan->antenatal_lain))
+                    @if($asesmen->rmeAsesmenObstetriRiwayatKesehatan->antenatal_lain == 1)
+                        Ya
+                    @elseif($asesmen->rmeAsesmenObstetriRiwayatKesehatan->antenatal_lain == 0)
+                        Tidak
+                    @else
+                        {{ $asesmen->rmeAsesmenObstetriRiwayatKesehatan->antenatal_lain }}
+                    @endif
+                    <br>
+                    Berapa kali: {{ $asesmen->rmeAsesmenObstetriRiwayatKesehatan->berapa_kali ?? '-' }}
+                @else
+                    -
+                @endif
+            </td>
+           
         </tr>
     </table>
 
@@ -1168,119 +1224,101 @@
         <tr>
             <td colspan="2" style="background-color: #f5f5f5; font-weight: bold;">Rencana Penatalaksanaan dan Pengobatan</td>
         </tr>
+
         <tr>
-            <td style="width: 50%; vertical-align: top;"><strong>Observasi</strong></td>
-            <td style="width: 50%; vertical-align: top;"><strong>Terapeutik</strong></td>
-        </tr>
-        <tr>
-            <td style="vertical-align: top;">
-                @if(isset($asesmen->rmeAsesmenObstetriDiagnosisImplementasi->observasi) && $asesmen->rmeAsesmenObstetriDiagnosisImplementasi->observasi)
-                    @php
-                        $observasi = is_string($asesmen->rmeAsesmenObstetriDiagnosisImplementasi->observasi) ?
-                            json_decode($asesmen->rmeAsesmenObstetriDiagnosisImplementasi->observasi, true) :
-                            $asesmen->rmeAsesmenObstetriDiagnosisImplementasi->observasi;
-                    @endphp
-                    @if(is_array($observasi))
-                        <ul style="margin: 0; padding-left: 15px;">
-                            @foreach($observasi as $item)
-                                <li style="font-size: 10px; margin-bottom: 3px;">{{ $item }}</li>
-                            @endforeach
-                        </ul>
-                    @else
-                        {{ $observasi }}
-                    @endif
-                @else
-                    -
-                @endif
-            </td>
-            <td style="vertical-align: top;">
-                @if(isset($asesmen->rmeAsesmenObstetriDiagnosisImplementasi->terapeutik) && $asesmen->rmeAsesmenObstetriDiagnosisImplementasi->terapeutik)
-                    @php
-                        $terapeutik = is_string($asesmen->rmeAsesmenObstetriDiagnosisImplementasi->terapeutik) ?
-                            json_decode($asesmen->rmeAsesmenObstetriDiagnosisImplementasi->terapeutik, true) :
-                            $asesmen->rmeAsesmenObstetriDiagnosisImplementasi->terapeutik;
-                    @endphp
-                    @if(is_array($terapeutik))
-                        <ul style="margin: 0; padding-left: 15px;">
-                            @foreach($terapeutik as $item)
-                                <li style="font-size: 10px; margin-bottom: 3px;">{{ $item }}</li>
-                            @endforeach
-                        </ul>
-                    @else
-                        {{ $terapeutik }}
-                    @endif
+            <td colspan="2" style="vertical-align: top;">
+                @if(isset($asesmen->asesmenObstetri->rencana_pengobatan ))
+                    {{ $asesmen->asesmenObstetri->rencana_pengobatan }}
                 @else
                     -
                 @endif
             </td>
         </tr>
+    </table>
+    <div class="section-title mt-3">9. Prognosis</div>
+    <table class="detail-table">
         <tr>
-            <td style="width: 50%; vertical-align: top;"><strong>Edukasi</strong></td>
-            <td style="width: 50%; vertical-align: top;"><strong>Kolaborasi</strong></td>
-        </tr>
-        <tr>
-            <td style="vertical-align: top;">
-                @if(isset($asesmen->rmeAsesmenObstetriDiagnosisImplementasi->edukasi) && $asesmen->rmeAsesmenObstetriDiagnosisImplementasi->edukasi)
-                    @php
-                        $edukasi = is_string($asesmen->rmeAsesmenObstetriDiagnosisImplementasi->edukasi) ?
-                            json_decode($asesmen->rmeAsesmenObstetriDiagnosisImplementasi->edukasi, true) :
-                            $asesmen->rmeAsesmenObstetriDiagnosisImplementasi->edukasi;
-                    @endphp
-                    @if(is_array($edukasi))
-                        <ul style="margin: 0; padding-left: 15px;">
-                            @foreach($edukasi as $item)
-                                <li style="font-size: 10px; margin-bottom: 3px;">{{ $item }}</li>
-                            @endforeach
-                        </ul>
-                    @else
-                        {{ $edukasi }}
-                    @endif
-                @else
-                    -
-                @endif
-            </td>
-            <td style="vertical-align: top;">
-                @if(isset($asesmen->rmeAsesmenObstetriDiagnosisImplementasi->kolaborasi) && $asesmen->rmeAsesmenObstetriDiagnosisImplementasi->kolaborasi)
-                    @php
-                        $kolaborasi = is_string($asesmen->rmeAsesmenObstetriDiagnosisImplementasi->kolaborasi) ?
-                            json_decode($asesmen->rmeAsesmenObstetriDiagnosisImplementasi->kolaborasi, true) :
-                            $asesmen->rmeAsesmenObstetriDiagnosisImplementasi->kolaborasi;
-                    @endphp
-                    @if(is_array($kolaborasi))
-                        <ul style="margin: 0; padding-left: 15px;">
-                            @foreach($kolaborasi as $item)
-                                <li style="font-size: 10px; margin-bottom: 3px;">{{ $item }}</li>
-                            @endforeach
-                        </ul>
-                    @else
-                        {{ $kolaborasi }}
-                    @endif
-                @else
-                    -
-                @endif
+            <td colspan="2" style="vertical-align: top;">
+                @php
+                    $prognosisData = $satsetPrognosis;
+                    $valuePrognosis = null;
+
+                    foreach ($prognosisData as $item) {
+                        if ($item->prognosis_id == $asesmen->asesmenObstetri->paru_prognosis) {
+                            $valuePrognosis = $item->value;
+                            break;
+                        }
+                    }
+                @endphp
+
+                {{ $valuePrognosis ?? '-' }}
             </td>
         </tr>
     </table>
 
-    <div class="section-title mt-3">9. Evaluasi</div>
+
+    <div class="section-title mt-3">10. Evaluasi</div>
+
     <table class="detail-table">
         <tr>
-            <td style="background-color: #f5f5f5; font-weight: bold;">Evaluasi</td>
+            <td colspan="4" style="background-color:#f5f5f5; font-weight:bold;">
+                10. Discharge Planning
+            </td>
         </tr>
+
         <tr>
+            <td>Usia lanjut</td>
             <td>
-                <strong>Diagnosis medis</strong>:
-                {{ $asesmen->asesmenObstetri->evaluasi_evaluasi ?? '-' }}
+                {{ ($asesmen->rmeAsesmenObstetriDischargePlanning->dp_usia_lanjut ?? '') == '1' ? 'Ya' : 'Tidak' }}
+            </td>
+            <td>Hambatan mobilisasi</td>
+            <td>
+                {{ ($asesmen->rmeAsesmenObstetriDischargePlanning->dp_hambatan_mobilisasi ?? '') == '1' ? 'Ya' : 'Tidak' }}
+            </td>
+        </tr>
+
+        <tr>
+            <td>Pelayanan medis berkelanjutan</td>
+            <td>
+                {{ ($asesmen->rmeAsesmenObstetriDischargePlanning->dp_layanan_medis_lanjutan ?? '') == '1' ? 'Ya' : 'Tidak' }}
+            </td>
+            <td>Ketergantungan aktivitas harian</td>
+            <td>
+                {{ ($asesmen->rmeAsesmenObstetriDischargePlanning->dp_tergantung_orang_lain ?? '') == '1' ? 'Ya' : 'Tidak' }}
+            </td>
+        </tr>
+
+        <tr>
+            <td>Lama dirawat</td>
+            <td>
+                {{ $asesmen->rmeAsesmenObstetriDischargePlanning->dp_lama_dirawat ?? '-' }} Hari
+            </td>
+            <td>Rencana pulang</td>
+            <td>
+                @if(isset($asesmen->rmeAsesmenObstetriDischargePlanning->dp_rencana_pulang))
+                    {{ \Carbon\Carbon::parse($asesmen->rmeAsesmenObstetriDischargePlanning->dp_rencana_pulang)->format('d M Y') }}
+                @else
+                    -
+                @endif
+            </td>
+        </tr>
+
+        <tr>
+            <td>Kesimpulan</td>
+            <td colspan="3">
+                {{ $asesmen->rmeAsesmenObstetriDischargePlanning->dp_kesimpulan ?? '-' }}
             </td>
         </tr>
     </table>
+
+
 
     <div class="sign-area">
         <div class="sign-box">
             <p>Perawat yang Melakukan Asesmen Awal Medis Obstetri</p>
-            <br><br><br>
-            <p>( _________________________ )</p>
-            <p>{{ $asesmen->user->name ?? '.............................' }}</p>
+            <br>
+            <img src="{{ generateQrCode(($asesmen->user->karyawan->gelar_depan ?? ' ') . str()->title($asesmen->user->karyawan->nama ?? ' ') . ($asesmen->user->karyawan->gelar_belakang ?? ' '), 120, 'svg_datauri') }}" alt="QR Code">
+            <p>{{ (($asesmen->user->karyawan->gelar_depan ?? ' ') . str()->title($asesmen->user->karyawan->nama ?? ' ') . ($asesmen->user->karyawan->gelar_belakang ?? ' ')) ?? '.............................' }}</p>
         </div>
         <div class="clear"></div>
     </div>

@@ -287,7 +287,7 @@
                             - {{ $asesmen->rmeAsesmenNeurologi->riwayat_pengobatan_keterangan }}
                         @endif
                     @else
-                        Tidak Diketahui
+                        -
                     @endif
                 @else
                     -
@@ -300,9 +300,9 @@
     <div class="section-title">Riwayat Alergi</div>
     @php
         $alergiData = [];
-        if (isset($asesmen->rmeAsesmenNeurologi->riwayat_alergi) && $asesmen->rmeAsesmenNeurologi->riwayat_alergi) {
+        if (isset($alergiPasien) && $alergiPasien) {
             try {
-                $alergiData = json_decode($asesmen->rmeAsesmenNeurologi->riwayat_alergi, true);
+                $alergiData = json_decode($alergiPasien, true);
                 if (!is_array($alergiData)) {
                     $alergiData = [];
                 }
@@ -310,7 +310,9 @@
                 $alergiData = [];
             }
         }
+
     @endphp
+
 
     @if (!empty($alergiData))
         <table class="detail-table">
@@ -326,8 +328,8 @@
                 @foreach ($alergiData as $index => $alergi)
                     <tr>
                         <td>{{ $index + 1 }}</td>
-                        <td>{{ $alergi['jenis'] ?? '-' }}</td>
-                        <td>{{ $alergi['alergen'] ?? '-' }}</td>
+                        <td>{{ $alergi['jenis_alergi'] ?? '-' }}</td>
+                        <td>{{ $alergi['nama_alergi'] ?? '-' }}</td>
                         <td>{{ $alergi['reaksi'] ?? '-' }}</td>
                     </tr>
                 @endforeach
@@ -342,7 +344,7 @@
     <table class="detail-table">
         <tr>
             <td width="25%" style="font-weight: bold;">Tekanan Darah</td>
-            <td width="25%">{{ $asesmen->rmeAsesmenNeurologi->tekanan_darah ?? '-' }} mmHg</td>
+            <td width="25%">{{ $asesmen->rmeAsesmenNeurologi->darah_sistole ?? '-' }}/{{ $asesmen->rmeAsesmenNeurologi->darah_diastole ?? '-' }} mmHg</td>
             <td width="25%" style="font-weight: bold;">Suhu</td>
             <td width="25%">{{ $asesmen->rmeAsesmenNeurologi->suhu ?? '-' }} °C</td>
         </tr>
@@ -736,108 +738,23 @@
         <tr>
             <td colspan="2" style="background-color: #f5f5f5; font-weight: bold;">Rencana Penatalaksanaan</td>
         </tr>
+
         <tr>
-            <td width="50%" style="vertical-align: top; padding: 0;">
+            <td width="100%" style="vertical-align: top; padding: 0;">
                 <!-- Observasi -->
                 <table class="detail-table" style="margin: 0; border-top: none; border-left: none;">
-                    <tr>
-                        <td colspan="2" style="font-weight: bold; background-color: #f9f9f9;">Observasi</td>
-                    </tr>
                     @php
-                        $observasi = isset($asesmen->rmeAsesmenNeurologiIntensitasNyeri->observasi) ?
-                            json_decode($asesmen->rmeAsesmenNeurologiIntensitasNyeri->observasi, true) : [];
+                        $observasi = $asesmen->rmeAsesmenNeurologiIntensitasNyeri->rencana_pengobatan ?
+                            $asesmen->rmeAsesmenNeurologiIntensitasNyeri->rencana_pengobatan : ''
                     @endphp
 
-                    @if (!empty($observasi) && is_array($observasi))
-                        @foreach ($observasi as $index => $item)
+                    @if (!empty($observasi))
                         <tr>
-                            <td width="10%" style="border-left: none;">{{ $index + 1 }}</td>
-                            <td width="90%">{{ $item }}</td>
+                            <td colspan="2" width="90%">{{ $observasi }}</td>
                         </tr>
-                        @endforeach
                     @else
                         <tr>
                             <td colspan="2" style="border-left: none;" class="text-muted">Tidak ada data observasi</td>
-                        </tr>
-                    @endif
-                </table>
-            </td>
-            <td width="50%" style="vertical-align: top; padding: 0;">
-                <!-- Terapeutik -->
-                <table class="detail-table" style="margin: 0; border-top: none; border-left: none;">
-                    <tr>
-                        <td colspan="2" style="font-weight: bold; background-color: #f9f9f9;">Terapeutik</td>
-                    </tr>
-                    @php
-                        $terapeutik = isset($asesmen->rmeAsesmenNeurologiIntensitasNyeri->terapeutik) ?
-                            json_decode($asesmen->rmeAsesmenNeurologiIntensitasNyeri->terapeutik, true) : [];
-                    @endphp
-
-                    @if (!empty($terapeutik) && is_array($terapeutik))
-                        @foreach ($terapeutik as $index => $item)
-                        <tr>
-                            <td width="10%" style="border-left: none;">{{ $index + 1 }}</td>
-                            <td width="90%">{{ $item }}</td>
-                        </tr>
-                        @endforeach
-                    @else
-                        <tr>
-                            <td colspan="2" style="border-left: none;" class="text-muted">Tidak ada data terapeutik</td>
-                        </tr>
-                    @endif
-                </table>
-            </td>
-        </tr>
-    </table>
-
-    <table class="detail-table" style="margin-top: 10px; page-break-inside: avoid;">
-        <tr>
-            <td width="50%" style="vertical-align: top; padding: 0;">
-                <!-- Edukasi -->
-                <table class="detail-table" style="margin: 0; border-top: none; border-left: none;">
-                    <tr>
-                        <td colspan="2" style="font-weight: bold; background-color: #f9f9f9;">Edukasi</td>
-                    </tr>
-                    @php
-                        $edukasi = isset($asesmen->rmeAsesmenNeurologiIntensitasNyeri->edukasi) ?
-                            json_decode($asesmen->rmeAsesmenNeurologiIntensitasNyeri->edukasi, true) : [];
-                    @endphp
-
-                    @if (!empty($edukasi) && is_array($edukasi))
-                        @foreach ($edukasi as $index => $item)
-                        <tr>
-                            <td width="10%" style="border-left: none;">{{ $index + 1 }}</td>
-                            <td width="90%">{{ $item }}</td>
-                        </tr>
-                        @endforeach
-                    @else
-                        <tr>
-                            <td colspan="2" style="border-left: none;" class="text-muted">Tidak ada data edukasi</td>
-                        </tr>
-                    @endif
-                </table>
-            </td>
-            <td width="50%" style="vertical-align: top; padding: 0;">
-                <!-- Kolaborasi -->
-                <table class="detail-table" style="margin: 0; border-top: none; border-left: none;">
-                    <tr>
-                        <td colspan="2" style="font-weight: bold; background-color: #f9f9f9;">Kolaborasi</td>
-                    </tr>
-                    @php
-                        $kolaborasi = isset($asesmen->rmeAsesmenNeurologiIntensitasNyeri->kolaborasi) ?
-                            json_decode($asesmen->rmeAsesmenNeurologiIntensitasNyeri->kolaborasi, true) : [];
-                    @endphp
-
-                    @if (!empty($kolaborasi) && is_array($kolaborasi))
-                        @foreach ($kolaborasi as $index => $item)
-                        <tr>
-                            <td width="10%" style="border-left: none;">{{ $index + 1 }}</td>
-                            <td width="90%">{{ $item }}</td>
-                        </tr>
-                        @endforeach
-                    @else
-                        <tr>
-                            <td colspan="2" style="border-left: none;" class="text-muted">Tidak ada data kolaborasi</td>
                         </tr>
                     @endif
                 </table>
@@ -846,22 +763,16 @@
     </table>
 
     <!-- Prognosis -->
+
     <table class="detail-table" style="margin-top: 10px; page-break-inside: avoid;">
         <tr>
             <td colspan="2" style="font-weight: bold; background-color: #f9f9f9;">Prognosis</td>
         </tr>
-        @php
-            $prognosis = isset($asesmen->rmeAsesmenNeurologiIntensitasNyeri->prognosis) ?
-                json_decode($asesmen->rmeAsesmenNeurologiIntensitasNyeri->prognosis, true) : [];
-        @endphp
 
-        @if (!empty($prognosis) && is_array($prognosis))
-            @foreach ($prognosis as $index => $item)
+        @if (!empty($prognosis))
             <tr>
-                <td width="10%">{{ $index + 1 }}</td>
-                <td width="90%">{{ $item }}</td>
+                <td colspan="2" width="10%">{{ $prognosis->value ?? '' }}</td>
             </tr>
-            @endforeach
         @else
             <tr>
                 <td colspan="2" class="text-muted">Tidak ada data prognosis</td>
@@ -923,9 +834,9 @@
     <div class="sign-area">
         <div class="sign-box">
             <p>Perawat yang Melakukan Asesmen Neurologi</p>
-            <br><br><br>
-            <p>( _________________________ )</p>
-            <p>{{ $asesmen->user->name ?? '.............................' }}</p>
+            <br>
+            <img src="{{ generateQrCode(($asesmen->user->karyawan->gelar_depan ?? ' ') . str()->title($asesmen->user->karyawan->nama ?? ' ') . ($asesmen->user->karyawan->gelar_belakang ?? ' '), 120, 'svg_datauri') }}" alt="QR Code">
+            <p>{{ (($asesmen->user->karyawan->gelar_depan ?? ' ') . str()->title($asesmen->user->karyawan->nama ?? ' ') . ($asesmen->user->karyawan->gelar_belakang ?? ' ')) ?? '.............................' }}</p>
         </div>
         <div class="clear"></div>
     </div>

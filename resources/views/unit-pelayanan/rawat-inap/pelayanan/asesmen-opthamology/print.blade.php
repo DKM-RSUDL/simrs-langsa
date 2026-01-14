@@ -191,8 +191,9 @@
             color: #ffffff;
         }
 
-
-
+        .page-break {
+        page-break-before: always;
+        }
     </style>
 </head>
     <body>
@@ -208,6 +209,10 @@
                 $ophtamology_komprehensif = $asesmen->rme_asesmen_kep_ophtamology_komprehensif;
 
                 $rencanaPulang = $data['asesmen']->rmeAsesmenKepOphtamologyRencanaPulang;
+
+                $rmeAsesmenKepOphtamology = $data['asesmen']->rmeAsesmenKepOphtamology;
+
+
 
                 $statusPresent = $data['asesmen']->rmeAsesmenKepOphtamologyFisik;
                 $faktorpemberat = $data['faktorpemberat']
@@ -265,31 +270,11 @@
             </table>
 
 
-            <table>
+            <table style="margin-top : 20px;">
                 <!-- Header Anamnesis -->
                 <tr>
-                    <td class="label">ANAMNESIS</td>
+                    <td class="label">ANAMNESIS / Keluhan Utama</td>
                     <td class="value">{{ $asesmen->anamnesis ?? '-' }}</td>
-                </tr>
-
-                <!-- Keluhan Utama -->
-                <tr>
-                    <td class="label">Keluhan utama :</td>
-                    <td class="value">
-                        {{ $asesmen->keluhan_utama ?? implode(', ', $penyakit_yang_diderita) ?: '–' }}
-                    </td>
-                </tr>
-                <tr>
-                    <td class="label">Lama keluhan:</td>
-                    <td class="value">{{ $asesmen->lama_keluhan ?? '' }}</td>
-                </tr>
-                <tr>
-                    <td class="label">Pencetus / Faktor pemberat:</td>
-                    <td class="value">
-                        @foreach ($faktorpemberat as $value )
-                            <label for="">{{ $value->name . ',' }}</label>
-                        @endforeach
-                    </td>
                 </tr>
 
                 <!-- Riwayat Penyakit Sekarang -->
@@ -354,99 +339,51 @@
                     </td>
                 </tr>
                 @endforeach
-
-                <!-- Tambahan ruang kosong untuk obat lain jika ditulis tangan -->
-                @if(count($riwayat_penggunaan_obat) < 3)
-                    @for($i = count($riwayat_penggunaan_obat); $i < 3; $i++)
-                    <tr>
-                        <td class="label" style="padding-left: 30px; font-weight: normal;">{{ $i + 1 }}.</td>
-                        <td class="value" style="height: 5px; border-bottom: 1px dotted #444;"></td>
-                    </tr>
-                    @endfor
-                @endif
-
-            @else
-                <!-- Jika tidak ada obat, beri ruang untuk tulis tangan -->
-                <tr>
-                    <td colspan="2" class="value" style="height: 20px; border-bottom: 1px dotted #444;"></td>
-                </tr>
             @endif
 
-                @if(!empty($riwayat_penggunaan_obat))
-                    @foreach($riwayat_penggunaan_obat as $obat)
-                    <tr>
-                        <td colspan="2" class="obat-item">
-                            • {{ $obat->namaObat ?? '-' }}
-                            {{ $obat->dosis ?? '' }} {{ $obat->satuan ?? '' }},
-                            {{ $obat->frekuensi ?? '' }}
-                            {{ !empty($obat->keterangan) ? ' — ' . $obat->keterangan : '' }}
-                        </td>
-                    </tr>
-                    @endforeach
-                @else
-                    <tr><td colspan="2" class="value" style="height:20px;"></td></tr>
-                @endif
 
-                <!-- Riwayat Alergi -->
-                <tr>
-                    <td colspan="2" class="label" style="padding-top: 0px;">Riwayat Alergi:</td>
-                </tr>
+            <!-- Riwayat Alergi -->
+            <tr>
+                <td colspan="2" class="label" style="padding-top: 0px;">Riwayat Alergi:</td>
+            </tr>
 
-                <tr>
-                    <td colspan="2" class="checkbox-group" style="padding: 6px 0 10px 0;">
-                        <label style="display: inline-flex; align-items: center; margin-right: 40px;">
-                            <input type="checkbox" {{ empty($riwayat_alergi) ? 'checked' : '' }} style="margin-right: 6px;">
-                            Tidak ada
-                        </label>
-                        <label style="display: inline-flex; align-items: center;">
-                            <input type="checkbox" {{ !empty($riwayat_alergi) ? 'checked' : '' }} style="margin-right: 6px;">
+            <tr>
+                <td colspan="2" class="checkbox-group" style="padding: 6px 0 10px 0;">
+                    <label style="display: inline-flex; align-items: center; margin-right: 40px;">
+                        <input type="checkbox" {{ empty($riwayat_alergi) ? 'checked' : '' }} style="margin-right: 6px;">
+                        Tidak ada
+                    </label>
+                    <label style="display: inline-flex; align-items: center;">
+                         <input type="checkbox" {{ !empty($riwayat_alergi) ? 'checked' : '' }} style="margin-right: 6px;">
                             Ada, sebutkan:
-                        </label>
-                    </td>
-                </tr>
+                    </label>
+                </td>
+            </tr>
 
-                @if(!empty($riwayat_alergi))
-                    @foreach($riwayat_alergi as $index => $alergi)
-                    <tr>
-                        <td class="label" style="padding-left: 30px; font-weight: normal; width: 10%;">
+            @if(!empty($riwayat_alergi))
+                @foreach($riwayat_alergi as $index => $alergi)
+                <tr>
+                    <td class="label" style="padding-left: 30px; font-weight: normal; width: 10%;">
                             {{ $index + 1 }}.
-                        </td>
-                        <td class="value" style="border-bottom: 1px dotted #444; padding: 0px;">
+                    </td>
+                    <td class="value" style="border-bottom: 1px dotted #444; padding: 0px;">
                             <strong>{{ $alergi['alergen'] ?? '-' }}</strong>
                             (Jenis: {{ $alergi['jenis'] ?? '-' }})
                             — Reaksi: {{ $alergi['reaksi'] ?? '-' }}
                             — Keparahan: {{ $alergi['keparahan'] ?? '-' }}
-                        </td>
-                    </tr>
-                    @endforeach
-
-                    <!-- Baris kosong tambahan untuk tulis tangan (maksimal total 4 item) -->
-                    @if(count($riwayat_alergi) < 3)
-                        @for($i = count($riwayat_alergi); $i < 3; $i++)
-                        <tr>
-                            <td class="label" style="padding-left: 30px; font-weight: normal;">
-                                {{ $i + 1 }}.
-                            </td>
-                            <td class="value" style="height: 5px; border-bottom: 1px dotted #444;"></td>
-                        </tr>
-                        @endfor
-                    @endif
-
-                @else
-                    <!-- Jika tidak ada alergi, beri ruang tulis tangan -->
-                    <tr>
-                        <td colspan="2" class="value" style="height: 10px; border-bottom: 1px dotted #444;"></td>
-                    </tr>
-                @endif
+                    </td>
+                </tr>
+                @endforeach
+            @endif
 
 
 
                <!-- Status Oftalmologi / Pemeriksaan Mata -->
-                <tr>
+                <tr >
                     <td colspan="2" class="label" style="padding-top: 12px; font-size: 11pt;">STATUS OFTALMOLOGI</td>
                 </tr>
 
-                <tr>
+                    <tr>
                     <td colspan="2">
                         <table style="width: 100%; border-collapse: collapse; margin: 0; padding: 0; font-size: 9.5pt;">
                             <tr>
@@ -502,9 +439,9 @@
                 </tr>
                 <!-- Status Present -->
                 <tr>
-                    <td colspan="2" class="label" style="padding-top: 18px; font-size: 12pt;">STATUS PRESENT</td>
+                    <td colspan="2" class="label" style="padding-top: 18px; font-size: 12pt; ">STATUS PRESENT</td>
                 </tr>
-                <tr>
+                <tr style="width: 100%; margin-top: 20px; border-collapse: collapse;">
                     <td colspan="2">
                         <table style="width: 100%; margin-top: 8px; border-collapse: collapse;">
                             <tr>
@@ -573,7 +510,7 @@
                 </tr>
                 <!-- Pemeriksaan Oftalmologi Komprehensif -->
 
-                <tr>
+                <tr class="page-break">
                     <td colspan="2">
                        <table border="1">
                             <tr>
@@ -666,8 +603,8 @@
                         </table>
                     </td>
                 </tr>
-                    <tr>
-                        <td colspan="2">
+                <tr class="page-break">
+                    <td colspan="2">
                         <table border="1">
                                 <tr>
                                     <th style="width:35%; text-align:center;">Pengkajian Awal Medis Opthamology/ Mata</th>
@@ -675,8 +612,8 @@
                                     <th style="width:35%; text-align:center;">NO RM: {{ $data['dataMedis']->kd_pasien }}</th>
                                 </tr>
                         </table>
-                        </td>
-                    </tr>
+                    </td>
+                </tr>
                     <!-- DIAGNOSIS DIFERENSIAL -->
                     @php
                         $diagnosisBanding = json_decode($asesmen_kep_ophtamology->diagnosis_banding ?? '[]', true);
@@ -705,32 +642,40 @@
                         </td>
                     </tr>
 
-                    <!-- RENCANA PEMERIKSAAN LAIN -->
-                    <tr>
-                        <td colspan="2"
-                            class="label"
-                            style="padding:16px 6px 8px; font-weight:bold;">
-                            RENCANA PEMERIKSAAN LAIN
-                        </td>
-                    </tr>
+
 
                     <!-- RENCANA PENATALAKSANAAN DAN PENGOBATAN -->
                     <tr>
-                        <td colspan="2"
+                        <td
                             class="label"
                             style="padding:18px 6px 8px; font-weight:bold;">
                             RENCANA PENATALAKSANAAN DAN PENGOBATAN
                         </td>
+                        <td class="value" style="padding:16px 6px 10px;">
+                            {{ $rmeAsesmenKepOphtamology->rencana_pengobatan ?? '–' }}
+                        </td>
                     </tr>
+
 
                     <!-- PROGNOSIS -->
                     <tr>
                         <td class="label" style="padding:16px 6px 10px;">
                             PROGNOSIS
                         </td>
+                        @php
+                            $prognosisData = $data['satsetPrognosis'];
+                            $valuePrognosis = null;
+
+                            foreach ($prognosisData as $item) {
+                                if ($item->prognosis_id == $asesmen_kep_ophtamology->paru_prognosis) {
+                                    $valuePrognosis = $item->value;
+                                    break; // biar berhenti saat ketemu
+                                }
+                            }
+                        @endphp
 
                         <td class="value" style="padding:16px 6px 10px;">
-                            {{ $asesmen_kep_ophtamology->paru_prognosis ?? '–' }}
+                            {{ $valuePrognosis ?? '–' }}
                         </td>
                     </tr>
                     <tr>
@@ -767,15 +712,16 @@
                                 <td class="label" style="width: 55%; padding: 6px 8px;">
                                     Usia lanjut (> 60 th)
                                 </td>
+
                                 <td style="padding: 6px 8px; text-align: center;">
                                     <label style="margin-right: 30px;">
                                         <input type="checkbox"
-                                            {{ $data['dataMedis']->pasien->umur >  60 ? 'checked' : '' }}>
+                                            {{ $rencanaPulang['usia_lanjut'] == 'Ya' ? 'checked' : '' }}>
                                         Ya
                                     </label>
                                     <label>
                                         <input type="checkbox"
-                                            {{ $data['dataMedis']->pasien->umur   < 60 ? 'checked' : '' }}>
+                                            {{ $rencanaPulang['usia_lanjut'] == 'Tidak'  < 60 ? 'checked' : '' }}>
                                         Tidak
                                     </label>
                                 </td>
@@ -891,10 +837,10 @@
                                     <br><br>
                                     Dokter yang memeriksa
                                     <br><br>
-                                    <img src="{{ generateQrCode($data['dataMedis']->dokter->nama_lengkap, 120, 'svg_datauri') }}" alt="QR Code">
+                                    <img src="{{ generateQrCode(($data['asesmen']->user->karyawan->gelar_depan ?? '') . ' ' . str()->title($data['asesmen']->user->karyawan->nama ?? '') . ' ' . ($data['asesmen']->user->karyawan->gelar_belakang ?? ''), 100, 'svg_datauri') }}" alt="QR Petugas">
                                     <br>
                                     <br>
-                                    {{ $data['dataMedis']->dokter->nama_lengkap     }}
+                                    {{ ($data['asesmen']->user->karyawan->gelar_depan ?? '') . ' ' . str()->title($data['asesmen']->user->karyawan->nama ?? '') . ' ' . ($data['asesmen']->user->karyawan->gelar_belakang ?? '') }}
                                 </td>
                             </tr>
                         </table>

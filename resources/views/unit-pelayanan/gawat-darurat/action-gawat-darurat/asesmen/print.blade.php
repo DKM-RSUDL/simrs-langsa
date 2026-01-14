@@ -422,9 +422,9 @@
             </tr>
             <tr>
                 <td class="w-15">Suhu</td>
-                <td class="w-35">: {{ $vitalSign['suhu'] ?? '-' }} °C</td>
+                <td class="w-35">: {{ $vitalSign['temp'] ?? '-' }} °C</td>
                 <td class="w-15">Respirasi</td>
-                <td class="w-35">: {{ $vitalSign['resp'] ?? '-' }} x/menit</td>
+                <td class="w-35">: {{ $vitalSign['rr'] ?? '-' }} x/menit</td>
             </tr>
         </table>
     </div>
@@ -525,6 +525,183 @@
                 </tr>
             @endfor
         </table>
+    </div>
+
+    <!-- Pemeriksaan Penunjang -->
+    <div class="section">
+        <div class="section-title">PEMERIKSAAN PENUNJANG</div>
+        <div style="padding: 5px;">
+            <!-- Laboratorium -->
+            @if (!empty($laborData) && $laborData->count() > 0)
+                <div class="section-subtitle">Laboratorium</div>
+                <table class="bordered" style="margin-bottom: 15px;">
+                    <tr>
+                        <th>Tanggal</th>
+                        <th>Nama Pemeriksaan</th>
+                    </tr>
+                    @foreach ($laborData as $lab)
+                        @foreach ($lab->details as $detail)
+                            <tr>
+                                <td>{{ $lab->tgl_order ? date('d M Y H:i', strtotime($lab->tgl_order)) : '-' }}</td>
+                                <td>{{ $detail->produk->deskripsi ?? 'Pemeriksaan Lab' }}</td>
+                            </tr>
+                        @endforeach
+                    @endforeach
+                </table>
+            @endif
+
+            <!-- Radiologi -->
+            <div class="section-subtitle">Radiologi</div>
+            @if (!empty($radiologiData) && $radiologiData->count() > 0)
+                <table class="bordered" style="margin-bottom: 15px;">
+                    <tr>
+                        <th>Tanggal</th>
+                        <th>Nama Pemeriksaan</th>
+                    </tr>
+
+                    @foreach ($radiologiData as $radio)
+                        <tr>
+                            <td>{{ $radio['Tanggal-Jam'] ?? '-' }}</td>
+                            <td>{{ $radio['Nama Pemeriksaan'] ?? '-' }}</td>
+                        </tr>
+                    @endforeach
+                </table>
+            @else
+                <table class="bordered" style="margin-bottom: 15px;">
+                    <tr>
+                        <th>Tanggal dan Jam</th>
+                        <th>Nama Pemeriksaan</th>
+                    </tr>
+                    <tr>
+                        <td colspan="2" style="text-align: center; font-style: italic;">Tidak ada data radiologi
+                        </td>
+                    </tr>
+                </table>
+            @endif
+
+            @if ((empty($laborData) || $laborData->count() == 0) && (empty($radiologiData) || $radiologiData->count() == 0))
+                <p style="font-style: italic;">Tidak ada pemeriksaan penunjang yang dilakukan</p>
+            @endif
+        </div>
+    </div>
+
+    <!-- E-Resep -->
+    <div class="section">
+        <div class="section-title">E-RESEP</div>
+        <div style="padding: 5px;">
+            @if (!empty($riwayatObat) && $riwayatObat->count() > 0)
+                <table class="bordered" style="margin-bottom: 15px;">
+                    <tr>
+                        <th class="col-header">Nama Obat</th>
+                        <th class="col-header">Cara Pemberian</th>
+                    </tr>
+                    @foreach ($riwayatObat as $resep)
+                        <tr>
+                            <td>{{ $resep->nama_obat ?? 'Tidak ada informasi' }}</td>
+                            <td>{{ explode(',', $resep->cara_pakai)[1] ?? '' }}</td>
+                        </tr>
+                    @endforeach
+                </table>
+            @else
+                <table class="bordered" style="margin-bottom: 15px;">
+                    <tr>
+                        <th class="col-header">Nama Obat</th>
+                        <th class="col-header">Cara Pemberian</th>
+                    </tr>
+                    <tr>
+                        <td colspan="2" style="text-align: center; font-style: italic;">Tidak ada data resep</td>
+                    </tr>
+                </table>
+            @endif
+        </div>
+    </div>
+
+    <!-- Observasi Lanjutan/Re-Triase -->
+    <div class="section">
+        <div class="section-title">OBSERVASI LANJUTAN/RE-TRIASE</div>
+        <div style="padding: 5px;">
+            @if (!empty($retriaseData) && $retriaseData->count() > 0)
+                <table class="bordered" style="margin-bottom: 15px;">
+                    <tr>
+                        <th class="col-header">Keluhan</th>
+                        <th class="col-header">Vital Sign</th>
+                        <th class="col-header">Re-Triase/EWS</th>
+                    </tr>
+                    @foreach ($retriaseData as $retriase)
+                        <tr>
+                            <td>{{ $retriase->anamnesis_retriase ?? '-' }}</td>
+                            <td>
+                                @php
+                                    $vitalSignRetriase = is_string($retriase->vitalsign_retriase)
+                                        ? json_decode($retriase->vitalsign_retriase, true)
+                                        : $retriase->vitalsign_retriase;
+                                @endphp
+                                @if (!empty($vitalSignRetriase))
+                                    @if (isset($vitalSignRetriase['td_sistole']) && isset($vitalSignRetriase['td_diastole']))
+                                        TD:
+                                        {{ $vitalSignRetriase['td_sistole'] }}/{{ $vitalSignRetriase['td_diastole'] }}
+                                        mmHg<br>
+                                    @endif
+                                    @if (isset($vitalSignRetriase['nadi']))
+                                        Nadi: {{ $vitalSignRetriase['nadi'] }} x/mnt<br>
+                                    @endif
+                                    @if (isset($vitalSignRetriase['rr']))
+                                        RR: {{ $vitalSignRetriase['rr'] }} x/mnt<br>
+                                    @endif
+                                    @if (isset($vitalSignRetriase['temp']))
+                                        Suhu: {{ $vitalSignRetriase['temp'] }}°C<br>
+                                    @endif
+                                    @if (isset($vitalSignRetriase['spo2_tanpa_o2']))
+                                        SpO2: {{ $vitalSignRetriase['spo2_tanpa_o2'] }}%
+                                    @endif
+                                @else
+                                    -
+                                @endif
+                            </td>
+                            <td>
+                                @php
+                                    $triaseClass = '';
+                                    $triaseText = $retriase->hasil_triase ?? '-';
+                                    switch ($retriase->kode_triase) {
+                                        case 1:
+                                            $triaseClass = 'Merah (Resusitasi)';
+                                            break;
+                                        case 2:
+                                            $triaseClass = 'Kuning (Urgent)';
+                                            break;
+                                        case 3:
+                                            $triaseClass = 'Hijau (Less Urgent)';
+                                            break;
+                                        case 4:
+                                            $triaseClass = 'Biru (Non Urgent)';
+                                            break;
+                                        case 5:
+                                            $triaseClass = 'Hitam (DOA)';
+                                            break;
+                                        default:
+                                            $triaseClass = $triaseText;
+                                            break;
+                                    }
+                                @endphp
+                                {{ $triaseClass }}
+                            </td>
+                        </tr>
+                    @endforeach
+                </table>
+            @else
+                <table class="bordered" style="margin-bottom: 15px;">
+                    <tr>
+                        <th class="col-header">Keluhan</th>
+                        <th class="col-header">Vital Sign</th>
+                        <th class="col-header">Re-Triase/EWS</th>
+                    </tr>
+                    <tr>
+                        <td colspan="3" style="text-align: center; font-style: italic;">Tidak ada data observasi
+                            lanjutan/re-triase</td>
+                    </tr>
+                </table>
+            @endif
+        </div>
     </div>
 
     <!-- Alat Terpasang -->
@@ -718,12 +895,14 @@
                 </tr>
                 <tr>
                     <td class="signature-gap">
-                        <img src="{{ generateQrCode(($asesmen->user->karyawan->gelar_depan ?? '') . ' ' . str()->title($asesmen->user->karyawan->nama ?? '') . ' ' . ($asesmen->user->karyawan->gelar_belakang ?? ''), 100,  'svg_datauri') }}" alt="QR Petugas">
+                        <img src="{{ generateQrCode(($asesmen->user->karyawan->gelar_depan ?? '') . ' ' . str()->title($asesmen->user->karyawan->nama ?? '') . ' ' . ($asesmen->user->karyawan->gelar_belakang ?? ''), 100, 'svg_datauri') }}"
+                            alt="QR Petugas">
                     </td>
                 </tr>
                 <tr>
                     {{-- <td>{{ $asesmen->user->name ?? '_________________' }}</td> --}}
-                    <td>{{ ($asesmen->user->karyawan->gelar_depan ?? '') . ' ' . str()->title($asesmen->user->karyawan->nama ?? '') . ' ' . ($asesmen->user->karyawan->gelar_belakang ?? '') }}</td>
+                    <td>{{ ($asesmen->user->karyawan->gelar_depan ?? '') . ' ' . str()->title($asesmen->user->karyawan->nama ?? '') . ' ' . ($asesmen->user->karyawan->gelar_belakang ?? '') }}
+                    </td>
                 </tr>
                 <tr>
                     <td>Tanggal: {{ date('d-m-Y H:i', strtotime($asesmen->waktu_asesmen)) }}</td>
@@ -741,7 +920,7 @@
             <div class="page-break"></div>
 
             @php
-                $spriData = $asesmen->tindaklanjut[0]['spri'] ?? [];
+                $spriData = $asesmen->tindaklanjut->first() ? $asesmen->tindaklanjut->first()->spri : [];
             @endphp
 
             <header>
@@ -878,26 +1057,9 @@
 
             <!-- Diagnosa Kerja -->
             <div class="section" style="margin-top: 15px;">
-                <div class="section-subtitle">Diagnosa kerja (satu atau lebih):</div>
-                <div class="box-content-small">
-                    @php
-                        $diagnosis = $spriData['diagnosis'] ?? ($asesmen->diagnosis ?? []);
-
-                        if (is_string($diagnosis)) {
-                            $diagnosis = json_decode($diagnosis, true);
-                        }
-
-                        if (!empty($diagnosis) && is_array($diagnosis)) {
-                            foreach ($diagnosis as $index => $diag) {
-                                echo $index + 1 . '. ' . $diag;
-                                if ($index < count($diagnosis) - 1) {
-                                    echo '<br>';
-                                }
-                            }
-                        } else {
-                            echo '-';
-                        }
-                    @endphp
+                <div class="section-subtitle">Diagnosa Kerja</div>
+                <div class="box-content">
+                    {{ $spriData['diagnosis'] ?? '-' }}
                 </div>
             </div>
 
@@ -929,7 +1091,8 @@
                         </tr>
                         <tr>
                             <td class="signature-gap">
-                                <img src="{{ generateQrCode(($asesmen->user->karyawan->gelar_depan ?? '') . ' ' . str()->title($asesmen->user->karyawan->nama ?? '') . ' ' . ($asesmen->user->karyawan->gelar_belakang ?? ''), 100,  'svg_datauri') }}" alt="QR Petugas">
+                                <img src="{{ generateQrCode(($asesmen->user->karyawan->gelar_depan ?? '') . ' ' . str()->title($asesmen->user->karyawan->nama ?? '') . ' ' . ($asesmen->user->karyawan->gelar_belakang ?? ''), 100, 'svg_datauri') }}"
+                                    alt="QR Petugas">
                             </td>
                         </tr>
                         <tr>

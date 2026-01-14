@@ -173,23 +173,33 @@
             <tr>
                 <th>Tanggal Masuk</th>
                 {{-- <td>{{ date('d/m/Y', strtotime($resume->tgl_masuk)) }}</td> --}}
-                <td>{{ date('d/m/Y', strtotime($dataMedis->tgl_masuk)) }}</td>
+                <td>
+                    @if (!empty($dataMedis?->tgl_masuk))
+                        {{ date('d/m/Y', strtotime($dataMedis->tgl_masuk)) }}
+                    @else
+                        -
+                    @endif
+                </td>
             </tr>
             <tr>
                 <th>Tanggal Keluar</th>
                 {{-- <td>{{ $resume->rmeResumeDet->tgl_pulang ? date('d/m/Y', strtotime($resume->rmeResumeDet->tgl_pulang)) : '-' }} --}}
-                <td>{{ $dataMedis->tgl_pulang ? date('d/m/Y', strtotime($dataMedis->tgl_pulang)) : '-' }}
+                <td>{{ !empty($dataMedis?->tgl_pulang) ? date('d/m/Y', strtotime($dataMedis->tgl_pulang)) : '-' }}
                 </td>
             </tr>
             <tr>
                 <th>Lama Dirawat</th>
                 <td>
-                    {{ !empty($dataMedis->tgl_pulang) ? selisihHari($dataMedis->tgl_masuk, $dataMedis->tgl_pulang) + 1 . ' Hari' : '-' }}
+                    @if (!empty($dataMedis?->tgl_masuk) && !empty($dataMedis?->tgl_pulang))
+                        {{ selisihHari($dataMedis->tgl_masuk, $dataMedis->tgl_pulang) + 1 . ' Hari' }}
+                    @else
+                        -
+                    @endif
                 </td>
             </tr>
             <tr>
                 <th>Jaminan</th>
-                <td>{{ $dataMedis->customer->customer }}</td>
+                <td>{{ $dataMedis?->customer?->customer ?? '-' }}</td>
             </tr>
             <tr>
                 <th>Anamnesis</th>
@@ -389,14 +399,20 @@
             <p>DPJP yang merawat</p>
             <br>
             {{-- Use SVG data URI to avoid requiring Imagick/GD; preferred for PDF rendering --}}
-            <img src="{{ generateQrCode($dataMedis->dokter->nama_lengkap, 120, 'svg_datauri') }}" alt="QR Code">
+            @if (!empty($dataMedis?->dokter?->nama_lengkap))
+                <img src="{{ generateQrCode($dataMedis->dokter->nama_lengkap, 120, 'svg_datauri') }}" alt="QR Code">
+            @endif
 
-            <p class="name-konsulen">{{ $dataMedis->dokter->nama_lengkap }}</p>
+            <p class="name-konsulen">{{ $dataMedis?->dokter?->nama_lengkap ?? '-' }}</p>
             <p class="identity-num">
                 @php
-                    $identityNum = 'Id Peg. ' . $dataMedis->dokter->kd_karyawan;
-                    if (!empty($dataMedis->dokter->detail->nip_baru)) {
+                    $identityNum = '';
+                    if (!empty($dataMedis?->dokter?->detail?->nip_baru)) {
                         $identityNum = 'NIP. ' . $dataMedis->dokter->detail->nip_baru;
+                    } elseif (!empty($dataMedis?->dokter?->kd_karyawan)) {
+                        $identityNum = 'Id Peg. ' . $dataMedis->dokter->kd_karyawan;
+                    } else {
+                        $identityNum = '-';
                     }
                     echo $identityNum;
                 @endphp

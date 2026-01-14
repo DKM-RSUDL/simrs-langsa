@@ -1073,17 +1073,21 @@ class AsesmenKepThtController extends Controller
                 ->where('urut_masuk', $urut_masuk)
                 ->first();
 
+            $alergiPasien = RmeAlergiPasien::where('kd_pasien', $kd_pasien)->get();
+
             $pdf = PDF::loadView('unit-pelayanan.rawat-inap.pelayanan.asesmen-tht.print', [
                 'asesmen'    => $asesmenTht ?? null,
-                'pasien' => optional($dataMedis)->pasien ?? null,
-                'dataMedis' => $dataMedis ?? null,
-                // variabel lainnya sesuai kebutuhan
-                'rmeAsesmenTht'                     => optional($asesmenTht)->rmeAsesmenTht ?? null,
-                'rmeAsesmenThtPemeriksaanFisik'     => optional($asesmenTht)->rmeAsesmenThtPemeriksaanFisik ?? null,
-                'pemeriksaanFisik'                  => optional($asesmenTht)->pemeriksaanFisik ?? null,
+                'pasien'     => optional($dataMedis)->pasien ?? null,
+                'dataMedis'  => $dataMedis ?? null,
+
+                // relasi lainnya
+                'rmeAsesmenTht' => optional($asesmenTht)->rmeAsesmenTht ?? null,
+                'rmeAsesmenThtPemeriksaanFisik' => optional($asesmenTht)->rmeAsesmenThtPemeriksaanFisik ?? null,
+                'pemeriksaanFisik' => optional($asesmenTht)->pemeriksaanFisik ?? null,
                 'rmeAsesmenThtRiwayatKesehatanObatAlergi' => optional($asesmenTht)->rmeAsesmenThtRiwayatKesehatanObatAlergi ?? null,
-                'rmeAsesmenThtDischargePlanning'    => optional($asesmenTht)->rmeAsesmenThtDischargePlanning ?? null,
+                'rmeAsesmenThtDischargePlanning' => optional($asesmenTht)->rmeAsesmenThtDischargePlanning ?? null,
                 'rmeAsesmenThtDiagnosisImplementasi' => optional($asesmenTht)->rmeAsesmenThtDiagnosisImplementasi ?? null,
+                'alergiPasien' => $alergiPasien,
             ]);
 
             $pdf->setPaper('a4', 'portrait');

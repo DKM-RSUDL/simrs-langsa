@@ -278,7 +278,7 @@
 
                                 <div class="form-group mb-3">
                                     <label class="d-block mb-2" style="min-width: 200px;">Irama</label>
-                                    <select class="form-select" name="kontraksi_letak_janin">
+                                    <select class="form-select" name="kontraksi_irama">
                                         <option value="">pilih</option>
                                         <option value="1"
                                             {{ ($asesmen->rmeAsesmenObstetriPemeriksaanFisik->kontraksi_irama ?? '') == '1' ? 'selected' : '' }}>
@@ -1469,11 +1469,11 @@
                                 <h5 class="fw-semibold mb-4">7. Diagnosis</h5>
                                 @php
                                     // Parse existing diagnosis data from database
-                                    $diagnosisBanding = !empty($asesmen->rmeAsesmenKepOphtamology[0]->diagnosis_banding)
-                                        ? json_decode($asesmen->rmeAsesmenKepOphtamology[0]->diagnosis_banding, true)
+                                    $diagnosisBanding = !empty($asesmen->rmeAsesmenObstetriDiagnosisImplementasi->diagnosis_banding)
+                                        ? json_decode($asesmen->rmeAsesmenObstetriDiagnosisImplementasi->diagnosis_banding, true)
                                         : [];
-                                    $diagnosisKerja = !empty($asesmen->rmeAsesmenKepOphtamology[0]->diagnosis_kerja)
-                                        ? json_decode($asesmen->rmeAsesmenKepOphtamology[0]->diagnosis_kerja, true)
+                                    $diagnosisKerja = !empty($asesmen->rmeAsesmenObstetriDiagnosisImplementasi->diagnosis_kerja)
+                                        ? json_decode($asesmen->rmeAsesmenObstetriDiagnosisImplementasi->diagnosis_kerja, true)
                                         : [];
                                 @endphp
 
