@@ -501,7 +501,7 @@
 
     <!-- 6. Pemeriksaan Fisik -->
     <div class="content-section">
-        <div class="section-title">PEMERIKSAAN FISIK</div>
+        <div class="section-title">6. PEMERIKSAAN FISIK</div>
 
         @php
             $pemeriksaanFisikParu = $asesmen->rmeAsesmenParuPemeriksaanFisik->first();
@@ -752,12 +752,9 @@
     <!-- Page Break untuk halaman 2 -->
     <div class="page-break"></div>
 
-    <!-- Page Break untuk halaman 3 -->
-    <div class="page-break"></div>
-
     <!-- 9. Diagnosis -->
     <div class="content-section">
-        <div class="section-title">9. DIAGNOSIS</div>
+        <div class="section-title">8. DIAGNOSIS</div>
         <table class="detail-table">
             <tr>
                 <td class="col-header">DIAGNOSIS BANDING :</td>
@@ -815,7 +812,7 @@
 
     <!-- 10. Implementasi -->
     <div class="content-section">
-        <div class="section-title">10. RENCANA PENATALAKSANAAN DAN PENGOBATAN</div>
+        <div class="section-title">9. RENCANA PENATALAKSANAAN DAN PENGOBATAN</div>
         @php
             $implementasi = optional($asesmen->rmeAsesmenParuDiagnosisImplementasi);
             $observasi = $implementasi->observasi ? json_decode($implementasi->observasi, true) : [];
@@ -835,7 +832,7 @@
 
     <!-- Prognosis -->
     <div class="content-section">
-        <div class="section-title">PROGNOSIS</div>
+        <div class="section-title">10. PROGNOSIS</div>
         <div>
             @php
 
@@ -857,7 +854,7 @@
 
     <!-- 8. Perencanaan Pulang Pasien -->
     <div class="content-section">
-        <div class="section-title">8. PERENCANAAN PULANG PASIEN (DISCHARGE PLANNING)</div>
+        <div class="section-title">11 . PERENCANAAN PULANG PASIEN (DISCHARGE PLANNING)</div>
         @php
             $dischargePlanning = optional($asesmen->rmeAsesmenParuPerencanaanPulang);
         @endphp
@@ -947,10 +944,9 @@
         </div>
         <div class="sign-box">
             <p>Dokter yang memeriksa</p>
-            <br><br><br>
-            <p>( _________________________ )</p>
-            <p>{{ optional($asesmen->user)->name ?? '.............................' }}</p>
-            <p style="font-size: 9px;">ttd dan nama jelas</p>
+            <br><img src="{{ generateQrCode(($asesmen->user->karyawan->gelar_depan ?? '') . ' ' . str()->title($asesmen->user->karyawan->nama ?? '') . ' ' . ($asesmen->user->karyawan->gelar_belakang ?? ''), 100, 'svg_datauri') }}"
+                                    alt="QR Petugas">
+            <p>{{ ($asesmen->user->karyawan->gelar_depan ?? '') . ' ' . str()->title($asesmen->user->karyawan->nama ?? '') . ' ' . ($asesmen->user->karyawan->gelar_belakang ?? '') }}</p>
         </div>
         <div class="clear"></div>
     </div>
