@@ -767,9 +767,10 @@
                                 <br><br>
                                 Dokter yang memeriksa
                                 <br><br>
-                                <img src="{{ generateQrCode($dokterNama, 120, 'svg_datauri') }}" alt="QR Code">
+                                <img src="{{ generateQrCode(($asesmen->user->karyawan->gelar_depan ?? '') . ' ' . str()->title($asesmen->user->karyawan->nama ?? '') . ' ' . ($asesmen->user->karyawan->gelar_belakang ?? ''), 100, 'svg_datauri') }}"
+                                    alt="QR Petugas">
                                 <br>
-                                {{ $dokterNama }}
+                                {{ ($asesmen->user->karyawan->gelar_depan ?? '') . ' ' . str()->title($asesmen->user->karyawan->nama ?? '') . ' ' . ($asesmen->user->karyawan->gelar_belakang ?? '') }}
                             </td>
                         </tr>
                     </table>

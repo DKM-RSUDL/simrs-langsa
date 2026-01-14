@@ -10,26 +10,26 @@
 
         <div class="col-md-9">
             <x-content-card>
-            <x-button-previous />
+                <x-button-previous />
                 @include('components.page-header', [
                     'title' => 'Edit Asesmen Pengkajian Awal Medis Pasien Anak',
                     'description' => 'Isikan Asesmen awal dalam 24 jam sejak pasien masuk ke unit pelayanan',
                 ])
 
-            <form method="POST" enctype="multipart/form-data"
-                action="{{ route('rawat-inap.asesmen.medis.medis-anak.update', [
-                    'kd_unit' => request()->route('kd_unit'),
-                    'kd_pasien' => request()->route('kd_pasien'),
-                    'tgl_masuk' => request()->route('tgl_masuk'),
-                    'urut_masuk' => request()->route('urut_masuk'),
-                    'id' => $asesmen->id,
-                ]) }}">
-                @csrf
-                @method('PUT')
-                <input type="hidden" name="kd_pasien" value="{{ $dataMedis->kd_pasien }}">
-                <input type="hidden" name="kd_unit" value="{{ $dataMedis->kd_unit }}">
-                <input type="hidden" name="tgl_masuk" value="{{ $dataMedis->tgl_masuk }}">
-                <input type="hidden" name="urut_masuk" value="{{ $dataMedis->urut_masuk }}">
+                <form method="POST" enctype="multipart/form-data"
+                    action="{{ route('rawat-inap.asesmen.medis.medis-anak.update', [
+                        'kd_unit' => request()->route('kd_unit'),
+                        'kd_pasien' => request()->route('kd_pasien'),
+                        'tgl_masuk' => request()->route('tgl_masuk'),
+                        'urut_masuk' => request()->route('urut_masuk'),
+                        'id' => $asesmen->id,
+                    ]) }}">
+                    @csrf
+                    @method('PUT')
+                    <input type="hidden" name="kd_pasien" value="{{ $dataMedis->kd_pasien }}">
+                    <input type="hidden" name="kd_unit" value="{{ $dataMedis->kd_unit }}">
+                    <input type="hidden" name="tgl_masuk" value="{{ $dataMedis->tgl_masuk }}">
+                    <input type="hidden" name="urut_masuk" value="{{ $dataMedis->urut_masuk }}">
 
                     <!-- FORM ASESMEN -->
                     <div class="px-3">
@@ -186,8 +186,8 @@
                                     @endphp
 
                                     <input type="text" class="form-control" name="vital_sign[gcs]" id="gcsInput"
-                                        value="{{ old('vital_sign.gcs', $gcsValue) }}"
-                                        placeholder="Contoh: 15 E4 V5 M6" readonly>
+                                        value="{{ old('vital_sign.gcs', $gcsValue) }}" placeholder="Contoh: 15 E4 V5 M6"
+                                        readonly>
 
                                     <button type="button" class="btn btn-outline-primary" onclick="openGCSModal()"
                                         title="Buka Kalkulator GCS">
@@ -205,8 +205,7 @@
 
                                     <div class="flex-grow-1">
                                         <label class="form-label">Sistole</label>
-                                        <input type="number" class="form-control" name="sistole"
-                                            placeholder="Sistole"
+                                        <input type="number" class="form-control" name="sistole" placeholder="Sistole"
                                             value="{{ $asesmen->asesmenMedisAnak->sistole ?? '' }}">
                                     </div>
 
@@ -235,8 +234,7 @@
                             </div>
                             <div class="form-group">
                                 <label style="min-width: 200px;">Berat Badan Kg</label>
-                                <input type="number" class="form-control" name="berat_badan"
-                                    placeholder="Berat Badan"
+                                <input type="number" class="form-control" name="berat_badan" placeholder="Berat Badan"
                                     value="{{ $asesmen->asesmenMedisAnak->berat_badan ?? '' }}">
                             </div>
                             <div class="form-group">
@@ -431,8 +429,7 @@
                                                 <input class="form-check-input" type="radio" name="mulut_sianosis"
                                                     id="mulut_sianosis_tidak" value="tidak"
                                                     {{ old('mulut_sianosis', $fisik->mulut_sianosis ? 'ya' : 'tidak') === 'tidak' ? 'checked' : '' }}>
-                                                <label class="form-check-label"
-                                                    for="mulut_sianosis_tidak">Tidak</label>
+                                                <label class="form-check-label" for="mulut_sianosis_tidak">Tidak</label>
                                             </div>
                                         </div>
                                     </div>
@@ -476,8 +473,7 @@
                                                 <input class="form-check-input" type="radio" name="leher_kelenjar"
                                                     id="leher_kelenjar_tidak" value="tidak"
                                                     {{ old('leher_kelenjar', $fisik->leher_kelenjar ? 'ya' : 'tidak') === 'tidak' ? 'checked' : '' }}>
-                                                <label class="form-check-label"
-                                                    for="leher_kelenjar_tidak">Tidak</label>
+                                                <label class="form-check-label" for="leher_kelenjar_tidak">Tidak</label>
                                             </div>
                                         </div>
                                     </div>
@@ -517,18 +513,16 @@
                                         <label class="form-label">a. Bentuk:</label>
                                         <div class="d-flex flex-wrap gap-3">
                                             <div class="form-check">
-                                                <input class="form-check-input" type="checkbox"
-                                                    name="thoraks_bentuk[]" id="thoraks_simetris" value="simetris"
+                                                <input class="form-check-input" type="checkbox" name="thoraks_bentuk[]"
+                                                    id="thoraks_simetris" value="simetris"
                                                     {{ old('thoraks_simetris', $fisik->thoraks_simetris ?? false) ? 'checked' : '' }}>
-                                                <label class="form-check-label"
-                                                    for="thoraks_simetris">Simetris</label>
+                                                <label class="form-check-label" for="thoraks_simetris">Simetris</label>
                                             </div>
                                             <div class="form-check">
-                                                <input class="form-check-input" type="checkbox"
-                                                    name="thoraks_bentuk[]" id="thoraks_asimetris" value="asimetris"
+                                                <input class="form-check-input" type="checkbox" name="thoraks_bentuk[]"
+                                                    id="thoraks_asimetris" value="asimetris"
                                                     {{ old('thoraks_asimetris', $fisik->thoraks_asimetris ?? false) ? 'checked' : '' }}>
-                                                <label class="form-check-label"
-                                                    for="thoraks_asimetris">Asimetris</label>
+                                                <label class="form-check-label" for="thoraks_asimetris">Asimetris</label>
                                             </div>
                                         </div>
                                     </div>
@@ -605,18 +599,16 @@
                                         <label class="form-label">c. Venekasi:</label>
                                         <div class="d-flex flex-wrap gap-3">
                                             <div class="form-check">
-                                                <input class="form-check-input" type="radio"
-                                                    name="abdomen_venekasi" id="abdomen_venekasi_ya" value="ya"
+                                                <input class="form-check-input" type="radio" name="abdomen_venekasi"
+                                                    id="abdomen_venekasi_ya" value="ya"
                                                     {{ old('abdomen_venekasi', $fisik->abdomen_venekasi ? 'ya' : 'tidak') === 'ya' ? 'checked' : '' }}>
                                                 <label class="form-check-label" for="abdomen_venekasi_ya">Ya</label>
                                             </div>
                                             <div class="form-check">
-                                                <input class="form-check-input" type="radio"
-                                                    name="abdomen_venekasi" id="abdomen_venekasi_tidak"
-                                                    value="tidak"
+                                                <input class="form-check-input" type="radio" name="abdomen_venekasi"
+                                                    id="abdomen_venekasi_tidak" value="tidak"
                                                     {{ old('abdomen_venekasi', $fisik->abdomen_venekasi ? 'ya' : 'tidak') === 'tidak' ? 'checked' : '' }}>
-                                                <label class="form-check-label"
-                                                    for="abdomen_venekasi_tidak">Tidak</label>
+                                                <label class="form-check-label" for="abdomen_venekasi_tidak">Tidak</label>
                                             </div>
                                         </div>
                                     </div>
@@ -660,8 +652,7 @@
                                                 <input class="form-check-input" type="radio" name="genetalia"
                                                     id="genetalia_ambigus" value="ambigus"
                                                     {{ old('genetalia', $fisik->genetalia ?? '') === 'ambigus' ? 'checked' : '' }}>
-                                                <label class="form-check-label"
-                                                    for="genetalia_ambigus">Ambigus</label>
+                                                <label class="form-check-label" for="genetalia_ambigus">Ambigus</label>
                                             </div>
                                         </div>
                                     </div>
@@ -833,8 +824,7 @@
                                                                         </div>
                                                                         <div class="col-md-6">
                                                                             <div class="input-group input-group-sm">
-                                                                                <input type="number"
-                                                                                    class="form-control"
+                                                                                <input type="number" class="form-control"
                                                                                     name="lama_kehamilan"
                                                                                     placeholder="..."
                                                                                     value="{{ $asesmen->asesmenMedisAnakDtl->lama_kehamilan ?? '' }}">
@@ -914,9 +904,9 @@
                                                                 <!-- Persalinan -->
                                                                 <div class="col-md-4 mb-3">
                                                                     <div class="form-check">
-                                                                        <input class="form-check-input"
-                                                                            type="checkbox" name="persalinan"
-                                                                            id="persalinan" value="1"
+                                                                        <input class="form-check-input" type="checkbox"
+                                                                            name="persalinan" id="persalinan"
+                                                                            value="1"
                                                                             {{ old('persalinan', $asesmen->asesmenMedisAnakDtl->persalinan ?? false) ? 'checked' : '' }}>
                                                                         <label class="form-check-label"
                                                                             for="persalinan">Persalinan: PV/ SC/ FE/
@@ -927,8 +917,8 @@
                                                                 <!-- Penyulit Persalinan -->
                                                                 <div class="col-md-4 mb-3">
                                                                     <div class="form-check">
-                                                                        <input class="form-check-input"
-                                                                            type="checkbox" name="penyulit_persalinan"
+                                                                        <input class="form-check-input" type="checkbox"
+                                                                            name="penyulit_persalinan"
                                                                             id="penyulit_persalinan" value="1"
                                                                             {{ old('penyulit_persalinan', $asesmen->asesmenMedisAnakDtl->penyulit_persalinan ?? false) ? 'checked' : '' }}>
                                                                         <label class="form-check-label"
@@ -940,9 +930,9 @@
                                                                 <!-- Lainnya -->
                                                                 <div class="col-md-4 mb-3">
                                                                     <div class="form-check">
-                                                                        <input class="form-check-input"
-                                                                            type="checkbox" name="lainnya_sebukan"
-                                                                            id="lainnya_sebukan" value="1"
+                                                                        <input class="form-check-input" type="checkbox"
+                                                                            name="lainnya_sebukan" id="lainnya_sebukan"
+                                                                            value="1"
                                                                             {{ old('lainnya_sebukan', $asesmen->asesmenMedisAnakDtl->lainnya_sebukan ?? false) ? 'checked' : '' }}>
                                                                         <label class="form-check-label"
                                                                             for="lainnya_sebukan">Lainnya
@@ -971,9 +961,9 @@
                                                                 <!-- Prematur -->
                                                                 <div class="col-md-4 mb-3">
                                                                     <div class="form-check">
-                                                                        <input class="form-check-input"
-                                                                            type="checkbox" name="prematur_aterm"
-                                                                            id="prematur_aterm" value="1"
+                                                                        <input class="form-check-input" type="checkbox"
+                                                                            name="prematur_aterm" id="prematur_aterm"
+                                                                            value="1"
                                                                             {{ old('prematur_aterm', $asesmen->asesmenMedisAnakDtl->prematur_aterm ?? false) ? 'checked' : '' }}>
                                                                         <label class="form-check-label"
                                                                             for="prematur_aterm">Prematur/ aterm/ post
@@ -984,9 +974,9 @@
                                                                 <!-- KMK/SMK/BMK -->
                                                                 <div class="col-md-4 mb-3">
                                                                     <div class="form-check">
-                                                                        <input class="form-check-input"
-                                                                            type="checkbox" name="kmk_smk_bmk"
-                                                                            id="kmk_smk_bmk" value="1"
+                                                                        <input class="form-check-input" type="checkbox"
+                                                                            name="kmk_smk_bmk" id="kmk_smk_bmk"
+                                                                            value="1"
                                                                             {{ old('kmk_smk_bmk', $asesmen->asesmenMedisAnakDtl->kmk_smk_bmk ?? false) ? 'checked' : '' }}>
                                                                         <label class="form-check-label"
                                                                             for="kmk_smk_bmk">KMK/ SMK/ BMK</label>
@@ -996,9 +986,9 @@
                                                                 <!-- Pasca NICU -->
                                                                 <div class="col-md-4 mb-3">
                                                                     <div class="form-check">
-                                                                        <input class="form-check-input"
-                                                                            type="checkbox" name="pasca_nicu"
-                                                                            id="pasca_nicu" value="1"
+                                                                        <input class="form-check-input" type="checkbox"
+                                                                            name="pasca_nicu" id="pasca_nicu"
+                                                                            value="1"
                                                                             {{ old('pasca_nicu', $asesmen->asesmenMedisAnakDtl->pasca_nicu ?? false) ? 'checked' : '' }}>
                                                                         <label class="form-check-label"
                                                                             for="pasca_nicu">Pasca NICU</label>
@@ -1023,10 +1013,7 @@
                                     if (isset($asesmen->asesmenMedisAnakDtl) && $asesmen->asesmenMedisAnakDtl) {
                                         if (is_string($asesmen->asesmenMedisAnakDtl->riwayat_imunisasi)) {
                                             $riwayatImunisasi =
-                                                json_decode(
-                                                    $asesmen->asesmenMedisAnakDtl->riwayat_imunisasi,
-                                                    true,
-                                                ) ?:
+                                                json_decode($asesmen->asesmenMedisAnakDtl->riwayat_imunisasi, true) ?:
                                                 [];
                                         } elseif (is_array($asesmen->asesmenMedisAnakDtl->riwayat_imunisasi)) {
                                             $riwayatImunisasi = $asesmen->asesmenMedisAnakDtl->riwayat_imunisasi;
@@ -1110,8 +1097,7 @@
                                                 </div>
                                                 <div class="form-check">
                                                     <input class="form-check-input" type="checkbox"
-                                                        name="riwayat_imunisasi[]" id="booster_iii"
-                                                        value="booster_iii"
+                                                        name="riwayat_imunisasi[]" id="booster_iii" value="booster_iii"
                                                         {{ in_array('booster_iii', old('riwayat_imunisasi', $riwayatImunisasi)) ? 'checked' : '' }}>
                                                     <label class="form-check-label" for="booster_iii">Booster
                                                         III</label>
@@ -1243,19 +1229,16 @@
                                             <div class="col-md-3">
                                                 <div class="form-check form-check-inline">
                                                     <input class="form-check-input" type="radio"
-                                                        name="pernah_dirawat" id="pernah_dirawat_tidak"
-                                                        value="0"
+                                                        name="pernah_dirawat" id="pernah_dirawat_tidak" value="0"
                                                         {{ old('pernah_dirawat', $asesmen->asesmenMedisAnakDtl->pernah_dirawat ?? '0') == '0' ? 'checked' : '' }}>
                                                     <label class="form-check-label"
                                                         for="pernah_dirawat_tidak">Tidak</label>
                                                 </div>
                                                 <div class="form-check form-check-inline">
                                                     <input class="form-check-input" type="radio"
-                                                        name="pernah_dirawat" id="pernah_dirawat_ya"
-                                                        value="1"
+                                                        name="pernah_dirawat" id="pernah_dirawat_ya" value="1"
                                                         {{ old('pernah_dirawat', $asesmen->asesmenMedisAnakDtl->pernah_dirawat ?? '0') == '1' ? 'checked' : '' }}>
-                                                    <label class="form-check-label"
-                                                        for="pernah_dirawat_ya">Ya</label>
+                                                    <label class="form-check-label" for="pernah_dirawat_ya">Ya</label>
                                                 </div>
                                             </div>
                                             <div class="col-md-4">
@@ -1270,8 +1253,8 @@
                                                 <label class="form-label small">Jam:</label>
                                                 <input type="time" class="form-control form-control-sm"
                                                     name="jam_dirawat"
-                                                    value="{{ isset($asesmen->asesmenMedisAnakDtl->jam_masuk)
-                                                        ? \Carbon\Carbon::parse($asesmen->asesmenMedisAnakDtl->jam_masuk)->format('H:i')
+                                                    value="{{ isset($asesmen->asesmenMedisAnakDtl->jam_dirawat)
+                                                        ? \Carbon\Carbon::parse($asesmen->asesmenMedisAnakDtl->jam_dirawat)->format('H:i')
                                                         : \Carbon\Carbon::now('Asia/Jakarta')->format('H:i') }}">
                                             </div>
                                         </div>
@@ -1305,8 +1288,8 @@
                                     <div class="col-md-4 mb-3">
                                         <label class="form-label">Pemberian susu formula:</label>
                                         <div class="input-group">
-                                            <input type="number" class="form-control"
-                                                name="pemberian_susu_formula" placeholder="Usia mulai susu formula"
+                                            <input type="number" class="form-control" name="pemberian_susu_formula"
+                                                placeholder="Usia mulai susu formula"
                                                 value="{{ old('pemberian_susu_formula', $asesmen->asesmenMedisAnakDtl->pemberian_susu_formula ?? '') }}">
                                             <span class="input-group-text">mggu/bln</span>
                                         </div>
@@ -1315,8 +1298,8 @@
                                     <div class="col-md-4 mb-3">
                                         <label class="form-label">Makanan tambahan umur:</label>
                                         <div class="input-group">
-                                            <input type="number" class="form-control"
-                                                name="makanan_tambahan_umur" placeholder="Usia mulai MPASI"
+                                            <input type="number" class="form-control" name="makanan_tambahan_umur"
+                                                placeholder="Usia mulai MPASI"
                                                 value="{{ old('makanan_tambahan_umur', $asesmen->asesmenMedisAnakDtl->makanan_tambahan_umur ?? '') }}">
                                             <span class="input-group-text">mggu/bln</span>
                                         </div>
@@ -1583,8 +1566,7 @@
 
                             <!-- Tombol Reset (Opsional) -->
                             <div class="mt-3">
-                                <button type="button" class="btn btn-secondary"
-                                    onclick="resetDischargePlanning()">
+                                <button type="button" class="btn btn-secondary" onclick="resetDischargePlanning()">
                                     Reset Discharge Planning
                                 </button>
                             </div>
@@ -1596,8 +1578,8 @@
                     <div class="text-end">
                         <x-button-submit>Perbarui</x-button-submit>
                     </div>
-            </form>
-        </x-content-card>
+                </form>
+            </x-content-card>
         </div>
     </div>
 @endsection

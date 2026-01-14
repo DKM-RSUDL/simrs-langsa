@@ -212,7 +212,7 @@
 
                 $rmeAsesmenKepOphtamology = $data['asesmen']->rmeAsesmenKepOphtamology;
 
-              
+
 
                 $statusPresent = $data['asesmen']->rmeAsesmenKepOphtamologyFisik;
                 $faktorpemberat = $data['faktorpemberat']
@@ -276,7 +276,7 @@
                     <td class="label">ANAMNESIS / Keluhan Utama</td>
                     <td class="value">{{ $asesmen->anamnesis ?? '-' }}</td>
                 </tr>
-                
+
                 <!-- Riwayat Penyakit Sekarang -->
                 {{-- <tr>
                     <td  class="label" style="padding-top:0px;">Riwayat penyakit sekarang:</td>
@@ -341,7 +341,7 @@
                 @endforeach
             @endif
 
-               
+
             <!-- Riwayat Alergi -->
             <tr>
                 <td colspan="2" class="label" style="padding-top: 0px;">Riwayat Alergi:</td>
@@ -642,11 +642,11 @@
                         </td>
                     </tr>
 
-                  
+
 
                     <!-- RENCANA PENATALAKSANAAN DAN PENGOBATAN -->
                     <tr>
-                        <td 
+                        <td
                             class="label"
                             style="padding:18px 6px 8px; font-weight:bold;">
                             RENCANA PENATALAKSANAAN DAN PENGOBATAN
@@ -655,7 +655,7 @@
                             {{ $rmeAsesmenKepOphtamology->rencana_pengobatan ?? '–' }}
                         </td>
                     </tr>
-                    
+
 
                     <!-- PROGNOSIS -->
                     <tr>
@@ -712,7 +712,7 @@
                                 <td class="label" style="width: 55%; padding: 6px 8px;">
                                     Usia lanjut (> 60 th)
                                 </td>
-                             
+
                                 <td style="padding: 6px 8px; text-align: center;">
                                     <label style="margin-right: 30px;">
                                         <input type="checkbox"
@@ -837,10 +837,10 @@
                                     <br><br>
                                     Dokter yang memeriksa
                                     <br><br>
-                                    <img src="{{ generateQrCode($data['dataMedis']->dokter->nama_lengkap, 120, 'svg_datauri') }}" alt="QR Code">
+                                    <img src="{{ generateQrCode(($data['asesmen']->user->karyawan->gelar_depan ?? '') . ' ' . str()->title($data['asesmen']->user->karyawan->nama ?? '') . ' ' . ($data['asesmen']->user->karyawan->gelar_belakang ?? ''), 100, 'svg_datauri') }}" alt="QR Petugas">
                                     <br>
                                     <br>
-                                    {{ $data['dataMedis']->dokter->nama_lengkap     }}
+                                    {{ ($data['asesmen']->user->karyawan->gelar_depan ?? '') . ' ' . str()->title($data['asesmen']->user->karyawan->nama ?? '') . ' ' . ($data['asesmen']->user->karyawan->gelar_belakang ?? '') }}
                                 </td>
                             </tr>
                         </table>

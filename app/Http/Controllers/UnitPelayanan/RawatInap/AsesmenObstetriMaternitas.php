@@ -134,17 +134,6 @@ class AsesmenObstetriMaternitas extends Controller
 
 
             // 5. Simpan ke tabel obstetri (contoh)
-            $asesmenObstetri = new RmeAsesmenObstetri;
-            $asesmenObstetri->id_asesmen = $asesmen->id;
-            $asesmenObstetri->tgl_masuk = "$request->tgl_masuk $request->jam_masuk";
-            $asesmenObstetri->antenatal_rs = $request->antenatal_rs;
-            $asesmenObstetri->antenatal_rs_count = $request->antenatal_rs_count;
-            $asesmenObstetri->antenatal_lain = $request->antenatal_lain;
-            $asesmenObstetri->antenatal_lain_count = $request->antenatal_lain_count;
-            $asesmenObstetri->nama_pemeriksa = Auth::user()->name;
-            $asesmenObstetri->anamnesis_anamnesis = $request->anamnesis_anamnesis;
-            $asesmenObstetri->evaluasi_evaluasi = $request->evaluasi_evaluasi;
-            $asesmenObstetri->save();
 
             $asesmenObstetri = new RmeAsesmenObstetri;
             $asesmenObstetri->id_asesmen = $asesmen->id;
@@ -636,6 +625,8 @@ class AsesmenObstetriMaternitas extends Controller
             }
             $asesmenObstetri->save();
 
+
+
             $asesmenObstetriPemeriksaanFisik = RmeAsesmenObstetriPemeriksaanFisik::firstOrNew(['id_asesmen' => $asesmen->id]);
             $asesmenObstetriPemeriksaanFisik->id_asesmen = $asesmen->id;
             $asesmenObstetriPemeriksaanFisik->keadaan_umum = $request->keadaan_umum;
@@ -929,6 +920,7 @@ class AsesmenObstetriMaternitas extends Controller
             }
 
             $itemFisik = MrItemFisik::whereIn('id', $itemFisikIds)->get()->keyBy('id');
+              $satsetPrognosis = SatsetPrognosis::all();
 
             // Load view and generate PDF
             $pdf = PDF::loadView('unit-pelayanan.rawat-inap.pelayanan.asesmen-obstetri-maternitas.print', [
@@ -943,6 +935,7 @@ class AsesmenObstetriMaternitas extends Controller
                 'rmeAsesmenObstetriDischargePlanning' => optional($asesmen)->rmeAsesmenObstetriDischargePlanning,
                 'rmeAsesmenObstetriDiagnosisImplementasi' => optional($asesmen)->rmeAsesmenObstetriDiagnosisImplementasi,
                 'itemFisik' => $itemFisik,
+                'satsetPrognosis' => $satsetPrognosis
             ]);
 
             $pdf->setPaper('a4', 'portrait');
