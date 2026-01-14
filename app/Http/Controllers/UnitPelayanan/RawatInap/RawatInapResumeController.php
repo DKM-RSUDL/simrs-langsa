@@ -558,7 +558,7 @@ class RawatInapResumeController extends Controller
         $hasilKonpas = "$tdKonpas, $rr, $resp, $temp, $tb, $bb";
 
         $resepRawat = $this->getRiwayatObatHariIni($dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk, $kunjunganIGD);
-        $resepPulang = $this->getObatPulang($dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk);
+        $resepPulang = $this->getObatPulang($dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk, $kunjunganIGD);
 
         $labor = SegalaOrder::with(['details'])
             ->where('kd_pasien', $dataMedis->kd_pasien)
