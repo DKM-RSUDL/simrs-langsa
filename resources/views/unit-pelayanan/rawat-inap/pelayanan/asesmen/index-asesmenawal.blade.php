@@ -283,7 +283,11 @@
                         class="btn btn-sm btn-info">
                         <i class="fas fa-eye me-1"></i> Lihat
                     </a>
-
+                    <a id="btnPrintAsesmen"
+                        href="{{ route('rawat-inap.asesmen.medis.ginekologik.print-pdf', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
+                        target="_blank" class="btn btn-primary btn-sm">
+                        <i class="bi bi-printer"></i> Print
+                    </a>
                     <a href="{{ route('rawat-inap.asesmen.medis.ginekologik.edit', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
                         class="btn btn-sm btn-secondary">
                         <i class="fas fa-edit"></i> Edit

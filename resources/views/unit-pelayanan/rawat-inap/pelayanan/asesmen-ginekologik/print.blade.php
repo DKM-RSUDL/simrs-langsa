@@ -3,757 +3,521 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Asesmen Ginekologik</title>
+    <title>Asesmen Medis Ginekologik - {{ $pasien->nama ?? '' }}</title>
     <style>
         @page {
-            margin: 0.5cm 1cm;
+            size: A4;
+            margin: 3mm 6mm;
         }
 
         body {
-            font-family: Arial, sans-serif;
-            font-size: 11px;
-            line-height: 1.4;
-            color: #333;
             margin: 0;
             padding: 0;
+            box-sizing: border-box;
+            font-family: "DejaVu Sans", "Helvetica", "Arial", sans-serif !important;
+            font-size: 8.5pt;
         }
 
-        header {
+        .a4 {
             width: 100%;
-            display: table;
-            padding-bottom: 20px;
-            border-bottom: 2px solid black;
-            margin-bottom: 20px;
+            max-width: 100%;
         }
 
-        .left-column {
-            float: left;
-            width: 20%;
-            text-align: center;
-        }
-
-        .center-column {
-            float: left;
-            width: 40%;
-            text-align: center;
-            padding: 10px 0;
-        }
-
-        .right-column {
-            float: right;
-            width: 35%;
-        }
-
-        .header-logo {
-            width: 80px;
-            margin-bottom: 5px;
-        }
-
-        .info-table {
+        table {
             width: 100%;
             border-collapse: collapse;
         }
 
-        .info-table td {
-            padding: 4px;
-            border: 1px solid #333;
-            font-size: 10px;
-        }
-
-        .clear {
-            clear: both;
-        }
-
-        .content-section {
-            margin-top: 20px;
-        }
-
-        .section-title {
-            background: #f5f5f5;
-            padding: 8px;
-            font-weight: bold;
-            border-left: 3px solid #333;
-            margin-bottom: 10px;
-            font-size: 12px;
-        }
-
-        .detail-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 15px;
-        }
-
-        .detail-table th,
-        .detail-table td {
-            padding: 6px;
-            border: 1px solid #333;
-            font-size: 10px;
+        td,
+        th {
+            padding: 4px 6px;
             vertical-align: top;
         }
 
-        .detail-table th {
-            background-color: #f8f9fa;
-            font-weight: bold;
+        .header-table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: #f0f0f0;
+            padding: 0;
+            position: relative;
         }
 
-        .col-header {
-            font-weight: bold;
-            background-color: #f8f9fa;
-            width: 25%;
-        }
-
-        .checkbox-group {
-            display: inline-block;
-            margin-right: 15px;
-        }
-
-        .checkbox {
-            margin-right: 5px;
+        .td-left {
+            width: 40%;
+            text-align: left;
             vertical-align: middle;
         }
 
-        input[type="checkbox"] {
-            margin-right: 5px;
+        .td-center {
+            width: 40%;
+            text-align: center;
             vertical-align: middle;
-            transform: scale(1.2);
         }
 
-        .sign-area {
-            margin-top: 30px;
-            page-break-inside: avoid;
+        .td-right {
+            width: 20%;
+            text-align: center;
+            vertical-align: middle;
         }
 
-        .sign-box {
-            float: right;
-            width: 200px;
+        .brand-name {
+            font-weight: 700;
+            font-size: 14px;
+            margin: 0;
+        }
+
+        .brand-info {
+            font-size: 7px;
+            margin: 0;
+        }
+
+        .title-main {
+            font-size: 16px;
+            font-weight: bold;
+            display: block;
+            margin: 0;
+        }
+
+        .title-sub {
+            font-size: 14px;
+            font-weight: bold;
+            display: block;
+            margin: 0;
+        }
+
+        .unit-box {
+            background-color: #bbbbbb;
+            padding: 15px 0px;
+            width: 100%;
             text-align: center;
         }
 
-        .sign-box p {
-            margin: 5px 0;
+        .unit-text {
+            font-size: 18px;
+            font-weight: bold;
+            color: #ffffff;
         }
 
-        .two-column {
-            width: 48%;
-            float: left;
-            margin-right: 2%;
+        .patient-table {
+            width: 100%;
+            margin-top: 15px;
+            border-collapse: collapse;
         }
 
-        .two-column:last-child {
-            margin-right: 0;
+        .patient-table th,
+        .patient-table td {
+            border: 1px solid #ccc;
+            padding: 5px 7px;
+            font-size: 9pt;
         }
 
-        .text-center {
-            text-align: center;
+        .patient-table th {
+            background-color: #f2f2f2;
+            text-align: left;
+            width: 130px;
         }
 
-        .small-text {
-            font-size: 9px;
+        .section-title {
+            font-weight: bold;
+            font-size: 11pt;
+            padding: 8px 0 4px 0;
+            border-bottom: 1px solid #000;
+            margin-top: 10px;
+            margin-bottom: 5px;
         }
 
-        .page-break {
-            page-break-before: always;
+        .label {
+            font-weight: bold;
+            width: 35%;
         }
 
-        /* Print-specific styles */
-        @media print {
-            .page-break {
-                page-break-before: always;
-            }
+        .value {
+            border-bottom: 0.5px dotted #000;
+            min-height: 18px;
+        }
 
-            * {
-                -webkit-print-color-adjust: exact !important;
-                color-adjust: exact !important;
-                print-color-adjust: exact !important;
-            }
+        .table-border {
+            border: 1px solid #000;
+            margin-top: 5px;
+        }
 
-            input[type="checkbox"] {
-                -webkit-print-color-adjust: exact !important;
-                color-adjust: exact !important;
-                print-color-adjust: exact !important;
-                transform: scale(1.2);
-                margin-right: 5px;
-            }
+        .table-border th,
+        .table-border td {
+            border: 1px solid #000;
+            padding: 4px;
+        }
 
-            .section-title {
-                background-color: #f5f5f5 !important;
-            }
-
-            .col-header {
-                background-color: #f8f9fa !important;
-            }
-
-            .detail-table th {
-                background-color: #f8f9fa !important;
-            }
-
-            table,
-            th,
-            td {
-                border: 1px solid #000 !important;
-            }
+        .bg-gray {
+            background-color: #f2f2f2;
         }
     </style>
 </head>
 
 <body>
-    <header>
-        <div class="left-column">
-            <div style="width: 80px; height: 80px; border: 0px solid #333; margin: 0 auto 5px;">
-                @if(file_exists(public_path('assets/img/Logo-RSUD-Langsa-1.png')))
-                    <img src="data:image/png;base64,{{ base64_encode(file_get_contents(public_path('assets/img/Logo-RSUD-Langsa-1.png'))) }}"
-                        class="header-logo" alt="Logo">
-                @else
-                    <div style="text-align: center; line-height: 80px; font-size: 8px;">LOGO</div>
-                @endif
-            </div>
-            <p style="font-size: 10px; margin: 0;">RSUD Langsa</p>
-            <p style="font-size: 9px; margin: 0;">Jl. Jend. A. Yani No.1 Kota Langsa</p>
-        </div>
-        <div class="center-column">
-            <h1 style="font-size: 16px; margin: 0;">Pengkajian Awal Medis</h1>
-            <h2 style="font-size: 14px; margin: 5px 0;">Ginekologik</h2>
-            <p style="font-size: 10px; margin: 0;">Diisi dalam 24 jam sejak pasien masuk</p>
-            <p style="font-size: 9px; margin: 5px 0;">No : B.8 /IRM/Rev 2/ 2018</p>
-        </div>
-        <div class="right-column">
-            <table class="info-table">
-                <tr>
-                    <td><strong>No RM</strong></td>
-                    <td>{{ optional($pasien)->kd_pasien ?? '-' }}</td>
-                </tr>
-                <tr>
-                    <td><strong>Nama</strong></td>
-                    <td>{{ optional($pasien)->nama ? ucwords(strtolower(optional($pasien)->nama)) : '-' }}</td>
-                </tr>
-                <tr>
-                    <td><strong>Jenis Kelamin</strong></td>
-                    <td>
-                        @php
-                            $gender = '-';
-                            if (optional($pasien)->jenis_kelamin == 1) {
-                                $gender = 'Laki-Laki';
-                            } elseif (optional($pasien)->jenis_kelamin == 0) {
-                                $gender = 'Perempuan';
-                            }
-                        @endphp
-                        {{ $gender }}
-                    </td>
-                </tr>
-                <tr>
-                    <td><strong>Tanggal Lahir</strong></td>
-                    <td>{{ optional($pasien)->tgl_lahir ? date('d/m/Y', strtotime(optional($pasien)->tgl_lahir)) : '-' }}
-                    </td>
-                </tr>
-            </table>
-        </div>
-        <div class="clear"></div>
-    </header>
+    @php
+        // Mapping Relasi dari Controller
+        $ginek = $rmeAsesmenGinekologik;
+        $vital = $rmeAsesmenGinekologikTandaVital;
+        $fisikRadio = $asesmen->rmeAsesmenGinekologikPemeriksaanFisik;
+        $ekstremitas = $rmeAsesmenGinekologikEkstremitasGinekologik;
+        $discharge = $rmeAsesmenGinekologikPemeriksaanDischarge;
+        $dxImpl = $rmeAsesmenGinekologikDiagnosisImplementasi;
+        $pfDynamic = $asesmen->pemeriksaanFisik;
 
-    <!-- 1. Data masuk -->
-    <div class="content-section">
-        <div class="section-title">1. DATA MASUK</div>
-        <table class="detail-table">
-            <tr>
-                <td class="col-header">Petugas:</td>
-                <td>{{ $asesmen->user->name ?? '-' }}</td>
-                <td class="col-header">Tanggal Dan Jam Masuk:</td>
-                <td>{{ $asesmen->rmeAsesmenGinekologik->tanggal ? date('d M Y', strtotime($asesmen->rmeAsesmenGinekologik->tanggal)) : '-' }}
-                    {{ $asesmen->rmeAsesmenGinekologik->jam_masuk ? date('H:i', strtotime($asesmen->rmeAsesmenGinekologik->jam_masuk)) : '-' }}
-                </td>
-            </tr>
-            <tr>
-                <td class="col-header">Kondisi Masuk:</td>
-                <td>{{ $asesmen->rmeAsesmenGinekologik->kondisi_masuk ?? '-' }}</td>
-                <td class="col-header">Diagnosis Masuk:</td>
-                <td>{{ $asesmen->rmeAsesmenGinekologik->diagnosis_masuk ?? '-' }}</td>
-            </tr>
-            <tr>
-                <td class="col-header">Ruang:</td>
-                <td colspan="3">{{ $dataMedis->unit->nama_unit ?? '-'}}</td>
-            </tr>
-        </table>
-    </div>
+        // Logo RSUD Langsa
+        $logoPath = public_path('assets/img/Logo-RSUD-Langsa-1.png');
+        $logoData = @file_get_contents($logoPath);
+        $logoBase64 = $logoData ? 'data:image/png;base64,' . base64_encode($logoData) : null;
 
-    <!-- 2. G/P/A (Gravida, Para, Abortus) -->
-    <div class="content-section">
-        <div class="section-title">2. G/P/A (GRAVIDA, PARA, ABORTUS)</div>
-        <table class="detail-table">
-            <tr>
-                <td class="col-header">Gravida:</td>
-                <td>{{ $asesmen->rmeAsesmenGinekologik->gravida ?? '-' }}</td>
-                <td class="col-header">Para:</td>
-                <td>{{ $asesmen->rmeAsesmenGinekologik->para ?? '-' }}</td>
-            </tr>
-            <tr>
-                <td class="col-header">Abortus:</td>
-                <td colspan="3">{{ $asesmen->rmeAsesmenGinekologik->abortus ?? '-' }}</td>
-            </tr>
-        </table>
-    </div>
+        // Helper Decode JSON
+        $decode = function ($val) {
+            if (empty($val)) {
+                return [];
+            }
+            $d = is_string($val) ? json_decode($val, true) : $val;
+            return is_array($d) ? $d : [];
+        };
 
-    <!-- 3. Keluhan Utama -->
-    <div class="content-section">
-        <div class="section-title">3. KELUHAN UTAMA</div>
-        <table class="detail-table">
-            <tr>
-                <td class="col-header">Keluhan Utama/Alasan Masuk RS:</td>
-                <td colspan="3">{{ $asesmen->rmeAsesmenGinekologik->keluhan_utama ?? '-' }}</td>
-            </tr>
-            <tr>
-                <td class="col-header">Riwayat Penyakit:</td>
-                <td colspan="3">{{ $asesmen->rmeAsesmenGinekologik->riwayat_penyakit ?? '-' }}</td>
-            </tr>
-            <tr>
-                <td class="col-header">Riwayat Haid - Siklus:</td>
-                <td>{{ $asesmen->rmeAsesmenGinekologik->siklus ? $asesmen->rmeAsesmenGinekologik->siklus . ' Hari' : '-' }}</td>
-                <td class="col-header">HPHT:</td>
-                <td>{{ $asesmen->rmeAsesmenGinekologik->hpht ?? '-' }}</td>
-            </tr>
-            <tr>
-                <td class="col-header">Usia Kehamilan:</td>
-                <td>{{ $asesmen->rmeAsesmenGinekologik->usia_kehamilan ?? '-' }}</td>
-                <td class="col-header">Perkawinan - Jumlah:</td>
-                <td>{{ $asesmen->rmeAsesmenGinekologik->jumlah ? $asesmen->rmeAsesmenGinekologik->jumlah . ' Kali' : '-' }}</td>
-            </tr>
-            <tr>
-                <td class="col-header">Dengan Suami Sekarang:</td>
-                <td colspan="3">{{ $asesmen->rmeAsesmenGinekologik->tahun ? $asesmen->rmeAsesmenGinekologik->tahun . ' Tahun' : '-' }}</td>
-            </tr>
-        </table>
-    </div>
+        // Helper Normal/Abnormal
+        $fmtNormal = function ($val, $ket = '') {
+            if ($val === null || $val === '') {
+                return '-';
+            }
+            return ($val == '1' ? 'Normal' : 'Abnormal') . ($ket ? ' (' . $ket . ')' : '');
+        };
 
-    <!-- 4. Riwayat Obstetrik -->
-    <div class="content-section">
-        <div class="section-title">4. RIWAYAT OBSTETRIK</div>
-        @if (!empty($asesmen->rmeAsesmenGinekologik->riwayat_obstetrik))
-            @php
-                $riwayatObstetrik = json_decode($asesmen->rmeAsesmenGinekologik->riwayat_obstetrik, true) ?? [];
-            @endphp
-            @if (!empty($riwayatObstetrik) && is_array($riwayatObstetrik))
-                <table class="detail-table">
-                    <thead>
+        // Prognosis Label
+        $prognosisLabel = '-';
+        if (!empty($ginek->paru_prognosis)) {
+            $prognosisLabel =
+                \App\Models\SatsetPrognosis::where('prognosis_id', $ginek->paru_prognosis)->value('value') ??
+                $ginek->paru_prognosis;
+        }
+    @endphp
+
+    <div class="a4">
+        <table class="header-table">
+            <tr>
+                <td class="td-left">
+                    <table>
                         <tr>
-                            <th>Keadaan</th>
-                            <th>Kehamilan</th>
-                            <th>Cara Persalinan</th>
-                            <th>Keadaan Nifas</th>
-                            <th>Tanggal Lahir</th>
-                            <th>Keadaan Anak</th>
-                            <th>Tempat dan Penolong</th>
+                            <td>
+                                @if ($logoBase64)
+                                    <img src="{{ $logoBase64 }}" style="width:70px;">
+                                @endif
+                            </td>
+                            <td>
+                                <p class="brand-name">RSUD Langsa</p>
+                                <p class="brand-info">Jl. Jend. A. Yani No.1 Kota Langsa</p>
+                                <p class="brand-info">Telp. 0641-22051, email: rsulangsa@gmail.com</p>
+                            </td>
                         </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($riwayatObstetrik as $index => $item)
-                            <tr>
-                                <td>{{ $item['keadaan'] ?? '-' }}</td>
-                                <td>{{ $item['kehamilan'] ?? '-' }}</td>
-                                <td>{{ $item['caraPersalinan'] ?? '-' }}</td>
-                                <td>{{ $item['keadaanNifas'] ?? '-' }}</td>
-                                <td>{{ !empty($item['tanggalLahir']) ? date('d M Y', strtotime($item['tanggalLahir'])) : '-' }}</td>
-                                <td>{{ $item['keadaanAnak'] ?? '-' }}</td>
-                                <td>{{ $item['tempatPenolong'] ?? '-' }}</td>
-                            </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-            @else
-                <table class="detail-table">
-                    <tr>
-                        <td>Tidak ada data riwayat obstetrik</td>
-                    </tr>
-                </table>
-            @endif
-        @else
-            <table class="detail-table">
+                    </table>
+                </td>
+                <td class="td-center">
+                    <span class="title-main">ASESMEN MEDIS GINEKOLOGIK</span>
+                    <span class="title-sub">Pengkajian Awal
+                        Medis Ginekologik</span>
+                </td>
+                <td class="td-right">
+                    <div class="unit-box"><span class="unit-text">RAWAT INAP</span></div>
+                </td>
+            </tr>
+        </table>
+
+        <table class="patient-table">
+            <tr>
+                <th>No. RM</th>
+                <td>{{ $pasien->kd_pasien ?? '-' }}</td>
+                <th>Tgl. Lahir</th>
+                <td>{{ !empty($pasien->tgl_lahir) ? date('d-m-Y', strtotime($pasien->tgl_lahir)) : '-' }}</td>
+            </tr>
+            <tr>
+                <th>Nama Pasien</th>
+                <td>{{ $pasien->nama ?? '-' }}</td>
+                <th>Jenis Kelamin</th>
+                <td>{{ ($pasien->jenis_kelamin ?? '') == '1' ? 'Laki-Laki' : 'Perempuan' }}</td>
+            </tr>
+        </table>
+
+        <div class="section-title">1. DATA MASUK</div>
+        <table>
+            <tr>
+                <td class="label">Tanggal & Jam Pengisian</td>
+                <td class="value">{{ !empty($ginek->tanggal) ? date('d-m-Y', strtotime($ginek->tanggal)) : '-' }} /
+                    {{ $ginek->jam_masuk ?? '-' }}</td>
+            </tr>
+            <tr>
+                <td class="label">Kondisi Masuk</td>
+                <td class="value">{{ $ginek->kondisi_masuk ?? '-' }}</td>
+            </tr>
+            <tr>
+                <td class="label">Diagnosis Masuk</td>
+                <td class="value">{{ $ginek->diagnosis_masuk ?? '-' }}</td>
+            </tr>
+        </table>
+
+        <div class="section-title">2. G/P/A (Gravida, Para, Abortus)</div>
+        <table style="text-align: center;">
+            <tr>
+                <td style="border: 1px solid #ccc;"><strong>G:</strong> {{ $ginek->gravida ?? '0' }}</td>
+                <td style="border: 1px solid #ccc;"><strong>P:</strong> {{ $ginek->para ?? '0' }}</td>
+                <td style="border: 1px solid #ccc;"><strong>A:</strong> {{ $ginek->abortus ?? '0' }}</td>
+            </tr>
+        </table>
+
+        <div class="section-title">3. KELUHAN UTAMA & RIWAYAT HAID</div>
+        <table>
+            <tr>
+                <td class="label">Keluhan Utama</td>
+                <td class="value">{{ $ginek->keluhan_utama ?? '-' }}</td>
+            </tr>
+            <tr>
+                <td class="label">Riwayat Penyakit</td>
+                <td class="value">{{ $ginek->riwayat_penyakit ?? '-' }}</td>
+            </tr>
+            <tr>
+                <td colspan="2" style="padding: 5px 0;">
+                    <strong>Riwayat Haid:</strong> Siklus: {{ $ginek->siklus ?? '-' }} Hari |
+                    HPHT: {{ !empty($ginek->hpht) ? date('d-m-Y', strtotime($ginek->hpht)) : '-' }} |
+                    Usia Kehamilan: {{ $ginek->usia_kehamilan_display ?? '-' }}
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <strong>Perkawinan:</strong> Jumlah: {{ $ginek->jumlah ?? '0' }} Kali |
+                    Dengan Suami Sekarang: {{ $ginek->tahun ?? '-' }} |
+                    Jumlah Suami: {{ $ginek->jumlah_suami ?? '0' }}
+                </td>
+            </tr>
+        </table>
+
+        <div class="section-title">4. RIWAYAT OBSTETRIK</div>
+        <table class="table-border">
+            <tr class="bg-gray">
+                <th>Keadaan</th>
+                <th>Cara Persalinan</th>
+                <th>Nifas</th>
+                <th>Tgl Lahir</th>
+                <th>Keadaan Anak</th>
+                <th>Penolong</th>
+            </tr>
+            @forelse($decode($ginek->riwayat_obstetrik) as $obs)
                 <tr>
-                    <td>Tidak ada data riwayat obstetrik</td>
+                    <td>{{ $obs['keadaan'] ?? '-' }}</td>
+                    <td>{{ $obs['cara_persalinan'] ?? '-' }}</td>
+                    <td>{{ $obs['keadaan_nifas'] ?? '-' }}</td>
+                    <td>{{ $obs['tanggal_lahir'] ?? '-' }}</td>
+                    <td>{{ $obs['keadaan_anak'] ?? '-' }}</td>
+                    <td>{{ $obs['tempat_penolong'] ?? '-' }}</td>
                 </tr>
-            </table>
-        @endif
-    </div>
-
-    <!-- 5. Riwayat Penyakit Dahulu -->
-    <div class="content-section">
-        <div class="section-title">5. RIWAYAT PENYAKIT DAHULU/TERMASUK OPERASI DAN KELUARGA BERENCANA</div>
-        <table class="detail-table">
-            <tr>
-                <td>{{ $asesmen->rmeAsesmenGinekologik->riwayat_penyakit_dahulu ?? '-' }}</td>
-            </tr>
-        </table>
-    </div>
-
-    <!-- Page Break untuk halaman kedua -->
-    <div class="page-break"></div>
-
-    <!-- 6. Pemeriksaan Fisik -->
-    <div class="content-section">
-        <div class="section-title">6. PEMERIKSAAN FISIK</div>
-        <table class="detail-table">
-            <tr>
-                <td colspan="4">
-                    <span style="font-weight: bold;">Pemeriksaan Fisik</span>
-                    <br>
-                    Centang normal jika fisik yang dinilai normal. Jika tidak dipilih, maka pemeriksaan tidak dilakukan.
-                </td>
-            </tr>
-            @php
-                // Fetch all physical examination items from MrItemFisik
-                $fisikItems = \App\Models\MrItemFisik::orderBy('urut')->get()->pluck('nama', 'id')->toArray();
-
-                // Create mapping of pemeriksaan fisik by id_item_fisik
-                $pemeriksaanFisikMap = [];
-                foreach ($pemeriksaanFisik ?? [] as $item) {
-                    $pemeriksaanFisikMap[$item->id_item_fisik] = $item;
-                }
-
-                // Split items into two columns
-                $totalItems = count($fisikItems);
-                $halfCount = ceil($totalItems / 2);
-                $firstColumn = array_slice($fisikItems, 0, $halfCount, true);
-                $secondColumn = array_slice($fisikItems, $halfCount, null, true);
-                $maxRows = max(count($firstColumn), count($secondColumn));
-            @endphp
-
-            @for ($i = 0; $i < $maxRows; $i++)
+            @empty
                 <tr>
-                    <!-- First Column -->
-                    <td class="col-header" style="width: 25%;">
-                        @if (isset($firstColumn[array_keys($firstColumn)[$i]]))
-                            @php
-                                $itemId = array_keys($firstColumn)[$i];
-                                $itemName = $firstColumn[$itemId];
-                                $pemeriksaan = $pemeriksaanFisikMap[$itemId] ?? null;
-                                $status = optional($pemeriksaan)->is_normal;
-                                $keterangan = optional($pemeriksaan)->keterangan;
-                                $prefix = chr(97 + array_keys($firstColumn)[$i]); // a, b, c, ...
-                            @endphp
-                            {{ $prefix }}. {{ $itemName }}
-                        @else
-                            &nbsp;
-                        @endif
-                    </td>
-                    <td style="width: 25%;">
-                        @if (isset($firstColumn[array_keys($firstColumn)[$i]]))
-                            @if($status === 1 || $status === '1')
-                                Normal
-                            @elseif($status === 0 || $status === '0')
-                                Tidak Normal
-                                @if($keterangan)
-                                    - {{ $keterangan }}
-                                @endif
-                            @else
-                                Tidak Diperiksa
-                            @endif
-                        @else
-                            &nbsp;
-                        @endif
-                    </td>
-
-                    <!-- Second Column -->
-                    <td class="col-header" style="width: 25%;">
-                        @if (isset($secondColumn[array_keys($secondColumn)[$i]]))
-                            @php
-                                $itemId = array_keys($secondColumn)[$i];
-                                $itemName = $secondColumn[$itemId];
-                                $pemeriksaan = $pemeriksaanFisikMap[$itemId] ?? null;
-                                $status = optional($pemeriksaan)->is_normal;
-                                $keterangan = optional($pemeriksaan)->keterangan;
-                                $prefix = chr(97 + count($firstColumn) + $i); // continues from first column
-                            @endphp
-                            {{ $prefix }}. {{ $itemName }}
-                        @else
-                            &nbsp;
-                        @endif
-                    </td>
-                    <td style="width: 25%;">
-                        @if (isset($secondColumn[array_keys($secondColumn)[$i]]))
-                            @if($status === 1 || $status === '1')
-                                Normal
-                            @elseif($status === 0 || $status === '0')
-                                Tidak Normal
-                                @if($keterangan)
-                                    - {{ $keterangan }}
-                                @endif
-                            @else
-                                Tidak Diperiksa
-                            @endif
-                        @else
-                            &nbsp;
-                        @endif
-                    </td>
+                    <td colspan="6" style="text-align:center;">Tidak ada riwayat obstetrik</td>
                 </tr>
-            @endfor
+            @endforelse
         </table>
-    </div>
 
-    <!-- 7. Pemeriksaan Ekstremitas -->
-    <div class="content-section">
-        <div class="section-title">7. PEMERIKSAAN EKSTREMITAS</div>
-        <table class="detail-table">
+        <div class="section-title">5. RIWAYAT PENYAKIT DAHULU (Termasuk Operasi & KB)</div>
+        <div style="min-height: 40px; border: 0.5px solid #ccc; padding: 5px;">
+            {{ $ginek->riwayat_penyakit_dahulu ?? '-' }}</div>
+
+        <div class="section-title">6. TANDA VITAL</div>
+        <table class="table-border">
             <tr>
-                <td class="col-header" colspan="2">Ekstremitas Atas</td>
-                <td class="col-header" colspan="2">Ekstremitas Bawah</td>
+                <td width="25%"><strong>TD:</strong>
+                    {{ $vital->tekanan_darah_sistole ?? '-' }}/{{ $vital->tekanan_darah_diastole ?? '-' }} mmHg</td>
+                <td width="25%"><strong>Suhu:</strong> {{ $vital->suhu ?? '-' }} °C</td>
+                <td width="25%"><strong>Nadi:</strong> {{ $vital->nadi ?? '-' }} x/mnt</td>
+                <td width="25%"><strong>Respirasi:</strong> {{ $vital->respirasi ?? '-' }} x/mnt</td>
             </tr>
             <tr>
-                <td class="col-header">Edema:</td>
-                <td>{{ $asesmen->rmeAsesmenGinekologikEkstremitasGinekologik->edema_atas ?? '-' }}</td>
-                <td class="col-header">Edema:</td>
-                <td>{{ $asesmen->rmeAsesmenGinekologikEkstremitasGinekologik->edema_bawah ?? '-' }}</td>
-            </tr>
-            <tr>
-                <td class="col-header">Varises:</td>
-                <td>{{ $asesmen->rmeAsesmenGinekologikEkstremitasGinekologik->varises_atas ?? '-' }}</td>
-                <td class="col-header">Varises:</td>
-                <td>{{ $asesmen->rmeAsesmenGinekologikEkstremitasGinekologik->varises_bawah ?? '-' }}</td>
-            </tr>
-            <tr>
-                <td class="col-header">Refleks:</td>
-                <td>{{ $asesmen->rmeAsesmenGinekologikEkstremitasGinekologik->refleks_atas ?? '-' }}</td>
-                <td class="col-header">Refleks:</td>
-                <td>{{ $asesmen->rmeAsesmenGinekologikEkstremitasGinekologik->refleks_bawah ?? '-' }}</td>
-            </tr>
-            <tr>
-                <td class="col-header">Catatan Tambahan:</td>
-                <td colspan="3">{{ $asesmen->rmeAsesmenGinekologikEkstremitasGinekologik->catatan_ekstremitas ?? '-' }}</td>
+                <td><strong>Sat. O2:</strong> {{ $vital->nafas ?? '-' }} %</td>
+                <td><strong>BB:</strong> {{ $vital->berat_badan ?? '-' }} kg</td>
+                <td><strong>TB:</strong> {{ $vital->tinggi_badan ?? '-' }} cm</td>
+                <td></td>
             </tr>
         </table>
-    </div>
 
-    <!-- 8. Status Ginekologik dan Pemeriksaan -->
-    <div class="content-section">
-        <div class="section-title">8. STATUS GINEKOLOGIK DAN PEMERIKSAAN</div>
-        <table class="detail-table">
+        <div class="section-title">7. PEMERIKSAAN FISIK</div>
+        <table class="table-border">
             <tr>
-                <td class="col-header">Keadaan Umum:</td>
-                <td>{{ $asesmen->rmeAsesmenGinekologikEkstremitasGinekologik->keadaan_umum ?? '-' }}</td>
-                <td class="col-header">Status Ginekologik:</td>
-                <td>{{ $asesmen->rmeAsesmenGinekologikEkstremitasGinekologik->status_ginekologik ?? '-' }}</td>
+                <td width="30%"><strong>Kesadaran</strong></td>
+                <td colspan="3">{{ $fisikRadio->paru_kesadaran ?? '-' }}</td>
             </tr>
             <tr>
-                <td class="col-header">Pemeriksaan:</td>
-                <td>{{ $asesmen->rmeAsesmenGinekologikEkstremitasGinekologik->pemeriksaan ?? '-' }}</td>
-                <td class="col-header">Inspekulo:</td>
-                <td>{{ $asesmen->rmeAsesmenGinekologikEkstremitasGinekologik->inspekulo ?? '-' }}</td>
+                <td><strong>Kepala</strong></td>
+                <td>{{ $fmtNormal($fisikRadio->kepala, $fisikRadio->kepala_keterangan) }}</td>
+                <td><strong>Leher</strong></td>
+                <td>{{ $fmtNormal($fisikRadio->leher, $fisikRadio->leher_keterangan) }}</td>
             </tr>
             <tr>
-                <td class="col-header">VT (Vaginal Toucher):</td>
-                <td>{{ $asesmen->rmeAsesmenGinekologikEkstremitasGinekologik->vt ?? '-' }}</td>
-                <td class="col-header">RT (Rectal Toucher):</td>
-                <td>{{ $asesmen->rmeAsesmenGinekologikEkstremitasGinekologik->rt ?? '-' }}</td>
+                <td><strong>Mata</strong></td>
+                <td>{{ $fmtNormal($fisikRadio->mata, $fisikRadio->mata_keterangan) }}</td>
+                <td><strong>Tenggorokan</strong></td>
+                <td>{{ $fmtNormal($fisikRadio->tenggorokan, $fisikRadio->tenggorokan_keterangan) }}</td>
+            </tr>
+            <tr>
+                <td><strong>Hidung</strong></td>
+                <td>{{ $fmtNormal($fisikRadio->hidung, $fisikRadio->hidung_keterangan) }}</td>
+                <td><strong>Mulut/Gigi</strong></td>
+                <td>{{ $fmtNormal($fisikRadio->mulut_gigi, $fisikRadio->mulut_gigi_keterangan) }}</td>
+            </tr>
+            <tr>
+                <td><strong>Dada (Jantung)</strong></td>
+                <td>{{ $fmtNormal($fisikRadio->jantung, $fisikRadio->jantung_keterangan) }}</td>
+                <td><strong>Dada (Paru)</strong></td>
+                <td>{{ $fmtNormal($fisikRadio->paru, $fisikRadio->paru_keterangan) }}</td>
+            </tr>
+            <tr>
+                <td><strong>Perut (Hati)</strong></td>
+                <td>{{ $fmtNormal($fisikRadio->hati, $fisikRadio->hati_keterangan) }}</td>
+                <td><strong>Perut (Limpa)</strong></td>
+                <td>{{ $fmtNormal($fisikRadio->limpa, $fisikRadio->limpa_keterangan) }}</td>
+            </tr>
+            <tr>
+                <td><strong>Kulit</strong></td>
+                <td colspan="3">{{ $fmtNormal($fisikRadio->kulit, $fisikRadio->kulit_keterangan) }}</td>
             </tr>
         </table>
-    </div>
 
-    <!-- 9. Hasil Pemeriksaan Penunjang -->
-    <div class="content-section">
-        <div class="section-title">9. HASIL PEMERIKSAAN PENUNJANG</div>
-        <table class="detail-table">
-            <tr>
-                <td class="col-header">Laboratorium:</td>
-                <td colspan="3">{{ $asesmen->rmeAsesmenGinekologikPemeriksaanDischarge->laboratorium ?? '-' }}</td>
+        <div class="section-title">8. PEMERIKSAAN EKSTREMITAS</div>
+        <table class="table-border">
+            <tr class="bg-gray">
+                <th>Lokasi</th>
+                <th>Edema</th>
+                <th>Varises</th>
+                <th>Refleks</th>
             </tr>
             <tr>
-                <td class="col-header">USG:</td>
-                <td colspan="3">{{ $asesmen->rmeAsesmenGinekologikPemeriksaanDischarge->usg ?? '-' }}</td>
+                <td>Ekstremitas Atas</td>
+                <td>{{ $ekstremitas->edema_atas ?? '-' }}</td>
+                <td>{{ $ekstremitas->varises_atas ?? '-' }}</td>
+                <td>{{ $ekstremitas->refleks_atas ?? '-' }}</td>
             </tr>
             <tr>
-                <td class="col-header">Radiologi:</td>
-                <td colspan="3">{{ $asesmen->rmeAsesmenGinekologikPemeriksaanDischarge->radiologi ?? '-' }}</td>
+                <td>Ekstremitas Bawah</td>
+                <td>{{ $ekstremitas->edema_bawah ?? '-' }}</td>
+                <td>{{ $ekstremitas->varises_bawah ?? '-' }}</td>
+                <td>{{ $ekstremitas->refleks_bawah ?? '-' }}</td>
             </tr>
             <tr>
-                <td class="col-header">Lainnya:</td>
-                <td colspan="3">{{ $asesmen->rmeAsesmenGinekologikPemeriksaanDischarge->penunjang_lainnya ?? '-' }}</td>
+                <td colspan="4"><strong>Catatan:</strong> {{ $ekstremitas->catatan_ekstremitas ?? '-' }}</td>
             </tr>
         </table>
-    </div>
 
-    <!-- Page Break untuk halaman kedua -->
-    <div class="page-break"></div>
-
-    <!-- 10. Discharge Planning -->
-    <div class="content-section">
-        <div class="section-title">10. DISCHARGE PLANNING</div>
-        <table class="detail-table">
+        <div class="section-title">9. STATUS GINEKOLOGIK & PEMERIKSAAN</div>
+        <table>
             <tr>
-                <td class="col-header">Diagnosis Medis:</td>
-                <td colspan="3">{{ $asesmen->rmeAsesmenGinekologikPemeriksaanDischarge->diagnosis_medis ?? '-' }}</td>
+                <td class="label">Keadaan Umum</td>
+                <td class="value">{{ $ekstremitas->keadaan_umum ?? '-' }}</td>
             </tr>
             <tr>
-                <td class="col-header">Usia Lanjut:</td>
-                <td>{{ $asesmen->rmeAsesmenGinekologikPemeriksaanDischarge->usia_lanjut == '0' ? 'Ya' : ($asesmen->rmeAsesmenGinekologikPemeriksaanDischarge->usia_lanjut == '1' ? 'Tidak' : '-') }}</td>
-                <td class="col-header">Hambatan Mobilisasi:</td>
-                <td>{{ $asesmen->rmeAsesmenGinekologikPemeriksaanDischarge->hambatan_mobilisasi == '0' ? 'Ya' : ($asesmen->rmeAsesmenGinekologikPemeriksaanDischarge->hambatan_mobilisasi == '1' ? 'Tidak' : '-') }}</td>
+                <td class="label">Inspekulo (Spekulum)</td>
+                <td class="value">{{ $ekstremitas->inspekulo ?? '-' }}</td>
             </tr>
             <tr>
-                <td class="col-header">Membutuhkan Penggunaan Media Berkelanjutan:</td>
-                <td colspan="3">{{ $asesmen->rmeAsesmenGinekologikPemeriksaanDischarge->penggunaan_media_berkelanjutan ?? '-' }}</td>
+                <td class="label">VT (Vaginal Toucher)</td>
+                <td class="value">{{ $ekstremitas->vt ?? '-' }}</td>
             </tr>
             <tr>
-                <td class="col-header">Ketergantungan dengan Orang Lain dalam Aktivitas Harian:</td>
-                <td colspan="3">{{ $asesmen->rmeAsesmenGinekologikPemeriksaanDischarge->ketergantungan_aktivitas ?? '-' }}</td>
-            </tr>
-            <tr>
-                <td class="col-header">Pasien/Keluarga Memerlukan Keterampilan Khusus Setelah Pulang:</td>
-                <td colspan="3">{{ $asesmen->rmeAsesmenGinekologikPemeriksaanDischarge->keterampilan_khusus ?? '-' }}</td>
-            </tr>
-            <tr>
-                <td class="col-header">Pasien Memerlukan Alat Bantu Setelah Keluar Rumah Sakit:</td>
-                <td colspan="3">{{ $asesmen->rmeAsesmenGinekologikPemeriksaanDischarge->alat_bantu ?? '-' }}</td>
-            </tr>
-            <tr>
-                <td class="col-header">Pasien Memiliki Nyeri Kronis dan/atau Kebiasaan Setelah Pulang:</td>
-                <td colspan="3">{{ $asesmen->rmeAsesmenGinekologikPemeriksaanDischarge->nyeri_kronis ?? '-' }}</td>
-            </tr>
-            <tr>
-                <td class="col-header">Perkiraan Lama Hari Dirawat:</td>
-                <td>{{ $asesmen->rmeAsesmenGinekologikPemeriksaanDischarge->perkiraan_hari ?? '-' }}</td>
-                <td class="col-header">Rencana Tanggal Pulang:</td>
-                <td>{{ $asesmen->rmeAsesmenGinekologikPemeriksaanDischarge->tanggal_pulang ? date('d M Y', strtotime($asesmen->rmeAsesmenGinekologikPemeriksaanDischarge->tanggal_pulang)) : '-' }}</td>
-            </tr>
-            <tr>
-                <td class="col-header">Kesimpulan:</td>
-                <td colspan="3">{{ $asesmen->rmeAsesmenGinekologikPemeriksaanDischarge->kesimpulan_planing ?? '-' }}</td>
+                <td class="label">RT (Rectal Toucher)</td>
+                <td class="value">{{ $ekstremitas->rt ?? '-' }}</td>
             </tr>
         </table>
-    </div>
 
-    <!-- 11. Diagnosis -->
-    <div class="content-section">
-        <div class="section-title">11. DIAGNOSIS</div>
-        <table class="detail-table">
+        <div class="section-title">10. HASIL PEMERIKSAAN PENUNJANG</div>
+        <table>
             <tr>
-                <td class="col-header">DIAGNOSIS BANDING :</td>
-                <td>
-                    @if(optional($asesmen->rmeAsesmenGinekologikDiagnosisImplementasi)->diagnosis_banding)
-                        @php
-                            $diagnosisBanding = json_decode($asesmen->rmeAsesmenGinekologikDiagnosisImplementasi->diagnosis_banding, true);
-                        @endphp
-                        @if(is_array($diagnosisBanding) && !empty($diagnosisBanding))
-                            @foreach($diagnosisBanding as $index => $diagnosis)
-                                {{ $index + 1 }}. {{ $diagnosis }}<br>
-                            @endforeach
-                        @else
-                            {{ $asesmen->rmeAsesmenGinekologikDiagnosisImplementasi->diagnosis_banding }}
-                        @endif
-                    @else
-                        -
-                    @endif
-                </td>
+                <td class="label">1. Laboratorium</td>
+                <td class="value">{{ $discharge->laboratorium ?? '-' }}</td>
             </tr>
             <tr>
-                <td class="col-header">DIAGNOSIS KERJA :</td>
-                <td>
-                    @if(optional($asesmen->rmeAsesmenGinekologikDiagnosisImplementasi)->diagnosis_kerja)
-                        @php
-                            $diagnosisKerja = json_decode($asesmen->rmeAsesmenGinekologikDiagnosisImplementasi->diagnosis_kerja, true);
-                        @endphp
-                        @if(is_array($diagnosisKerja) && !empty($diagnosisKerja))
-                            @foreach($diagnosisKerja as $index => $diagnosis)
-                                {{ $index + 1 }}. {{ $diagnosis }}<br>
-                            @endforeach
-                        @else
-                            {{ $asesmen->rmeAsesmenGinekologikDiagnosisImplementasi->diagnosis_kerja }}
-                        @endif
-                    @else
-                        -
-                    @endif
-                </td>
+                <td class="label">2. USG</td>
+                <td class="value">{{ $discharge->usg ?? '-' }}</td>
+            </tr>
+            <tr>
+                <td class="label">3. Radiologi</td>
+                <td class="value">{{ $discharge->radiologi ?? '-' }}</td>
+            </tr>
+            <tr>
+                <td class="label">4. Lainnya</td>
+                <td class="value">{{ $discharge->penunjang_lainnya ?? '-' }}</td>
             </tr>
         </table>
-    </div>
 
-    <!-- 12. Implementasi -->
-    <div class="content-section">
-        <div class="section-title">12. RENCANA PENATALAKSANAAN DAN PENGOBATAN</div>
-        @php
-            $implementasi = optional($asesmen->rmeAsesmenGinekologikDiagnosisImplementasi);
-            $observasi = $implementasi->observasi ? json_decode($implementasi->observasi, true) : [];
-            $terapeutik = $implementasi->terapeutik ? json_decode($implementasi->terapeutik, true) : [];
-            $edukasi = $implementasi->edukasi ? json_decode($implementasi->edukasi, true) : [];
-            $kolaborasi = $implementasi->kolaborasi ? json_decode($implementasi->kolaborasi, true) : [];
-            $prognosis = $implementasi->prognosis ? json_decode($implementasi->prognosis, true) : [];
-        @endphp
-
-        <table class="detail-table">
+        <div class="section-title">11. DIAGNOSIS, PROGNOSIS & RENCANA PENGOBATAN</div>
+        <table>
             <tr>
-                <td class="col-header" style="width: 25%;">Observasi:</td>
-                <td style="width: 25%;">
-                    @if(is_array($observasi) && !empty($observasi))
-                        @foreach($observasi as $index => $item)
-                            {{ $index + 1 }}. {{ $item }}<br>
-                        @endforeach
-                    @else
-                        -
-                    @endif
-                </td>
-                <td class="col-header" style="width: 25%;">Terapeutik:</td>
-                <td style="width: 25%;">
-                    @if(is_array($terapeutik) && !empty($terapeutik))
-                        @foreach($terapeutik as $index => $item)
-                            {{ $index + 1 }}. {{ $item }}<br>
-                        @endforeach
-                    @else
-                        -
-                    @endif
-                </td>
+                <td class="label">Diagnosis Banding</td>
+                <td class="value">{{ implode(', ', $decode($dxImpl->diagnosis_banding)) ?: '-' }}</td>
             </tr>
             <tr>
-                <td class="col-header">Edukasi:</td>
-                <td>
-                    @if(is_array($edukasi) && !empty($edukasi))
-                        @foreach($edukasi as $index => $item)
-                            {{ $index + 1 }}. {{ $item }}<br>
-                        @endforeach
-                    @else
-                        -
-                    @endif
-                </td>
-                <td class="col-header">Kolaborasi:</td>
-                <td>
-                    @if(is_array($kolaborasi) && !empty($kolaborasi))
-                        @foreach($kolaborasi as $index => $item)
-                            {{ $index + 1 }}. {{ $item }}<br>
-                        @endforeach
-                    @else
-                        -
-                    @endif
-                </td>
+                <td class="label">Diagnosis Kerja</td>
+                <td class="value">{{ implode(', ', $decode($dxImpl->diagnosis_kerja)) ?: '-' }}</td>
             </tr>
             <tr>
-                <td class="col-header">Prognosis:</td>
-                <td colspan="3">
-                    @if(is_array($prognosis) && !empty($prognosis))
-                        @foreach($prognosis as $index => $item)
-                            {{ $index + 1 }}. {{ $item }}<br>
-                        @endforeach
+                <td class="label">Rencana Penatalaksanaan</td>
+                <td class="value">{{ $ginek->rencana_pengobatan ?? '-' }}</td>
+            </tr>
+            <tr>
+                <td class="label">Prognosis</td>
+                <td class="value">{{ $prognosisLabel }}</td>
+            </tr>
+        </table>
+
+        <div class="section-title">12. PERENCANAAN PULANG (DISCHARGE PLANNING)</div>
+        <table class="table-border">
+            <tr>
+                <td>Usia Lanjut: {{ $discharge->usia_lanjut == '0' ? 'Ya' : 'Tidak' }}</td>
+                <td>Hambatan Mobilisasi: {{ $discharge->hambatan_mobilisasi == '0' ? 'Ya' : 'Tidak' }}</td>
+            </tr>
+            <tr>
+                <td>Media Berkelanjutan: {{ $discharge->penggunaan_media_berkelanjutan ?? '-' }}</td>
+                <td>Ketergantungan Aktivitas: {{ $discharge->ketergantungan_aktivitas ?? '-' }}</td>
+            </tr>
+            <tr>
+                <td>Keterampilan Khusus: {{ $discharge->keterampilan_khusus ?? '-' }}</td>
+                <td>Alat Bantu: {{ $discharge->alat_bantu ?? '-' }}</td>
+            </tr>
+            <tr>
+                <td>Nyeri Kronis: {{ $discharge->nyeri_kronis ?? '-' }}</td>
+                <td>Lama Dirawat: {{ $discharge->perkiraan_hari ?? '-' }} Hari</td>
+            </tr>
+            <tr>
+                <td>Rencana Tgl Pulang:
+                    {{ !empty($discharge->tanggal_pulang) ? date('d-m-Y', strtotime($discharge->tanggal_pulang)) : '-' }}
+                </td>
+                <td><strong>Kesimpulan:</strong> {{ $discharge->kesimpulan_planing ?? '-' }}</td>
+            </tr>
+        </table>
+
+        <br>
+        <table width="100%">
+            <tr>
+                <td width="65%"></td>
+                <td align="center">
+                    Langsa,
+                    {{ !empty($ginek->tanggal) ? date('d-m-Y', strtotime($ginek->tanggal)) : date('d-m-Y') }}<br>
+                    Dokter yang memeriksa,<br><br>
+                    @php
+                        $namaDok =
+                            ($asesmen->user->karyawan->gelar_depan ?? '') .
+                            ' ' .
+                            ($asesmen->user->karyawan->nama ?? '') .
+                            ' ' .
+                            ($asesmen->user->karyawan->gelar_belakang ?? '');
+                        $namaDok = trim($namaDok);
+                    @endphp
+                    @if ($namaDok)
+                        <img src="{{ generateQrCode($namaDok, 100, 'svg_datauri') }}" alt="QR"><br>
+                        <strong>{{ $namaDok }}</strong>
                     @else
-                        -
+                        <br><br><br>( __________________________ )
                     @endif
                 </td>
             </tr>
         </table>
-    </div>
-
-    <!-- Tanda Tangan -->
-    <div class="sign-area">
-        <div style="float: left; width: 48%;">
-            <p>Tanggal:
-                {{ optional($asesmen->rmeAsesmenGinekologik)->tanggal ? date('d/m/Y', strtotime($asesmen->rmeAsesmenGinekologik->tanggal)) : '.............................' }}
-            </p>
-            <p>Jam:
-                {{ optional($asesmen->rmeAsesmenGinekologik)->jam_masuk ? date('H:i', strtotime($asesmen->rmeAsesmenGinekologik->jam_masuk)) : '.............................' }}
-            </p>
-        </div>
-        <div class="sign-box">
-            <p>Dokter yang memeriksa</p>
-            <br><br><br>
-            <p>( _________________________ )</p>
-            <p>{{ optional($asesmen->user)->name ?? '.............................' }}</p>
-            <p style="font-size: 9px;">ttd dan nama jelas</p>
-        </div>
-        <div class="clear"></div>
     </div>
 </body>
 
