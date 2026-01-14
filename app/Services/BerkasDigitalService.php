@@ -1125,4 +1125,52 @@ class BerkasDigitalService
             'alergiPasien'
         );
     }
+
+    /**
+     * Get Asesmen Obstetri Maternitas data untuk ditampilkan di berkas digital dokumen
+     * Menyusun variabel yang diperlukan oleh blade print asesmen-obstetri-maternitas
+     */
+    public function getAsesmenObstetriData($dataMedis)
+    {
+        // Tentukan tanggal masuk
+        $tglMasuk = isset($dataMedis->tgl_transaksi) ? $dataMedis->tgl_transaksi : $dataMedis->tgl_masuk;
+
+        // Ambil data asesmen obstetri (kategori=1, sub_kategori=4)
+        $asesmenObstetri = RmeAsesmen::with([
+            'asesmenObstetri',
+            'rmeAsesmenObstetriPemeriksaanFisik',
+            'rmeAsesmenObstetriStatusNyeri',
+            'rmeAsesmenObstetriRiwayatKesehatan',
+            'rmeAsesmenObstetriDiagnosisImplementasi',
+            'rmeAsesmenObstetriDischargePlanning',
+            'pemeriksaanFisik',
+            'user'
+        ])
+            ->where('kd_pasien', $dataMedis->kd_pasien)
+            ->where('kd_unit', $dataMedis->kd_unit)
+            ->whereDate('tgl_masuk', $tglMasuk)
+            ->where('urut_masuk', $dataMedis->urut_masuk)
+            ->where('kategori', 1)
+            ->where('sub_kategori', 4)
+            ->first();
+
+        // Jika tidak ada, return null
+        if (!$asesmenObstetri) {
+            return null;
+        }
+
+        // Ambil master data yang diperlukan untuk print asesmen obstetri
+        $rmeMasterDiagnosis = RmeMasterDiagnosis::all();
+        $rmeMasterImplementasi = RmeMasterImplementasi::all();
+        $satsetPrognosis = SatsetPrognosis::all();
+        $alergiPasien = RmeAlergiPasien::where('kd_pasien', $dataMedis->kd_pasien)->get();
+
+        return compact(
+            'asesmenObstetri',
+            'rmeMasterDiagnosis',
+            'rmeMasterImplementasi',
+            'satsetPrognosis',
+            'alergiPasien'
+        );
+    }
 }

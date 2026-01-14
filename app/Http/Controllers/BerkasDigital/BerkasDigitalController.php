@@ -389,6 +389,22 @@ class BerkasDigitalController extends Controller
             $alergiPasienMedisAnak = collect([]);
         }
 
+        // Ambil data Asesmen Obstetri (Rawat Inap)
+        $asesmenObstetriData = $this->berkasDigitalService->getAsesmenObstetriData($dataMedis);
+        if ($asesmenObstetriData) {
+            extract($asesmenObstetriData);
+            $rmeMasterDiagnosisObstetri = $rmeMasterDiagnosis;
+            $rmeMasterImplementasiObstetri = $rmeMasterImplementasi;
+            $satsetPrognosisObstetri = $satsetPrognosis;
+            $alergiPasienObstetri = $alergiPasien;
+        } else {
+            $asesmenObstetri = null;
+            $rmeMasterDiagnosisObstetri = collect([]);
+            $rmeMasterImplementasiObstetri = collect([]);
+            $satsetPrognosisObstetri = collect([]);
+            $alergiPasienObstetri = collect([]);
+        }
+
         return view('berkas-digital.document.show', compact(
             'listDokumen',
             'dataMedis',
@@ -464,7 +480,13 @@ class BerkasDigitalController extends Controller
             'rmeMasterDiagnosisMedisAnak',
             'rmeMasterImplementasiMedisAnak',
             'satsetPrognosisMedisAnak',
-            'alergiPasienMedisAnak'
+            'alergiPasienMedisAnak',
+            // asesmen obstetri
+            'asesmenObstetri',
+            'rmeMasterDiagnosisObstetri',
+            'rmeMasterImplementasiObstetri',
+            'satsetPrognosisObstetri',
+            'alergiPasienObstetri'
         ));
     }
 
