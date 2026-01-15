@@ -28,6 +28,7 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class AsesmenGeriatriController extends Controller
 {
@@ -369,7 +370,82 @@ class AsesmenGeriatriController extends Controller
             'user'
         ));
     }
+    public function generatePDF($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $id)
+    {
+        // 1. Ambil data kunjungan dan pasien [cite: 351, 352]
+        $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
+            ->join('transaksi as t', function ($join) {
+                $join->on('kunjungan.kd_pasien', '=', 't.kd_pasien');
+                $join->on('kunjungan.kd_unit', '=', 't.kd_unit');
+                $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
+                $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
+            })
+            ->leftJoin('dokter', 'kunjungan.KD_DOKTER', '=', 'dokter.KD_DOKTER')
+            ->select('kunjungan.*', 't.*', 'dokter.NAMA as nama_dokter')
+            ->where('kunjungan.kd_unit', $kd_unit)
+            ->where('kunjungan.kd_pasien', $kd_pasien)
+            ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
+            ->first();
 
+        if (!$dataMedis) {
+            abort(404, 'Data kunjungan tidak ditemukan');
+        }
+
+        // 2. Ambil data asesmen utama [cite: 357]
+        $asesmen = RmeAsesmen::with(['user.karyawan'])
+            ->where('id', $id)
+            ->where('sub_kategori', 12) // Geriatri
+            ->first();
+
+        if (!$asesmen) {
+            return redirect()->back()->with('error', 'Data asesmen tidak ditemukan');
+        }
+
+        // 3. Ambil data detail geriatri, pemeriksaan fisik, alergi, dan rencana pulang [cite: 360, 362, 363, 364]
+        $asesmenGeriatri = RmeAsesmenGeriatri::where('id_asesmen', $asesmen->id)->first();
+        $pemeriksaanFisik = RmeAsesmenPemeriksaanFisik::with('itemFisik')
+            ->where('id_asesmen', $asesmen->id)
+            ->get()
+            ->keyBy('id_item_fisik');
+        $alergiPasien = RmeAlergiPasien::where('kd_pasien', $kd_pasien)->get();
+        $rencanaPulang = RmeAsesmenGeriatriRencanaPulang::where('id_asesmen', $asesmen->id)->first();
+        $itemFisik = MrItemFisik::orderby('urut')->get();
+
+        // 4. Decode data JSON untuk ditampilkan di PDF [cite: 366, 367, 368, 369]
+        $diagnosisBanding = json_decode($asesmenGeriatri->diagnosis_banding ?? '[]', true);
+        $diagnosisKerja = json_decode($asesmenGeriatri->diagnosis_kerja ?? '[]', true);
+        $adl = json_decode($asesmenGeriatri->adl ?? '[]', true);
+        $kognitif = json_decode($asesmenGeriatri->kognitif ?? '[]', true);
+        $depresi = json_decode($asesmenGeriatri->depresi ?? '[]', true);
+        $inkontinensia = json_decode($asesmenGeriatri->inkontinensia ?? '[]', true);
+        $insomnia = json_decode($asesmenGeriatri->insomnia ?? '[]', true);
+        $kategoriImt = json_decode($asesmenGeriatri->kategori_imt ?? '[]', true);
+
+        // Variabel pendukung untuk view (menyesuaikan variabel di file printgeriatri.txt)
+        $pasien = $dataMedis->pasien;
+
+        // 5. Generate PDF
+        $pdf = Pdf::loadView('unit-pelayanan.rawat-inap.pelayanan.asesmen-geriatri.print', compact(
+            'dataMedis',
+            'pasien',
+            'asesmen',
+            'asesmenGeriatri',
+            'pemeriksaanFisik',
+            'alergiPasien',
+            'rencanaPulang',
+            'itemFisik',
+            'diagnosisBanding',
+            'diagnosisKerja',
+            'adl',
+            'kognitif',
+            'depresi',
+            'inkontinensia',
+            'insomnia',
+            'kategoriImt'
+        ))->setPaper('a4', 'portrait');
+
+        return $pdf->stream('Asesmen_Geriatri_' . $kd_pasien . '.pdf');
+    }
 
 
     public function update(Request $request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $id)
