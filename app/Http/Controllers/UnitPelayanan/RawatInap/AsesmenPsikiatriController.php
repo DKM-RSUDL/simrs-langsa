@@ -29,6 +29,7 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class AsesmenPsikiatriController extends Controller
 {
@@ -633,6 +634,50 @@ class AsesmenPsikiatriController extends Controller
         } catch (\Exception $e) {
             DB::rollBack();
             return redirect()->back()->with('error', 'Gagal mengupdate data asesmen: ' . $e->getMessage())->withInput();
+        }
+    }
+
+    public function generatePDF($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $id)
+    {
+        try {
+            $asesmen = RmeAsesmen::with([
+                'user',
+                'rmeAsesmenPsikiatri',
+                'rmeAsesmenPsikiatriDtl'
+            ])->findOrFail($id);
+
+            $dataMedis = Kunjungan::with('pasien')
+                ->where('kd_unit', $kd_unit)
+                ->where('kd_pasien', $kd_pasien)
+                ->whereDate('tgl_masuk', $tgl_masuk)
+                ->where('urut_masuk', $urut_masuk)
+                ->first();
+
+            $alergiPasien = \App\Models\RmeAlergiPasien::where('kd_pasien', $kd_pasien)->get();
+
+            // Load view print yang telah kita buat sebelumnya
+            $pdf = Pdf::loadView('unit-pelayanan.rawat-inap.pelayanan.asesmen-psikiatri.print', [
+                'asesmen'             => $asesmen,
+                'pasien'              => optional($dataMedis)->pasien,
+                'dataMedis'           => $dataMedis,
+                'asesmenPsikiatri'    => $asesmen->rmeAsesmenPsikiatri,
+                'asesmenPsikiatriDtl' => $asesmen->rmeAsesmenPsikiatriDtl,
+                'alergiPasien'        => $alergiPasien,
+            ]);
+
+            $pdf->setPaper('a4', 'portrait');
+            $pdf->setOptions([
+                'isHtml5ParserEnabled' => true,
+                'isRemoteEnabled'      => true,
+                'defaultFont'          => 'sans-serif'
+            ]);
+
+            return $pdf->stream("asesmen-psikiatri-{$id}.pdf");
+        } catch (\Exception $e) {
+            return response()->json([
+                'status'  => 'error',
+                'message' => 'Gagal generate PDF: ' . $e->getMessage()
+            ], 500);
         }
     }
 
