@@ -34,6 +34,12 @@ use App\Models\RmeAsesmenParuRencanaKerja;
 use App\Models\RmeAsesmenParuPerencanaanPulang;
 use App\Models\RmeAsesmenParuDiagnosisImplementasi;
 use App\Models\RmeAsesmenParuPemeriksaanFisik;
+use App\Models\RmeAsesmenGinekologik;
+use App\Models\RmeAsesmenGinekologikTandaVital;
+use App\Models\RmeAsesmenGinekologikPemeriksaanFisik;
+use App\Models\RmeAsesmenGinekologikEkstremitasGinekologik;
+use App\Models\RmeAsesmenGinekologikPemeriksaanDischarge;
+use App\Models\RmeAsesmenGinekologikDiagnosisImplementasi;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Carbon;
 use App\Services\AsesmenService;
@@ -1313,6 +1319,64 @@ class BerkasDigitalService
             'asesmenParu',
             'satsetPrognosis',
             'KebiasaanData'
+        );
+    }
+
+    /**
+     * Get Asesmen Ginekologik data untuk ditampilkan di berkas digital dokumen
+     * Menyusun variabel yang diperlukan oleh blade print asesmen-ginekologik
+     */
+    public function getAsesmenGinekologikData($dataMedis)
+    {
+        // Tentukan tanggal masuk
+        $tglMasuk = isset($dataMedis->tgl_transaksi) ? $dataMedis->tgl_transaksi : $dataMedis->tgl_masuk;
+
+        // Ambil data asesmen Ginekologik (kategori=1, sub_kategori=9)
+        $asesmenGinekologik = RmeAsesmen::with([
+            'user',
+            'rmeAsesmenGinekologik',
+            'rmeAsesmenGinekologikTandaVital',
+            'rmeAsesmenGinekologikPemeriksaanFisik',
+            'rmeAsesmenGinekologikEkstremitasGinekologik',
+            'rmeAsesmenGinekologikPemeriksaanDischarge',
+            'rmeAsesmenGinekologikDiagnosisImplementasi',
+            'pemeriksaanFisik' => function ($query) {
+                $query->orderBy('id_item_fisik');
+            },
+        ])
+            ->where('kd_pasien', $dataMedis->kd_pasien)
+            ->whereDate('tgl_masuk', date('Y-m-d', strtotime($tglMasuk)))
+            ->where('urut_masuk', $dataMedis->urut_masuk)
+            ->where('kategori', 1)
+            ->where('sub_kategori', 9)
+            ->orderBy('waktu_asesmen', 'desc')
+            ->first();
+
+        // Jika tidak ada, return null
+        if (!$asesmenGinekologik) {
+            return null;
+        }
+
+        // Ambil master data yang diperlukan untuk print asesmen Ginekologik
+        $satsetPrognosis = SatsetPrognosis::all();
+
+        // Ambil data relasi untuk kemudahan akses di blade
+        $rmeAsesmenGinekologik = $asesmenGinekologik->rmeAsesmenGinekologik;
+        $rmeAsesmenGinekologikTandaVital = $asesmenGinekologik->rmeAsesmenGinekologikTandaVital;
+        $rmeAsesmenGinekologikPemeriksaanFisik = $asesmenGinekologik->rmeAsesmenGinekologikPemeriksaanFisik;
+        $rmeAsesmenGinekologikEkstremitasGinekologik = $asesmenGinekologik->rmeAsesmenGinekologikEkstremitasGinekologik;
+        $rmeAsesmenGinekologikPemeriksaanDischarge = $asesmenGinekologik->rmeAsesmenGinekologikPemeriksaanDischarge;
+        $rmeAsesmenGinekologikDiagnosisImplementasi = $asesmenGinekologik->rmeAsesmenGinekologikDiagnosisImplementasi;
+
+        return compact(
+            'asesmenGinekologik',
+            'rmeAsesmenGinekologik',
+            'rmeAsesmenGinekologikTandaVital',
+            'rmeAsesmenGinekologikPemeriksaanFisik',
+            'rmeAsesmenGinekologikEkstremitasGinekologik',
+            'rmeAsesmenGinekologikPemeriksaanDischarge',
+            'rmeAsesmenGinekologikDiagnosisImplementasi',
+            'satsetPrognosis'
         );
     }
 }

@@ -435,6 +435,28 @@ class BerkasDigitalController extends Controller
             $KebiasaanData = null;
         }
 
+        // Ambil data Asesmen Ginekologik (Rawat Inap)
+        $asesmenGinekologikData = $this->berkasDigitalService->getAsesmenGinekologikData($dataMedis);
+        if ($asesmenGinekologikData) {
+            $asesmenGinekologik = $asesmenGinekologikData['asesmenGinekologik'];
+            $rmeAsesmenGinekologik = $asesmenGinekologikData['rmeAsesmenGinekologik'];
+            $rmeAsesmenGinekologikTandaVital = $asesmenGinekologikData['rmeAsesmenGinekologikTandaVital'];
+            $rmeAsesmenGinekologikPemeriksaanFisik = $asesmenGinekologikData['rmeAsesmenGinekologikPemeriksaanFisik'];
+            $rmeAsesmenGinekologikEkstremitasGinekologik = $asesmenGinekologikData['rmeAsesmenGinekologikEkstremitasGinekologik'];
+            $rmeAsesmenGinekologikPemeriksaanDischarge = $asesmenGinekologikData['rmeAsesmenGinekologikPemeriksaanDischarge'];
+            $rmeAsesmenGinekologikDiagnosisImplementasi = $asesmenGinekologikData['rmeAsesmenGinekologikDiagnosisImplementasi'];
+            $satsetPrognosisGinekologik = $asesmenGinekologikData['satsetPrognosis'];
+        } else {
+            $asesmenGinekologik = null;
+            $rmeAsesmenGinekologik = null;
+            $rmeAsesmenGinekologikTandaVital = null;
+            $rmeAsesmenGinekologikPemeriksaanFisik = null;
+            $rmeAsesmenGinekologikEkstremitasGinekologik = null;
+            $rmeAsesmenGinekologikPemeriksaanDischarge = null;
+            $rmeAsesmenGinekologikDiagnosisImplementasi = null;
+            $satsetPrognosisGinekologik = null;
+        }
+
         return view('berkas-digital.document.show', compact(
             'listDokumen',
             'dataMedis',
@@ -527,7 +549,16 @@ class BerkasDigitalController extends Controller
             // asesmen paru
             'asesmenParu',
             'satsetPrognosisParu',
-            'KebiasaanData'
+            'KebiasaanData',
+            // asesmen ginekologik
+            'asesmenGinekologik',
+            'rmeAsesmenGinekologik',
+            'rmeAsesmenGinekologikTandaVital',
+            'rmeAsesmenGinekologikPemeriksaanFisik',
+            'rmeAsesmenGinekologikEkstremitasGinekologik',
+            'rmeAsesmenGinekologikPemeriksaanDischarge',
+            'rmeAsesmenGinekologikDiagnosisImplementasi',
+            'satsetPrognosisGinekologik'
         ));
     }
 

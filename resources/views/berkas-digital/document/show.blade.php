@@ -139,6 +139,23 @@
             @else
                 <p>Data asesmen paru tidak ditemukan untuk kunjungan ini.</p>
             @endif
+
+            @if ($asesmenGinekologik)
+                @include('unit-pelayanan.rawat-inap.pelayanan.asesmen-ginekologik.print', [
+                    'asesmen' => $asesmenGinekologik,
+                    'pasien' => $pasien,
+                    'dataMedis' => $dataMedis,
+                    'rmeAsesmenGinekologik' => $rmeAsesmenGinekologik,
+                    'rmeAsesmenGinekologikTandaVital' => $rmeAsesmenGinekologikTandaVital,
+                    'rmeAsesmenGinekologikPemeriksaanFisik' => $rmeAsesmenGinekologikPemeriksaanFisik,
+                    'rmeAsesmenGinekologikEkstremitasGinekologik' => $rmeAsesmenGinekologikEkstremitasGinekologik,
+                    'rmeAsesmenGinekologikPemeriksaanDischarge' => $rmeAsesmenGinekologikPemeriksaanDischarge,
+                    'rmeAsesmenGinekologikDiagnosisImplementasi' => $rmeAsesmenGinekologikDiagnosisImplementasi,
+                    'satsetPrognosis' => $satsetPrognosisGinekologik,
+                ])
+            @else
+                <p>Data asesmen ginekologik tidak ditemukan untuk kunjungan ini.</p>
+            @endif
         </div>
     </x-content-card>
     <x-content-card>
