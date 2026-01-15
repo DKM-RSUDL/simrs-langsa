@@ -24,6 +24,11 @@ use App\Models\Agama;
 use App\Models\Pendidikan;
 use App\Models\Pekerjaan;
 use App\Models\MrItemFisik;
+use App\Models\RmeAsesmenTht;
+use App\Models\RmeAsesmenThtPemeriksaanFisik;
+use App\Models\RmeAsesmenThtRiwayatKesehatanObatAlergi;
+use App\Models\RmeAsesmenThtDischargePlanning;
+use App\Models\RmeAsesmenthtDiagnosisImplementasi;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Carbon;
 use App\Services\AsesmenService;
@@ -1171,6 +1176,54 @@ class BerkasDigitalService
             'rmeMasterImplementasi',
             'satsetPrognosis',
             'alergiPasien'
+        );
+    }
+
+    /**
+     * Get Asesmen THT Medis data untuk ditampilkan di berkas digital dokumen
+     * Menyusun variabel yang diperlukan oleh blade print asesmen-tht
+     */
+    public function getAsesmenThtData($dataMedis)
+    {
+        // Tentukan tanggal masuk
+        $tglMasuk = isset($dataMedis->tgl_transaksi) ? $dataMedis->tgl_transaksi : $dataMedis->tgl_masuk;
+
+        // Ambil data asesmen THT (kategori=1, sub_kategori=5)
+        $asesmenTht = RmeAsesmen::with([
+            'rmeAsesmenTht',
+            'rmeAsesmenThtPemeriksaanFisik',
+            'rmeAsesmenThtRiwayatKesehatanObatAlergi',
+            'rmeAsesmenThtDischargePlanning',
+            'rmeAsesmenThtDiagnosisImplementasi',
+            'user'
+        ])
+            ->where('kd_pasien', $dataMedis->kd_pasien)
+            ->whereDate('tgl_masuk', date('Y-m-d', strtotime($tglMasuk)))
+            ->where('urut_masuk', $dataMedis->urut_masuk)
+            ->where('kategori', 1)
+            ->where('sub_kategori', 5)
+            ->orderBy('waktu_asesmen', 'desc')
+            ->first();
+
+        // Jika tidak ada, return null
+        if (!$asesmenTht) {
+            return null;
+        }
+
+        // Ambil master data yang diperlukan untuk print asesmen THT
+        $rmeMasterDiagnosis = RmeMasterDiagnosis::all();
+        $rmeMasterImplementasi = RmeMasterImplementasi::all();
+        $satsetPrognosis = SatsetPrognosis::all();
+        $alergiPasien = RmeAlergiPasien::where('kd_pasien', $dataMedis->kd_pasien)->get();
+        $itemFisik = MrItemFisik::orderby('urut')->get();
+
+        return compact(
+            'asesmenTht',
+            'rmeMasterDiagnosis',
+            'rmeMasterImplementasi',
+            'satsetPrognosis',
+            'alergiPasien',
+            'itemFisik'
         );
     }
 }

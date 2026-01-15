@@ -405,6 +405,24 @@ class BerkasDigitalController extends Controller
             $alergiPasienObstetri = collect([]);
         }
 
+        // Ambil data Asesmen THT Medis (Rawat Inap)
+        $asesmenThtData = $this->berkasDigitalService->getAsesmenThtData($dataMedis);
+        if ($asesmenThtData) {
+            extract($asesmenThtData);
+            $rmeMasterDiagnosisTht = $rmeMasterDiagnosis;
+            $rmeMasterImplementasiTht = $rmeMasterImplementasi;
+            $satsetPrognosisTht = $satsetPrognosis;
+            $alergiPasienTht = $alergiPasien;
+            $itemFisikTht = $itemFisik;
+        } else {
+            $asesmenTht = null;
+            $rmeMasterDiagnosisTht = collect([]);
+            $rmeMasterImplementasiTht = collect([]);
+            $satsetPrognosisTht = collect([]);
+            $alergiPasienTht = collect([]);
+            $itemFisikTht = collect([]);
+        }
+
         return view('berkas-digital.document.show', compact(
             'listDokumen',
             'dataMedis',
@@ -486,7 +504,14 @@ class BerkasDigitalController extends Controller
             'rmeMasterDiagnosisObstetri',
             'rmeMasterImplementasiObstetri',
             'satsetPrognosisObstetri',
-            'alergiPasienObstetri'
+            'alergiPasienObstetri',
+            // asesmen medis tht
+            'asesmenTht',
+            'rmeMasterDiagnosisTht',
+            'rmeMasterImplementasiTht',
+            'satsetPrognosisTht',
+            'alergiPasienTht',
+            'itemFisikTht'
         ));
     }
 

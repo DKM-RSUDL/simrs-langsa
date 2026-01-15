@@ -114,6 +114,20 @@
             @else
                 <p>Data asesmen obstetri tidak ditemukan untuk kunjungan ini.</p>
             @endif
+
+            @if ($asesmenTht)
+                @include('unit-pelayanan.rawat-inap.pelayanan.asesmen-tht.print', [
+                    'asesmen' => $asesmenTht,
+                    'dataMedis' => $dataMedis,
+                    'rmeMasterDiagnosis' => $rmeMasterDiagnosisTht,
+                    'rmeMasterImplementasi' => $rmeMasterImplementasiTht,
+                    'satsetPrognosis' => $satsetPrognosisTht,
+                    'alergiPasien' => $alergiPasienTht,
+                    'itemFisik' => $itemFisikTht,
+                ])
+            @else
+                <p>Data asesmen THT tidak ditemukan untuk kunjungan ini.</p>
+            @endif
         </div>
     </x-content-card>
     <x-content-card>
