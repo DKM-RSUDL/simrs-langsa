@@ -273,6 +273,68 @@
                     @endif
                 </td>
             </tr>
+
+            @php
+                function statusDiagLabel($status)
+                {
+                    $label = '-';
+                    switch ($status) {
+                        case 0:
+                            $label = 'Utama';
+                            break;
+                        case 1:
+                            $label = 'Diagnosa Awal';
+                            break;
+                        case 2:
+                            $label = 'Komplikasi';
+                            break;
+                        case 3:
+                            $label = 'Sekunder';
+                            break;
+                    }
+                    return $label;
+                }
+
+                function kasusLabel($kasus)
+                {
+                    $label = '-';
+                    switch ($kasus) {
+                        case 0:
+                            $label = 'Baru';
+                            break;
+                        case 1:
+                            $label = 'Lama';
+                            break;
+                    }
+                    return $label;
+                }
+            @endphp
+
+            <tr>
+                <th>ICD 10</th>
+                <td>
+                    @if (isset($resume->icd_10))
+                        <ul>
+                            @foreach ($resume->icd_10 as $item)
+                                <li>{{ $item['kd_penyakit'] }} - {{ statusDiagLabel($item['stat_diag']) }} - {{ kasusLabel($item['kasus']) }}</li>
+                            @endforeach
+                        </ul>
+                    @endif
+                </td>
+            </tr>
+
+            <tr>
+                <th>ICD 9</th>
+                <td>
+                    @if (isset($resume->icd_9))
+                        <ul>
+                            @foreach ($resume->icd_9 as $item)
+                                <li>{{ $item }}</li>
+                            @endforeach
+                        </ul>
+                    @endif
+                </td>
+            </tr>
             <tr>
                 <th>Tindakan</th>
                 <td>

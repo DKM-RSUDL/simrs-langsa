@@ -309,6 +309,7 @@ class RawatInapResumeController extends Controller
             ->where('aktif', 1)
             ->get();
 
+
         return view(
             'unit-pelayanan.rawat-inap.pelayanan.resume.resume-medis.detail',
             compact(
@@ -597,6 +598,8 @@ class RawatInapResumeController extends Controller
             ->where('id_asesmen', ($lastAsesmen->id ?? 0))
             ->where('is_normal', 0)
             ->get();
+
+            // dd($resume->icd_10);
 
 
         $pdf = Pdf::loadView('unit-pelayanan.rawat-inap.pelayanan.resume.resume-medis.print', compact(
