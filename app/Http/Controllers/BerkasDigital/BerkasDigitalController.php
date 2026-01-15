@@ -423,6 +423,18 @@ class BerkasDigitalController extends Controller
             $itemFisikTht = collect([]);
         }
 
+        // Ambil data Asesmen Paru (Rawat Inap)
+        $asesmenParuData = $this->berkasDigitalService->getAsesmenParuData($dataMedis);
+        if ($asesmenParuData) {
+            $asesmenParu = $asesmenParuData['asesmenParu'];
+            $satsetPrognosisParu = $asesmenParuData['satsetPrognosis'];
+            $KebiasaanData = $asesmenParuData['KebiasaanData'];
+        } else {
+            $asesmenParu = null;
+            $satsetPrognosisParu = null;
+            $KebiasaanData = null;
+        }
+
         return view('berkas-digital.document.show', compact(
             'listDokumen',
             'dataMedis',
@@ -511,7 +523,11 @@ class BerkasDigitalController extends Controller
             'rmeMasterImplementasiTht',
             'satsetPrognosisTht',
             'alergiPasienTht',
-            'itemFisikTht'
+            'itemFisikTht',
+            // asesmen paru
+            'asesmenParu',
+            'satsetPrognosisParu',
+            'KebiasaanData'
         ));
     }
 

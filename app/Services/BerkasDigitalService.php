@@ -29,6 +29,11 @@ use App\Models\RmeAsesmenThtPemeriksaanFisik;
 use App\Models\RmeAsesmenThtRiwayatKesehatanObatAlergi;
 use App\Models\RmeAsesmenThtDischargePlanning;
 use App\Models\RmeAsesmenthtDiagnosisImplementasi;
+use App\Models\RmeAsesmenParu;
+use App\Models\RmeAsesmenParuRencanaKerja;
+use App\Models\RmeAsesmenParuPerencanaanPulang;
+use App\Models\RmeAsesmenParuDiagnosisImplementasi;
+use App\Models\RmeAsesmenParuPemeriksaanFisik;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Carbon;
 use App\Services\AsesmenService;
@@ -1224,6 +1229,90 @@ class BerkasDigitalService
             'satsetPrognosis',
             'alergiPasien',
             'itemFisik'
+        );
+    }
+
+    /**
+     * Get Asesmen Paru data untuk ditampilkan di berkas digital dokumen
+     * Menyusun variabel yang diperlukan oleh blade print asesmen-paru
+     */
+    public function getAsesmenParuData($dataMedis)
+    {
+        // Tentukan tanggal masuk
+        $tglMasuk = isset($dataMedis->tgl_transaksi) ? $dataMedis->tgl_transaksi : $dataMedis->tgl_masuk;
+
+        // Ambil data asesmen Paru (kategori=1, sub_kategori=8)
+        $asesmenParu = RmeAsesmen::with([
+            'user',
+            'rmeAsesmenParu',
+            'rmeAsesmenParuRencanaKerja',
+            'rmeAsesmenParuPerencanaanPulang',
+            'rmeAsesmenParuDiagnosisImplementasi',
+            'rmeAsesmenParuPemeriksaanFisik',
+            'rmeAlergiPasien',
+            'pemeriksaanFisik' => function ($query) {
+                $query->orderBy('id_item_fisik');
+            },
+        ])
+            ->where('kd_pasien', $dataMedis->kd_pasien)
+            ->whereDate('tgl_masuk', date('Y-m-d', strtotime($tglMasuk)))
+            ->where('urut_masuk', $dataMedis->urut_masuk)
+            ->where('kategori', 1)
+            ->where('sub_kategori', 8)
+            ->orderBy('waktu_asesmen', 'desc')
+            ->first();
+
+        // Jika tidak ada, return null
+        if (!$asesmenParu) {
+            return null;
+        }
+
+        // Ambil master data yang diperlukan untuk print asesmen Paru
+        $satsetPrognosis = SatsetPrognosis::all();
+
+        // Get KebiasaanData (inline logic dari controller)
+        $KebiasaanData = [
+            'alkohol' => [
+                'status' => 'tidak',
+                'jenis' => null,
+            ],
+            'merokok' => [
+                'status' => 'tidak',
+                'detail' => [],
+            ],
+            'obat' => [
+                'status' => 'tidak',
+                'detail' => [],
+            ],
+        ];
+
+        // Ambil data kebiasaan dari rmeAsesmenParu jika ada
+        if ($asesmenParu->rmeAsesmenParu) {
+            $kebiasaanPasien = $asesmenParu->rmeAsesmenParu;
+
+            $isAlkohol = $kebiasaanPasien->alkohol == 'ya' ? true : false;
+            $isMerokok = $kebiasaanPasien->merokok == 'ya' ? true : false;
+            $isObat = $kebiasaanPasien->obat == 'ya' ? true : false;
+
+            // Format ulang data untuk KebiasaanData
+            $KebiasaanData['alkohol'] = [
+                'status' => $isAlkohol ? 'ya' : 'tidak',
+                'jenis' => $kebiasaanPasien->alkohol_jenis,
+            ];
+            $KebiasaanData['merokok'] = [
+                'status' => $isMerokok ? 'ya' : 'tidak',
+                'detail' => $kebiasaanPasien->merokok_data,
+            ];
+            $KebiasaanData['obat'] = [
+                'status' => $isObat ? 'ya' : 'tidak',
+                'detail' => $kebiasaanPasien->obat_data,
+            ];
+        }
+
+        return compact(
+            'asesmenParu',
+            'satsetPrognosis',
+            'KebiasaanData'
         );
     }
 }

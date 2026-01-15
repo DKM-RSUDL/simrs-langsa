@@ -128,6 +128,17 @@
             @else
                 <p>Data asesmen THT tidak ditemukan untuk kunjungan ini.</p>
             @endif
+
+            @if ($asesmenParu)
+                @include('unit-pelayanan.rawat-inap.pelayanan.asesmen-paru.print', [
+                    'asesmen' => $asesmenParu,
+                    'dataMedis' => $dataMedis,
+                    'satsetPrognosis' => $satsetPrognosisParu,
+                    'KebiasaanData' => $KebiasaanData,
+                ])
+            @else
+                <p>Data asesmen paru tidak ditemukan untuk kunjungan ini.</p>
+            @endif
         </div>
     </x-content-card>
     <x-content-card>
