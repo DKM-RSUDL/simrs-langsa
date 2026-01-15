@@ -662,11 +662,7 @@ class AsesmenPsikiatriController extends Controller
 
         // Mengambil data asesmen psikiatri
         $asesmen = RmeAsesmen::where('id', $id) // TAMBAHKAN PARAMETER ID
-            ->where('kd_pasien', $kd_pasien)
-            ->where('kd_unit', $kd_unit)
-            ->where('tgl_masuk', $tgl_masuk)
-            ->where('urut_masuk', $urut_masuk)
-            ->where('kategori', 2)
+            ->where('kategori', 1)
             ->where('sub_kategori', 11)
             ->with('user')
             ->first();

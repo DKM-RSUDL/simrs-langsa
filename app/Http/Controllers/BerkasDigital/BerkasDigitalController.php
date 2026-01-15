@@ -304,8 +304,8 @@ class BerkasDigitalController extends Controller
         $customer = isset($dataMedis->customer) ? $dataMedis->customer : null;
 
         // Ambil data asesmen via service dengan semua data yang diperlukan
+        // PERBAIKAN: Sekarang akan mengambil data dari IGD jika ada asal IGD
         $asesmenData = $this->berkasDigitalService->getAsesmenData($dataMedis);
-        // Extract akan membuat variabel: $asesmen, $triase, $riwayatAlergi, $laborData, $radiologiData, $riwayatObat, $retriaseData
         extract($asesmenData);
 
         // Ambil data pengkajian awal medis (rawat inap)
@@ -357,6 +357,37 @@ class BerkasDigitalController extends Controller
         $satsetPrognosisNeurologi = $asesmenNeurologiData['satsetPrognosis'];
         $alergiPasienNeurologi = $asesmenNeurologiData['alergiPasien'];
         $itemFisik = $asesmenNeurologiData['itemFisik'];
+
+        // Ambil data Asesmen Opthamology (Rawat Inap)
+        $asesmenOpthamologyData = $this->berkasDigitalService->getAsesmenOpthamologyData($dataMedis);
+        $asesmenOpthamology = $asesmenOpthamologyData['asesmenOpthamology'];
+        $faktorpemberatOpthamology = $asesmenOpthamologyData['faktorpemberat'];
+        $menjalarOpthamology = $asesmenOpthamologyData['menjalar'];
+        $frekuensinyeriOpthamology = $asesmenOpthamologyData['frekuensinyeri'];
+        $kualitasnyeriOpthamology = $asesmenOpthamologyData['kualitasnyeri'];
+        $faktorperinganOpthamology = $asesmenOpthamologyData['faktorperingan'];
+        $efeknyeriOpthamology = $asesmenOpthamologyData['efeknyeri'];
+        $jenisnyeriOpthamology = $asesmenOpthamologyData['jenisnyeri'];
+        $itemFisikOpthamology = $asesmenOpthamologyData['itemFisik'];
+        $rmeMasterDiagnosisOpthamology = $asesmenOpthamologyData['rmeMasterDiagnosis'];
+        $rmeMasterImplementasiOpthamology = $asesmenOpthamologyData['rmeMasterImplementasi'];
+        $satsetPrognosisOpthamology = $asesmenOpthamologyData['satsetPrognosis'];
+
+        // Ambil data Asesmen Medis Anak (Rawat Inap)
+        $asesmenMedisAnakData = $this->berkasDigitalService->getAsesmenMedisAnakData($dataMedis);
+        if ($asesmenMedisAnakData) {
+            extract($asesmenMedisAnakData);
+            $rmeMasterDiagnosisMedisAnak = $rmeMasterDiagnosis;
+            $rmeMasterImplementasiMedisAnak = $rmeMasterImplementasi;
+            $satsetPrognosisMedisAnak = $satsetPrognosis;
+            $alergiPasienMedisAnak = $alergiPasien;
+        } else {
+            $asesmenMedisAnak = null;
+            $rmeMasterDiagnosisMedisAnak = collect([]);
+            $rmeMasterImplementasiMedisAnak = collect([]);
+            $satsetPrognosisMedisAnak = collect([]);
+            $alergiPasienMedisAnak = collect([]);
+        }
 
         return view('berkas-digital.document.show', compact(
             'listDokumen',
@@ -414,7 +445,26 @@ class BerkasDigitalController extends Controller
             'rmeMasterImplementasiNeurologi',
             'satsetPrognosisNeurologi',
             'alergiPasienNeurologi',
-            'itemFisik'
+            'itemFisik',
+            // asesmen opthamology
+            'asesmenOpthamology',
+            'faktorpemberatOpthamology',
+            'menjalarOpthamology',
+            'frekuensinyeriOpthamology',
+            'kualitasnyeriOpthamology',
+            'faktorperinganOpthamology',
+            'efeknyeriOpthamology',
+            'jenisnyeriOpthamology',
+            'itemFisikOpthamology',
+            'rmeMasterDiagnosisOpthamology',
+            'rmeMasterImplementasiOpthamology',
+            'satsetPrognosisOpthamology',
+            // asesmen medis anak
+            'asesmenMedisAnak',
+            'rmeMasterDiagnosisMedisAnak',
+            'rmeMasterImplementasiMedisAnak',
+            'satsetPrognosisMedisAnak',
+            'alergiPasienMedisAnak'
         ));
     }
 
