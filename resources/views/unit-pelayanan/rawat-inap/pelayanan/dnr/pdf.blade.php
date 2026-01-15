@@ -252,6 +252,7 @@
                 <td>{{ $dnr->no_hp_dokter }}</td>
             </tr>
         </table>
+        
     </main>
 
     <footer>

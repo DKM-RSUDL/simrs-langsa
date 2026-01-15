@@ -220,7 +220,7 @@
                                                 id="skala_nyeri" min="1" max="10"
                                                 placeholder="1-10" value="{{ $asesmen->skala_nyeri }}">
                                         </div>
-
+                                       
                                         <div class="form-group">
                                             <label style="min-width: 200px;">Kategori Nyeri</label>
                                             <input type="text" class="form-control" name="kategori_nyeri"
