@@ -4,7 +4,6 @@
 <head>
     <meta charset="UTF-8">
     <title>Asesmen THT</title>
-
     <style>
         @page {
             size: A4;
@@ -334,8 +333,8 @@
                 <td colspan="2" class="section-title">1. DATA MASUK</td>
             </tr>
             <tr>
-                <td class="label">Tanggal Masuk</td>
-                <td class="value">{{ $tglMasuk ? date('d M Y', strtotime($tglMasuk)) : '-' }}</td>
+                <td class="label" style="width: 10%;">Tanggal Masuk</td>
+                <td class="value" style="width: 90%;">{{ $tglMasuk ? date('d M Y', strtotime($tglMasuk)) : '-' }}</td>
             </tr>
             <tr>
                 <td class="label">Jam Masuk</td>
@@ -516,42 +515,17 @@
                 </td>
             </tr>
 
-            {{-- Sub pemeriksaan THT panjang: tetap tabel border 1 (biar rapi & konsisten) --}}
+            {{-- Sub Pemeriksaan Fisik Koprehensif --}}
+            <tr>
+                <td colspan="2" class="section-title">PEMERIKSAAN FISIK KOPREHENSIF</td>
+            </tr>
             <tr>
                 <td colspan="2" style="padding-top:8px;">
                     <table style="width:100%; border-collapse:collapse;" border="1">
                         <tbody>
                             <tr>
-                                <td colspan="4" style="font-weight:bold;">Laringoskopi
-                                    Indirek</td>
-                            </tr>
-                            <tr>
-                                <td style="width:25%; font-weight:bold;">Pangkal Lidah</td>
-                                <td style="width:25%;">{{ $pfTht->pangkal_lidah ?? '-' }}</td>
-                                <td style="width:25%; font-weight:bold;">Tonsil Lidah</td>
-                                <td style="width:25%;">{{ $pfTht->tonsil_lidah ?? '-' }}</td>
-                            </tr>
-                            <tr>
-                                <td style="font-weight:bold;">Epiglotis</td>
-                                <td>{{ $pfTht->epiglotis ?? '-' }}</td>
-                                <td style="font-weight:bold;">Pita Suara</td>
-                                <td>{{ $pfTht->pita_suara ?? '-' }}</td>
-                            </tr>
-                            <tr>
-                                <td colspan="4" style="font-weight:bold;">Plica Vokalis</td>
-                            </tr>
-                            <tr>
-                                <td style="font-weight:bold;">Bentuk (Kanan/Kiri)</td>
-                                <td>{{ $pfTht->plica_vokalis_bentuk_kanan ?? '-' }} /
-                                    {{ $pfTht->plica_vokalis_bentuk_kiri ?? '-' }}</td>
-                                <td style="font-weight:bold;">Warna (Kanan/Kiri)</td>
-                                <td>{{ $pfTht->plica_vokalis_warna_kanan ?? '-' }} /
-                                    {{ $pfTht->plica_vokalis_warna_kiri ?? '-' }}</td>
-                            </tr>
-
-
-                            <tr>
-                                <td colspan="4" style="font-weight:bold;">Daun Telinga</td>
+                                <td colspan="4" style="background-color: #a3a3a3d0;"><strong>Daun Telinga</strong>
+                                </td>
                             </tr>
                             <tr>
                                 <td style="font-weight:bold;">Nanah (Kanan/Kiri)</td>
@@ -566,9 +540,9 @@
                                 <td colspan="3">{{ $pfTht->daun_telinga_lainnya_kanan ?? '-' }} /
                                     {{ $pfTht->daun_telinga_lainnya_kiri ?? '-' }}</td>
                             </tr>
-
                             <tr>
-                                <td colspan="4" style="font-weight:bold;">Liang Telinga</td>
+                                <td colspan="4" style="background-color: #a3a3a3d0;"><strong>Liang Telinga</strong>
+                                </td>
                             </tr>
                             <tr>
                                 <td style="font-weight:bold;">Darah (Kanan/Kiri)</td>
@@ -586,9 +560,28 @@
                                 <td>{{ $pfTht->liang_telinga_lainnya_kanan ?? '-' }} /
                                     {{ $pfTht->liang_telinga_lainnya_kiri ?? '-' }}</td>
                             </tr>
-
                             <tr>
-                                <td colspan="4" style="font-weight:bold;">Tes Pendengaran</td>
+                                <td colspan="4" style="background-color: #a3a3a3d0;"><strong>Membran
+                                        Tympani</strong>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight:bold;">Warna (Kanan/Kiri)</td>
+                                <td>{{ $pfTht->membran_tympani_warna_kanan ?? '-' }} /
+                                    {{ $pfTht->membran_tympani_warna_kiri ?? '-' }}</td>
+                                <td style="font-weight:bold;">Perforasi (Kanan/Kiri)</td>
+                                <td>{{ $pfTht->membran_tympani_perforasi_kanan ?? '-' }} /
+                                    {{ $pfTht->membran_tympani_perforasi_kiri ?? '-' }}</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight:bold;">Lainnya (Kanan/Kiri)</td>
+                                <td colspan="3">{{ $pfTht->membran_tympani_lainnya_kanan ?? '-' }} /
+                                    {{ $pfTht->membran_tympani_lainnya_kiri ?? '-' }}</td>
+                            </tr>
+                            <tr>
+                                <td colspan="4" style="background-color: #a3a3a3d0;"><strong>Tes
+                                        Pendengaran</strong>
+                                </td>
                             </tr>
                             <tr>
                                 <td style="font-weight:bold;">Rinne (Kanan/Kiri)</td>
@@ -606,34 +599,9 @@
                                 <td>{{ $pfTht->tes_pendengaran_bebisik_kanan ?? '-' }} /
                                     {{ $pfTht->tes_pendengaran_bebisik_kiri ?? '-' }}</td>
                             </tr>
-
-                            <tr>
-                                <td colspan="4" style="font-weight:bold;">Sinus Frontalis</td>
-                            </tr>
-                            <tr>
-                                <td style="font-weight:bold;">Nyeri Tekan (Kanan/Kiri)</td>
-                                <td>{{ $pfTht->senus_frontalis_nyeri_tekan_kanan ?? '-' }} /
-                                    {{ $pfTht->senus_frontalis_nyeri_tekan_kiri ?? '-' }}</td>
-                                <td style="font-weight:bold;">Transluminasi (Kanan/Kiri)</td>
-                                <td>{{ $pfTht->senus_frontalis_transluminasi_kanan ?? '-' }} /
-                                    {{ $pfTht->senus_frontalis_transluminasi_kiri ?? '-' }}</td>
-                            </tr>
-
-                            <tr>
-                                <td colspan="4" style="font-weight:bold;">Sinus Maksilaris</td>
-                            </tr>
-                            <tr>
-                                <td style="font-weight:bold;">Nyeri Tekan (Kanan/Kiri)</td>
-                                <td>{{ $pfTht->sinus_maksinasi_nyari_tekan_kanan ?? '-' }} /
-                                    {{ $pfTht->sinus_maksinasi_nyari_tekan_kiri ?? '-' }}</td>
-                                <td style="font-weight:bold;">Transluminasi (Kanan/Kiri)</td>
-                                <td>{{ $pfTht->sinus_maksinasi_transluminasi_kanan ?? '-' }} /
-                                    {{ $pfTht->sinus_maksinasi_transluminasi_kiri ?? '-' }}</td>
-                            </tr>
-
-                            <tr>
-                                <td colspan="4" style="font-weight:bold;">Rhinoskopi Anterior</td>
-                            </tr>
+                            <td colspan="4" style="background-color: #a3a3a3d0;"><strong>Rhinoscopi
+                                    Anterior</strong>
+                            </td>
                             <tr>
                                 <td style="font-weight:bold;">Cavum Nasi (Kanan/Kiri)</td>
                                 <td>{{ $pfTht->rhinoscopi_anterior_cavun_nasi_kanan ?? '-' }} /
@@ -648,13 +616,16 @@
                                     {{ $pfTht->rhinoscopi_anterior_septum_nasi_kiri ?? '-' }}</td>
                             </tr>
 
-                            <tr>
-                                <td colspan="4" style="font-weight:bold;">Rhinoskopi Posterior</td>
-                            </tr>
+                            <td colspan="4" style="background-color: #a3a3a3d0;"><strong>Rhinoscopi
+                                    Posterior</strong>
+                            </td>
                             <tr>
                                 <td style="font-weight:bold;">Septum Nasi (Kanan/Kiri)</td>
-                                <td colspan="3">{{ $pfTht->rhinoscopi_pasterior_septum_nasi_kanan ?? '-' }} /
+                                <td>{{ $pfTht->rhinoscopi_pasterior_septum_nasi_kanan ?? '-' }} /
                                     {{ $pfTht->rhinoscopi_pasterior_septum_nasi_kiri ?? '-' }}</td>
+                                <td style="font-weight:bold;">Fasso Rosenmuler (Kanan/Kiri)</td>
+                                <td>{{ $pfTht->rhinoscopi_fasso_rossenmuler_kanan ?? '-' }} /
+                                    {{ $pfTht->rhinoscopi_fasso_rossenmuler_kiri ?? '-' }}</td>
                             </tr>
                             <tr>
                                 <td style="font-weight:bold;">Superior (Kanan/Kiri)</td>
@@ -664,16 +635,9 @@
                                 <td>{{ $pfTht->rhinoscopi_media_kanan ?? '-' }} /
                                     {{ $pfTht->rhinoscopi_media_kiri ?? '-' }}</td>
                             </tr>
-                            <tr>
-                                <td style="font-weight:bold;">Fasso Rosenmuler (Kanan/Kiri)</td>
-                                <td colspan="3">{{ $pfTht->rhinoscopi_fasso_rossenmuler_kanan ?? '-' }} /
-                                    {{ $pfTht->rhinoscopi_fasso_rossenmuler_kiri ?? '-' }}</td>
-                            </tr>
 
-
-                            <tr>
-                                <td colspan="4" style="font-weight:bold;">Meatus Nasi</td>
-                            </tr>
+                            <td colspan="4" style="background-color: #a3a3a3d0;"><strong>Meatus Nasi</strong>
+                            </td>
                             <tr>
                                 <td style="font-weight:bold;">Superior (Kanan/Kiri)</td>
                                 <td>{{ $pfTht->meatus_nasi_superior_kanan ?? '-' }} /
@@ -687,27 +651,8 @@
                                 <td colspan="3">{{ $pfTht->meatus_nasi_inferior_kanan ?? '-' }} /
                                     {{ $pfTht->meatus_nasi_inferior_kiri ?? '-' }}</td>
                             </tr>
-
-                            <tr>
-                                <td colspan="4" style="font-weight:bold;">Membran Timpani</td>
-                            </tr>
-                            <tr>
-                                <td style="font-weight:bold;">Warna (Kanan/Kiri)</td>
-                                <td>{{ $pfTht->membran_tympani_warna_kanan ?? '-' }} /
-                                    {{ $pfTht->membran_tympani_warna_kiri ?? '-' }}</td>
-                                <td style="font-weight:bold;">Perforasi (Kanan/Kiri)</td>
-                                <td>{{ $pfTht->membran_tympani_perforasi_kanan ?? '-' }} /
-                                    {{ $pfTht->membran_tympani_perforasi_kiri ?? '-' }}</td>
-                            </tr>
-                            <tr>
-                                <td style="font-weight:bold;">Lainnya (Kanan/Kiri)</td>
-                                <td colspan="3">{{ $pfTht->membran_tympani_lainnya_kanan ?? '-' }} /
-                                    {{ $pfTht->membran_tympani_lainnya_kiri ?? '-' }}</td>
-                            </tr>
-
-                            <tr>
-                                <td colspan="4" style="font-weight:bold;">Hidung</td>
-                            </tr>
+                            <td colspan="4" style="background-color: #a3a3a3d0;"><strong>Hidung</strong>
+                            </td>
                             <tr>
                                 <td style="font-weight:bold;">Bentuk (Kanan/Kiri)</td>
                                 <td>{{ $pfTht->hidung_bentuk_kanan ?? '-' }} / {{ $pfTht->hidung_bentuk_kiri ?? '-' }}
@@ -725,9 +670,53 @@
                                     {{ $pfTht->hidung_fissare_kiri ?? '-' }}</td>
                             </tr>
 
+                            <td colspan="4" style="background-color: #a3a3a3d0;"><strong>Sinus Frontalis</strong>
+                            </td>
                             <tr>
-                                <td colspan="4" style="font-weight:bold;">Antropometri</td>
+                                <td style="font-weight:bold;">Nyeri Tekan (Kanan/Kiri)</td>
+                                <td>{{ $pfTht->senus_frontalis_nyeri_tekan_kanan ?? '-' }} /
+                                    {{ $pfTht->senus_frontalis_nyeri_tekan_kiri ?? '-' }}</td>
+                                <td style="font-weight:bold;">Transluminasi (Kanan/Kiri)</td>
+                                <td>{{ $pfTht->senus_frontalis_transluminasi_kanan ?? '-' }} /
+                                    {{ $pfTht->senus_frontalis_transluminasi_kiri ?? '-' }}</td>
                             </tr>
+                            <td colspan="4" style="background-color: #a3a3a3d0;"><strong>Sinus Maksinasi</strong>
+                            </td>
+                            <tr>
+                                <td style="font-weight:bold;">Nyeri Tekan (Kanan/Kiri)</td>
+                                <td>{{ $pfTht->sinus_maksinasi_nyari_tekan_kanan ?? '-' }} /
+                                    {{ $pfTht->sinus_maksinasi_nyari_tekan_kiri ?? '-' }}</td>
+                                <td style="font-weight:bold;">Transluminasi (Kanan/Kiri)</td>
+                                <td>{{ $pfTht->sinus_maksinasi_transluminasi_kanan ?? '-' }} /
+                                    {{ $pfTht->sinus_maksinasi_transluminasi_kiri ?? '-' }}</td>
+                            </tr>
+                            <td colspan="4" style="background-color: #a3a3a3d0;"><strong>Laringoskopi
+                                    Indirex</strong>
+                            </td>
+                            <tr>
+                                <td style="width:25%; font-weight:bold;">Pangkal Lidah</td>
+                                <td style="width:25%;">{{ $pfTht->pangkal_lidah ?? '-' }}</td>
+                                <td style="width:25%; font-weight:bold;">Tonsil Lidah</td>
+                                <td style="width:25%;">{{ $pfTht->tonsil_lidah ?? '-' }}</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight:bold;">Epiglotis</td>
+                                <td>{{ $pfTht->epiglotis ?? '-' }}</td>
+                                <td style="font-weight:bold;">Pita Suara</td>
+                                <td>{{ $pfTht->pita_suara ?? '-' }}</td>
+                            </tr>
+                            <td colspan="4" style="background-color: #a3a3a3d0;"><strong>Plica Vokalis</strong>
+                            </td>
+                            <tr>
+                                <td style="font-weight:bold;">Bentuk (Kanan/Kiri)</td>
+                                <td>{{ $pfTht->plica_vokalis_bentuk_kanan ?? '-' }} /
+                                    {{ $pfTht->plica_vokalis_bentuk_kiri ?? '-' }}</td>
+                                <td style="font-weight:bold;">Warna (Kanan/Kiri)</td>
+                                <td>{{ $pfTht->plica_vokalis_warna_kanan ?? '-' }} /
+                                    {{ $pfTht->plica_vokalis_warna_kiri ?? '-' }}</td>
+                            </tr>
+                            <td colspan="4" style="background-color: #a3a3a3d0;"><strong>Antropometri</strong>
+                            </td>
                             <tr>
                                 <td style="font-weight:bold;">Tinggi Badan</td>
                                 <td>{{ $pfTht->antropometri_tinggi_badan ?? '-' }}</td>
@@ -862,7 +851,7 @@
 
             {{-- 7. HASIL PEMERIKSAAN PENUNJANG --}}
             <tr>
-                <td colspan="2" class="section-title">7. HASIL PEMERIKSAAN PENUNJANG</td>
+                <td colspan="2" class="section-title">8. HASIL PENUNJANG</td>
             </tr>
             <tr>
                 <td colspan="2">
@@ -941,7 +930,7 @@
 
             {{-- 8. DISCHARGE PLANNING --}}
             <tr>
-                <td colspan="2" class="section-title">8. DISCHARGE PLANNING</td>
+                <td colspan="2" class="section-title">12. DISCHARGE PLANNING</td>
             </tr>
             <tr>
                 <td colspan="2">

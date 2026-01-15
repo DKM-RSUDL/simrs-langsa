@@ -525,6 +525,14 @@ class RawatInapResumeController extends Controller
 
         if (empty($resume)) return back()->with('error', 'Gagal menemukan data resume !');
 
+        // get data medis
+        $asalIGD = AsalIGD::where('kd_kasir', $dataMedis->kd_kasir)->where('no_transaksi', $dataMedis->no_transaksi)->first();
+        $kunjunganIGD = null;
+
+        if (!empty($asalIGD)) {
+            $kunjunganIGD = $this->baseService->getDataMedisbyTransaksi($asalIGD->kd_kasir_asal, $asalIGD->no_transaksi_asal);
+        }
+
         // get last ttv
         $vitalSign = $this->asesmenService->getVitalSignData($dataMedis->kd_kasir, $dataMedis->no_transaksi);
 
@@ -549,8 +557,8 @@ class RawatInapResumeController extends Controller
 
         $hasilKonpas = "$tdKonpas, $rr, $resp, $temp, $tb, $bb";
 
-        $resepRawat = $this->getRiwayatObatHariIni($dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk);
-        $resepPulang = $this->getObatPulang($dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk);
+        $resepRawat = $this->getRiwayatObatHariIni($dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk, $kunjunganIGD);
+        $resepPulang = $this->getObatPulang($dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk, $kunjunganIGD);
 
         $labor = SegalaOrder::with(['details'])
             ->where('kd_pasien', $dataMedis->kd_pasien)

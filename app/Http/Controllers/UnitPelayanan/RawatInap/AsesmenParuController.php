@@ -893,11 +893,18 @@ class AsesmenParuController extends Controller
                 'rmeAsesmenParuRencanaKerja',
                 'rmeAsesmenParuPerencanaanPulang',
                 'rmeAsesmenParuDiagnosisImplementasi',
+                'rmeAsesmenParuPemeriksaanFisik',
                 'rmeAlergiPasien',
                 'pemeriksaanFisik' => function ($query) {
                     $query->orderBy('id_item_fisik');
                 },
             ])->findOrFail($id);
+
+            $idAsesmen = $this->getIdAsesmen($kd_pasien);
+
+            $KebiasaanData = $this->getKebiasaan($idAsesmen);
+
+            $prognosisData = SatsetPrognosis::all();
 
             $dataMedis = Kunjungan::with('pasien')
                 ->where('kd_unit', $kd_unit)
@@ -916,6 +923,8 @@ class AsesmenParuController extends Controller
                 'rmeAsesmenParuPerencanaanPulang' => optional($asesmen)->rmeAsesmenParuPerencanaanPulang ?? null,
                 'rmeAsesmenParuDiagnosisImplementasi' => optional($asesmen)->rmeAsesmenParuDiagnosisImplementasi ?? null,
                 'pemeriksaanFisik' => optional($asesmen)->pemeriksaanFisik ?? null,
+                'satsetPrognosis' => $prognosisData,
+                'KebiasaanData' => $KebiasaanData
             ]);
 
             $pdf->setPaper('a4', 'portrait');
