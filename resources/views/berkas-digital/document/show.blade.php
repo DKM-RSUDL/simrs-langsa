@@ -156,6 +156,19 @@
             @else
                 <p>Data asesmen ginekologik tidak ditemukan untuk kunjungan ini.</p>
             @endif
+
+            @if ($asesmenPsikiatri)
+                @include('unit-pelayanan.rawat-inap.pelayanan.asesmen-psikiatri.print', [
+                    'asesmen' => $asesmenPsikiatri,
+                    'asesmenPsikiatri' => $asesmenPsikiatriMain,
+                    'asesmenPsikiatriDtl' => $asesmenPsikiatriDtl,
+                    'alergiPasien' => $alergiPasienPsikiatri,
+                    'pasien' => $pasien,
+                    'dataMedis' => $dataMedis,
+                ])
+            @else
+                <p>Data asesmen psikiatri tidak ditemukan untuk kunjungan ini.</p>
+            @endif
         </div>
     </x-content-card>
     <x-content-card>

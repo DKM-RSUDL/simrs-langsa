@@ -40,6 +40,8 @@ use App\Models\RmeAsesmenGinekologikPemeriksaanFisik;
 use App\Models\RmeAsesmenGinekologikEkstremitasGinekologik;
 use App\Models\RmeAsesmenGinekologikPemeriksaanDischarge;
 use App\Models\RmeAsesmenGinekologikDiagnosisImplementasi;
+use App\Models\RmeAsesmenPsikiatri;
+use App\Models\RmeAsesmenPsikiatriDtl;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Carbon;
 use App\Services\AsesmenService;
@@ -1377,6 +1379,43 @@ class BerkasDigitalService
             'rmeAsesmenGinekologikPemeriksaanDischarge',
             'rmeAsesmenGinekologikDiagnosisImplementasi',
             'satsetPrognosis'
+        );
+    }
+
+    /**
+     * Get Asesmen Psikiatri data untuk ditampilkan di berkas digital dokumen
+     * Menyusun variabel yang diperlukan oleh blade print asesmen-psikiatri
+     */
+    public function getAsesmenPsikiatriData($dataMedis)
+    {
+        // Tentukan tanggal masuk
+        $tglMasuk = isset($dataMedis->tgl_transaksi) ? $dataMedis->tgl_transaksi : $dataMedis->tgl_masuk;
+
+        // Ambil data asesmen Psikiatri (kategori=1, sub_kategori=11)
+        $asesmen = RmeAsesmen::with(['user'])
+            ->where('kd_pasien', $dataMedis->kd_pasien)
+            ->whereDate('tgl_masuk', date('Y-m-d', strtotime($tglMasuk)))
+            ->where('urut_masuk', $dataMedis->urut_masuk)
+            ->where('kategori', 1)
+            ->where('sub_kategori', 11)
+            ->orderBy('waktu_asesmen', 'desc')
+            ->first();
+
+        // Jika tidak ada, return null
+        if (!$asesmen) {
+            return null;
+        }
+
+        // Ambil data relasi psikiatri
+        $asesmenPsikiatri = RmeAsesmenPsikiatri::where('id_asesmen', $asesmen->id)->first();
+        $asesmenPsikiatriDtl = RmeAsesmenPsikiatriDtl::where('id_asesmen', $asesmen->id)->first();
+        $alergiPasien = RmeAlergiPasien::where('kd_pasien', $dataMedis->kd_pasien)->get();
+
+        return compact(
+            'asesmen',
+            'asesmenPsikiatri',
+            'asesmenPsikiatriDtl',
+            'alergiPasien'
         );
     }
 }

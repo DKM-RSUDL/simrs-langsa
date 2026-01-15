@@ -457,6 +457,20 @@ class BerkasDigitalController extends Controller
             $satsetPrognosisGinekologik = null;
         }
 
+        // Ambil data Asesmen Psikiatri (Rawat Inap)
+        $asesmenPsikiatriData = $this->berkasDigitalService->getAsesmenPsikiatriData($dataMedis);
+        if ($asesmenPsikiatriData) {
+            $asesmenPsikiatri = $asesmenPsikiatriData['asesmen'];
+            $asesmenPsikiatriMain = $asesmenPsikiatriData['asesmenPsikiatri'];
+            $asesmenPsikiatriDtl = $asesmenPsikiatriData['asesmenPsikiatriDtl'];
+            $alergiPasienPsikiatri = $asesmenPsikiatriData['alergiPasien'];
+        } else {
+            $asesmenPsikiatri = null;
+            $asesmenPsikiatriMain = null;
+            $asesmenPsikiatriDtl = null;
+            $alergiPasienPsikiatri = null;
+        }
+
         return view('berkas-digital.document.show', compact(
             'listDokumen',
             'dataMedis',
@@ -558,7 +572,12 @@ class BerkasDigitalController extends Controller
             'rmeAsesmenGinekologikEkstremitasGinekologik',
             'rmeAsesmenGinekologikPemeriksaanDischarge',
             'rmeAsesmenGinekologikDiagnosisImplementasi',
-            'satsetPrognosisGinekologik'
+            'satsetPrognosisGinekologik',
+            // asesmen psikiatri
+            'asesmenPsikiatri',
+            'asesmenPsikiatriMain',
+            'asesmenPsikiatriDtl',
+            'alergiPasienPsikiatri'
         ));
     }
 
