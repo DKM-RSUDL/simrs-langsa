@@ -1,30 +1,12 @@
-
-
-
-
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <title>Form Anamnesis - Ophthalmology</title>
 
     <style>
         /* Your original styles remain unchanged — I didn't modify CSS */
-        * { box-sizing: border-box; font-family: "DejaVu Sans", "Helvetica", "Arial", sans-serif !important; font-size: 8.5pt; }
-        @page { size: A4; margin: 3mm 6mm; }
-        body { margin: 0; padding: 0; }
-        .a4 { width: 100%; max-width: 100%; }
-        table { width: 100%; border-collapse: collapse; }
-        td, th { padding: 4px 6px; vertical-align: top; }
-        .label { font-weight: bold; width: 38%; padding-right: 8px; }
-        .value { border-bottom: 1px solid #000; min-height: 22px; }
-        .value.tall { min-height: 32px; }
-        .value.empty-space { min-height: 60px; }
-        .checkbox-group label { margin-right: 28px; display: inline-block; }
-        /* ... rest of your styles unchanged ... */
-    </style>
-</head>
-   <style>
         * {
             box-sizing: border-box;
             font-family: "DejaVu Sans", "Helvetica", "Arial", sans-serif !important;
@@ -74,11 +56,6 @@
 
         .value.empty-space {
             min-height: 60px;
-            /* ruang tulis tangan jika kosong */
-        }
-
-        .checkbox-group {
-            font-family: "DejaVu Sans", sans-serif !important;
         }
 
         .checkbox-group label {
@@ -86,222 +63,287 @@
             display: inline-block;
         }
 
-
-
-        input[type="checkbox"]:checked {
-            background: #fff;
-        }
-
-        input[type="checkbox"]:checked::after {
-            content: "";
-            /* content: "\2713"; */
-            /* Unicode checkmark yang support di DejaVu Sans */
-            position: absolute;
-            top: -3px;
-            left: 1px;
-            font-size: 16px;
-            color: #000;
-            line-height: 1;
-        }
-
-        .obat-item {
-            border-bottom: 1px dotted #666;
-            padding: 2px 6px;
-            margin-bottom: 2px;
-        }
-
-        .header {
-            display: flex;
-            align-items: stretch;
-            margin-bottom: 10mm;
-            border-bottom: 1px solid #000;
-            width: 100%;
-        }
-
-        .patient-table {
-            width: 100%;
-            margin-top: 15px;
-            border-collapse: collapse;
-        }
-
-        .patient-table th,
-        .patient-table td {
-            border: 1px solid #ccc;
-            padding: 5px 7px;
-            font-size: 9pt;
-        }
-
-        .patient-table th {
-            background-color: #f2f2f2;
-            text-align: left;
-            width: 130px;
-        }
-
-        .header-table {
-            width: 100%;
-            border-collapse: collapse;
-            background-color: #f0f0f0;
-            padding: 0;
-            position: relative;
-        }
-
-        .td-left {
-            width: 40%;
-            text-align: left;
-            vertical-align: middle;
-        }
-
-        .td-center {
-            width: 40%;
-            text-align: center;
-            vertical-align: middle;
-        }
-
-
-
-        .brand-table {
-            border-collapse: collapse;
-            background-color: transparent;
-        }
-
-        .va-middle {
-            vertical-align: middle;
-        }
-
-        .brand-logo {
-            width: 60px;
-            height: auto;
-            margin-right: 2px;
-        }
-
-        .brand-name {
-            font-weight: 700;
-            margin: 0;
-            font-size: 14px;
-        }
-
-        .brand-info {
-            margin: 0;
-            font-size: 7px;
-        }
-
-        .title-main {
-            display: block;
-            font-size: 16px;
-            font-weight: bold;
-            margin: 0;
-        }
-
-        .title-sub {
-            display: block;
-            font-size: 14px;
-            font-weight: bold;
-            margin: 0;
-        }
-
-
-
-        .unit-box {
-            background-color: #bbbbbb;
-            padding: 15px 0px;
-            width: 100%;
-            margin: 0 auto;
-            text-align: center;
-        }
-
-        .unit-text {
-            font-size: 18px;
-            font-weight: bold;
-            color: #ffffff;
-        }
-
-        .page-break {
-            page-break-before: always;
-        }
-
-    
-        .header-asesmen {
-            margin-top: 1rem;
-            font-size: 1.5rem;
-            font-weight: 600;
-        }
-
-        
-
-        .section-title {
-            font-size: 1.25rem;
-            font-weight: 600;
-            margin-bottom: 1.5rem;
-        }
-
-        .form-label.fw-bold {
-            font-weight: 600 !important;
-            color: #333;
-            margin-bottom: 0.25rem;
-        }
-
-        .text-justify {
-            text-align: justify;
-        }
-
-        .badge {
-            font-size: 0.75rem;
-        }
-
-        .table th {
-            font-weight: 600;
-            background-color: #f8f9fa;
-        }
-
-        /* Site Marking Show Styles */
-        .site-marking-container {
-            border: 2px solid #dee2e6;
-            border-radius: 8px;
-            overflow: hidden;
-            background: #f8f9fa;
-            position: relative;
-            background-color: red;
-        }
-
-        
-        .marking-list-item-show {
-            padding: 12px;
-            border: 1px solid #dee2e6;
-            border-radius: 6px;
-            margin-bottom: 8px;
-            background: #fff;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-        }
-
-        .marking-badge {
-            font-size: 10px;
-            padding: 4px 8px;
-        }
-
-        #anatomyImageShow {
-            display: block;
-            max-width: 100%;
-            height: auto;
-        }
-
-        #markingCanvasShow {
-            pointer-events: none;
-        }
-
-        .marking-detail {
-            font-size: 0.875rem;
-        }
-
-        .marking-color-indicator {
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            display: inline-block;
-            border: 2px solid #fff;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
-        }
-
+        /* ... rest of your styles unchanged ... */
     </style>
+</head>
+<style>
+    * {
+        box-sizing: border-box;
+        font-family: "DejaVu Sans", "Helvetica", "Arial", sans-serif !important;
+        font-size: 8.5pt;
+    }
+
+    @page {
+        size: A4;
+        margin: 3mm 6mm;
+    }
+
+    body {
+        margin: 0;
+        padding: 0;
+    }
+
+    .a4 {
+        width: 100%;
+        max-width: 100%;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    td,
+    th {
+        padding: 4px 6px;
+        vertical-align: top;
+    }
+
+    .label {
+        font-weight: bold;
+        width: 38%;
+        padding-right: 8px;
+    }
+
+    .value {
+        border-bottom: 1px solid #000;
+        min-height: 22px;
+    }
+
+    .value.tall {
+        min-height: 32px;
+    }
+
+    .value.empty-space {
+        min-height: 60px;
+        /* ruang tulis tangan jika kosong */
+    }
+
+    .checkbox-group {
+        font-family: "DejaVu Sans", sans-serif !important;
+    }
+
+    .checkbox-group label {
+        margin-right: 28px;
+        display: inline-block;
+    }
+
+
+
+    input[type="checkbox"]:checked {
+        background: #fff;
+    }
+
+    input[type="checkbox"]:checked::after {
+        content: "";
+        /* content: "\2713"; */
+        /* Unicode checkmark yang support di DejaVu Sans */
+        position: absolute;
+        top: -3px;
+        left: 1px;
+        font-size: 16px;
+        color: #000;
+        line-height: 1;
+    }
+
+    .obat-item {
+        border-bottom: 1px dotted #666;
+        padding: 2px 6px;
+        margin-bottom: 2px;
+    }
+
+    .header {
+        display: flex;
+        align-items: stretch;
+        margin-bottom: 10mm;
+        border-bottom: 1px solid #000;
+        width: 100%;
+    }
+
+    .patient-table {
+        width: 100%;
+        margin-top: 15px;
+        border-collapse: collapse;
+    }
+
+    .patient-table th,
+    .patient-table td {
+        border: 1px solid #ccc;
+        padding: 5px 7px;
+        font-size: 9pt;
+    }
+
+    .patient-table th {
+        background-color: #f2f2f2;
+        text-align: left;
+        width: 130px;
+    }
+
+    .header-table {
+        width: 100%;
+        border-collapse: collapse;
+        background-color: #f0f0f0;
+        padding: 0;
+        position: relative;
+    }
+
+    .td-left {
+        width: 40%;
+        text-align: left;
+        vertical-align: middle;
+    }
+
+    .td-center {
+        width: 40%;
+        text-align: center;
+        vertical-align: middle;
+    }
+
+
+
+    .brand-table {
+        border-collapse: collapse;
+        background-color: transparent;
+    }
+
+    .va-middle {
+        vertical-align: middle;
+    }
+
+    .brand-logo {
+        width: 60px;
+        height: auto;
+        margin-right: 2px;
+    }
+
+    .brand-name {
+        font-weight: 700;
+        margin: 0;
+        font-size: 14px;
+    }
+
+    .brand-info {
+        margin: 0;
+        font-size: 7px;
+    }
+
+    .title-main {
+        display: block;
+        font-size: 16px;
+        font-weight: bold;
+        margin: 0;
+    }
+
+    .title-sub {
+        display: block;
+        font-size: 14px;
+        font-weight: bold;
+        margin: 0;
+    }
+
+
+
+    .unit-box {
+        background-color: #bbbbbb;
+        padding: 15px 0px;
+        width: 100%;
+        margin: 0 auto;
+        text-align: center;
+    }
+
+    .unit-text {
+        font-size: 18px;
+        font-weight: bold;
+        color: #ffffff;
+    }
+
+    .page-break {
+        page-break-before: always;
+    }
+
+
+    .header-asesmen {
+        margin-top: 1rem;
+        font-size: 1.5rem;
+        font-weight: 600;
+    }
+
+
+
+    .section-title {
+        font-size: 1.25rem;
+        font-weight: 600;
+        margin-bottom: 1.5rem;
+    }
+
+    .form-label.fw-bold {
+        font-weight: 600 !important;
+        color: #333;
+        margin-bottom: 0.25rem;
+    }
+
+    .text-justify {
+        text-align: justify;
+    }
+
+    .badge {
+        font-size: 0.75rem;
+    }
+
+    .table th {
+        font-weight: 600;
+        background-color: #f8f9fa;
+    }
+
+    /* Site Marking Show Styles */
+    .site-marking-container {
+        border: 2px solid #dee2e6;
+        border-radius: 8px;
+        overflow: hidden;
+        background: #f8f9fa;
+        position: relative;
+        background-color: red;
+    }
+
+
+    .marking-list-item-show {
+        padding: 12px;
+        border: 1px solid #dee2e6;
+        border-radius: 6px;
+        margin-bottom: 8px;
+        background: #fff;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+
+    .marking-badge {
+        font-size: 10px;
+        padding: 4px 8px;
+    }
+
+    #anatomyImageShow {
+        display: block;
+        max-width: 100%;
+        height: auto;
+    }
+
+    #markingCanvasShow {
+        pointer-events: none;
+    }
+
+    .marking-detail {
+        font-size: 0.875rem;
+    }
+
+    .marking-color-indicator {
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        display: inline-block;
+        border: 2px solid #fff;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+    }
+</style>
+
 <body>
 
     @php
@@ -342,7 +384,8 @@
                 <span class="title-sub">PENYAKIT KULIT & KELAMIN</span>
             </td>
             <td class="td-right">
-                <div class="unit-box"><span class="unit-text" style="font-size: 14px; margin-top:10px;">RAWAT INAP</span></div>
+                <div class="unit-box"><span class="unit-text" style="font-size: 14px; margin-top:10px;">RAWAT
+                        INAP</span></div>
             </td>
         </tr>
     </table>
@@ -352,7 +395,8 @@
             <th>No. RM</th>
             <td>{{ $data['dataMedis']->pasien->kd_pasien ?? '-' }}</td>
             <th>Tgl. Lahir</th>
-            <td>{{ $data['dataMedis']->pasien->tgl_lahir ? \Carbon\Carbon::parse($data['dataMedis']->pasien->tgl_lahir)->format('d M Y') : '-' }}</td>
+            <td>{{ $data['dataMedis']->pasien->tgl_lahir ? \Carbon\Carbon::parse($data['dataMedis']->pasien->tgl_lahir)->format('d M Y') : '-' }}
+            </td>
         </tr>
         <tr>
             <th>Nama Pasien</th>
@@ -362,30 +406,41 @@
         </tr>
     </table>
 
-    <table style="margin-top: 20px;">
+    <table border="1" style="margin-top: 20px;">
         <tr>
-            <td class="label">ANAMNESIS / Keluhan Utama</td>
-            <td class="value">{{ $asesmen->anamnesis ?? '-' }}</td>
-        </tr>
-        <tr>
-            <td class="label">Riwayat penyakit terdahulu:</td>
-            <td class="value">{{ $asesmen->riwayat_penyakit_dahulu ?? implode(', ', $penyakit_yang_diderita) ?: '–' }}</td>
-        </tr>
-        <tr>
-            <td class="label">Riwayat penyakit dalam keluarga:</td>
-            <td class="value">{{ implode(', ', $riwayat_penyakit_keluarga) ?: 'Tidak ada / tidak diketahui' }}</td>
+            <td colspan="2">
+                <table>
+                    <tr>
+                        <td class="label">ANAMNESIS / Keluhan Utama</td>
+                        <td class="value">{{ $asesmen->anamnesis ?? '-' }}</td>
+                    </tr>
+                    <tr>
+                        <td class="label">Riwayat penyakit terdahulu:</td>
+                        <td class="value">
+                            {{ $asesmen->riwayat_penyakit_dahulu ?? implode(', ', $penyakit_yang_diderita) ?: '–' }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="label">Riwayat penyakit dalam keluarga:</td>
+                        <td class="value">
+                            {{ implode(', ', $riwayat_penyakit_keluarga) ?: 'Tidak ada / tidak diketahui' }}</td>
+                    </tr>
+                </table>
+            </td>
         </tr>
 
         <tr>
-            <td colspan="2" class="label" style="padding-top: 0px;">Riwayat pengobatan / pemakaian obat saat ini:</td>
+            <td colspan="2" class="label" style="padding-top: 6px;">Riwayat pengobatan / pemakaian obat saat ini:</td>
         </tr>
         <tr>
             <td colspan="2" class="checkbox-group" style="padding: 6px 0 8px 0;">
                 <label style="display: inline-flex; align-items: center; margin-right: 40px; white-space: nowrap;">
-                    <input type="checkbox" {{ empty($riwayat_penggunaan_obat) ? 'checked' : '' }} style="margin-right: 6px;"> Tidak ada
+                    <input type="checkbox" {{ empty($riwayat_penggunaan_obat) ? 'checked' : '' }}
+                        style="margin-right: 6px;"> Tidak ada
                 </label>
                 <label style="display: inline-flex; align-items: center; white-space: nowrap;">
-                    <input type="checkbox" {{ !empty($riwayat_penggunaan_obat) ? 'checked' : '' }} style="margin-right: 6px;"> Ada, sebutkan:
+                    <input type="checkbox" {{ !empty($riwayat_penggunaan_obat) ? 'checked' : '' }}
+                        style="margin-right: 6px;"> Ada, sebutkan:
                 </label>
             </td>
         </tr>
@@ -393,8 +448,7 @@
         @if(!empty($riwayat_penggunaan_obat))
             @foreach($riwayat_penggunaan_obat as $index => $obat)
                 <tr>
-                    <td class="label" style="padding-left: 30px; font-weight: normal;">{{ $index + 1 }}.</td>
-                    <td class="value" style="border-bottom: 1px dotted #444;">
+                    <td colspan="2" class="label" style="padding-left: 30px; font-weight: normal;">{{ $index + 1 }}.
                         <strong>{{ $obat['namaObat'] ?? '-' }}</strong>
                         {{ $obat['dosis'] ?? '' }} {{ $obat['satuan'] ?? '' }},
                         {{ $obat['frekuensi'] ?? '-' }}
@@ -405,15 +459,17 @@
         @endif
 
         <tr>
-            <td colspan="2" class="label" style="padding-top: 0px;">Riwayat Alergi:</td>
+            <td colspan="2" class="label" style="padding-top: 5px;">Riwayat Alergi:</td>
         </tr>
         <tr>
             <td colspan="2" class="checkbox-group" style="padding: 6px 0 10px 0;">
                 <label style="display: inline-flex; align-items: center; margin-right: 40px;">
-                    <input type="checkbox" {{ empty($riwayat_alergi) ? 'checked' : '' }} style="margin-right: 6px;"> Tidak ada
+                    <input type="checkbox" {{ empty($riwayat_alergi) ? 'checked' : '' }} style="margin-right: 6px;">
+                    Tidak ada
                 </label>
                 <label style="display: inline-flex; align-items: center;">
-                    <input type="checkbox" {{ !empty($riwayat_alergi) ? 'checked' : '' }} style="margin-right: 6px;"> Ada, sebutkan:
+                    <input type="checkbox" {{ !empty($riwayat_alergi) ? 'checked' : '' }} style="margin-right: 6px;">
+                    Ada, sebutkan:
                 </label>
             </td>
         </tr>
@@ -421,13 +477,14 @@
         @if(!empty($riwayat_alergi))
             @foreach($riwayat_alergi as $index => $alergi)
                 <tr>
-                    <td class="label" style="padding-left: 30px; font-weight: normal; width: 10%;">{{ $index + 1 }}.</td>
-                    <td class="value" style="border-bottom: 1px dotted #444; padding: 0px;">
+                    <td colspan="2" class="label" style="padding-left: 30px; font-weight: normal; width: 10%;">
+                        {{ $index + 1 }}.
                         <strong>{{ $alergi['alergen'] ?? '-' }}</strong>
                         (Jenis: {{ $alergi['jenis'] ?? '-' }})
                         — Reaksi: {{ $alergi['reaksi'] ?? '-' }}
                         — Keparahan: {{ $alergi['keparahan'] ?? '-' }}
                     </td>
+
                 </tr>
             @endforeach
         @endif
@@ -437,14 +494,15 @@
         </tr>
         <tr>
             <td colspan="2">
-                <table style="width: 100%; margin-top: 8px; border-collapse: collapse;">
+                <table border="1" style="width: 100%; margin-top: 8px; border-collapse: collapse;">
                     <tr>
-                        <td class="label" style="width: 25%;">Sensorium</td>
-                        <td class="value" style="width: 25%;">{{ $data['asesmenKulitKelamin']->sensorium ?? '' }}</td>
-                        <td class="label" style="width: 25%;">Tekanan darah</td>
-                        <td class="value">
+                        <td class="label" style="width: 20px;">Sensorium</td>
+                        <td class="value" style="width: 100px;">{{ $data['asesmenKulitKelamin']->sensorium ?? '' }}</td>
+                        <td class="label">Tekanan darah</td>
+                        <td class="value" style="width : 100px;">
                             @if(!empty($data['asesmenKulitKelamin']->tekanan_darah_sistole) && !empty($data['asesmenKulitKelamin']->tekanan_darah_diastole))
-                                {{ $data['asesmenKulitKelamin']->tekanan_darah_sistole }}/{{ $data['asesmenKulitKelamin']->tekanan_darah_diastole }} mmHg
+                                {{ $data['asesmenKulitKelamin']->tekanan_darah_sistole }}/{{ $data['asesmenKulitKelamin']->tekanan_darah_diastole }}
+                                mmHg
                             @endif
                         </td>
                     </tr>
@@ -457,7 +515,8 @@
                     <tr>
                         <td class="label">Nadi</td>
                         <td class="value">{{ $data['asesmenKulitKelamin']->nadi ?? '' }}</td>
-                        <td></td><td></td>
+                        <td></td>
+                        <td></td>
                     </tr>
                 </table>
             </td>
@@ -468,7 +527,7 @@
         </tr>
         <tr>
             <td colspan="2" style="padding:0;">
-                <table class="table table-bordered mb-0">
+                <table border="1" class="table table-bordered mb-0">
                     <tbody>
                         @foreach ($data['itemFisik']->chunk(2) as $chunk)
                             <tr>
@@ -485,12 +544,15 @@
                                                 <td style="width:25%;">
                                                     <input type="checkbox" id="{{ $item->id }}-normal" {{ $isNormal ? 'checked' : '' }}>
                                                     <label for="{{ $item->id }}-normal">Normal</label>
+                                                    <div style="display:{{ !$isNormal && $keterangan ? 'block' : 'none' }};">
+                                                        <input type="text" class="form-control form-control-sm"
+                                                            value="{{ $keterangan }}"
+                                                            placeholder="Keterangan jika tidak normal">
+                                                    </div>
                                                 </td>
                                             </tr>
                                         </table>
-                                        <div style="display:{{ !$isNormal && $keterangan ? 'block' : 'none' }};">
-                                            <input type="text" class="form-control form-control-sm" value="{{ $keterangan }}" placeholder="Keterangan jika tidak normal">
-                                        </div>
+
                                     </td>
                                 @endforeach
                                 @if ($chunk->count() < 2)
@@ -510,13 +572,14 @@
         <tr>
             <td class="checkbox-group" style="padding: 6px 0 10px 0;">
                 <div class="text-center">
-                    <img src="{{ asset('assets/img/asesmen/asesmen.jpeg') }}" alt="Skala Nyeri Visual" class="img-fluid mb-3" style="max-height: 200px;">
+                    <img src="{{ asset('assets/img/asesmen/asesmen.jpeg') }}" alt="Skala Nyeri Visual"
+                        class="img-fluid mb-3" style="max-height: 200px;">
                 </div>
             </td>
             <td>
                 @php
                     $nilai = $asesmen->skala_nyeri ?? 0;
-                    $kategori = match(true) {
+                    $kategori = match (true) {
                         $nilai >= 1 && $nilai <= 3 => 'Nyeri Ringan',
                         $nilai >= 4 && $nilai <= 6 => 'Nyeri Sedang',
                         $nilai >= 7 && $nilai <= 9 => 'Nyeri Berat',
@@ -532,15 +595,16 @@
         <!-- Diagnosis -->
         @php
             $diagnosisBanding = json_decode($asesmenKulitKelamin->diagnosis_banding ?? '[]', true);
-            $diagnosisKerja  = json_decode($asesmenKulitKelamin->diagnosis_kerja  ?? '[]', true);
+            $diagnosisKerja = json_decode($asesmenKulitKelamin->diagnosis_kerja ?? '[]', true);
         @endphp
-   
+
         <tr>
             <!-- Left Column: Diagnosis, Rencana, Prognosis -->
             <td style="width: 50%; vertical-align: top; padding-right: 12px;">
                 <table style="width: 100%; border-collapse: collapse; height : 400px;">
                     <tr>
-                        <td class="label" style="width: 40%; font-weight: bold; padding: 8px 10px; background: #f8f9fa; border: 1px solid #dee2e6;">
+                        <td class="label"
+                            style="width: 40%; font-weight: bold; padding: 8px 10px; background: #f8f9fa; border: 1px solid #dee2e6;">
                             DIAGNOSIS DIFERENSIAL
                         </td>
                         <td class="value" style="padding: 8px 10px; border: 1px solid #dee2e6; border-left: none;">
@@ -548,7 +612,8 @@
                         </td>
                     </tr>
                     <tr>
-                        <td class="label" style="width: 40%; font-weight: bold; padding: 8px 10px; background: #f8f9fa; border: 1px solid #dee2e6;">
+                        <td class="label"
+                            style="width: 40%; font-weight: bold; padding: 8px 10px; background: #f8f9fa; border: 1px solid #dee2e6;">
                             DIAGNOSIS KERJA
                         </td>
                         <td class="value" style="padding: 8px 10px; border: 1px solid #dee2e6; border-left: none;">
@@ -556,15 +621,18 @@
                         </td>
                     </tr>
                     <tr>
-                        <td class="label" style="width: 40%; font-weight: bold; padding: 8px 10px; background: #f8f9fa; border: 1px solid #dee2e6;">
+                        <td class="label"
+                            style="width: 40%; font-weight: bold; padding: 8px 10px; background: #f8f9fa; border: 1px solid #dee2e6;">
                             RENCANA PENATALAKSANAAN DAN PENGOBATAN
                         </td>
-                        <td class="value" style="padding: 8px 10px; border: 1px solid #dee2e6; border-left: none; min-height: 60px;">
+                        <td class="value"
+                            style="padding: 8px 10px; border: 1px solid #dee2e6; border-left: none; min-height: 60px;">
                             {{ $rmeAsesmenKepOphtamology->rencana_pengobatan ?? '–' }}
                         </td>
                     </tr>
                     <tr>
-                        <td class="label" style="width: 40%; font-weight: bold; padding: 8px 10px; background: #f8f9fa; border: 1px solid #dee2e6;">
+                        <td class="label"
+                            style="width: 40%; font-weight: bold; padding: 8px 10px; background: #f8f9fa; border: 1px solid #dee2e6;">
                             PROGNOSIS
                         </td>
                         <td class="value" style="padding: 8px 10px; border: 1px solid #dee2e6; border-left: none;">
@@ -585,13 +653,13 @@
 
             <!-- Right Column: Site Marking -->
             <td style="width: 50%; vertical-align: top; padding-left: 12px;">
-                
-                <div class="site-marking-container" style="width: 280px; max-width: 100%; position: relative; background: #f8f9fa; border: 2px solid #dee2e6; border-radius: 6px; overflow: hidden;">
-                    <img src="{{ asset('assets/images/sitemarking/kulit-kelamin.png') }}" 
-                        id="anatomyImageShow" 
+
+                <div class="site-marking-container"
+                    style="width: 280px; max-width: 100%; position: relative; background: #f8f9fa; border: 2px solid #dee2e6; border-radius: 6px; overflow: hidden;">
+                    <img src="{{ asset('assets/images/sitemarking/kulit-kelamin.png') }}" id="anatomyImageShow"
                         style="display: block; width: 100%; height: auto;">
-                    <canvas id="markingCanvasShow" 
-                            style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 10; pointer-events: none;"></canvas>
+                    <canvas id="markingCanvasShow"
+                        style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 10; pointer-events: none;"></canvas>
                 </div>
 
                 <div class="mt-2" style="margin-top: 10px;">
@@ -603,11 +671,12 @@
         </tr>
         <!-- Discharge Planning -->
         <tr>
-            <td colspan="2" class="label" style="padding-top: 18px; font-size: 12pt;">PERENCANAAN PULANG PASIEN (DISCHARGE PLANNING)</td>
+            <td colspan="2" class="label" style="padding-top: 18px; font-size: 12pt;">PERENCANAAN PULANG PASIEN
+                (DISCHARGE PLANNING)</td>
         </tr>
         <tr>
             <td colspan="2">
-                <table style="width: 100%; margin-top: 8px; border-collapse: collapse;">
+                <table border="1" style="width: 100%; margin-top: 8px; border-collapse: collapse;">
                     @php
                         $ketergantungan = (
                             ($rencanaPulang['memerlukan_keterampilan_khusus'] ?? '') == 'ya' ||
@@ -617,8 +686,8 @@
                     @endphp
 
                     <tr>
-                        <td class="label" style="width:55%;">Usia lanjut (> 60 th)</td>
-                        <td style="text-align:center;">
+                        <td class="label" style="width:30%;">Usia lanjut (> 60 th)</td>
+                        <td style="text-align:left;">
                             <label><input type="checkbox" {{ ($rencanaPulang['usia_lanjut'] ?? '') == 'Ya' ? 'checked' : '' }}> Ya</label>
                             <label><input type="checkbox" {{ ($rencanaPulang['usia_lanjut'] ?? '') != 'Ya' ? 'checked' : '' }}> Tidak</label>
                         </td>
@@ -655,7 +724,8 @@
                             <br><br>
                             Dokter yang memeriksa
                             <br><br>
-                            <img src="{{ generateQrCode(($data['asesmen']->user->karyawan->gelar_depan ?? '') . ' ' . str()->title($data['asesmen']->user->karyawan->nama ?? '') . ' ' . ($data['asesmen']->user->karyawan->gelar_belakang ?? ''), 100, 'svg_datauri') }}" alt="QR Petugas">
+                            <img src="{{ generateQrCode(($data['asesmen']->user->karyawan->gelar_depan ?? '') . ' ' . str()->title($data['asesmen']->user->karyawan->nama ?? '') . ' ' . ($data['asesmen']->user->karyawan->gelar_belakang ?? ''), 100, 'svg_datauri') }}"
+                                alt="QR Petugas">
                             <br><br>
                             {{ ($data['asesmen']->user->karyawan->gelar_depan ?? '') . ' ' . str()->title($data['asesmen']->user->karyawan->nama ?? '') . ' ' . ($data['asesmen']->user->karyawan->gelar_belakang ?? '') }}
                         </td>
@@ -673,7 +743,7 @@
                 const canvas = document.getElementById('markingCanvasShow');
 
                 // Check if elements exist
-                if (!image || !canvas  ) {
+                if (!image || !canvas) {
                     console.log('Site marking elements not found - no marking data available');
                     return;
                 }
@@ -722,8 +792,8 @@
                 }
 
                 function loadMarkingsShow() {
-                    
-                  
+
+
 
                     // Draw markings on canvas
                     setTimeout(() => {
@@ -731,7 +801,7 @@
                     }, 100);
                 }
 
-              
+
                 function drawArrowShow(ctx, startX, startY, endX, endY, color) {
                     ctx.strokeStyle = color;
                     ctx.fillStyle = color;
@@ -791,4 +861,5 @@
     </script>
 
 </body>
+
 </html>
