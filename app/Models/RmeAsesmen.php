@@ -130,30 +130,37 @@ class RmeAsesmen extends Model
         return $this->hasOne(RmeAsesmenKepRajal::class, 'id_asesmen', 'id');
     }
 
-    public function asesmenKepRajalTtv() {
+    public function asesmenKepRajalTtv()
+    {
         return $this->hasOne(RmeAsesmenKepRajalTtv::class, 'id_asesmen', 'id');
     }
 
-    public function asesmenKepRajalPendidikan() {
+    public function asesmenKepRajalPendidikan()
+    {
         return $this->hasOne(RmeAsesmenKepRajalPendidikan::class, 'id_asesmen', 'id');
     }
 
-    public function asesmenKepRajalSkalaNyeri() {
+    public function asesmenKepRajalSkalaNyeri()
+    {
         return $this->hasOne(RmeAsesmenKepRajalSkalaNyeri::class, 'id_asesmen', 'id');
     }
 
-    public function asesmenKepRajalSosialBudaya() {
+    public function asesmenKepRajalSosialBudaya()
+    {
         return $this->hasOne(RmeAsesmenKepRajalSosialBudaya::class, 'id_asesmen', 'id');
     }
-    public function asesmenKepRajalRisikoJatuh() {
+    public function asesmenKepRajalRisikoJatuh()
+    {
         return $this->hasOne(RmeAsesmenKepRajalRisikoJatuh::class, 'id_asesmen', 'id');
     }
 
-    public function asesmenKepRajalGizi() {
+    public function asesmenKepRajalGizi()
+    {
         return $this->hasOne(RmeAsesmenKepRajalGizi::class, 'id_asesmen', 'id');
     }
 
-    public function asesmenKepRajalDischargePlanning() {
+    public function asesmenKepRajalDischargePlanning()
+    {
         return $this->hasOne(RmeAsesmenKepRajalDischargePlanning::class, 'id_asesmen', 'id');
     }
 
@@ -237,6 +244,19 @@ class RmeAsesmen extends Model
     {
         return $this->hasOne(RmeAsesmenKepUmumStatusFungsional::class, 'id_asesmen', 'id');
     }
+    // app/Models/RmeAsesmen.php
+
+    // asesmen psikiatri
+    public function rmeAsesmenPsikiatri()
+    {
+        return $this->hasOne(RmeAsesmenPsikiatri::class, 'id_asesmen', 'id');
+    }
+
+    public function rmeAsesmenPsikiatriDtl()
+    {
+        return $this->hasOne(RmeAsesmenPsikiatriDtl::class, 'id_asesmen', 'id');
+    }
+
 
     // asesmen tht
     public function rmeAsesmenTht()
@@ -556,12 +576,10 @@ class RmeAsesmen extends Model
     public function asesmenMedisNeonatologi()
     {
         return $this->hasOne(RmeAsesmenMedisNeonatologi::class, 'id_asesmen', 'id');
-
     }
     public function asesmenMedisNeonatologiFisikGeneralis()
     {
         return $this->hasOne(RmeAsesmenMedisNeonatologiFisikGeneralis::class, 'id_asesmen', 'id');
-
     }
     public function asesmenMedisNeonatologiDtl()
     {

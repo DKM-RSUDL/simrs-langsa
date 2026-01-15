@@ -213,8 +213,8 @@
         <div class="center-column">
             <h1 style="font-size: 16px; margin: 0;">Pengkajian Awal Medis</h1>
             <h2 style="font-size: 14px; margin: 5px 0;">Penyakit Paru</h2>
-            <p style="font-size: 10px; margin: 0;">Diisi dalam 24 jam sejak pasien masuk</p>
-            <p style="font-size: 9px; margin: 5px 0;">No : B.8 /IRM/Rev 2/ 2018</p>
+            {{-- <p style="font-size: 10px; margin: 0;">Diisi dalam 24 jam sejak pasien masuk</p>
+            <p style="font-size: 9px; margin: 5px 0;">No : B.8 /IRM/Rev 2/ 2018</p> --}}
         </div>
         <div class="right-column">
             <table class="info-table">
@@ -256,7 +256,7 @@
         <table class="detail-table">
             <tr>
                 <td class="col-header">Petugas:</td>
-                <td>{{ $asesmen->user->name ?? '-' }}</td>
+                <td>{{ ($asesmen->user->karyawan->gelar_depan ?? '') . ' ' . str()->title($asesmen->user->karyawan->nama ?? '') . ' ' . ($asesmen->user->karyawan->gelar_belakang ?? '') }}</td>
                 <td class="col-header">Tanggal Dan Jam Masuk:</td>
                 <td>{{ $asesmen->rmeAsesmenParu->tanggal ? date('d M Y', strtotime($asesmen->rmeAsesmenParu->tanggal)) : '-' }}
                     {{ $asesmen->rmeAsesmenParu->jam_masuk ? date('H:i', strtotime($asesmen->rmeAsesmenParu->jam_masuk)) : '-' }}
@@ -501,17 +501,17 @@
 
     <!-- 6. Pemeriksaan Fisik -->
     <div class="content-section">
-        <div class="section-title">PEMERIKSAAN FISIK</div>
+        <div class="section-title">6. PEMERIKSAAN FISIK</div>
 
         @php
             $pemeriksaanFisikParu = $asesmen->rmeAsesmenParuPemeriksaanFisik->first();
         @endphp
-        
+
         <table class="detail-table" border="1" cellpadding="6" cellspacing="0">
             <tr>
                 <td colspan="2" class="text-center fw-bold bg-light">PEMERIKSAAN FISIK</td>
             </tr>
-            
+
             <tr>
                 <td class="col-header fw-bold">a. Kepala:</td>
                 <td>
@@ -521,7 +521,7 @@
                     @endif
                 </td>
             </tr>
-            
+
             <tr>
                 <td class="col-header fw-bold">b. Mata:</td>
                 <td>
@@ -531,7 +531,7 @@
                     @endif
                 </td>
             </tr>
-            
+
             <tr>
                 <td class="col-header fw-bold">c. THT:</td>
                 <td>
@@ -541,7 +541,7 @@
                     @endif
                 </td>
             </tr>
-            
+
             <tr>
                 <td class="col-header fw-bold">d. Leher:</td>
                 <td>
@@ -551,11 +551,11 @@
                     @endif
                 </td>
             </tr>
-            
+
             <tr>
                 <td colspan="2" class="col-header fw-bold">e. Thoraks</td>
             </tr>
-            
+
             <tr>
                 <td class="ps-4 fw-bold">Jantung:</td>
                 <td>
@@ -565,7 +565,7 @@
                     @endif
                 </td>
             </tr>
-            
+
             <tr>
                 <td class="ps-4 fw-bold align-top">Paru:</td>
                 <td>
@@ -598,10 +598,10 @@
                     </table>
                 </td>
             </tr>
-            
+
             <tr>
                 <td colspan="2" class="ps-5 py-2">
-                    <strong>Suara Pernafasan (SP):</strong> 
+                    <strong>Suara Pernafasan (SP):</strong>
                     @php
                         $sp = json_decode($pemeriksaanFisikParu->paru_suara_pernafasan ?? '[]', true) ?: [];
                         $sp_display = array_map(function($item) {
@@ -611,10 +611,10 @@
                     {{ implode(', ', $sp_display) ?: '-' }}
                 </td>
             </tr>
-            
+
             <tr>
                 <td colspan="2" class="ps-5 py-2">
-                    <strong>Suara Tambahan (ST):</strong> 
+                    <strong>Suara Tambahan (ST):</strong>
                     @php
                         $st = json_decode($pemeriksaanFisikParu->paru_suara_tambahan ?? '[]', true) ?: [];
                         $st_display = array_map(function($item) {
@@ -752,9 +752,109 @@
     <!-- Page Break untuk halaman 2 -->
     <div class="page-break"></div>
 
+    <!-- 9. Diagnosis -->
+    <div class="content-section">
+        <div class="section-title">8. DIAGNOSIS</div>
+        <table class="detail-table">
+            <tr>
+                <td class="col-header">DIAGNOSIS BANDING :</td>
+                <td>
+                    @if(optional($asesmen->rmeAsesmenParuDiagnosisImplementasi)->diagnosis_banding)
+                        @php
+                            $diagnosisBanding = json_decode($asesmen->rmeAsesmenParuDiagnosisImplementasi->diagnosis_banding, true);
+                        @endphp
+                        @if(is_array($diagnosisBanding) && !empty($diagnosisBanding))
+                            @foreach($diagnosisBanding as $index => $diagnosis)
+                                {{ $index + 1 }}. {{ $diagnosis }}<br>
+                            @endforeach
+                        @else
+                            {{ $asesmen->rmeAsesmenParuDiagnosisImplementasi->diagnosis_banding }}
+                        @endif
+                    @else
+                        -
+                    @endif
+                </td>
+            </tr>
+            <tr>
+                <td class="col-header">DIAGNOSIS KERJA :</td>
+                <td>
+                    @if(optional($asesmen->rmeAsesmenParuDiagnosisImplementasi)->diagnosis_kerja)
+                        @php
+                            $diagnosisKerja = json_decode($asesmen->rmeAsesmenParuDiagnosisImplementasi->diagnosis_kerja, true);
+                        @endphp
+                        @if(is_array($diagnosisKerja) && !empty($diagnosisKerja))
+                            @foreach($diagnosisKerja as $index => $diagnosis)
+                                {{ $index + 1 }}. {{ $diagnosis }}<br>
+                            @endforeach
+                        @else
+                            {{ $asesmen->rmeAsesmenParuDiagnosisImplementasi->diagnosis_kerja }}
+                        @endif
+                    @else
+                        -
+                    @endif
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    {{-- <!-- Gambar Radiologi Paru -->
+    <div class="content-section page-break">
+        <div class="section-title">GAMBAR RADIOLOGI PARU</div>
+        <div style="height: 120px; border: 1px solid #333; text-align: center; padding: 50px;">
+            @if(optional($asesmen->rmeAsesmenParuDiagnosisImplementasi)->gambar_radiologi_paru)
+                <img src="{{ asset('storage/' . $asesmen->rmeAsesmenParuDiagnosisImplementasi->gambar_radiologi_paru) }}"
+                    style="max-width: 100%; max-height: 100px;" alt="Gambar Radiologi Paru">
+            @else
+                [Area untuk gambar radiologi paru]
+            @endif
+        </div>
+    </div> --}}
+
+    <!-- 10. Implementasi -->
+    <div class="content-section">
+        <div class="section-title">9. RENCANA PENATALAKSANAAN DAN PENGOBATAN</div>
+        @php
+            $implementasi = optional($asesmen->rmeAsesmenParuDiagnosisImplementasi);
+            $observasi = $implementasi->observasi ? json_decode($implementasi->observasi, true) : [];
+            $terapeutik = $implementasi->terapeutik ? json_decode($implementasi->terapeutik, true) : [];
+            $edukasi = $implementasi->edukasi ? json_decode($implementasi->edukasi, true) : [];
+            $kolaborasi = $implementasi->kolaborasi ? json_decode($implementasi->kolaborasi, true) : [];
+        @endphp
+
+        <div class="two-column">
+          {{ old('rencana_pengobatan', isset($asesmen->rmeAsesmenParu) ? $asesmen->rmeAsesmenParu->rencana_pengobatan : '') }}
+        </div>
+
+
+        <div class="clear"></div>
+    </div>
+
+
+    <!-- Prognosis -->
+    <div class="content-section">
+        <div class="section-title">10. PROGNOSIS</div>
+        <div>
+            @php
+
+                    $prognosisData = $satsetPrognosis;
+
+                    $valuePrognosis = null;
+
+                    foreach ($prognosisData as $item) {
+                        if ($item->prognosis_id ==  $asesmen->rmeAsesmenParu->paru_prognosis) {
+                            $valuePrognosis = $item->value;
+                            break;
+                        }
+                    }
+            @endphp
+        </div>
+
+        <p> {{ $valuePrognosis ?? '-' }}</p>
+    </div>
+
     <!-- 8. Perencanaan Pulang Pasien -->
     <div class="content-section">
-        <div class="section-title">8. PERENCANAAN PULANG PASIEN (DISCHARGE PLANNING)</div>
+        <div class="section-title">11 . PERENCANAAN PULANG PASIEN (DISCHARGE PLANNING)</div>
         @php
             $dischargePlanning = optional($asesmen->rmeAsesmenParuPerencanaanPulang);
         @endphp
@@ -805,10 +905,10 @@
         </table>
 
         <table class="detail-table" style="margin-top: 10px;">
-            <tr>
+            {{-- <tr>
                 <td class="col-header">Diagnosis medis:</td>
                 <td colspan="3">{{ $dischargePlanning->diagnosis_medis ?? '.............................' }}</td>
-            </tr>
+            </tr> --}}
             <tr>
                 <td class="col-header">Rencana Pulang Khusus:</td>
                 <td colspan="3">{{ $dischargePlanning->rencana_pulang_khusus ?? '.............................' }}</td>
@@ -831,108 +931,6 @@
         @endif
     </div>
 
-    <!-- Page Break untuk halaman 3 -->
-    <div class="page-break"></div>
-
-    <!-- 9. Diagnosis -->
-    <div class="content-section">
-        <div class="section-title">9. DIAGNOSIS</div>
-        <table class="detail-table">
-            <tr>
-                <td class="col-header">DIAGNOSIS BANDING :</td>
-                <td>
-                    @if(optional($asesmen->rmeAsesmenParuDiagnosisImplementasi)->diagnosis_banding)
-                        @php
-                            $diagnosisBanding = json_decode($asesmen->rmeAsesmenParuDiagnosisImplementasi->diagnosis_banding, true);
-                        @endphp
-                        @if(is_array($diagnosisBanding) && !empty($diagnosisBanding))
-                            @foreach($diagnosisBanding as $index => $diagnosis)
-                                {{ $index + 1 }}. {{ $diagnosis }}<br>
-                            @endforeach
-                        @else
-                            {{ $asesmen->rmeAsesmenParuDiagnosisImplementasi->diagnosis_banding }}
-                        @endif
-                    @else
-                        -
-                    @endif
-                </td>
-            </tr>
-            <tr>
-                <td class="col-header">DIAGNOSIS KERJA :</td>
-                <td>
-                    @if(optional($asesmen->rmeAsesmenParuDiagnosisImplementasi)->diagnosis_kerja)
-                        @php
-                            $diagnosisKerja = json_decode($asesmen->rmeAsesmenParuDiagnosisImplementasi->diagnosis_kerja, true);
-                        @endphp
-                        @if(is_array($diagnosisKerja) && !empty($diagnosisKerja))
-                            @foreach($diagnosisKerja as $index => $diagnosis)
-                                {{ $index + 1 }}. {{ $diagnosis }}<br>
-                            @endforeach
-                        @else
-                            {{ $asesmen->rmeAsesmenParuDiagnosisImplementasi->diagnosis_kerja }}
-                        @endif
-                    @else
-                        -
-                    @endif
-                </td>
-            </tr>
-        </table>
-    </div>
-   
-    {{-- <!-- Gambar Radiologi Paru -->
-    <div class="content-section page-break">
-        <div class="section-title">GAMBAR RADIOLOGI PARU</div>
-        <div style="height: 120px; border: 1px solid #333; text-align: center; padding: 50px;">
-            @if(optional($asesmen->rmeAsesmenParuDiagnosisImplementasi)->gambar_radiologi_paru)
-                <img src="{{ asset('storage/' . $asesmen->rmeAsesmenParuDiagnosisImplementasi->gambar_radiologi_paru) }}"
-                    style="max-width: 100%; max-height: 100px;" alt="Gambar Radiologi Paru">
-            @else
-                [Area untuk gambar radiologi paru]
-            @endif
-        </div>
-    </div> --}}
-
-    <!-- 10. Implementasi -->
-    <div class="content-section">
-        <div class="section-title">10. RENCANA PENATALAKSANAAN DAN PENGOBATAN</div>
-        @php
-            $implementasi = optional($asesmen->rmeAsesmenParuDiagnosisImplementasi);
-            $observasi = $implementasi->observasi ? json_decode($implementasi->observasi, true) : [];
-            $terapeutik = $implementasi->terapeutik ? json_decode($implementasi->terapeutik, true) : [];
-            $edukasi = $implementasi->edukasi ? json_decode($implementasi->edukasi, true) : [];
-            $kolaborasi = $implementasi->kolaborasi ? json_decode($implementasi->kolaborasi, true) : [];
-        @endphp
-
-        <div class="two-column">
-          {{ old('rencana_pengobatan', isset($asesmen->rmeAsesmenParu) ? $asesmen->rmeAsesmenParu->rencana_pengobatan : '') }}
-        </div>
-
-       
-        <div class="clear"></div>
-    </div>
-
-  
-    <!-- Prognosis -->
-    <div class="content-section">
-        <div class="section-title">PROGNOSIS</div>
-        <div>
-            @php
-                  
-                    $prognosisData = $satsetPrognosis;
-                  
-                    $valuePrognosis = null;
-
-                    foreach ($prognosisData as $item) {
-                        if ($item->prognosis_id ==  $asesmen->rmeAsesmenParu->paru_prognosis) {
-                            $valuePrognosis = $item->value;
-                            break;
-                        }
-                    }
-            @endphp
-        </div>
-       
-        <p> {{ $valuePrognosis ?? '-' }}</p>
-    </div>
 
     <!-- Tanda Tangan -->
     <div class="sign-area">
@@ -946,10 +944,9 @@
         </div>
         <div class="sign-box">
             <p>Dokter yang memeriksa</p>
-            <br><br><br>
-            <p>( _________________________ )</p>
-            <p>{{ optional($asesmen->user)->name ?? '.............................' }}</p>
-            <p style="font-size: 9px;">ttd dan nama jelas</p>
+            <br><img src="{{ generateQrCode(($asesmen->user->karyawan->gelar_depan ?? '') . ' ' . str()->title($asesmen->user->karyawan->nama ?? '') . ' ' . ($asesmen->user->karyawan->gelar_belakang ?? ''), 100, 'svg_datauri') }}"
+                                    alt="QR Petugas">
+            <p>{{ ($asesmen->user->karyawan->gelar_depan ?? '') . ' ' . str()->title($asesmen->user->karyawan->nama ?? '') . ' ' . ($asesmen->user->karyawan->gelar_belakang ?? '') }}</p>
         </div>
         <div class="clear"></div>
     </div>

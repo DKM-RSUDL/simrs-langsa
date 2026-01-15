@@ -4,9 +4,17 @@
     <x-content-card>
         <div style="height: 150vh; overflow-y: auto; display: flex; flex-direction: column; gap: 50px;">
             @if ($asesmen)
-                @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.asesmen.print')
+                @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.asesmen.print', [
+                    'asesmen' => $asesmen,
+                    'triase' => $triase,
+                    'riwayatAlergi' => $riwayatAlergi,
+                    'laborData' => $laborData,
+                    'radiologiData' => $radiologiData,
+                    'riwayatObat' => $riwayatObat,
+                    'retriaseData' => $retriaseData,
+                ])
             @else
-                <p>Data asesmen tidak ditemukan untuk kunjungan ini.</p>
+                <p>Data asesmen IGD tidak ditemukan untuk kunjungan ini.</p>
             @endif
 
             @if ($triaseIGD)
@@ -55,6 +63,43 @@
                 ])
             @else
                 <p>Data asesmen neurologi tidak ditemukan untuk kunjungan ini.</p>
+            @endif
+
+            @if ($asesmenOpthamology)
+                @include('unit-pelayanan.rawat-inap.pelayanan.asesmen-opthamology.print', [
+                    'data' => [
+                        'asesmen' => $asesmenOpthamology,
+                        'faktorpemberat' => $faktorpemberatOpthamology,
+                        'menjalar' => $menjalarOpthamology,
+                        'frekuensinyeri' => $frekuensinyeriOpthamology,
+                        'kualitasnyeri' => $kualitasnyeriOpthamology,
+                        'faktorperingan' => $faktorperinganOpthamology,
+                        'efeknyeri' => $efeknyeriOpthamology,
+                        'jenisnyeri' => $jenisnyeriOpthamology,
+                        'itemFisik' => $itemFisikOpthamology,
+                        'rmeMasterDiagnosis' => $rmeMasterDiagnosisOpthamology,
+                        'rmeMasterImplementasi' => $rmeMasterImplementasiOpthamology,
+                        'satsetPrognosis' => $satsetPrognosisOpthamology,
+                        'dataMedis' => $dataMedis,
+                    ],
+                ])
+            @else
+                <p>Data asesmen opthamology tidak ditemukan untuk kunjungan ini.</p>
+            @endif
+
+            @if ($asesmenMedisAnak)
+                @include('unit-pelayanan.rawat-inap.pelayanan.asesmen-medis-anak.print', [
+                    'data' => [
+                        'asesmen' => $asesmenMedisAnak,
+                        'dataMedis' => $dataMedis,
+                        'rmeMasterDiagnosis' => $rmeMasterDiagnosisMedisAnak,
+                        'rmeMasterImplementasi' => $rmeMasterImplementasiMedisAnak,
+                        'satsetPrognosis' => $satsetPrognosisMedisAnak,
+                        'alergiPasien' => $alergiPasienMedisAnak,
+                    ],
+                ])
+            @else
+                <p>Data asesmen medis anak tidak ditemukan untuk kunjungan ini.</p>
             @endif
         </div>
     </x-content-card>
