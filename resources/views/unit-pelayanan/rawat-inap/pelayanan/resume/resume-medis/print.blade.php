@@ -385,7 +385,7 @@
                 <th colspan="2">Tindak lanjut</th>
             </tr>
             <tr>
-                <th>Nama</th>
+                <th>Alasan Pulang</th>
                 <td>{{ tindakLanjutLabel($resume->rmeResumeDet->tindak_lanjut_code) }}</td>
             </tr>
 
