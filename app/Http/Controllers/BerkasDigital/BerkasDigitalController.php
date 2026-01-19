@@ -389,6 +389,88 @@ class BerkasDigitalController extends Controller
             $alergiPasienMedisAnak = collect([]);
         }
 
+        // Ambil data Asesmen Obstetri (Rawat Inap)
+        $asesmenObstetriData = $this->berkasDigitalService->getAsesmenObstetriData($dataMedis);
+        if ($asesmenObstetriData) {
+            extract($asesmenObstetriData);
+            $rmeMasterDiagnosisObstetri = $rmeMasterDiagnosis;
+            $rmeMasterImplementasiObstetri = $rmeMasterImplementasi;
+            $satsetPrognosisObstetri = $satsetPrognosis;
+            $alergiPasienObstetri = $alergiPasien;
+        } else {
+            $asesmenObstetri = null;
+            $rmeMasterDiagnosisObstetri = collect([]);
+            $rmeMasterImplementasiObstetri = collect([]);
+            $satsetPrognosisObstetri = collect([]);
+            $alergiPasienObstetri = collect([]);
+        }
+
+        // Ambil data Asesmen THT Medis (Rawat Inap)
+        $asesmenThtData = $this->berkasDigitalService->getAsesmenThtData($dataMedis);
+        if ($asesmenThtData) {
+            extract($asesmenThtData);
+            $rmeMasterDiagnosisTht = $rmeMasterDiagnosis;
+            $rmeMasterImplementasiTht = $rmeMasterImplementasi;
+            $satsetPrognosisTht = $satsetPrognosis;
+            $alergiPasienTht = $alergiPasien;
+            $itemFisikTht = $itemFisik;
+        } else {
+            $asesmenTht = null;
+            $rmeMasterDiagnosisTht = collect([]);
+            $rmeMasterImplementasiTht = collect([]);
+            $satsetPrognosisTht = collect([]);
+            $alergiPasienTht = collect([]);
+            $itemFisikTht = collect([]);
+        }
+
+        // Ambil data Asesmen Paru (Rawat Inap)
+        $asesmenParuData = $this->berkasDigitalService->getAsesmenParuData($dataMedis);
+        if ($asesmenParuData) {
+            $asesmenParu = $asesmenParuData['asesmenParu'];
+            $satsetPrognosisParu = $asesmenParuData['satsetPrognosis'];
+            $KebiasaanData = $asesmenParuData['KebiasaanData'];
+        } else {
+            $asesmenParu = null;
+            $satsetPrognosisParu = null;
+            $KebiasaanData = null;
+        }
+
+        // Ambil data Asesmen Ginekologik (Rawat Inap)
+        $asesmenGinekologikData = $this->berkasDigitalService->getAsesmenGinekologikData($dataMedis);
+        if ($asesmenGinekologikData) {
+            $asesmenGinekologik = $asesmenGinekologikData['asesmenGinekologik'];
+            $rmeAsesmenGinekologik = $asesmenGinekologikData['rmeAsesmenGinekologik'];
+            $rmeAsesmenGinekologikTandaVital = $asesmenGinekologikData['rmeAsesmenGinekologikTandaVital'];
+            $rmeAsesmenGinekologikPemeriksaanFisik = $asesmenGinekologikData['rmeAsesmenGinekologikPemeriksaanFisik'];
+            $rmeAsesmenGinekologikEkstremitasGinekologik = $asesmenGinekologikData['rmeAsesmenGinekologikEkstremitasGinekologik'];
+            $rmeAsesmenGinekologikPemeriksaanDischarge = $asesmenGinekologikData['rmeAsesmenGinekologikPemeriksaanDischarge'];
+            $rmeAsesmenGinekologikDiagnosisImplementasi = $asesmenGinekologikData['rmeAsesmenGinekologikDiagnosisImplementasi'];
+            $satsetPrognosisGinekologik = $asesmenGinekologikData['satsetPrognosis'];
+        } else {
+            $asesmenGinekologik = null;
+            $rmeAsesmenGinekologik = null;
+            $rmeAsesmenGinekologikTandaVital = null;
+            $rmeAsesmenGinekologikPemeriksaanFisik = null;
+            $rmeAsesmenGinekologikEkstremitasGinekologik = null;
+            $rmeAsesmenGinekologikPemeriksaanDischarge = null;
+            $rmeAsesmenGinekologikDiagnosisImplementasi = null;
+            $satsetPrognosisGinekologik = null;
+        }
+
+        // Ambil data Asesmen Psikiatri (Rawat Inap)
+        $asesmenPsikiatriData = $this->berkasDigitalService->getAsesmenPsikiatriData($dataMedis);
+        if ($asesmenPsikiatriData) {
+            $asesmenPsikiatri = $asesmenPsikiatriData['asesmen'];
+            $asesmenPsikiatriMain = $asesmenPsikiatriData['asesmenPsikiatri'];
+            $asesmenPsikiatriDtl = $asesmenPsikiatriData['asesmenPsikiatriDtl'];
+            $alergiPasienPsikiatri = $asesmenPsikiatriData['alergiPasien'];
+        } else {
+            $asesmenPsikiatri = null;
+            $asesmenPsikiatriMain = null;
+            $asesmenPsikiatriDtl = null;
+            $alergiPasienPsikiatri = null;
+        }
+
         return view('berkas-digital.document.show', compact(
             'listDokumen',
             'dataMedis',
@@ -464,7 +546,38 @@ class BerkasDigitalController extends Controller
             'rmeMasterDiagnosisMedisAnak',
             'rmeMasterImplementasiMedisAnak',
             'satsetPrognosisMedisAnak',
-            'alergiPasienMedisAnak'
+            'alergiPasienMedisAnak',
+            // asesmen obstetri
+            'asesmenObstetri',
+            'rmeMasterDiagnosisObstetri',
+            'rmeMasterImplementasiObstetri',
+            'satsetPrognosisObstetri',
+            'alergiPasienObstetri',
+            // asesmen medis tht
+            'asesmenTht',
+            'rmeMasterDiagnosisTht',
+            'rmeMasterImplementasiTht',
+            'satsetPrognosisTht',
+            'alergiPasienTht',
+            'itemFisikTht',
+            // asesmen paru
+            'asesmenParu',
+            'satsetPrognosisParu',
+            'KebiasaanData',
+            // asesmen ginekologik
+            'asesmenGinekologik',
+            'rmeAsesmenGinekologik',
+            'rmeAsesmenGinekologikTandaVital',
+            'rmeAsesmenGinekologikPemeriksaanFisik',
+            'rmeAsesmenGinekologikEkstremitasGinekologik',
+            'rmeAsesmenGinekologikPemeriksaanDischarge',
+            'rmeAsesmenGinekologikDiagnosisImplementasi',
+            'satsetPrognosisGinekologik',
+            // asesmen psikiatri
+            'asesmenPsikiatri',
+            'asesmenPsikiatriMain',
+            'asesmenPsikiatriDtl',
+            'alergiPasienPsikiatri'
         ));
     }
 

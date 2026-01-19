@@ -101,6 +101,74 @@
             @else
                 <p>Data asesmen medis anak tidak ditemukan untuk kunjungan ini.</p>
             @endif
+
+            @if ($asesmenObstetri)
+                @include('unit-pelayanan.rawat-inap.pelayanan.asesmen-obstetri-maternitas.print', [
+                    'asesmen' => $asesmenObstetri,
+                    'dataMedis' => $dataMedis,
+                    'rmeMasterDiagnosis' => $rmeMasterDiagnosisObstetri,
+                    'rmeMasterImplementasi' => $rmeMasterImplementasiObstetri,
+                    'satsetPrognosis' => $satsetPrognosisObstetri,
+                    'alergiPasien' => $alergiPasienObstetri,
+                ])
+            @else
+                <p>Data asesmen obstetri tidak ditemukan untuk kunjungan ini.</p>
+            @endif
+
+            @if ($asesmenTht)
+                @include('unit-pelayanan.rawat-inap.pelayanan.asesmen-tht.print', [
+                    'asesmen' => $asesmenTht,
+                    'dataMedis' => $dataMedis,
+                    'rmeMasterDiagnosis' => $rmeMasterDiagnosisTht,
+                    'rmeMasterImplementasi' => $rmeMasterImplementasiTht,
+                    'satsetPrognosis' => $satsetPrognosisTht,
+                    'alergiPasien' => $alergiPasienTht,
+                    'itemFisik' => $itemFisikTht,
+                ])
+            @else
+                <p>Data asesmen THT tidak ditemukan untuk kunjungan ini.</p>
+            @endif
+
+            @if ($asesmenParu)
+                @include('unit-pelayanan.rawat-inap.pelayanan.asesmen-paru.print', [
+                    'asesmen' => $asesmenParu,
+                    'dataMedis' => $dataMedis,
+                    'satsetPrognosis' => $satsetPrognosisParu,
+                    'KebiasaanData' => $KebiasaanData,
+                ])
+            @else
+                <p>Data asesmen paru tidak ditemukan untuk kunjungan ini.</p>
+            @endif
+
+            @if ($asesmenGinekologik)
+                @include('unit-pelayanan.rawat-inap.pelayanan.asesmen-ginekologik.print', [
+                    'asesmen' => $asesmenGinekologik,
+                    'pasien' => $pasien,
+                    'dataMedis' => $dataMedis,
+                    'rmeAsesmenGinekologik' => $rmeAsesmenGinekologik,
+                    'rmeAsesmenGinekologikTandaVital' => $rmeAsesmenGinekologikTandaVital,
+                    'rmeAsesmenGinekologikPemeriksaanFisik' => $rmeAsesmenGinekologikPemeriksaanFisik,
+                    'rmeAsesmenGinekologikEkstremitasGinekologik' => $rmeAsesmenGinekologikEkstremitasGinekologik,
+                    'rmeAsesmenGinekologikPemeriksaanDischarge' => $rmeAsesmenGinekologikPemeriksaanDischarge,
+                    'rmeAsesmenGinekologikDiagnosisImplementasi' => $rmeAsesmenGinekologikDiagnosisImplementasi,
+                    'satsetPrognosis' => $satsetPrognosisGinekologik,
+                ])
+            @else
+                <p>Data asesmen ginekologik tidak ditemukan untuk kunjungan ini.</p>
+            @endif
+
+            @if ($asesmenPsikiatri)
+                @include('unit-pelayanan.rawat-inap.pelayanan.asesmen-psikiatri.print', [
+                    'asesmen' => $asesmenPsikiatri,
+                    'asesmenPsikiatri' => $asesmenPsikiatriMain,
+                    'asesmenPsikiatriDtl' => $asesmenPsikiatriDtl,
+                    'alergiPasien' => $alergiPasienPsikiatri,
+                    'pasien' => $pasien,
+                    'dataMedis' => $dataMedis,
+                ])
+            @else
+                <p>Data asesmen psikiatri tidak ditemukan untuk kunjungan ini.</p>
+            @endif
         </div>
     </x-content-card>
     <x-content-card>

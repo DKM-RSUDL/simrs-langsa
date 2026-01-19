@@ -179,7 +179,7 @@
         }
 
         .label {
-            margin-bottom: 80px;
+            margin-bottom: 10px;
             font-weight: normal;
         }
 
@@ -418,9 +418,11 @@
 
     <div class="footer">
         <div class="ttd-wrapper">
-            <p class="label">Petugas Dokter Triase</p>
-            <div class="space"></div>
-            <p class="nama">( {{ $dokterNama ?? '_____________________' }} )</p>
+            <p class="label">Dokter Triase</p>
+            <img src="{{ generateQrCode($dokterNama, 100, 'svg_datauri') }}" alt="QR Dokter Triase">
+            <p class="nama">
+                ( {{ $dokterNama ?? '_____________________' }} )
+            </p>
         </div>
     </div>
 

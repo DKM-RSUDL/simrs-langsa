@@ -46,7 +46,8 @@ class TindakanController extends Controller
             'tarif.tgl_berlaku'
         ])
             ->leftJoin('tarif', 'produk.kd_produk', '=', 'tarif.kd_produk')
-            ->where('tarif.kd_unit', $kd_unit)
+            // ->where('tarif.kd_unit', $kd_unit)
+            ->where('tarif.kd_unit', 10013)
             ->where('tarif.kd_tarif', 'TU')
             // ->whereDate('tarif.tgl_berlaku','2016-05-08')
             ->where('tarif.tgl_berlaku', '<=', Carbon::now()->toDateString())
@@ -221,8 +222,10 @@ class TindakanController extends Controller
                 'urut'          => $urut,
                 'kd_tarif'      => 'TU',
                 'kd_produk'     => $request->tindakan,
-                'kd_unit'       => $kd_unit,
+                // 'kd_unit'       => $kd_unit,
+                'kd_unit'       => 10013,
                 'kd_unit_tr'    => $kd_unit,
+                // 'kd_unit_tr'    => $kd_unit,
                 'tgl_berlaku'   => $request->tgl_berlaku,
                 'kd_user'       => $request->ppa,
                 'shift'         => 0,
