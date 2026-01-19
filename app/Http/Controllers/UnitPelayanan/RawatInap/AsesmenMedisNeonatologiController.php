@@ -21,6 +21,7 @@ use App\Services\BaseService;
 use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class AsesmenMedisNeonatologiController extends Controller
 {
@@ -494,6 +495,49 @@ class AsesmenMedisNeonatologiController extends Controller
         );
     }
 
+    public function generatePDF($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $id)
+    {
+        try {
+            // 1. Ambil data asesmen dengan relasi lengkap (Neonatologi, Fisik, dan Detail)
+            $asesmen = RmeAsesmen::with([
+                'asesmenMedisNeonatologi',
+                'asesmenMedisNeonatologiFisikGeneralis',
+                'asesmenMedisNeonatologiDtl'
+            ])->findOrFail($id);
+        } catch (\Exception $e) {
+            abort(404, 'Data asesmen tidak ditemukan');
+        }
+
+        // 2. Ambil data medis/kunjungan pasien
+        $dataMedis = $this->getDataMedis($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
+        if (!$dataMedis) {
+            abort(404, 'Data medis tidak ditemukan');
+        }
+
+        // 3. Ambil master data (Diagnosis, Prognosis, Alergi)
+        $masterData = $this->getMasterData($kd_pasien);
+
+        // 4. Siapkan data untuk dikirim ke view print
+        $payload = array_merge([
+            'kd_unit' => $kd_unit,
+            'kd_pasien' => $kd_pasien,
+            'tgl_masuk' => $tgl_masuk,
+            'urut_masuk' => $urut_masuk,
+            'dataMedis' => $dataMedis,
+            'asesmen' => $asesmen,
+        ], $masterData);
+
+        // 5. Generate PDF menggunakan view yang telah dibuat sebelumnya
+        // Pastikan path view sesuai dengan lokasi file print.blade.php Anda
+        $pdf = Pdf::loadView(
+            'unit-pelayanan.rawat-inap.pelayanan.asesmen-medis-neonatologi.print',
+            $payload
+        )->setPaper('a4', 'portrait');
+
+        // 6. Stream PDF ke browser
+        return $pdf->stream('Asesmen_Medis_Neonatologi_' . $kd_pasien . '.pdf');
+    }
+
     public function edit($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $id)
     {
         try {
@@ -810,7 +854,6 @@ class AsesmenMedisNeonatologiController extends Controller
                 ->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
         }
     }
-
     public function destroy($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
     {
         try {
