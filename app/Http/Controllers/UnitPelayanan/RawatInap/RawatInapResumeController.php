@@ -281,6 +281,7 @@ class RawatInapResumeController extends Controller
         $riwayatObatHariIni = $this->getRiwayatObatHariIni($dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk, $kunjunganIGD);
         $resepPulang = $this->getObatPulang($dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk, $kunjunganIGD);
 
+
         // tindakan
         $tindakan = ListTindakanPasien::with(['produk'])
             ->where(function ($q) use ($kunjunganIGD) {
@@ -577,13 +578,21 @@ class RawatInapResumeController extends Controller
             ->where('kategori', 'RD')
             ->get();
 
+        // tindakan
         $tindakan = ListTindakanPasien::with(['produk'])
-            ->where('kd_pasien', $dataMedis->kd_pasien)
-            ->where('kd_unit', $dataMedis->kd_unit)
-            ->whereDate('tgl_masuk', date('Y-m-d', strtotime($dataMedis->tgl_masuk)))
-            ->where('urut_masuk', $dataMedis->urut_masuk)
+            ->where(function ($q) use ($kunjunganIGD) {
+                $q->where('kd_pasien', $kunjunganIGD->kd_pasien ?? '')
+                    ->whereDate('tgl_masuk', $kunjunganIGD->tgl_masuk ?? '')
+                    ->where('urut_masuk', $kunjunganIGD->urut_masuk ?? '')
+                    ->where('kd_unit', $kunjunganIGD->kd_unit ?? '');
+            })
+            ->orWhere(function ($q) use ($dataMedis) {
+                $q->where('kd_pasien', $dataMedis->kd_pasien)
+                    ->whereDate('tgl_masuk', $dataMedis->tgl_masuk)
+                    ->where('urut_masuk', $dataMedis->urut_masuk)
+                    ->where('kd_unit', $dataMedis->kd_unit);
+            })
             ->get();
-
 
         $lastAsesmen = RmeAsesmen::with(['pemeriksaanFisik'])
             ->where('kd_pasien', $dataMedis->kd_pasien)
