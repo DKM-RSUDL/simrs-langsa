@@ -356,7 +356,7 @@
                 <th>Terapi Selama Dirawat</th>
                 <td>
                     @foreach ($resepRawat as $item)
-                        - {{ "$item->nama_obat $item->cara_pakai" }} <br>
+                        - {{ "$item->nama_obat $item->frekuensi" }} <br>
                     @endforeach
                 </td>
             </tr>

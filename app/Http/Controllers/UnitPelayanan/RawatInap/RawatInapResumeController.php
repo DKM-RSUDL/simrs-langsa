@@ -13,6 +13,7 @@ use App\Models\MrPenyakit;
 use App\Models\Penyakit;
 use App\Models\RmeAsesmen;
 use App\Models\RmeAsesmenPemeriksaanFisik;
+use App\Models\RmeCatatanPemberianObat;
 use App\Models\RMEResume;
 use App\Models\RmeResumeDtl;
 use App\Models\SegalaOrder;
@@ -278,7 +279,8 @@ class RawatInapResumeController extends Controller
             ->get();
 
         // Mengambil data obat
-        $riwayatObatHariIni = $this->getRiwayatObatHariIni($dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk, $kunjunganIGD);
+        // $riwayatObatHariIni = $this->getRiwayatObatHariIni($dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk, $kunjunganIGD);
+        $riwayatObatHariIni = $this->getRiwayatCatatanPemberianObat($dataMedis->kd_pasien, $dataMedis->kd_unit, $dataMedis->tgl_masuk, $dataMedis->urut_masuk);
         $resepPulang = $this->getObatPulang($dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk, $kunjunganIGD);
 
 
@@ -559,7 +561,7 @@ class RawatInapResumeController extends Controller
 
         $hasilKonpas = "$tdKonpas, $rr, $resp, $temp, $tb, $bb";
 
-        $resepRawat = $this->getRiwayatObatHariIni($dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk, $kunjunganIGD);
+        $resepRawat = $this->getRiwayatCatatanPemberianObat($dataMedis->kd_pasien, $dataMedis->kd_unit, $dataMedis->tgl_masuk, $dataMedis->urut_masuk);
         $resepPulang = $this->getObatPulang($dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk, $kunjunganIGD);
 
         $labor = SegalaOrder::with(['details'])
@@ -624,6 +626,31 @@ class RawatInapResumeController extends Controller
         ))
             ->setPaper('a4', 'potrait');
         return $pdf->stream('resume_' . $resume->kd_pasien . '_' . $resume->tgl_konsul . '.pdf');
+    }
+
+    private function getRiwayatCatatanPemberianObat($kd_pasien, $kd_unit, $tgl_masuk, $urut_masuk)
+    {
+        return RmeCatatanPemberianObat::where('kd_pasien', $kd_pasien)
+            ->where('kd_unit', $kd_unit)
+            ->whereDate('tgl_masuk', $tgl_masuk)
+            ->where('urut_masuk', $urut_masuk)
+            ->with(['petugas', 'petugasValidasi'])
+            ->select(
+                'id',
+                'kd_petugas',
+                'nama_obat',
+                'frekuensi',
+                'dosis',
+                'satuan',
+                'keterangan',
+                'freak',
+                'tanggal',
+                'catatan',
+                'is_validasi',
+                'petugas_validasi'
+            )
+            ->orderBy('tanggal', 'desc')
+            ->get();
     }
 
     private function getRiwayatObatHariIni($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $kunjunganIGD = null)
