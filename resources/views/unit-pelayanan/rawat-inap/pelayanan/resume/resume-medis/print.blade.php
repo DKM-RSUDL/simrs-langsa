@@ -324,18 +324,6 @@
             </tr>
 
             <tr>
-                <th>ICD 9</th>
-                <td>
-                    @if (isset($resume->icd_9))
-                        <ul>
-                            @foreach ($resume->icd_9 as $item)
-                                <li>{{ $item }}</li>
-                            @endforeach
-                        </ul>
-                    @endif
-                </td>
-            </tr>
-            <tr>
                 <th>Tindakan</th>
                 <td>
                     @if (count($tindakan) > 0)
@@ -350,11 +338,25 @@
                     @endif
                 </td>
             </tr>
+
+            <tr>
+                <th>ICD 9</th>
+                <td>
+                    @if (isset($resume->icd_9))
+                        <ul>
+                            @foreach ($resume->icd_9 as $item)
+                                <li>{{ $item }}</li>
+                            @endforeach
+                        </ul>
+                    @endif
+                </td>
+            </tr>
+
             <tr>
                 <th>Terapi Selama Dirawat</th>
                 <td>
                     @foreach ($resepRawat as $item)
-                        - {{ "$item->nama_obat $item->cara_pakai" }} <br>
+                        - {{ "$item->nama_obat $item->frekuensi" }} <br>
                     @endforeach
                 </td>
             </tr>

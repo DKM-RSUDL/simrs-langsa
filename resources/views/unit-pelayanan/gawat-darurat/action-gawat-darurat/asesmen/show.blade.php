@@ -794,10 +794,11 @@
                         handlePemeriksaanFisik(response.data.asesmen.pemeriksaan_fisik);
 
                         // Set URL print button
-                        let btnPrint = document.getElementById('btnPrintAsesmen');
-                        btnPrint.href =
-                            `/unit-pelayanan/gawat-darurat/pelayanan/${response.data.dataMedis.kd_pasien}/${response.data.dataMedis.tgl_masuk.split(' ')[0]}/${response.data.dataMedis.urut_masuk}/asesmen/${id}/print`;
+                        // let btnPrint = document.getElementById('btnPrintAsesmen');
+                        // btnPrint.href =
+                        //     `/unit-pelayanan/gawat-darurat/pelayanan/${response.data.dataMedis.kd_pasien}/${response.data.dataMedis.tgl_masuk.split(' ')[0]}/${response.data.dataMedis.urut_masuk}/asesmen/${id}/print`;
 
+                        $('#showasesmenModal #btnPrintAsesmen').attr('href', `/unit-pelayanan/gawat-darurat/pelayanan/${response.data.dataMedis.kd_pasien}/${response.data.dataMedis.tgl_masuk.split(' ')[0]}/${response.data.dataMedis.urut_masuk}/asesmen/${id}/print`);
                         modal.show();
                     } else {
                         Swal.fire('Error', 'Data tidak ditemukan', 'error');

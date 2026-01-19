@@ -24,6 +24,24 @@ use App\Models\Agama;
 use App\Models\Pendidikan;
 use App\Models\Pekerjaan;
 use App\Models\MrItemFisik;
+use App\Models\RmeAsesmenTht;
+use App\Models\RmeAsesmenThtPemeriksaanFisik;
+use App\Models\RmeAsesmenThtRiwayatKesehatanObatAlergi;
+use App\Models\RmeAsesmenThtDischargePlanning;
+use App\Models\RmeAsesmenthtDiagnosisImplementasi;
+use App\Models\RmeAsesmenParu;
+use App\Models\RmeAsesmenParuRencanaKerja;
+use App\Models\RmeAsesmenParuPerencanaanPulang;
+use App\Models\RmeAsesmenParuDiagnosisImplementasi;
+use App\Models\RmeAsesmenParuPemeriksaanFisik;
+use App\Models\RmeAsesmenGinekologik;
+use App\Models\RmeAsesmenGinekologikTandaVital;
+use App\Models\RmeAsesmenGinekologikPemeriksaanFisik;
+use App\Models\RmeAsesmenGinekologikEkstremitasGinekologik;
+use App\Models\RmeAsesmenGinekologikPemeriksaanDischarge;
+use App\Models\RmeAsesmenGinekologikDiagnosisImplementasi;
+use App\Models\RmeAsesmenPsikiatri;
+use App\Models\RmeAsesmenPsikiatriDtl;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Carbon;
 use App\Services\AsesmenService;
@@ -1122,6 +1140,281 @@ class BerkasDigitalService
             'rmeMasterDiagnosis',
             'rmeMasterImplementasi',
             'satsetPrognosis',
+            'alergiPasien'
+        );
+    }
+
+    /**
+     * Get Asesmen Obstetri Maternitas data untuk ditampilkan di berkas digital dokumen
+     * Menyusun variabel yang diperlukan oleh blade print asesmen-obstetri-maternitas
+     */
+    public function getAsesmenObstetriData($dataMedis)
+    {
+        // Tentukan tanggal masuk
+        $tglMasuk = isset($dataMedis->tgl_transaksi) ? $dataMedis->tgl_transaksi : $dataMedis->tgl_masuk;
+
+        // Ambil data asesmen obstetri (kategori=1, sub_kategori=4)
+        $asesmenObstetri = RmeAsesmen::with([
+            'asesmenObstetri',
+            'rmeAsesmenObstetriPemeriksaanFisik',
+            'rmeAsesmenObstetriStatusNyeri',
+            'rmeAsesmenObstetriRiwayatKesehatan',
+            'rmeAsesmenObstetriDiagnosisImplementasi',
+            'rmeAsesmenObstetriDischargePlanning',
+            'pemeriksaanFisik',
+            'user'
+        ])
+            ->where('kd_pasien', $dataMedis->kd_pasien)
+            ->where('kd_unit', $dataMedis->kd_unit)
+            ->whereDate('tgl_masuk', $tglMasuk)
+            ->where('urut_masuk', $dataMedis->urut_masuk)
+            ->where('kategori', 1)
+            ->where('sub_kategori', 4)
+            ->first();
+
+        // Jika tidak ada, return null
+        if (!$asesmenObstetri) {
+            return null;
+        }
+
+        // Ambil master data yang diperlukan untuk print asesmen obstetri
+        $rmeMasterDiagnosis = RmeMasterDiagnosis::all();
+        $rmeMasterImplementasi = RmeMasterImplementasi::all();
+        $satsetPrognosis = SatsetPrognosis::all();
+        $alergiPasien = RmeAlergiPasien::where('kd_pasien', $dataMedis->kd_pasien)->get();
+
+        return compact(
+            'asesmenObstetri',
+            'rmeMasterDiagnosis',
+            'rmeMasterImplementasi',
+            'satsetPrognosis',
+            'alergiPasien'
+        );
+    }
+
+    /**
+     * Get Asesmen THT Medis data untuk ditampilkan di berkas digital dokumen
+     * Menyusun variabel yang diperlukan oleh blade print asesmen-tht
+     */
+    public function getAsesmenThtData($dataMedis)
+    {
+        // Tentukan tanggal masuk
+        $tglMasuk = isset($dataMedis->tgl_transaksi) ? $dataMedis->tgl_transaksi : $dataMedis->tgl_masuk;
+
+        // Ambil data asesmen THT (kategori=1, sub_kategori=5)
+        $asesmenTht = RmeAsesmen::with([
+            'rmeAsesmenTht',
+            'rmeAsesmenThtPemeriksaanFisik',
+            'rmeAsesmenThtRiwayatKesehatanObatAlergi',
+            'rmeAsesmenThtDischargePlanning',
+            'rmeAsesmenThtDiagnosisImplementasi',
+            'user'
+        ])
+            ->where('kd_pasien', $dataMedis->kd_pasien)
+            ->whereDate('tgl_masuk', date('Y-m-d', strtotime($tglMasuk)))
+            ->where('urut_masuk', $dataMedis->urut_masuk)
+            ->where('kategori', 1)
+            ->where('sub_kategori', 5)
+            ->orderBy('waktu_asesmen', 'desc')
+            ->first();
+
+        // Jika tidak ada, return null
+        if (!$asesmenTht) {
+            return null;
+        }
+
+        // Ambil master data yang diperlukan untuk print asesmen THT
+        $rmeMasterDiagnosis = RmeMasterDiagnosis::all();
+        $rmeMasterImplementasi = RmeMasterImplementasi::all();
+        $satsetPrognosis = SatsetPrognosis::all();
+        $alergiPasien = RmeAlergiPasien::where('kd_pasien', $dataMedis->kd_pasien)->get();
+        $itemFisik = MrItemFisik::orderby('urut')->get();
+
+        return compact(
+            'asesmenTht',
+            'rmeMasterDiagnosis',
+            'rmeMasterImplementasi',
+            'satsetPrognosis',
+            'alergiPasien',
+            'itemFisik'
+        );
+    }
+
+    /**
+     * Get Asesmen Paru data untuk ditampilkan di berkas digital dokumen
+     * Menyusun variabel yang diperlukan oleh blade print asesmen-paru
+     */
+    public function getAsesmenParuData($dataMedis)
+    {
+        // Tentukan tanggal masuk
+        $tglMasuk = isset($dataMedis->tgl_transaksi) ? $dataMedis->tgl_transaksi : $dataMedis->tgl_masuk;
+
+        // Ambil data asesmen Paru (kategori=1, sub_kategori=8)
+        $asesmenParu = RmeAsesmen::with([
+            'user',
+            'rmeAsesmenParu',
+            'rmeAsesmenParuRencanaKerja',
+            'rmeAsesmenParuPerencanaanPulang',
+            'rmeAsesmenParuDiagnosisImplementasi',
+            'rmeAsesmenParuPemeriksaanFisik',
+            'rmeAlergiPasien',
+            'pemeriksaanFisik' => function ($query) {
+                $query->orderBy('id_item_fisik');
+            },
+        ])
+            ->where('kd_pasien', $dataMedis->kd_pasien)
+            ->whereDate('tgl_masuk', date('Y-m-d', strtotime($tglMasuk)))
+            ->where('urut_masuk', $dataMedis->urut_masuk)
+            ->where('kategori', 1)
+            ->where('sub_kategori', 8)
+            ->orderBy('waktu_asesmen', 'desc')
+            ->first();
+
+        // Jika tidak ada, return null
+        if (!$asesmenParu) {
+            return null;
+        }
+
+        // Ambil master data yang diperlukan untuk print asesmen Paru
+        $satsetPrognosis = SatsetPrognosis::all();
+
+        // Get KebiasaanData (inline logic dari controller)
+        $KebiasaanData = [
+            'alkohol' => [
+                'status' => 'tidak',
+                'jenis' => null,
+            ],
+            'merokok' => [
+                'status' => 'tidak',
+                'detail' => [],
+            ],
+            'obat' => [
+                'status' => 'tidak',
+                'detail' => [],
+            ],
+        ];
+
+        // Ambil data kebiasaan dari rmeAsesmenParu jika ada
+        if ($asesmenParu->rmeAsesmenParu) {
+            $kebiasaanPasien = $asesmenParu->rmeAsesmenParu;
+
+            $isAlkohol = $kebiasaanPasien->alkohol == 'ya' ? true : false;
+            $isMerokok = $kebiasaanPasien->merokok == 'ya' ? true : false;
+            $isObat = $kebiasaanPasien->obat == 'ya' ? true : false;
+
+            // Format ulang data untuk KebiasaanData
+            $KebiasaanData['alkohol'] = [
+                'status' => $isAlkohol ? 'ya' : 'tidak',
+                'jenis' => $kebiasaanPasien->alkohol_jenis,
+            ];
+            $KebiasaanData['merokok'] = [
+                'status' => $isMerokok ? 'ya' : 'tidak',
+                'detail' => $kebiasaanPasien->merokok_data,
+            ];
+            $KebiasaanData['obat'] = [
+                'status' => $isObat ? 'ya' : 'tidak',
+                'detail' => $kebiasaanPasien->obat_data,
+            ];
+        }
+
+        return compact(
+            'asesmenParu',
+            'satsetPrognosis',
+            'KebiasaanData'
+        );
+    }
+
+    /**
+     * Get Asesmen Ginekologik data untuk ditampilkan di berkas digital dokumen
+     * Menyusun variabel yang diperlukan oleh blade print asesmen-ginekologik
+     */
+    public function getAsesmenGinekologikData($dataMedis)
+    {
+        // Tentukan tanggal masuk
+        $tglMasuk = isset($dataMedis->tgl_transaksi) ? $dataMedis->tgl_transaksi : $dataMedis->tgl_masuk;
+
+        // Ambil data asesmen Ginekologik (kategori=1, sub_kategori=9)
+        $asesmenGinekologik = RmeAsesmen::with([
+            'user',
+            'rmeAsesmenGinekologik',
+            'rmeAsesmenGinekologikTandaVital',
+            'rmeAsesmenGinekologikPemeriksaanFisik',
+            'rmeAsesmenGinekologikEkstremitasGinekologik',
+            'rmeAsesmenGinekologikPemeriksaanDischarge',
+            'rmeAsesmenGinekologikDiagnosisImplementasi',
+            'pemeriksaanFisik' => function ($query) {
+                $query->orderBy('id_item_fisik');
+            },
+        ])
+            ->where('kd_pasien', $dataMedis->kd_pasien)
+            ->whereDate('tgl_masuk', date('Y-m-d', strtotime($tglMasuk)))
+            ->where('urut_masuk', $dataMedis->urut_masuk)
+            ->where('kategori', 1)
+            ->where('sub_kategori', 9)
+            ->orderBy('waktu_asesmen', 'desc')
+            ->first();
+
+        // Jika tidak ada, return null
+        if (!$asesmenGinekologik) {
+            return null;
+        }
+
+        // Ambil master data yang diperlukan untuk print asesmen Ginekologik
+        $satsetPrognosis = SatsetPrognosis::all();
+
+        // Ambil data relasi untuk kemudahan akses di blade
+        $rmeAsesmenGinekologik = $asesmenGinekologik->rmeAsesmenGinekologik;
+        $rmeAsesmenGinekologikTandaVital = $asesmenGinekologik->rmeAsesmenGinekologikTandaVital;
+        $rmeAsesmenGinekologikPemeriksaanFisik = $asesmenGinekologik->rmeAsesmenGinekologikPemeriksaanFisik;
+        $rmeAsesmenGinekologikEkstremitasGinekologik = $asesmenGinekologik->rmeAsesmenGinekologikEkstremitasGinekologik;
+        $rmeAsesmenGinekologikPemeriksaanDischarge = $asesmenGinekologik->rmeAsesmenGinekologikPemeriksaanDischarge;
+        $rmeAsesmenGinekologikDiagnosisImplementasi = $asesmenGinekologik->rmeAsesmenGinekologikDiagnosisImplementasi;
+
+        return compact(
+            'asesmenGinekologik',
+            'rmeAsesmenGinekologik',
+            'rmeAsesmenGinekologikTandaVital',
+            'rmeAsesmenGinekologikPemeriksaanFisik',
+            'rmeAsesmenGinekologikEkstremitasGinekologik',
+            'rmeAsesmenGinekologikPemeriksaanDischarge',
+            'rmeAsesmenGinekologikDiagnosisImplementasi',
+            'satsetPrognosis'
+        );
+    }
+
+    /**
+     * Get Asesmen Psikiatri data untuk ditampilkan di berkas digital dokumen
+     * Menyusun variabel yang diperlukan oleh blade print asesmen-psikiatri
+     */
+    public function getAsesmenPsikiatriData($dataMedis)
+    {
+        // Tentukan tanggal masuk
+        $tglMasuk = isset($dataMedis->tgl_transaksi) ? $dataMedis->tgl_transaksi : $dataMedis->tgl_masuk;
+
+        // Ambil data asesmen Psikiatri (kategori=1, sub_kategori=11)
+        $asesmen = RmeAsesmen::with(['user'])
+            ->where('kd_pasien', $dataMedis->kd_pasien)
+            ->whereDate('tgl_masuk', date('Y-m-d', strtotime($tglMasuk)))
+            ->where('urut_masuk', $dataMedis->urut_masuk)
+            ->where('kategori', 1)
+            ->where('sub_kategori', 11)
+            ->orderBy('waktu_asesmen', 'desc')
+            ->first();
+
+        // Jika tidak ada, return null
+        if (!$asesmen) {
+            return null;
+        }
+
+        // Ambil data relasi psikiatri
+        $asesmenPsikiatri = RmeAsesmenPsikiatri::where('id_asesmen', $asesmen->id)->first();
+        $asesmenPsikiatriDtl = RmeAsesmenPsikiatriDtl::where('id_asesmen', $asesmen->id)->first();
+        $alergiPasien = RmeAlergiPasien::where('kd_pasien', $dataMedis->kd_pasien)->get();
+
+        return compact(
+            'asesmen',
+            'asesmenPsikiatri',
+            'asesmenPsikiatriDtl',
             'alergiPasien'
         );
     }

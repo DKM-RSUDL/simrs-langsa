@@ -481,7 +481,7 @@ class TindakanController extends Controller
         $sjp = SjpKunjungan::where('KD_PASIEN', $kd_pasien)
             ->where('KD_UNIT', $dataMedis->kd_unit)
             ->where('TGL_MASUK', $tgl_masuk)
-            ->where('URUT_MASUK', (int)$dataMedis->urut_masuk)
+            ->where('URUT_MASUK', $dataMedis->urut_masuk)
             ->first();
 
 

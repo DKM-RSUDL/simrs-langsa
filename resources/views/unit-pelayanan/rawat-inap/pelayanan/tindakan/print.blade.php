@@ -182,7 +182,7 @@
         }
 
         .sig-name {
-            margin-top: 60px;
+            margin-top: 10px;
             font-weight: bold;
         }
     </style>
@@ -241,7 +241,7 @@
                 <tr>
                     <td>NO SEP</td>
                     <td>:</td>
-                    <td>{{ $sjp->NO_SJP ?? '...................' }}</td>
+                    <td>{{ $sjp->no_sjp ?? '...................' }}</td>
                 </tr>
                 <tr>
                     <td>NAMA</td>
@@ -285,15 +285,17 @@
             </div>
 
             <div class="signature-block">
-                <div class="sig-left">
+                {{-- <div class="sig-left">
                     TANDA TANGAN PASIEN
                     <div class="sig-name">
                         ({{ $dataMedis->pasien->nama }})
                     </div>
-                </div>
+                </div> --}}
                 <div class="sig-right">
                     TANDA TANGAN DOKTER
                     <div class="sig-name">
+                        <img src="{{ generateQrCode($tdk->ppa->nama_lengkap, 120, 'svg_datauri') }}" alt="QR Code">
+                        <br>
                         ({{ $tdk->ppa->nama_lengkap }})
                     </div>
                 </div>
@@ -396,15 +398,17 @@
             </div>
 
             <div class="signature-block">
-                <div class="sig-left">
+                {{-- <div class="sig-left">
                     TANDA TANGAN PASIEN
                     <div class="sig-name">
                         ({{ $dataMedis->pasien->nama }})
                     </div>
-                </div>
+                </div> --}}
                 <div class="sig-right">
                     TANDA TANGAN DOKTER
                     <div class="sig-name">
+                        <img src="{{ generateQrCode($tdk->ppa->nama_lengkap, 120, 'svg_datauri') }}" alt="QR Code">
+                        <br>
                         ({{ $tdk->ppa->nama_lengkap }})
                     </div>
                 </div>

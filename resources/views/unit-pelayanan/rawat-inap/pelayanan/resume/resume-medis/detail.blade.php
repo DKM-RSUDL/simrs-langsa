@@ -249,15 +249,16 @@
                                                         <tr>
                                                             <th>NO</th>
                                                             <th>Nama Obat</th>
-                                                            <th>Dosis</th>
                                                             <th>Frek</th>
-                                                            <th>Qty</th>
-                                                            <th>Rate</th>
+                                                            <th>Dosis</th>
+                                                            {{-- <th>Qty</th> --}}
+                                                            {{-- <th>Rate</th> --}}
                                                         </tr>
                                                     </thead>
                                                     <tbody>
+
                                                         @foreach ($riwayatObatHariIni as $obat)
-                                                            <tr>
+                                                            {{-- <tr>
                                                                 <td>{{ $loop->iteration }}</td>
                                                                 <td>
                                                                     {{ $obat->nama_obat ?? '-' }}
@@ -268,6 +269,19 @@
                                                                 <td>{{ explode(',', $obat->cara_pakai)[0] }}</td>
                                                                 <td>{{ (int) $obat->jumlah ?? '-' }}</td>
                                                                 <td>-</td>
+                                                            </tr> --}}
+
+                                                            <tr>
+                                                                <td>{{ $loop->iteration }}</td>
+                                                                <td>
+                                                                    {{ $obat->nama_obat ?? '-' }}
+                                                                </td>
+                                                                <td>{{ $obat->frekuensi }}</td>
+                                                                <td>{{ $obat->dosis }}
+                                                                    {{ $obat->satuan }}
+                                                                </td>
+                                                                {{-- <td>{{ $obat->freak ?? '-' }}</td>
+                                                                <td>-</td> --}}
                                                             </tr>
                                                         @endforeach
                                                     </tbody>
