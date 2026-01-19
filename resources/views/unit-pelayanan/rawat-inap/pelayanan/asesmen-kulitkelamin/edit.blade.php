@@ -208,7 +208,7 @@
                                     </table>
                                 </div>
                             </div>
-
+                            
                             <div class="section-separator" id="skala-nyeri">
                                 <h5 class="section-title">5. Skala Nyeri</h5>
 
@@ -220,12 +220,23 @@
                                                 id="skala_nyeri" min="1" max="10"
                                                 placeholder="1-10" value="{{ $asesmen->skala_nyeri }}">
                                         </div>
+
+                                        @php
+                                            $nilai = $asesmen->skala_nyeri ?? 0;
+                                            $kategori = match (true) {
+                                                $nilai >= 1 && $nilai <= 3 => 'Nyeri Ringan',
+                                                $nilai >= 4 && $nilai <= 6 => 'Nyeri Sedang',
+                                                $nilai >= 7 && $nilai <= 9 => 'Nyeri Berat',
+                                                $nilai == 10 => 'Nyeri Tak Tertahankan',
+                                                default => ''
+                                            };
+                                        @endphp 
                                        
                                         <div class="form-group">
                                             <label style="min-width: 200px;">Kategori Nyeri</label>
                                             <input type="text" class="form-control" name="kategori_nyeri"
                                                 id="kategori_nyeri" readonly placeholder="Akan terisi otomatis"
-                                                value="{{ $asesmen->kategori_nyeri }}">
+                                                value="{{ $kategori }}">
                                         </div>
                                     </div>
 
@@ -411,8 +422,12 @@
                                     </div>
                                 </div>
                                 <input type="hidden" name="site_marking_data" id="siteMarkingData"
-                                    value="{{ $asesmenKulitKelamin->site_marking_data ?? '[]' }}">
+                                    value="{{ $asesmenKulitKelamin->site_marking_data  }}">
                             </div>
+                            {{-- @php
+                                dd($asesmenKulitKelamin->site_marking_data);
+                            @endphp
+                             --}}
 
                             <div class="section-separator" id="diagnosis">
                                 <h5 class="fw-semibold mb-4">8. Diagnosis</h5>
@@ -1236,6 +1251,7 @@
 @endpush
 
 @push('js')
+    @include('unit-pelayanan.rawat-inap.pelayanan.asesmen-kulitkelamin.include')
     <script>
         document.addEventListener('DOMContentLoaded', function() {
 
@@ -2005,6 +2021,7 @@
             initDiagnosisManagementEdit('diagnosis-kerja', 'diagnosis_kerja');
 
             function initDiagnosisManagementEdit(prefix, hiddenFieldId) {
+                console.log(prefix)
                 const inputField = document.getElementById(`${prefix}-input`);
                 const addButton = document.getElementById(`add-${prefix}`);
                 const listContainer = document.getElementById(`${prefix}-list`);
@@ -2019,7 +2036,9 @@
                 suggestionsList.style.width = 'calc(100% - 30px)';
                 suggestionsList.style.display = 'none';
 
+                
                 // Insert suggestions list after input
+                console.log(inputField)
                 inputField.parentNode.insertBefore(suggestionsList, inputField.nextSibling);
 
                 // Database options
@@ -2265,6 +2284,14 @@
                 suggestionsList.style.display = 'none';
 
                 // Insert suggestions list after input
+                console.log(inputField)
+                console.log(`${prefix}-input`)
+
+                
+                if (!inputField) {
+                    console.warn(`Input ${prefix}-input tidak ditemukan`);
+                    return;
+                }
                 inputField.parentNode.insertBefore(suggestionsList, inputField.nextSibling);
 
                 // Get database options
@@ -2543,6 +2570,8 @@
                 const markingCount = document.getElementById('markingCount');
                 const emptyState = document.getElementById('emptyState');
 
+                console.log(siteMarkingData)
+
                 let markings = [];
                 let markingCounter = 1;
                 let currentColor = '#dc3545';
@@ -2770,6 +2799,7 @@
                 function loadExistingDataEdit() {
                     try {
                         const existingData = JSON.parse(siteMarkingData.value || '[]');
+                        console.log(existingData)
                         if (existingData.length > 0) {
                             markings = existingData;
                             markingCounter = markings.length + 1;

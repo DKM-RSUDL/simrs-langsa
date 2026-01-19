@@ -118,6 +118,8 @@ class AsesmenKulitKelaminController extends Controller
             if (empty($dataMedis)) {
                 throw new Exception('Data kunjungan tidak ditemukan');
             }
+            
+          
 
             // Prepare assessment time
             $tanggal = $request->tanggal_masuk;
@@ -139,6 +141,7 @@ class AsesmenKulitKelaminController extends Controller
             $dataAsesmen->kategori = 1;
             $dataAsesmen->sub_kategori = 10; // Specific to dermatology/venereology
             $dataAsesmen->anamnesis = $request->anamnesis;
+            $dataAsesmen->skala_nyeri = $request->skala_nyeri;
             $dataAsesmen->save();
 
             // Prepare vital sign data
@@ -258,6 +261,23 @@ class AsesmenKulitKelaminController extends Controller
                     ],
                 ],
             ];
+
+             // Insert pemeriksaan fisik yang baru
+            $itemFisik = MrItemFisik::all();
+            foreach ($itemFisik as $item) {
+                $isNormal = $request->has($item->id.'-normal') ? 1 : 0;
+                $keterangan = $request->input($item->id.'_keterangan');
+                if ($isNormal) {
+                    $keterangan = '';
+                }
+
+                RmeAsesmenPemeriksaanFisik::create([
+                    'id_asesmen' => $dataAsesmen->id,
+                    'id_item_fisik' => $item->id,
+                    'is_normal' => $isNormal,
+                    'keterangan' => $keterangan,
+                ]);
+            }
 
             $this->baseService->updateResumeMedis($dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk, $resumeData);
 
@@ -691,7 +711,9 @@ class AsesmenKulitKelaminController extends Controller
             ];
 
             $this->baseService->updateResumeMedis($dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk, $resumeData);
-
+            
+            
+            
             DB::commit();
 
             return redirect()->route('rawat-inap.asesmen.medis.kulit-kelamin.show', [

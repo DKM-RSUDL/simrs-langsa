@@ -204,7 +204,50 @@
                         @endforeach
                     </div>
                 </div>
+             
 
+                <div class="section-separator" id="skala-nyeri">
+                                <h5 class="section-title">5. Skala Nyeri</h5>
+
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label style="min-width: 200px;">Skala Nyeri (1-10)</label>
+                                            <input type="number" class="form-control" name="skala_nyeri"
+                                                id="skala_nyeri" min="1" max="10"
+                                                placeholder="1-10" value="{{ $asesmen->skala_nyeri }}">
+                                        </div>
+                                       
+                                        @php
+                                            $nilai = $asesmen->skala_nyeri ?? 0;
+                                            $kategori = match (true) {
+                                                $nilai >= 1 && $nilai <= 3 => 'Nyeri Ringan',
+                                                $nilai >= 4 && $nilai <= 6 => 'Nyeri Sedang',
+                                                $nilai >= 7 && $nilai <= 9 => 'Nyeri Berat',
+                                                $nilai == 10 => 'Nyeri Tak Tertahankan',
+                                                default => ''
+                                            };
+                                        @endphp 
+                                        <div class="form-group">
+                                            <label style="min-width: 200px;">Kategori Nyeri</label>
+                                            <input type="text" class="form-control" name="kategori_nyeri"
+                                                id="kategori_nyeri" readonly placeholder="Akan terisi otomatis"
+                                                value="{{ $kategori }}">
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <div class="text-center">
+                                            <img src="{{ asset('assets/img/asesmen/asesmen.jpeg') }}"
+                                                alt="Skala Nyeri Visual" class="img-fluid mb-3"
+                                                style="max-height: 200px;">
+                                            <img src="{{ asset('assets/img/asesmen/numerik.png') }}"
+                                                alt="Skala Nyeri Numerik" class="img-fluid"
+                                                style="max-height: 150px;">
+                                        </div>
+                                    </div>
+                                </div>
+                </div>
                 <!-- 6.1. Site Marking - Penandaan Anatomi -->
                 @if (isset($asesmenKulitKelamin->site_marking_data) &&
                         !empty($asesmenKulitKelamin->site_marking_data) &&
