@@ -693,7 +693,6 @@
                                 </div>
                             </div>
                         </div>
-
                         <!-- 5. Riwayat Kesehatan -->
                         <div class="tab-pane fade show">
                             <div class="card">
@@ -2349,7 +2348,7 @@
 
                         <!-- MASALAH/ DIAGNOSIS KEPERAWATAN  -->
                         <div class="section-separator" id="masalah_diagnosis">
-                            <h5 class="section-title">13. MASALAH/ DIAGNOSIS KEPERAWATAN</h5>
+                            <h5 class="section-title">16. MASALAH/ DIAGNOSIS KEPERAWATAN</h5>
                             <p class="text-muted mb-4">(Diisi berdasarkan hasil asesmen dan berurut sesuai masalah yang
                                 dominan terlebih dahulu)</p>
 
