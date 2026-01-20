@@ -474,7 +474,7 @@
                                     .removeClass(
                                         'btn-primary btn-secondary btn-success btn-danger btn-warning btn-info btn-light btn-dark'
                                     )
-                                    .addClass('{{ $triaseColor[$currentTriase] }}');
+                                    .addClass('{{ $btnClass }}');
 
                                 // Kembali ke readonly
                                 $form.addClass("form-readonly");
