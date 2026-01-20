@@ -160,6 +160,10 @@
                     <td><strong>Tanggal Lahir</strong></td>
                     <td>{{ date('d/m/Y', strtotime($resume->pasien->tgl_lahir)) }}</td>
                 </tr>
+                <tr>
+                    <td><strong>Usia</strong></td>
+                    <td>{{ hitungUmur($resume->pasien->tgl_lahir) }} Tahun</td>
+                </tr>
             </table>
         </div>
     </header>

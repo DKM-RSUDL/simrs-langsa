@@ -64,6 +64,7 @@ class RadiologyFileService
         // Detect if Windows mapped drive (e.g., Z:)
         $isMappedDrive = preg_match('/^[A-Z]:$/i', $base);
 
+
         // Build path with appropriate separator
         if ($isUNC || $isMappedDrive || DIRECTORY_SEPARATOR === '\\') {
             // Windows style - use backslash

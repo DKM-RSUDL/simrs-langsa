@@ -342,7 +342,6 @@ class RadiologiController extends Controller
         // First try the configured mount path
         $filePath = $service->buildFilePath($fileName, $tanggal);
 
-
         if ($service->fileExists($filePath) && $service->isWithinMount($filePath)) {
             $response = response()->file($filePath, [
                 'Content-Type' => 'application/pdf',
@@ -423,6 +422,15 @@ class RadiologiController extends Controller
         try {
             $dataMedis = $this->baseService->getDataMedis($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
 
+            // get data medis
+            $asalIGD = AsalIGD::where('kd_kasir', $dataMedis->kd_kasir)->where('no_transaksi', $dataMedis->no_transaksi)->first();
+            $kunjunganIGD = null;
+
+            if (!empty($asalIGD)) {
+                $kunjunganIGD = $this->baseService->getDataMedisbyTransaksi($asalIGD->kd_kasir_asal, $asalIGD->no_transaksi_asal);
+            }
+
+
             // Dapatkan data radiologi menggunakan query yang lengkap
             $dataRadiologi = $this->getRadiologyResults(
                 $dataMedis->kd_pasien,
@@ -436,10 +444,59 @@ class RadiologiController extends Controller
                 ->where('kd_kasir', '09')
                 ->get();
 
+            $unitAsalIgd = UnitAsal::where('no_transaksi_asal', $kunjunganIGD->no_transaksi)
+                ->where('kd_kasir_asal', $kunjunganIGD->kd_kasir)
+                ->where('kd_kasir', '10')
+                ->get();
+
+
             // get data transaksi rad dari unit asal menggunakan Eloquent
             $dataTransaksi = [];
 
+            // ranap
             foreach ($unitAsal as $ua) {
+                $dataRadHasil = RadHasil::with([
+                    'produk.klas',
+                    'kunjungan.dokter'
+                ])
+                    ->whereHas('kunjungan.transaksi', function ($query) use ($ua) {
+                        $query->where('no_transaksi', $ua->no_transaksi)
+                            ->where('kd_kasir', $ua->kd_kasir);
+                    })
+                    ->where('kd_pasien', $dataMedis->kd_pasien)
+                    ->where('kd_unit', 5)
+                    ->get()
+                    ->map(function ($item) {
+                        $service = new RadiologyFileService();
+                        $fileName = $item->file ? $service->extractFileName($item->file) : null;
+
+                        return [
+                            'kd_pasien' => $item->kd_pasien,
+                            'kd_unit' => $item->kd_unit,
+                            'tgl_transaksi' => $item->tgl_masuk,
+                            'TGL_MASUK' => $item->tgl_masuk,
+                            'urut_masuk' => $item->urut_masuk,
+                            'urut' => $item->urut,
+                            'urut_rad' => $item->urut,
+                            'kd_dokter' => $item->kunjungan->dokter->kd_dokter ?? null,
+                            'nama_dokter' => $item->kunjungan->dokter->nama_lengkap ?? null,
+                            'kd_produk' => $item->kd_test,
+                            'nama_produk' => $item->produk->deskripsi ?? null,
+                            'hasil' => $item->hasil,
+                            'kd_alat' => $item->kd_alat,
+                            'klasifikasi' => $item->produk->klas->klasifikasi ?? null,
+                            'file' => $item->file ?? null,
+                            'filename' => $fileName,
+                            'kd_unit_rad' => $item->kd_unit,
+                        ];
+                    })
+                    ->toArray();
+
+                $dataTransaksi = array_merge($dataTransaksi, $dataRadHasil);
+            }
+
+            // igd
+            foreach ($unitAsalIgd as $ua) {
                 $dataRadHasil = RadHasil::with([
                     'produk.klas',
                     'kunjungan.dokter'
@@ -493,12 +550,15 @@ class RadiologiController extends Controller
                 $filename = $service->extractFileName($raw);
                 if (!$filename) continue;
 
-                // Dedupe by filename
                 if (in_array($filename, $seen)) continue;
                 $seen[] = $filename;
-
                 $previewBase = url("unit-pelayanan/rawat-inap/unit/{$kd_unit}/pelayanan/{$kd_pasien}/{$tgl_masuk}/{$urut_masuk}/radiologi/preview");
-                $fileUrl = $previewBase . '?file=' . urlencode($filename);
+
+                if (str_starts_with($raw, '\\')) {
+                    $fileUrl = $previewBase . '?file=' . urlencode($filename);
+                } else {
+                    $fileUrl = "https://e-rsudlangsa.id/dokumen/radiologi/$raw";
+                }
 
                 $files[] = [
                     'file_name' => $filename,
@@ -896,7 +956,7 @@ class RadiologiController extends Controller
             'pasien'
         ])
             ->where('kd_pasien', $kd_pasien)
-            ->where('tgl_masuk', $tgl_masuk)
+            ->whereDate('tgl_masuk', $tgl_masuk)
             ->where('urut_masuk', $urut_masuk)
             ->orderBy('kd_test')
             ->get();
