@@ -5,12 +5,10 @@
     <meta charset="UTF-8">
     <title>Asesmen Keperawatan Anak - {{ $data['dataMedis']->pasien->nama ?? '-' }}</title>
     <style>
-        /* --- STYLE DARI MEDIS (Agar ukuran kertas & font sama persis) --- */
         @page {
             size: A4;
             margin: 3mm 6mm;
             [cite_start]
-            /* Margin disamakan dengan Medis [cite: 260] */
         }
 
         body {
@@ -18,29 +16,25 @@
             padding: 0;
             box-sizing: border-box;
             [cite_start]
-            /* Disamakan dengan Medis [cite: 261] */
             font-family: "DejaVu Sans", "Helvetica", "Arial", sans-serif !important;
             font-size: 8.5pt;
             [cite_start]
-            /* Ukuran font disamakan dengan Medis [cite: 261] */
             line-height: 1.3;
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
-            /* margin-bottom: 5px; Hapus ini agar sama dengan default Medis */
         }
 
         td,
         th {
             padding: 3px 5px;
             [cite_start]
-            /* Padding disamakan dengan Medis [cite: 263] */
             vertical-align: top;
         }
 
-        /* --- HEADER & IDENTITAS (Style Medis) --- */
+        /* --- HEADER & IDENTITAS --- */
         .header-table {
             width: 100%;
             border-collapse: collapse;
@@ -115,7 +109,7 @@
             vertical-align: middle;
         }
 
-        /* --- Tabel Identitas Pasien (Style Khusus Medis) --- */
+        /* --- Tabel Identitas Pasien --- */
         .patient-table {
             width: 100%;
             margin-top: 15px;
@@ -136,7 +130,7 @@
             width: 130px;
         }
 
-        /* --- STYLE BAWAAN KEPERAWATAN (JANGAN DIHAPUS agar body ke bawah aman) --- */
+        /* --- STYLY BODY  --- */
         /* SECTIONS */
         .section-title {
             font-weight: bold;
@@ -147,8 +141,6 @@
             border: 1px solid #000;
             margin-bottom: 5px;
         }
-
-        /* Bordered table untuk isi asesmen (beda dengan patient-table header) */
         .bordered-table,
         .bordered-table th,
         .bordered-table td {
@@ -159,10 +151,8 @@
             background-color: #f2f2f2;
             text-align: left;
             padding: 3px 4px;
-            /* Kembalikan padding khusus tabel body */
         }
 
-        /* Override padding untuk bordered-table td agar sesuai style lama */
         .bordered-table td {
             padding: 3px 4px;
         }
@@ -202,7 +192,6 @@
         $fisik = $asesmen->rmeAsesmenKepAnakFisik ?? null;
         $pasien = $data['dataMedis']->pasien ?? null;
 
-        // Logika Logo disamakan dengan Medis (menggunakan path jika ada, atau fallback ke data)
         $logoBase64 = $data['logoBase64'] ?? null;
         if (!$logoBase64) {
             $logoPath = public_path('assets/img/Logo-RSUD-Langsa-1.png');
@@ -210,14 +199,14 @@
             $logoBase64 = $logoData ? 'data:image/png;base64,' . base64_encode($logoData) : null;
         }
 
-        // Helper untuk menampilkan Checkbox
+        // Helper Checkbox
         function checkbox($val)
         {
             return $val ? '&#9745;' : '&#9744;';
         }
     @endphp
 
-    {{-- KOP SURAT (Struktur Persis Medis) --}}
+    {{-- KOP SURAT --}}
     <table class="header-table">
         <tr>
             <td class="td-left">
@@ -250,8 +239,6 @@
             </td>
         </tr>
     </table>
-
-    {{-- IDENTITAS PASIEN (Menggunakan class 'patient-table' dan struktur Medis: Tgl Lahir format 'd M Y' & Kolom Umur) --}}
     <table class="patient-table">
         <tr>
             <th>No. RM</th>
