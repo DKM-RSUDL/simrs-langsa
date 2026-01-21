@@ -15,11 +15,9 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            [cite_start]
-            font-family: "DejaVu Sans", "Helvetica", "Arial", sans-serif !important;
+            [cite_start] font-family: "DejaVu Sans", "Helvetica", "Arial", sans-serif !important;
             font-size: 8.5pt;
-            [cite_start]
-            line-height: 1.3;
+            [cite_start] line-height: 1.3;
         }
 
         table {
@@ -30,8 +28,7 @@
         td,
         th {
             padding: 3px 5px;
-            [cite_start]
-            vertical-align: top;
+            [cite_start] vertical-align: top;
         }
 
         /* --- HEADER & IDENTITAS --- */
@@ -141,6 +138,7 @@
             border: 1px solid #000;
             margin-bottom: 5px;
         }
+
         .bordered-table,
         .bordered-table th,
         .bordered-table td {
@@ -290,162 +288,148 @@
         </tr>
     </table>
 
-    {{-- 3. PEMERIKSAAN FISIK --}}
-    <div class="section-title">3. PEMERIKSAAN FISIK</div>
+    {{-- Split Layout for Status (DIUBAH KE FULL WIDTH) --}}
+    <div style="width: 100%;">
+        {{-- Ubah width jadi 100% agar memenuhi halaman --}}
+        <div style="width: 100%;">
 
-    {{-- TTV --}}
-    <table class="bordered-table" style="margin-bottom: 10px;">
-        <tr>
-            <td width="25%"><strong>TD:</strong> {{ $fisik->sistole ?? '-' }}/{{ $fisik->diastole ?? '-' }} mmHg
-            </td>
-            <td width="25%"><strong>Nadi:</strong> {{ $fisik->nadi ?? '-' }} x/menit</td>
-            <td width="25%"><strong>Nafas:</strong> {{ $fisik->nafas ?? '-' }} x/menit</td>
-            <td width="25%"><strong>Suhu:</strong> {{ $fisik->suhu ?? '-' }} °C</td>
-        </tr>
-        <tr>
-            <td colspan="4"><strong>Saturasi O2:</strong> Tanpa bantuan ({{ $fisik->spo2_tanpa_bantuan ?? '-' }}%) |
-                Dengan bantuan ({{ $fisik->spo2_dengan_bantuan ?? '-' }}%)</td>
-        </tr>
-    </table>
-
-    {{-- Split Layout for Status --}}
-    <table width="100%">
-        <tr>
-            <td width="50%" valign="top" style="padding-right: 5px;">
-                <p class="text-bold mb-1" style="border-bottom: 1px solid #000;">A. Kesadaran & Status Mental</p>
-                <table class="bordered-table">
-                    <tr>
-                        <td width="40%">Kesadaran</td>
-                        <td>{{ $fisik->kesadaran ?? '-' }}</td>
-                    </tr>
-                    <tr>
-                        <td>GCS</td>
-                        <td>{{ $kepAnak->gcs ?? '-' }}</td>
-                    </tr>
-                    <tr>
-                        <td>Penglihatan</td>
-                        <td>{{ ['1' => 'Baik', '2' => 'Rusak', '3' => 'Alat Bantu'][$fisik->penglihatan ?? 0] ?? '-' }}
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Pendengaran</td>
-                        <td>{{ ['1' => 'Baik', '2' => 'Rusak', '3' => 'Alat Bantu'][$fisik->pendengaran ?? 0] ?? '-' }}
-                        </td>
-                    </tr>
-                </table>
-
-                <p class="text-bold mb-1 mt-2" style="border-bottom: 1px solid #000;">B. Status Komunikasi</p>
-                <table class="bordered-table">
-                    <tr>
-                        <td width="40%">Bicara</td>
-                        <td>{{ ['1' => 'Normal', '2' => 'Gangguan'][$fisik->bicara ?? 0] ?? '-' }}</td>
-                    </tr>
-                    <tr>
-                        <td>Refleks Menelan</td>
-                        <td>{{ ['1' => 'Normal', '2' => 'Sulit', '3' => 'Rusak'][$fisik->refleksi_menelan ?? 0] ?? '-' }}
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Pola Tidur</td>
-                        <td>{{ ['1' => 'Normal', '2' => 'Masalah'][$fisik->pola_tidur ?? 0] ?? '-' }}</td>
-                    </tr>
-                    <tr>
-                        <td>Luka</td>
-                        <td>{{ ['1' => 'Normal', '2' => 'Gangguan', '3' => 'Tidak Ada Luka'][$fisik->luka ?? 0] ?? '-' }}
-                        </td>
-                    </tr>
-                </table>
-                <p class="text-bold mb-1" style="border-bottom: 1px solid #000;">C. Status Eliminasi</p>
-                <table class="bordered-table">
-                    <tr>
-                        <td width="40%">Defekasi</td>
-                        <td>{{ ['1' => 'Tidak Ada', '2' => 'Normal', '3' => 'Konstipasi', '4' => 'Inkontinensia'][$fisik->defekasi ?? 0] ?? '-' }}
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Miksi</td>
-                        <td>{{ ['1' => 'Normal', '2' => 'Retensio', '3' => 'Inkontinensia'][$fisik->miksi ?? 0] ?? '-' }}
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Gastrointestinal</td>
-                        <td>{{ ['1' => 'Normal', '2' => 'Nausea', '3' => 'Muntah'][$fisik->gastroentestinal ?? 0] ?? '-' }}
-                        </td>
-                    </tr>
-                </table>
-            </td>
-        </tr>
-    </table>
-
-    <p class="text-bold mb-1 mt-2">D. Riwayat Kelahiran & Perkembangan</p>
-    <table class="bordered-table">
-        <tr>
-            <td width="50%"><strong>Lahir Umur Kehamilan:</strong> {{ $fisik->lahir_umur_kehamilan ?? '-' }}</td>
-            <td width="50%"><strong>ASI Sampai Umur:</strong> {{ $fisik->asi_Sampai_Umur ?? '-' }}</td>
-        </tr>
-        <tr>
-            <td><strong>Alasan Berhenti Menyusui:</strong> {{ $fisik->alasan_berhenti_menyusui ?? '-' }}</td>
-            <td><strong>Masalah Neonatus:</strong> {{ $fisik->masalah_neonatus ?? '-' }}</td>
-        </tr>
-        <tr>
-            <td colspan="2"><strong>Kelainan Kongenital:</strong> {{ $fisik->kelainan_kongenital ?? '-' }}</td>
-        </tr>
-        <tr>
-            <td colspan="2">
-                <strong>Motorik:</strong>
-                Tengkurap ({{ $fisik->tengkurap ?? '-' }}) |
-                Merangkak ({{ $fisik->merangkak ?? '-' }}) |
-                Duduk ({{ $fisik->duduk ?? '-' }}) |
-                Berdiri ({{ $fisik->berdiri ?? '-' }})
-            </td>
-        </tr>
-    </table>
-
-    <p class="text-bold mb-1 mt-2">E. Antropometri</p>
-    <table class="bordered-table">
-        <tr>
-            <td>TB: {{ $fisik->tinggi_badan ?? '-' }} cm</td>
-            <td>BB: {{ $fisik->berat_badan ?? '-' }} kg</td>
-            <td>LK: {{ $fisik->lingkar_kepala ?? '-' }} cm</td>
-            <td>IMT: {{ $fisik->imt ?? '-' }}</td>
-            <td>LPT: {{ $fisik->lpt ?? '-' }}</td>
-        </tr>
-    </table>
-
-    {{-- Pemeriksaan Fisik Menyeluruh --}}
-    <p class="text-bold mb-1 mt-2">F. Hasil Pemeriksaan Fisik Menyeluruh</p>
-    <table class="bordered-table" style="font-size: 7pt;">
-        @php
-            $pemeriksaanFisikData = $asesmen->pemeriksaanFisik ?? collect([]);
-        @endphp
-        @if ($pemeriksaanFisikData->count() > 0)
-            @foreach ($pemeriksaanFisikData->chunk(2) as $chunk)
+            <p class="text-bold mb-1" style="border-bottom: 1px solid #000;">A. Kesadaran & Status Mental</p>
+            <table class="bordered-table">
                 <tr>
-                    @foreach ($chunk as $item)
-                        <td width="20%">{{ $item->itemFisik->nama ?? '' }}</td>
-                        <td width="30%">
-                            @if ($item->is_normal)
-                                <b>Normal</b>
-                            @else
-                                @if ($item->keterangan)
-                                    <b>Tidak Normal:</b> {{ $item->keterangan }}
-                                @else
-                                    <i>Tidak Diperiksa</i>
-                                @endif
-                            @endif
-                        </td>
-                    @endforeach
-                    @if ($chunk->count() < 2)
-                        <td colspan="2"></td>
-                    @endif
+                    <td width="40%">Kesadaran</td>
+                    <td>{{ $fisik->kesadaran ?? '-' }}</td>
                 </tr>
-            @endforeach
-        @else
-            <tr>
-                <td colspan="4">Tidak ada data pemeriksaan fisik menyeluruh.</td>
-            </tr>
-        @endif
-    </table>
+                <tr>
+                    <td>GCS</td>
+                    <td>{{ $kepAnak->gcs ?? '-' }}</td>
+                </tr>
+                <tr>
+                    <td>Penglihatan</td>
+                    <td>{{ ['1' => 'Baik', '2' => 'Rusak', '3' => 'Alat Bantu'][$fisik->penglihatan ?? 0] ?? '-' }}
+                    </td>
+                </tr>
+                <tr>
+                    <td>Pendengaran</td>
+                    <td>{{ ['1' => 'Baik', '2' => 'Rusak', '3' => 'Alat Bantu'][$fisik->pendengaran ?? 0] ?? '-' }}
+                    </td>
+                </tr>
+            </table>
+
+            <p class="text-bold mb-1 mt-2" style="border-bottom: 1px solid #000;">B. Status Komunikasi</p>
+            <table class="bordered-table">
+                <tr>
+                    <td width="40%">Bicara</td>
+                    <td>{{ ['1' => 'Normal', '2' => 'Gangguan'][$fisik->bicara ?? 0] ?? '-' }}</td>
+                </tr>
+                <tr>
+                    <td>Refleks Menelan</td>
+                    <td>{{ ['1' => 'Normal', '2' => 'Sulit', '3' => 'Rusak'][$fisik->refleksi_menelan ?? 0] ?? '-' }}
+                    </td>
+                </tr>
+                <tr>
+                    <td>Pola Tidur</td>
+                    <td>{{ ['1' => 'Normal', '2' => 'Masalah'][$fisik->pola_tidur ?? 0] ?? '-' }}</td>
+                </tr>
+                <tr>
+                    <td>Luka</td>
+                    <td>{{ ['1' => 'Normal', '2' => 'Gangguan', '3' => 'Tidak Ada Luka'][$fisik->luka ?? 0] ?? '-' }}
+                    </td>
+                </tr>
+            </table>
+
+            <p class="text-bold mb-1" style="border-bottom: 1px solid #000;">C. Status Eliminasi</p>
+            <table class="bordered-table">
+                <tr>
+                    <td width="40%">Defekasi</td>
+                    <td>{{ ['1' => 'Tidak Ada', '2' => 'Normal', '3' => 'Konstipasi', '4' => 'Inkontinensia'][$fisik->defekasi ?? 0] ?? '-' }}
+                    </td>
+                </tr>
+                <tr>
+                    <td>Miksi</td>
+                    <td>{{ ['1' => 'Normal', '2' => 'Retensio', '3' => 'Inkontinensia'][$fisik->miksi ?? 0] ?? '-' }}
+                    </td>
+                </tr>
+                <tr>
+                    <td>Gastrointestinal</td>
+                    <td>{{ ['1' => 'Normal', '2' => 'Nausea', '3' => 'Muntah'][$fisik->gastroentestinal ?? 0] ?? '-' }}
+                    </td>
+                </tr>
+            </table>
+
+            <p class="text-bold mb-1 mt-2">D. Riwayat Kelahiran & Perkembangan</p>
+            <table class="bordered-table">
+                <tr>
+                    <td width="50%"><strong>Lahir Umur Kehamilan:</strong>
+                        {{ $fisik->lahir_umur_kehamilan ?? '-' }}</td>
+                    <td width="50%"><strong>ASI Sampai Umur:</strong> {{ $fisik->asi_Sampai_Umur ?? '-' }}</td>
+                </tr>
+                <tr>
+                    <td><strong>Alasan Berhenti Menyusui:</strong> {{ $fisik->alasan_berhenti_menyusui ?? '-' }}
+                    </td>
+                    <td><strong>Masalah Neonatus:</strong> {{ $fisik->masalah_neonatus ?? '-' }}</td>
+                </tr>
+                <tr>
+                    <td colspan="2"><strong>Kelainan Kongenital:</strong>
+                        {{ $fisik->kelainan_kongenital ?? '-' }}</td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <strong>Motorik:</strong>
+                        Tengkurap ({{ $fisik->tengkurap ?? '-' }}) |
+                        Merangkak ({{ $fisik->merangkak ?? '-' }}) |
+                        Duduk ({{ $fisik->duduk ?? '-' }}) |
+                        Berdiri ({{ $fisik->berdiri ?? '-' }})
+                    </td>
+                </tr>
+            </table>
+
+            <p class="text-bold mb-1 mt-2">E. Antropometri</p>
+            <table class="bordered-table">
+                <tr>
+                    <td>TB: {{ $fisik->tinggi_badan ?? '-' }} cm</td>
+                    <td>BB: {{ $fisik->berat_badan ?? '-' }} kg</td>
+                    <td>LK: {{ $fisik->lingkar_kepala ?? '-' }} cm</td>
+                    <td>IMT: {{ $fisik->imt ?? '-' }}</td>
+                    <td>LPT: {{ $fisik->lpt ?? '-' }}</td>
+                </tr>
+            </table>
+
+            {{-- Pemeriksaan Fisik Menyeluruh --}}
+            <p class="text-bold mb-1 mt-2">F. Hasil Pemeriksaan Fisik Menyeluruh</p>
+            <table class="bordered-table" style="font-size: 7pt;">
+                @php
+                    $pemeriksaanFisikData = $asesmen->pemeriksaanFisik ?? collect([]);
+                @endphp
+                @if ($pemeriksaanFisikData->count() > 0)
+                    @foreach ($pemeriksaanFisikData->chunk(2) as $chunk)
+                        <tr>
+                            @foreach ($chunk as $item)
+                                <td width="20%">{{ $item->itemFisik->nama ?? '' }}</td>
+                                <td width="30%">
+                                    @if ($item->is_normal)
+                                        <b>Normal</b>
+                                    @else
+                                        @if ($item->keterangan)
+                                            <b>Tidak Normal:</b> {{ $item->keterangan }}
+                                        @else
+                                            <i>Tidak Diperiksa</i>
+                                        @endif
+                                    @endif
+                                </td>
+                            @endforeach
+                            @if ($chunk->count() < 2)
+                                <td colspan="2"></td>
+                            @endif
+                        </tr>
+                    @endforeach
+                @else
+                    <tr>
+                        <td colspan="4">Tidak ada data pemeriksaan fisik menyeluruh.</td>
+                    </tr>
+                @endif
+            </table>
+        </div>
+    </div>
 
     {{-- 4. STATUS NYERI --}}
     <div class="section-title">4. STATUS NYERI</div>
