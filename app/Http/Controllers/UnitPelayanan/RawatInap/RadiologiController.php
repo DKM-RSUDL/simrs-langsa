@@ -465,6 +465,7 @@ class RadiologiController extends Controller
                     })
                     ->where('kd_pasien', $dataMedis->kd_pasien)
                     ->where('kd_unit', 5)
+                    ->whereDate('tgl_masuk', $dataMedis->tgl_masuk)
                     ->get()
                     ->map(function ($item) {
                         $service = new RadiologyFileService();
@@ -494,6 +495,7 @@ class RadiologiController extends Controller
 
                 $dataTransaksi = array_merge($dataTransaksi, $dataRadHasil);
             }
+
 
             // igd
             foreach ($unitAsalIgd as $ua) {
@@ -507,6 +509,7 @@ class RadiologiController extends Controller
                     })
                     ->where('kd_pasien', $dataMedis->kd_pasien)
                     ->where('kd_unit', 5)
+                    ->whereDate('tgl_masuk', $kunjunganIGD->tgl_masuk)
                     ->get()
                     ->map(function ($item) {
                         $service = new RadiologyFileService();
@@ -536,6 +539,7 @@ class RadiologiController extends Controller
 
                 $dataTransaksi = array_merge($dataTransaksi, $dataRadHasil);
             }
+
 
             $service = new RadiologyFileService();
 
@@ -553,7 +557,6 @@ class RadiologiController extends Controller
                 if (in_array($filename, $seen)) continue;
                 $seen[] = $filename;
                 $previewBase = url("unit-pelayanan/rawat-inap/unit/{$kd_unit}/pelayanan/{$kd_pasien}/{$tgl_masuk}/{$urut_masuk}/radiologi/preview");
-
                 if (str_starts_with($raw, '\\')) {
                     $fileUrl = $previewBase . '?file=' . urlencode($filename);
                 } else {
