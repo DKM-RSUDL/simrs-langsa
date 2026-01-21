@@ -5,32 +5,42 @@
     <meta charset="UTF-8">
     <title>Asesmen Keperawatan Anak - {{ $data['dataMedis']->pasien->nama ?? '-' }}</title>
     <style>
+        /* --- STYLE DARI MEDIS (Agar ukuran kertas & font sama persis) --- */
         @page {
             size: A4;
-            margin: 10mm;
+            margin: 3mm 6mm;
+            [cite_start]
+            /* Margin disamakan dengan Medis [cite: 260] */
         }
 
         body {
             margin: 0;
             padding: 0;
+            box-sizing: border-box;
+            [cite_start]
+            /* Disamakan dengan Medis [cite: 261] */
             font-family: "DejaVu Sans", "Helvetica", "Arial", sans-serif !important;
-            font-size: 8pt;
+            font-size: 8.5pt;
+            [cite_start]
+            /* Ukuran font disamakan dengan Medis [cite: 261] */
             line-height: 1.3;
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-bottom: 5px;
+            /* margin-bottom: 5px; Hapus ini agar sama dengan default Medis */
         }
 
         td,
         th {
-            padding: 3px 4px;
+            padding: 3px 5px;
+            [cite_start]
+            /* Padding disamakan dengan Medis [cite: 263] */
             vertical-align: top;
         }
 
-        /* --- HEADER & IDENTITAS --- */
+        /* --- HEADER & IDENTITAS (Style Medis) --- */
         .header-table {
             width: 100%;
             border-collapse: collapse;
@@ -105,6 +115,28 @@
             vertical-align: middle;
         }
 
+        /* --- Tabel Identitas Pasien (Style Khusus Medis) --- */
+        .patient-table {
+            width: 100%;
+            margin-top: 15px;
+            border-collapse: collapse;
+            margin-bottom: 15px;
+        }
+
+        .patient-table th,
+        .patient-table td {
+            border: 1px solid #ccc;
+            padding: 5px 7px;
+            font-size: 9pt;
+        }
+
+        .patient-table th {
+            background-color: #f2f2f2;
+            text-align: left;
+            width: 130px;
+        }
+
+        /* --- STYLE BAWAAN KEPERAWATAN (JANGAN DIHAPUS agar body ke bawah aman) --- */
         /* SECTIONS */
         .section-title {
             font-weight: bold;
@@ -116,6 +148,7 @@
             margin-bottom: 5px;
         }
 
+        /* Bordered table untuk isi asesmen (beda dengan patient-table header) */
         .bordered-table,
         .bordered-table th,
         .bordered-table td {
@@ -125,6 +158,13 @@
         .bordered-table th {
             background-color: #f2f2f2;
             text-align: left;
+            padding: 3px 4px;
+            /* Kembalikan padding khusus tabel body */
+        }
+
+        /* Override padding untuk bordered-table td agar sesuai style lama */
+        .bordered-table td {
+            padding: 3px 4px;
         }
 
         .text-bold {
@@ -161,7 +201,14 @@
         $kepAnak = $asesmen->rmeAsesmenKepAnak ?? null;
         $fisik = $asesmen->rmeAsesmenKepAnakFisik ?? null;
         $pasien = $data['dataMedis']->pasien ?? null;
+
+        // Logika Logo disamakan dengan Medis (menggunakan path jika ada, atau fallback ke data)
         $logoBase64 = $data['logoBase64'] ?? null;
+        if (!$logoBase64) {
+            $logoPath = public_path('assets/img/Logo-RSUD-Langsa-1.png');
+            $logoData = @file_get_contents($logoPath);
+            $logoBase64 = $logoData ? 'data:image/png;base64,' . base64_encode($logoData) : null;
+        }
 
         // Helper untuk menampilkan Checkbox
         function checkbox($val)
@@ -170,8 +217,7 @@
         }
     @endphp
 
-    {{-- KOP SURAT --}}
-    {{-- KOP SURAT --}}
+    {{-- KOP SURAT (Struktur Persis Medis) --}}
     <table class="header-table">
         <tr>
             <td class="td-left">
@@ -205,20 +251,21 @@
         </tr>
     </table>
 
-    {{-- IDENTITAS PASIEN --}}
-    <table class="bordered-table">
+    {{-- IDENTITAS PASIEN (Menggunakan class 'patient-table' dan struktur Medis: Tgl Lahir format 'd M Y' & Kolom Umur) --}}
+    <table class="patient-table">
         <tr>
-            <th width="15%">No. RM</th>
-            <td width="35%">{{ $pasien->kd_pasien ?? '-' }}</td>
-            <th width="15%">Tgl. Lahir</th>
-            <td width="35%">
-                {{ $pasien->tgl_lahir ? \Carbon\Carbon::parse($pasien->tgl_lahir)->format('d-m-Y') : '-' }}</td>
+            <th>No. RM</th>
+            <td>{{ $pasien->kd_pasien ?? '-' }}</td>
+            <th>Tgl. Lahir</th>
+            <td>
+                {{ $pasien->tgl_lahir ? \Carbon\Carbon::parse($pasien->tgl_lahir)->format('d M Y') : '-' }}
+            </td>
         </tr>
         <tr>
-            <th>Nama</th>
+            <th>Nama Pasien</th>
             <td>{{ $pasien->nama ?? '-' }}</td>
-            <th>Jenis Kelamin</th>
-            <td>{{ ($pasien->jenis_kelamin ?? '') == 'L' ? 'Laki-laki' : 'Perempuan' }}</td>
+            <th>Umur</th>
+            <td>{{ $pasien->umur ?? '-' }} Tahun</td>
         </tr>
     </table>
 
