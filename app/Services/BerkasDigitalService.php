@@ -40,6 +40,8 @@ use App\Models\RmeAsesmenGinekologikPemeriksaanFisik;
 use App\Models\RmeAsesmenGinekologikEkstremitasGinekologik;
 use App\Models\RmeAsesmenGinekologikPemeriksaanDischarge;
 use App\Models\RmeAsesmenGinekologikDiagnosisImplementasi;
+use App\Models\RmeAsesmenGeriatri;
+use App\Models\RmeAsesmenGeriatriRencanaPulang;
 use App\Models\RmeAsesmenPsikiatri;
 use App\Models\RmeAsesmenPsikiatriDtl;
 use Illuminate\Support\Facades\DB;
@@ -1379,6 +1381,70 @@ class BerkasDigitalService
             'rmeAsesmenGinekologikPemeriksaanDischarge',
             'rmeAsesmenGinekologikDiagnosisImplementasi',
             'satsetPrognosis'
+        );
+    }
+
+    /**
+     * Get Asesmen Geriatri (Rawat Inap) data untuk ditampilkan di berkas digital
+     * Menyusun variabel yang diperlukan oleh blade print asesmen-geriatri
+     */
+    public function getAsesmenGeriatriData($dataMedis)
+    {
+        $tglMasuk = isset($dataMedis->tgl_transaksi) ? $dataMedis->tgl_transaksi : $dataMedis->tgl_masuk;
+
+        $asesmen = RmeAsesmen::with(['user'])
+            ->where('kd_pasien', $dataMedis->kd_pasien)
+            ->where('kd_unit', $dataMedis->kd_unit)
+            ->whereDate('tgl_masuk', date('Y-m-d', strtotime($tglMasuk)))
+            ->where('urut_masuk', $dataMedis->urut_masuk)
+            ->where('kategori', 1)
+            ->where('sub_kategori', 12)
+            ->orderBy('waktu_asesmen', 'desc')
+            ->first();
+
+        if (!$asesmen) {
+            return null;
+        }
+
+        $asesmenGeriatri = RmeAsesmenGeriatri::where('id_asesmen', $asesmen->id)->first();
+        if (!$asesmenGeriatri) {
+            return null;
+        }
+
+        $pemeriksaanFisik = RmeAsesmenPemeriksaanFisik::with('itemFisik')
+            ->where('id_asesmen', $asesmen->id)
+            ->get()
+            ->keyBy('id_item_fisik');
+
+        $alergiPasien = RmeAlergiPasien::where('kd_pasien', $dataMedis->kd_pasien)->get();
+        $rencanaPulang = RmeAsesmenGeriatriRencanaPulang::where('id_asesmen', $asesmen->id)->first();
+        $itemFisik = MrItemFisik::orderby('urut')->get();
+
+        $diagnosisBanding = json_decode($asesmenGeriatri->diagnosis_banding ?? '[]', true);
+        $diagnosisKerja = json_decode($asesmenGeriatri->diagnosis_kerja ?? '[]', true);
+        $adl = json_decode($asesmenGeriatri->adl ?? '[]', true);
+        $kognitif = json_decode($asesmenGeriatri->kognitif ?? '[]', true);
+        $depresi = json_decode($asesmenGeriatri->depresi ?? '[]', true);
+        $inkontinensia = json_decode($asesmenGeriatri->inkontinensia ?? '[]', true);
+        $insomnia = json_decode($asesmenGeriatri->insomnia ?? '[]', true);
+        $kategoriImt = json_decode($asesmenGeriatri->kategori_imt ?? '[]', true);
+
+        return compact(
+            'asesmen',
+            'asesmenGeriatri',
+            'dataMedis',
+            'pemeriksaanFisik',
+            'itemFisik',
+            'rencanaPulang',
+            'alergiPasien',
+            'diagnosisBanding',
+            'diagnosisKerja',
+            'adl',
+            'kognitif',
+            'depresi',
+            'inkontinensia',
+            'insomnia',
+            'kategoriImt'
         );
     }
 

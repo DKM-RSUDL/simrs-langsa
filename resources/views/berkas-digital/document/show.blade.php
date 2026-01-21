@@ -169,6 +169,14 @@
             @else
                 <p>Data asesmen psikiatri tidak ditemukan untuk kunjungan ini.</p>
             @endif
+
+            @if ($asesmenGeriatriData)
+                @include(
+                    'unit-pelayanan.rawat-inap.pelayanan.asesmen-geriatri.print',
+                    $asesmenGeriatriData)
+            @else
+                <p>Data asesmen geriatri tidak ditemukan untuk kunjungan ini.</p>
+            @endif
         </div>
     </x-content-card>
     <x-content-card>

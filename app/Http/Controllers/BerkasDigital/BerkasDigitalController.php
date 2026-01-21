@@ -471,6 +471,9 @@ class BerkasDigitalController extends Controller
             $alergiPasienPsikiatri = null;
         }
 
+        // Ambil data Asesmen Geriatri (Rawat Inap)
+        $asesmenGeriatriData = $this->berkasDigitalService->getAsesmenGeriatriData($dataMedis);
+
         return view('berkas-digital.document.show', compact(
             'listDokumen',
             'dataMedis',
@@ -577,7 +580,9 @@ class BerkasDigitalController extends Controller
             'asesmenPsikiatri',
             'asesmenPsikiatriMain',
             'asesmenPsikiatriDtl',
-            'alergiPasienPsikiatri'
+            'alergiPasienPsikiatri',
+            // asesmen geriatri
+            'asesmenGeriatriData'
         ));
     }
 
