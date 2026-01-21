@@ -474,6 +474,23 @@ class BerkasDigitalController extends Controller
         // Ambil data Asesmen Geriatri (Rawat Inap)
         $asesmenGeriatriData = $this->berkasDigitalService->getAsesmenGeriatriData($dataMedis);
 
+        // Ambil data Asesmen Medis Neonatologi (Rawat Inap)
+        $asesmenMedisNeonatologiData = $this->berkasDigitalService->getAsesmenMedisNeonatologiData($dataMedis);
+        if ($asesmenMedisNeonatologiData) {
+            extract($asesmenMedisNeonatologiData);
+            $asesmenMedisNeonatologi = $asesmen;
+            $rmeMasterDiagnosisMedisNeonatologi = $rmeMasterDiagnosis;
+            $rmeMasterImplementasiMedisNeonatologi = $rmeMasterImplementasi;
+            $satsetPrognosisMedisNeonatologi = $satsetPrognosis;
+            $alergiPasienMedisNeonatologi = $alergiPasien;
+        } else {
+            $asesmenMedisNeonatologi = null;
+            $rmeMasterDiagnosisMedisNeonatologi = collect([]);
+            $rmeMasterImplementasiMedisNeonatologi = collect([]);
+            $satsetPrognosisMedisNeonatologi = collect([]);
+            $alergiPasienMedisNeonatologi = collect([]);
+        }
+
         return view('berkas-digital.document.show', compact(
             'listDokumen',
             'dataMedis',
@@ -582,7 +599,13 @@ class BerkasDigitalController extends Controller
             'asesmenPsikiatriDtl',
             'alergiPasienPsikiatri',
             // asesmen geriatri
-            'asesmenGeriatriData'
+            'asesmenGeriatriData',
+            // asesmen medis neonatologi
+            'asesmenMedisNeonatologi',
+            'rmeMasterDiagnosisMedisNeonatologi',
+            'rmeMasterImplementasiMedisNeonatologi',
+            'satsetPrognosisMedisNeonatologi',
+            'alergiPasienMedisNeonatologi'
         ));
     }
 

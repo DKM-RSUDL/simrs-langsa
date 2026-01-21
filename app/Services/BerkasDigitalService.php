@@ -1484,4 +1484,48 @@ class BerkasDigitalService
             'alergiPasien'
         );
     }
+
+    /**
+     * Get Asesmen Medis Neonatologi (Rawat Inap) data untuk ditampilkan di berkas digital dokumen
+     * Menyusun variabel yang diperlukan oleh blade print asesmen-medis-neonatologi
+     */
+    public function getAsesmenMedisNeonatologiData($dataMedis)
+    {
+        // Tentukan tanggal masuk
+        $tglMasuk = isset($dataMedis->tgl_transaksi) ? $dataMedis->tgl_transaksi : $dataMedis->tgl_masuk;
+
+        // Ambil data asesmen medis neonatologi (kategori=1, sub_kategori=14)
+        $asesmen = RmeAsesmen::with([
+            'asesmenMedisNeonatologi',
+            'asesmenMedisNeonatologiFisikGeneralis',
+            'asesmenMedisNeonatologiDtl'
+        ])
+            ->where('kd_pasien', $dataMedis->kd_pasien)
+            ->whereDate('tgl_masuk', date('Y-m-d', strtotime($tglMasuk)))
+            ->where('urut_masuk', $dataMedis->urut_masuk)
+            ->where('kategori', 1)
+            ->where('sub_kategori', 14)
+            ->orderBy('waktu_asesmen', 'desc')
+            ->first();
+
+        // Jika tidak ada, return null
+        if (!$asesmen) {
+            return null;
+        }
+
+        // Ambil master data yang diperlukan untuk print asesmen medis neonatologi
+        $rmeMasterDiagnosis = RmeMasterDiagnosis::all();
+        $rmeMasterImplementasi = RmeMasterImplementasi::all();
+        $satsetPrognosis = SatsetPrognosis::all();
+        $alergiPasien = RmeAlergiPasien::where('kd_pasien', $dataMedis->kd_pasien)->get();
+
+        return compact(
+            'asesmen',
+            'dataMedis',
+            'rmeMasterDiagnosis',
+            'rmeMasterImplementasi',
+            'satsetPrognosis',
+            'alergiPasien'
+        );
+    }
 }
