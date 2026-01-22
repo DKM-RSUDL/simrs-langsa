@@ -278,6 +278,8 @@
                     <td class="col-profesi">
                         {{ $value['nama_penanggung'] }}<br>
                         <small>({{ str()->title($value['jenis_tenaga']) }})</small>
+
+                        <img src="{{ generateQrCode($value['nama_penanggung'], 100, 'svg_datauri') }}" alt="QR Petugas" style="margin-top: 10px;">
                     </td>
 
                     <td class="col-rencana">
@@ -360,6 +362,10 @@
                         @if ($value['verified'])
                             <p style="font-size: 7.5pt; font-weight: bold; color: green;">
                                 DIVERIFIKASI
+
+                                <img src="{{ generateQrCode($value['nama_verified'], 100, 'svg_datauri') }}" alt="QR Petugas" style="margin-top: 10px;">
+
+                                {{ $value['nama_verified'] }}
                             </p>
                         @else
                             <p style="font-size: 7.5pt; font-style: italic; color: #999;">

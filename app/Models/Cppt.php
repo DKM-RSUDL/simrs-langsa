@@ -91,4 +91,9 @@ class Cppt extends Model
     {
         return $this->belongsTo(User::class, 'user_penanggung', 'id');
     }
+
+    public function userVerified()
+    {
+        return $this->belongsTo(User::class, 'user_verified', 'id');
+    }
 }
