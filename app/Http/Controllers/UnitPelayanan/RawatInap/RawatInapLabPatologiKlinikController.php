@@ -698,6 +698,7 @@ class RawatInapLabPatologiKlinikController extends Controller
                 );
             }
 
+
             // Query labor dengan orWhere - ambil dari RANAP atau IGD
             $labor = SegalaOrder::where('kategori', 'LB')
                 ->where('kd_pasien', $dataMedis->kd_pasien)
@@ -723,33 +724,32 @@ class RawatInapLabPatologiKlinikController extends Controller
             // Proses setiap labor untuk mendapatkan file
             $laborFiles = [];
             foreach ($labor as $item) {
-                // Cek apakah labor ini dari IGD yang perlu mapping
-                $unitAsal = UnitAsal::where('no_transaksi_asal', $item->no_transaksi)->first();
+                $unitAsal = UnitAsal::where('no_transaksi_asal', $item->no_transaksi)
+                            ->where('kd_kasir_asal', $item->kd_kasir)
+                            ->whereIn('kd_kasir', ['03', '07', '08'])
+                            ->get();
 
-                // Cari Otoritas dengan conditional query
-                $otoritas = Otoritas::where('status', 1)
-                    ->where(function ($query) use ($item, $unitAsal) {
-                        if (!empty($unitAsal)) {
-                            // Labor dari IGD - gunakan no_transaksi RANAP (hasil mapping)
-                            $query->where('no_transaksi', $unitAsal->no_transaksi)
-                                ->where('kd_kasir', $unitAsal->kd_kasir);
-                        } else {
-                            // Labor dari RANAP langsung
-                            $query->where('no_transaksi', $item->no_transaksi);
-                        }
-                    })
-                    ->first();
+                foreach($unitAsal as $ua) {
+                    $otoritas = Otoritas::where('status', 1)
+                                    ->where('no_transaksi', $ua->no_transaksi)
+                                    ->where('kd_kasir', $ua->kd_kasir)
+                                    ->first();
 
-                // Tambahkan ke list jika ada file
-                if ($otoritas && !empty($otoritas->file)) {
-                    $laborFiles[] = [
-                        'source' => $item->kd_unit == 3 ? 'IGD' : 'RANAP',
-                        'kd_order' => $item->kd_order,
-                        'tgl_order' => $item->tgl_order,
-                        'file_url' => "https://e-rsudlangsa.id/dokumen/lab_pk/$otoritas->file"
-                    ];
+
+                    // Tambahkan ke list jika ada file
+                    if ($otoritas && !empty($otoritas->file)) {
+                        $laborFiles[] = [
+                            'source' => $item->kd_unit == 3 ? 'IGD' : 'RANAP',
+                            'kd_order' => $item->kd_order,
+                            'tgl_order' => $item->tgl_order,
+                            'file_url' => "https://e-rsudlangsa.id/dokumen/lab_pk/$otoritas->file"
+                        ];
+                    }
                 }
             }
+
+            // Atau jika ingin berdasarkan kolom spesifik (misal: ID):
+            $laborFiles = array_intersect_key($laborFiles, array_unique(array_column($laborFiles, 'file_url')));
 
             if (empty($laborFiles)) {
                 return response()->json([
