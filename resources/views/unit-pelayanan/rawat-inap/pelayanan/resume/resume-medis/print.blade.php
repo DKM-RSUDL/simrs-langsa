@@ -402,6 +402,18 @@
                 <th>Alasan Pulang</th>
                 <td>{{ tindakLanjutLabel($resume->rmeResumeDet->tindak_lanjut_code) }}</td>
             </tr>
+            <tr>
+                <th>Kondisi Saat Pulang</th>
+                <td>
+                    @if ($resume->kondisi_saat_pulang == 1)
+                        Mandiri
+                    @endif
+
+                    @if ($resume->kondisi_saat_pulang == 2)
+                        Tidak Mandiri : {{ $resume->keterangan_kondisi_pulang }}
+                    @endif
+                </td>
+            </tr>
 
             @if ($resume->rmeResumeDet->tindak_lanjut_code == 6)
                 <tr>
