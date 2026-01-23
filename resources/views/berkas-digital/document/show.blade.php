@@ -169,6 +169,27 @@
             @else
                 <p>Data asesmen psikiatri tidak ditemukan untuk kunjungan ini.</p>
             @endif
+
+            @if ($asesmenGeriatriData)
+                @include(
+                    'unit-pelayanan.rawat-inap.pelayanan.asesmen-geriatri.print',
+                    $asesmenGeriatriData)
+            @else
+                <p>Data asesmen geriatri tidak ditemukan untuk kunjungan ini.</p>
+            @endif
+
+            @if ($asesmenMedisNeonatologi)
+                @include('unit-pelayanan.rawat-inap.pelayanan.asesmen-medis-neonatologi.print', [
+                    'asesmen' => $asesmenMedisNeonatologi,
+                    'dataMedis' => $dataMedis,
+                    'rmeMasterDiagnosis' => $rmeMasterDiagnosisMedisNeonatologi,
+                    'rmeMasterImplementasi' => $rmeMasterImplementasiMedisNeonatologi,
+                    'satsetPrognosis' => $satsetPrognosisMedisNeonatologi,
+                    'alergiPasien' => $alergiPasienMedisNeonatologi,
+                ])
+            @else
+                <p>Data asesmen medis neonatologi tidak ditemukan untuk kunjungan ini.</p>
+            @endif
         </div>
     </x-content-card>
     <x-content-card>
