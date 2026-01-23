@@ -7,69 +7,120 @@
     <style>
         @page {
             size: A4;
-            margin: 10mm;
+            margin: 3mm 6mm;
         }
 
         body {
             margin: 0;
             padding: 0;
             font-family: "DejaVu Sans", sans-serif;
-            font-size: 8pt;
-            line-height: 1.2;
+            font-size: 8.5pt;
+            line-height: 1.3;
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-bottom: 5px;
         }
 
         td,
         th {
-            padding: 3px 4px;
+            padding: 3px 5px;
             vertical-align: top;
         }
 
         .header-table {
+            width: 100%;
+            border-collapse: collapse;
             background-color: #f0f0f0;
+            padding: 0;
             margin-bottom: 10px;
+        }
+
+        .td-left {
+            width: 40%;
+            text-align: left;
+            vertical-align: middle;
+        }
+
+        .td-center {
+            width: 40%;
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        .td-right {
+            width: 20%;
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        .brand-table {
+            border-collapse: collapse;
+            background-color: transparent;
         }
 
         .brand-name {
             font-weight: 700;
-            font-size: 12px;
             margin: 0;
+            font-size: 14px;
         }
 
         .brand-info {
-            font-size: 7px;
             margin: 0;
+            font-size: 7px;
         }
 
         .title-main {
-            font-size: 14px;
+            font-size: 16px;
             font-weight: bold;
             display: block;
-            text-align: center;
+            margin: 0;
         }
 
         .title-sub {
-            font-size: 12px;
+            font-size: 14px;
             font-weight: bold;
             display: block;
-            text-align: center;
-        }
-
-        .keep-together {
-            page-break-inside: avoid;
+            margin: 0;
         }
 
         .unit-box {
             background-color: #bbbbbb;
-            padding: 10px;
+            padding: 15px 0px;
+            width: 100%;
+            margin: 0 auto;
             text-align: center;
-            color: #fff;
+        }
+
+        .unit-text {
+            font-size: 18px;
             font-weight: bold;
+            color: #ffffff;
+        }
+
+        .va-middle {
+            vertical-align: middle;
+        }
+
+        .patient-table {
+            width: 100%;
+            margin-top: 15px;
+            border-collapse: collapse;
+            margin-bottom: 15px;
+        }
+
+        .patient-table th,
+        .patient-table td {
+            border: 1px solid #ccc;
+            padding: 5px 7px;
+            font-size: 9pt;
+        }
+
+        .patient-table th {
+            background-color: #f2f2f2;
+            text-align: left;
+            width: 130px;
         }
 
         .section-title {
@@ -103,6 +154,7 @@
 
 <body>
     @php
+        // Data Perinatologi
         $asesmen = $data['asesmen'];
         $peri = $asesmen->rmeAsesmenPerinatology;
         $fisik = $asesmen->rmeAsesmenPerinatologyFisik;
@@ -111,12 +163,21 @@
         $dekubitus = $asesmen->rmeAsesmenPerinatologyResikoDekubitus;
         $jenisSkala = $dekubitus->jenis_skala ?? 0;
 
+        // Logic Logo
+        $logoBase64 = $data['logoBase64'] ?? null;
+        if (!$logoBase64) {
+            $logoPath = public_path('assets/img/Logo-RSUD-Langsa-1.png');
+            $logoData = @file_get_contents($logoPath);
+            $logoBase64 = $logoData ? 'data:image/png;base64,' . base64_encode($logoData) : null;
+        }
+
         function check($val)
         {
             return $val ? '&#9745;' : '&#9744;';
         }
-        $nyeri = $asesmen->rmeAsesmenPerinatologyStatusNyeri;
 
+        // --- Mapping Data Perinatologi ---
+        $nyeri = $asesmen->rmeAsesmenPerinatologyStatusNyeri;
         $mapJenisNyeri = ['1' => 'Nyeri Akut', '2' => 'Nyeri Kronis'];
         $mapFrekuensi = ['1' => 'Jarang', '2' => 'Hilang Timbul', '3' => 'Terus Menerus'];
         $mapMenjalar = ['1' => 'Ya', '2' => 'Tidak'];
@@ -185,42 +246,49 @@
     {{-- HEADER --}}
     <table class="header-table">
         <tr>
-            <td width="40%">
-                <table style="background: transparent;">
+            <td class="td-left">
+                <table class="brand-table">
                     <tr>
-                        <td>
-                            @if ($data['logoBase64'])
-                                <img src="{{ $data['logoBase64'] }}" style="width:60px;">
+                        <td class="va-middle">
+                            @if ($logoBase64)
+                                <img src="{{ $logoBase64 }}" style="width:70px; height:auto;">
                             @endif
                         </td>
-                        <td>
+                        <td class="va-middle">
                             <p class="brand-name">RSUD Langsa</p>
                             <p class="brand-info">Jl. Jend. A. Yani No.1 Kota Langsa</p>
-                            <p class="brand-info">Telp. 0641-22051</p>
+                            <p class="brand-info">Telp. 0641-22051, email: rsulangsa@gmail.com</p>
+                            <p class="brand-info">www.rsud.langsakota.go.id</p>
                         </td>
                     </tr>
                 </table>
             </td>
-            <td width="40%" style="text-align: center; vertical-align: middle;">
+
+            <td class="td-center">
                 <span class="title-main">ASESMEN KEPERAWATAN</span>
                 <span class="title-sub">PERINATOLOGY</span>
             </td>
-            <td width="20%">
-                <div class="unit-box">RAWAT INAP</div>
+
+            <td class="td-right">
+                <div class="unit-box">
+                    <span class="unit-text" style="font-size: 14px; margin-top: 10px;">RAWAT INAP</span>
+                </div>
             </td>
         </tr>
     </table>
 
-    {{-- IDENTITAS --}}
-    <table class="bordered-table">
+    {{-- IDENTITAS PASIEN --}}
+    <table class="patient-table">
         <tr>
-            <th width="15%">No. RM</th>
-            <td width="35%">{{ $pasien->kd_pasien ?? '-' }}</td>
-            <th width="15%">Tgl. Lahir</th>
-            <td width="35%">{{ $pasien->tgl_lahir ? date('d-m-Y', strtotime($pasien->tgl_lahir)) : '-' }}</td>
+            <th>No. RM</th>
+            <td>{{ $pasien->kd_pasien ?? '-' }}</td>
+            <th>Tgl. Lahir</th>
+            <td>
+                {{ $pasien->tgl_lahir ? \Carbon\Carbon::parse($pasien->tgl_lahir)->format('d M Y') : '-' }}
+            </td>
         </tr>
         <tr>
-            <th>Nama</th>
+            <th>Nama Pasien</th>
             <td>{{ $pasien->nama ?? '-' }}</td>
             <th>Jenis Kelamin</th>
             <td>{{ ($peri->jenis_kelamin ?? '') == '0' ? 'Laki-laki' : 'Perempuan' }}</td>
