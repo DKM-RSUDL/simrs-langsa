@@ -363,6 +363,10 @@ class BerkasDigitalController extends Controller
         $asesmenOpthamology = $asesmenOpthamologyData['asesmenOpthamology'];
         $faktorpemberatOpthamology = $asesmenOpthamologyData['faktorpemberat'];
         $menjalarOpthamology = $asesmenOpthamologyData['menjalar'];
+
+        // Ambil data Asesmen Keperawatan Anak (Rawat Inap)
+        $asesmenKepAnakData = $this->berkasDigitalService->getAsesmenKepAnakData($dataMedis);
+        $asesmenKepAnak = $asesmenKepAnakData['asesmen'] ?? null;
         $frekuensinyeriOpthamology = $asesmenOpthamologyData['frekuensinyeri'];
         $kualitasnyeriOpthamology = $asesmenOpthamologyData['kualitasnyeri'];
         $faktorperinganOpthamology = $asesmenOpthamologyData['faktorperingan'];
@@ -491,6 +495,10 @@ class BerkasDigitalController extends Controller
             $alergiPasienMedisNeonatologi = collect([]);
         }
 
+        // Ambil data Asesmen Keperawatan Anak (Rawat Inap)
+        $asesmenKepAnakData = $this->berkasDigitalService->getAsesmenKepAnakData($dataMedis);
+        $asesmenKepAnak = $asesmenKepAnakData['asesmen'] ?? null;
+
         return view('berkas-digital.document.show', compact(
             'listDokumen',
             'dataMedis',
@@ -605,7 +613,8 @@ class BerkasDigitalController extends Controller
             'rmeMasterDiagnosisMedisNeonatologi',
             'rmeMasterImplementasiMedisNeonatologi',
             'satsetPrognosisMedisNeonatologi',
-            'alergiPasienMedisNeonatologi'
+            'alergiPasienMedisNeonatologi',
+            'asesmenKepAnak'
         ));
     }
 

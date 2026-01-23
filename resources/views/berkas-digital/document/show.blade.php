@@ -190,6 +190,17 @@
             @else
                 <p>Data asesmen medis neonatologi tidak ditemukan untuk kunjungan ini.</p>
             @endif
+
+            @if ($asesmenKepAnak)
+                @include('unit-pelayanan.rawat-inap.pelayanan.asesmen-anak.print', [
+                    'data' => [
+                        'asesmen' => $asesmenKepAnak,
+                        'dataMedis' => $dataMedis,
+                    ],
+                ])
+            @else
+                <p>Data asesmen keperawatan anak tidak ditemukan untuk kunjungan ini.</p>
+            @endif
         </div>
     </x-content-card>
     <x-content-card>

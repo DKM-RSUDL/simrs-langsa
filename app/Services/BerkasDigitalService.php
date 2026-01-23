@@ -1528,4 +1528,59 @@ class BerkasDigitalService
             'alergiPasien'
         );
     }
+
+    /**
+     * Get Asesmen Keperawatan Anak (Rawat Inap) data untuk ditampilkan di berkas digital dokumen
+     * Menyusun variabel yang diperlukan oleh blade print asesmen-anak
+     */
+    public function getAsesmenKepAnakData($dataMedis)
+    {
+        try {
+            $tglMasuk = isset($dataMedis->tgl_transaksi) ? $dataMedis->tgl_transaksi : $dataMedis->tgl_masuk;
+
+            $asesmen = RmeAsesmen::with([
+                'rmeAsesmenKepAnak',
+                'rmeAsesmenKepAnakFisik',
+                'rmeAsesmenKepAnakStatusNyeri',
+                'rmeAsesmenKepAnakRiwayatKesehatan',
+                'rmeAsesmenKepAnakRisikoJatuh',
+                'rmeAsesmenKepAnakResikoDekubitus',
+                'rmeAsesmenKepAnakStatusPsikologis',
+                'rmeAsesmenKepAnakSosialEkonomi',
+                'rmeAsesmenKepAnakGizi',
+                'rmeAsesmenKepAnakStatusFungsional',
+                'rmeAsesmenKepAnakRencanaPulang',
+                'rmeAsesmenKepAnakKeperawatan',
+                'pemeriksaanFisik',
+                'pemeriksaanFisik.itemFisik',
+                'user'
+            ])
+                ->where('kd_pasien', $dataMedis->kd_pasien)
+                ->whereDate('tgl_masuk', date('Y-m-d', strtotime($tglMasuk)))
+                ->where('urut_masuk', $dataMedis->urut_masuk)
+                ->where('kategori', 2)
+                ->where('sub_kategori', 7)
+                ->orderBy('waktu_asesmen', 'desc')
+                ->first();
+
+            if (!$asesmen) {
+                return $this->emptyAsesmenKepAnakData($dataMedis);
+            }
+
+            return compact('asesmen', 'dataMedis');
+        } catch (\Exception $e) {
+            return $this->emptyAsesmenKepAnakData($dataMedis);
+        }
+    }
+
+    /**
+     * Return empty data structure untuk asesmen keperawatan anak
+     */
+    private function emptyAsesmenKepAnakData($dataMedis)
+    {
+        return [
+            'asesmen' => null,
+            'dataMedis' => $dataMedis,
+        ];
+    }
 }
