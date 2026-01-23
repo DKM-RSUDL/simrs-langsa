@@ -160,6 +160,10 @@
                     <td><strong>Tanggal Lahir</strong></td>
                     <td>{{ date('d/m/Y', strtotime($resume->pasien->tgl_lahir)) }}</td>
                 </tr>
+                <tr>
+                    <td><strong>Usia</strong></td>
+                    <td>{{ hitungUmur($resume->pasien->tgl_lahir) }} Tahun</td>
+                </tr>
             </table>
         </div>
     </header>
@@ -224,9 +228,17 @@
             <tr>
                 <th>Temuan Klinik Penunjang</th>
                 <td>
-                    <p>{{ $resume->pemeriksaan_penunjang }}</p>
+                    @if (!empty($resume->pemeriksaan_penunjang))
+                        <p><strong>LABORATORIUM</strong></p>
+                        <p class="multiline">{{ $resume->pemeriksaan_penunjang }}</p>
+                        <br>
+                    @endif
+                    @if (!empty($resume->pemeriksaan_rad))
+                        <p><strong>RADIOLOGI</strong></p>
+                        <p class="multiline">{{ $resume->pemeriksaan_rad }}</p>
+                    @endif
 
-                    <ul>
+                    {{-- <ul>
                         @if (count($labor) > 0)
                             <li>
                                 <p><strong>Lab Test</strong></p>
@@ -256,7 +268,7 @@
                                 </ol>
                             </li>
                         @endif
-                    </ul>
+                    </ul> --}}
                 </td>
             </tr>
             <tr>
@@ -356,7 +368,7 @@
                 <th>Terapi Selama Dirawat</th>
                 <td>
                     @foreach ($resepRawat as $item)
-                        - {{ "$item->nama_obat $item->cara_pakai" }} <br>
+                        - {{ "$item->nama_obat $item->frekuensi" }} <br>
                     @endforeach
                 </td>
             </tr>
@@ -389,6 +401,18 @@
             <tr>
                 <th>Alasan Pulang</th>
                 <td>{{ tindakLanjutLabel($resume->rmeResumeDet->tindak_lanjut_code) }}</td>
+            </tr>
+            <tr>
+                <th>Kondisi Saat Pulang</th>
+                <td>
+                    @if ($resume->kondisi_saat_pulang == 1)
+                        Mandiri
+                    @endif
+
+                    @if ($resume->kondisi_saat_pulang == 2)
+                        Tidak Mandiri : {{ $resume->keterangan_kondisi_pulang }}
+                    @endif
+                </td>
             </tr>
 
             @if ($resume->rmeResumeDet->tindak_lanjut_code == 6)

@@ -178,7 +178,7 @@ class CpptController extends Controller
 
     private function buildCpptQueryForPrint($additionalWheres = [])
     {
-        return Cppt::with(['dtCppt', 'pemberat', 'peringan', 'kualitas', 'frekuensi', 'menjalar', 'jenis', 'userPenanggung'])
+        return Cppt::with(['dtCppt', 'pemberat', 'peringan', 'kualitas', 'frekuensi', 'menjalar', 'jenis', 'userPenanggung', 'userVerified'])
             ->select([
                 'cppt.*',
                 't.kd_pasien',
@@ -1547,6 +1547,7 @@ class CpptController extends Controller
                 'rs_rujuk_bagian' => $item->first()->rs_rujuk_bagian,
                 'verified' => $item->first()->verified,
                 'user_verified' => $item->first()->user_verified,
+                'nama_verified' => $item->first()->user_verified ? $item->first()->userVerified->viewKaryawan->gelar_depan . ' ' . $item->first()->userVerified->viewKaryawan->nama . ' ' . $item->first()->userVerified->viewKaryawan->gelar_belakang : null,
                 'tipe_cppt' => $item->first()->tipe_cppt ?? null, // Added for index
                 'kondisi' => [
                     'id_konpas' => (int) $item->first()->id_konpas,

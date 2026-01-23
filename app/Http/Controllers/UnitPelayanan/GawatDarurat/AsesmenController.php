@@ -1296,7 +1296,7 @@ class AsesmenController extends Controller
                 $triasename = 'HIJAU';
                 break;
             case '2':
-                $triaselabel = 'URGNET';
+                $triaselabel = 'URGENT';
                 $triasename = 'KUNING';
                 break;
             case '3':

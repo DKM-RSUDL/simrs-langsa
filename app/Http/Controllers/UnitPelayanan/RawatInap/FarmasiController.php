@@ -417,7 +417,16 @@ class FarmasiController extends Controller
             $dataMedis->pasien->umur = 'Tidak Diketahui';
         }
 
-        $riwayatObat = $this->getRiwayatObat($kd_pasien);
+        // get data medis
+        $asalIGD = AsalIGD::where('kd_kasir', $dataMedis->kd_kasir)->where('no_transaksi', $dataMedis->no_transaksi)->first();
+        $kunjunganIGD = null;
+
+        if (!empty($asalIGD)) {
+            $kunjunganIGD = $this->baseService->getDataMedisbyTransaksi($asalIGD->kd_kasir_asal, $asalIGD->no_transaksi_asal);
+        }
+
+        // $riwayatObat = $this->getRiwayatObat($kd_pasien);
+        $riwayatObat = $this->getRiwayatObat($dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk, $kunjunganIGD);
 
         $dokters = Dokter::where('status', 1)->get();
 

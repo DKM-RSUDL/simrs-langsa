@@ -23,6 +23,7 @@ class RMEResume extends Model
         'konpas',
         'pemeriksaan_fisik',
         'pemeriksaan_penunjang',
+        'pemeriksaan_rad',
         'diagnosis',
         'icd_10',
         'icd_9',
@@ -32,6 +33,8 @@ class RMEResume extends Model
         'alergi',
         'anjuran_diet',
         'anjuran_edukasi',
+        'kondisi_saat_pulang',
+        'keterangan_kondisi_pulang'
     ];
 
     protected $casts = [
