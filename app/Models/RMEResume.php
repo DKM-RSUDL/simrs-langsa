@@ -23,6 +23,7 @@ class RMEResume extends Model
         'konpas',
         'pemeriksaan_fisik',
         'pemeriksaan_penunjang',
+        'pemeriksaan_rad',
         'diagnosis',
         'icd_10',
         'icd_9',

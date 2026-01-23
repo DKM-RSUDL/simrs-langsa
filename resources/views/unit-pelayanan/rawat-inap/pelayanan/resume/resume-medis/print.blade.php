@@ -228,9 +228,17 @@
             <tr>
                 <th>Temuan Klinik Penunjang</th>
                 <td>
-                    <p>{{ $resume->pemeriksaan_penunjang }}</p>
+                    @if (!empty($resume->pemeriksaan_penunjang))
+                        <p><strong>LABORATORIUM</strong></p>
+                        <p class="multiline">{{ $resume->pemeriksaan_penunjang }}</p>
+                        <br>
+                    @endif
+                    @if (!empty($resume->pemeriksaan_rad))
+                        <p><strong>RADIOLOGI</strong></p>
+                        <p class="multiline">{{ $resume->pemeriksaan_rad }}</p>
+                    @endif
 
-                    <ul>
+                    {{-- <ul>
                         @if (count($labor) > 0)
                             <li>
                                 <p><strong>Lab Test</strong></p>
@@ -260,7 +268,7 @@
                                 </ol>
                             </li>
                         @endif
-                    </ul>
+                    </ul> --}}
                 </td>
             </tr>
             <tr>

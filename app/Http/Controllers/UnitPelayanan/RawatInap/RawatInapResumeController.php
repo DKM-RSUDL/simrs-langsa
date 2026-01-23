@@ -11,6 +11,7 @@ use App\Models\Kunjungan;
 use App\Models\ListTindakanPasien;
 use App\Models\MrPenyakit;
 use App\Models\Penyakit;
+use App\Models\RadHasil;
 use App\Models\RmeAsesmen;
 use App\Models\RmeAsesmenPemeriksaanFisik;
 use App\Models\RmeCatatanPemberianObat;
@@ -18,6 +19,7 @@ use App\Models\RMEResume;
 use App\Models\RmeResumeDtl;
 use App\Models\SegalaOrder;
 use App\Models\Unit;
+use App\Models\UnitAsal;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
@@ -26,6 +28,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use App\Services\AsesmenService;
 use App\Services\BaseService;
+use App\Services\RadiologyFileService;
 use Barryvdh\DomPDF\Facade\Pdf;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
@@ -33,11 +36,14 @@ class RawatInapResumeController extends Controller
 {
     protected $asesmenService;
     private $baseService;
+    private $radiologiFileService;
+
     public function __construct()
     {
         $this->middleware('can:read unit-pelayanan/rawat-inap');
         $this->asesmenService = new AsesmenService();
         $this->baseService = new BaseService();
+        $this->radiologiFileService = new RadiologyFileService();
     }
 
     public function index(Request $request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
@@ -278,6 +284,8 @@ class RawatInapResumeController extends Controller
             ->orderBy('tgl_order', 'desc')
             ->get();
 
+        $radHasil = $this->getRadHasil($dataMedis, $kunjunganIGD);
+
         // Mengambil data obat
         // $riwayatObatHariIni = $this->getRiwayatObatHariIni($dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk, $kunjunganIGD);
         $riwayatObatHariIni = $this->getRiwayatCatatanPemberianObat($dataMedis->kd_pasien, $dataMedis->kd_unit, $dataMedis->tgl_masuk, $dataMedis->urut_masuk);
@@ -320,6 +328,7 @@ class RawatInapResumeController extends Controller
                 'dataResume',
                 'dataLabor',
                 'dataRadiologi',
+                'radHasil',
                 'riwayatObatHariIni',
                 'vitalSign',
                 'kodeICD',
@@ -331,6 +340,111 @@ class RawatInapResumeController extends Controller
         );
     }
 
+    private function getRadHasil($dataMedis, $kunjunganIGD)
+    {
+        // get data trx radiologi by trx unit asal (untuk data yang berasal dari unit lain)
+            $unitAsal = UnitAsal::where('no_transaksi_asal', $dataMedis->no_transaksi)
+                ->where('kd_kasir_asal', $dataMedis->kd_kasir)
+                ->where('kd_kasir', '09')
+                ->get();
+
+            $unitAsalIgd = UnitAsal::where('no_transaksi_asal', $kunjunganIGD->no_transaksi)
+                ->where('kd_kasir_asal', $kunjunganIGD->kd_kasir)
+                ->where('kd_kasir', '10')
+                ->get();
+
+
+            // get data transaksi rad dari unit asal menggunakan Eloquent
+            $dataTransaksi = [];
+
+            // ranap
+            foreach ($unitAsal as $ua) {
+                $dataRadHasil = RadHasil::with([
+                    'produk.klas',
+                    'kunjungan.dokter'
+                ])
+                    ->whereHas('kunjungan.transaksi', function ($query) use ($ua) {
+                        $query->where('no_transaksi', $ua->no_transaksi)
+                            ->where('kd_kasir', $ua->kd_kasir);
+                    })
+                    ->where('kd_pasien', $dataMedis->kd_pasien)
+                    ->where('kd_unit', 5)
+                    ->whereDate('tgl_masuk', $dataMedis->tgl_masuk)
+                    ->get()
+                    ->map(function ($item) {
+                        $fileName = $item->file ? $this->radiologiFileService->extractFileName($item->file) : null;
+
+                        return [
+                            'kd_pasien' => $item->kd_pasien,
+                            'kd_unit' => $item->kd_unit,
+                            'tgl_transaksi' => $item->tgl_masuk,
+                            'TGL_MASUK' => $item->tgl_masuk,
+                            'urut_masuk' => $item->urut_masuk,
+                            'urut' => $item->urut,
+                            'urut_rad' => $item->urut,
+                            'kd_dokter' => $item->kunjungan->dokter->kd_dokter ?? null,
+                            'nama_dokter' => $item->kunjungan->dokter->nama_lengkap ?? null,
+                            'kd_produk' => $item->kd_test,
+                            'nama_produk' => $item->produk->deskripsi ?? null,
+                            'hasil' => $item->hasil,
+                            'kd_alat' => $item->kd_alat,
+                            'klasifikasi' => $item->produk->klas->klasifikasi ?? null,
+                            'file' => $item->file ?? null,
+                            'filename' => $fileName,
+                            'kd_unit_rad' => $item->kd_unit,
+                        ];
+                    })
+                    ->toArray();
+
+                $dataTransaksi = array_merge($dataTransaksi, $dataRadHasil);
+            }
+
+
+            // igd
+            foreach ($unitAsalIgd as $ua) {
+                $dataRadHasil = RadHasil::with([
+                    'produk.klas',
+                    'kunjungan.dokter'
+                ])
+                    ->whereHas('kunjungan.transaksi', function ($query) use ($ua) {
+                        $query->where('no_transaksi', $ua->no_transaksi)
+                            ->where('kd_kasir', $ua->kd_kasir);
+                    })
+                    ->where('kd_pasien', $dataMedis->kd_pasien)
+                    ->where('kd_unit', 5)
+                    ->whereDate('tgl_masuk', $kunjunganIGD->tgl_masuk)
+                    ->get()
+                    ->map(function ($item) {
+                        $fileName = $item->file ? $this->radiologiFileService->extractFileName($item->file) : null;
+
+                        return [
+                            'kd_pasien' => $item->kd_pasien,
+                            'kd_unit' => $item->kd_unit,
+                            'tgl_transaksi' => $item->tgl_masuk,
+                            'TGL_MASUK' => $item->tgl_masuk,
+                            'urut_masuk' => $item->urut_masuk,
+                            'urut' => $item->urut,
+                            'urut_rad' => $item->urut,
+                            'kd_dokter' => $item->kunjungan->dokter->kd_dokter ?? null,
+                            'nama_dokter' => $item->kunjungan->dokter->nama_lengkap ?? null,
+                            'kd_produk' => $item->kd_test,
+                            'nama_produk' => $item->produk->deskripsi ?? null,
+                            'hasil' => $item->hasil,
+                            'kd_alat' => $item->kd_alat,
+                            'klasifikasi' => $item->produk->klas->klasifikasi ?? null,
+                            'file' => $item->file ?? null,
+                            'filename' => $fileName,
+                            'kd_unit_rad' => $item->kd_unit,
+                        ];
+                    })
+                    ->toArray();
+
+                $dataTransaksi = array_merge($dataTransaksi, $dataRadHasil);
+            }
+
+            return $dataTransaksi;
+    }
+
     public function update(Request $request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $id)
     {
         DB::beginTransaction();
@@ -339,6 +453,7 @@ class RawatInapResumeController extends Controller
             $validator = Validator::make($request->all(), [
                 'anamnesis' => 'required|string',
                 'pemeriksaan_penunjang' => 'nullable|string',
+                'pemeriksaan_rad' => 'nullable|string',
                 'diagnosis' => 'required|json',
                 'penyakit' => 'required|json',
                 // 'icd_10' => 'required|json',
@@ -394,6 +509,7 @@ class RawatInapResumeController extends Controller
                 'anamnesis' => trim($request->anamnesis),
                 'pemeriksaan_fisik' => trim($request->pemeriksaan_fisik),
                 'pemeriksaan_penunjang' => trim($request->pemeriksaan_penunjang),
+                'pemeriksaan_rad' => trim($request->pemeriksaan_rad),
                 'diagnosis' => $newDiagnosis,
                 'icd_10' => $penyakit,
                 'icd_9' => $newIcd9,

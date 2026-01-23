@@ -131,7 +131,7 @@
                                                         <th>Pemeriksaan</th>
                                                         <th>Tgl</th>
                                                         <th>Status</th>
-                                                        <th>Hasil</th>
+                                                        {{-- <th>Hasil</th> --}}
                                                     </tr>
                                                 </thead>
                                                 <tbody>
@@ -165,7 +165,7 @@
 
                                                                     {!! $statusLabel !!}
                                                                 </td>
-                                                                <td><a href="#">Lihat Hasil</a></td>
+                                                                {{-- <td><a href="#">Lihat Hasil</a></td> --}}
                                                             </tr>
                                                         @endforeach
                                                     @endforeach
@@ -176,8 +176,21 @@
                                 </div>
 
                                 <div class="mt-3">
-                                    <strong class="fw-bold">Hasil Pemeriksaan Penunjang</strong>
+                                    <strong class="fw-bold">Hasil Pemeriksaan Laboratorium</strong>
                                     <textarea class="form-control" id="pemeriksaan_penunjang" rows="3">{{ $dataResume->pemeriksaan_penunjang ?? '' }}</textarea>
+                                </div>
+
+                                <div class="mt-3">
+                                    <strong class="fw-bold">Hasil Pemeriksaan Radiologi</strong>
+                                    <textarea class="form-control" id="pemeriksaan_rad" rows="3">
+                                        @if (!empty($dataResume->pemeriksaan_rad))
+                                            {{ $dataResume->pemeriksaan_rad }}
+                                        @else
+                                            @foreach ($radHasil as $item)
+                                                {{ $item['hasil'] }}
+                                            @endforeach
+                                        @endif
+                                    </textarea>
                                 </div>
 
                                 <div class="mt-3">
@@ -576,6 +589,7 @@
             formData.append('anamnesis', $('#anamnesis').val().trim());
             formData.append('pemeriksaan_fisik', $('#pemeriksaan_fisik').val().trim());
             formData.append('pemeriksaan_penunjang', $('#pemeriksaan_penunjang').val().trim());
+            formData.append('pemeriksaan_rad', $('#pemeriksaan_rad').val().trim());
 
 
             // Ambil diagnosis berdasarkan urutan saat ini dari diagnosis-list
@@ -738,7 +752,7 @@
         function validateForm() {
             const requiredFields = {
                 'anamnesis': 'Anamnesis',
-                'pemeriksaan_penunjang': 'Pemeriksaan Penunjang'
+                // 'pemeriksaan_penunjang': 'Pemeriksaan Penunjang'
             };
             let isValid = true;
 
