@@ -96,7 +96,7 @@
                         <label class="col-sm-3 col-form-label">Distole:</label>
                         <div class="col-sm-9">
                             <div class="input-group mb-2">
-                                <input type="number" class="form-control" name="distole" value="{{ $asesmen->asesmenKetDewasaRanap->sistole}}">
+                                <input type="number" class="form-control" name="distole" value="{{ $asesmen->asesmenKetDewasaRanap->distole}}">
                                 <span class="input-group-text">mmHg</span>
                             </div>
                         </div>
@@ -1041,7 +1041,7 @@
                             <div class="form-check">
                                 <input class="form-check-input" type="checkbox" name="mata_telinga_hidung_normal"
                                     id="mata_telinga_hidung_normal" value="normal"
-                                    {{ old('mata_telinga_hidung_normal', $asesmen->asesmenKetDewasaRanapFisik->mata_telinga_hidung_normal ?? '') == 'normal' ? 'checked' : '' }}>
+                                    {{ old('mata_telinga_hidung_normal', $asesmen->asesmen_ket_dewasa_ranap_fisik->mata_telinga_hidung_normal ?? '') == 'normal' ? 'checked' : '' }}>
                                 <label class="form-check-label fw-bold" for="mata_telinga_hidung">Normal</label>
                             </div>
                         </div>
@@ -1653,6 +1653,7 @@
                                         ? $asesmen->vital_sign
                                         : (is_string($asesmen->asesmenKetDewasaRanapFisik->vital_sign) ? json_decode($asesmen->asesmenKetDewasaRanapFisik->vital_sign, true) : []);
                                     $gcsValue = $vitalSigns['gcs'] ?? '';
+                                   
                                 }
                             @endphp
 
@@ -4869,7 +4870,10 @@
             toggleSection('alkohol_obat', '.alkohol-detail');
             toggleSection('merokok', '.merokok-detail');
 
-            // template row creators
+            
+        });
+
+        // template row creators
             function alkoholRowHTML() {
                 return `<div class="d-flex gap-2 align-items-end mb-2 consumption-row">
                         <div class="col">
@@ -4900,7 +4904,6 @@
                         </div>
                         </div>`;
             }
-        });
 
         // add/remove handlers
         document.body.addEventListener('click', function(e) {
