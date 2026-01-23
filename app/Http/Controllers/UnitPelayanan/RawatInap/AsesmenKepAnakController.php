@@ -40,6 +40,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\Services\CheckResumeService;
 use Exception;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class AsesmenKepAnakController extends Controller
 {
@@ -748,6 +749,63 @@ class AsesmenKepAnakController extends Controller
             return back()->with('error', 'Data tidak ditemukan. Detail: ' . $e->getMessage());
         } catch (Exception $e) {
             return back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
+        }
+    }
+
+    public function generatePDF($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $id)
+    {
+        try {
+            // 1. Ambil data Medis/Kunjungan (seperti di fungsi show)
+            $dataMedis = Kunjungan::with('pasien')
+                ->where('kd_unit', $kd_unit)
+                ->where('kd_pasien', $kd_pasien)
+                ->where('tgl_masuk', $tgl_masuk)
+                ->where('urut_masuk', $urut_masuk)
+                ->firstOrFail();
+
+            // 2. Ambil data Asesmen (Tanpa memanggil dataMedis di dalam 'with')
+            $asesmen = RmeAsesmen::with([
+                'user.karyawan',
+                'rmeAsesmenKepAnak',
+                'rmeAsesmenKepAnakFisik',
+                'rmeAsesmenKepAnakStatusNyeri.frekuensiRelasi',
+                'rmeAsesmenKepAnakStatusNyeri.kualitasRelasi',
+                'rmeAsesmenKepAnakStatusNyeri.menjalarRelasi',
+                'rmeAsesmenKepAnakStatusNyeri.jenisNyeriRelasi',
+                'rmeAsesmenKepAnakStatusNyeri.faktorPemberatRelasi',
+                'rmeAsesmenKepAnakStatusNyeri.faktorPeringanRelasi',
+                'rmeAsesmenKepAnakStatusNyeri.efekNyeriRelasi',
+                'rmeAsesmenKepAnakStatusNyeri',
+                'rmeAsesmenKepAnakRiwayatKesehatan',
+                'rmeAsesmenKepAnakRisikoJatuh',
+                'rmeAsesmenKepAnakResikoDekubitus',
+                'rmeAsesmenKepAnakGizi',
+                'rmeAsesmenKepAnakRencanaPulang',
+                'rmeAsesmenKepAnakKeperawatan'
+            ])->findOrFail($id);
+
+            // 3. Siapkan Logo
+            $path = public_path('assets/img/logo-rs.png');
+            $logoBase64 = null;
+            if (file_exists($path)) {
+                $type = pathinfo($path, PATHINFO_EXTENSION);
+                $logoBase64 = 'data:image/' . $type . ';base64,' . base64_encode(file_get_contents($path));
+            }
+
+            // 4. Susun data untuk dikirim ke view print
+            $data = [
+                'asesmen'   => $asesmen,
+                'dataMedis' => $dataMedis, // Data kunjungan dikirim terpisah
+                'logoBase64' => $logoBase64,
+                'tglMasuk'  => $tgl_masuk,
+            ];
+
+            $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('unit-pelayanan.rawat-inap.pelayanan.asesmen-anak.print', compact('data'))
+                ->setPaper('a4', 'portrait');
+
+            return $pdf->stream('Asesmen-Keperawatan-Anak-' . $kd_pasien . '.pdf');
+        } catch (\Exception $e) {
+            return "Terjadi Kesalahan: " . $e->getMessage();
         }
     }
 
