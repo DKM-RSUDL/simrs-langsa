@@ -463,6 +463,7 @@ class RawatInapResumeController extends Controller
                 // RmeResumeDtl
                 'tindak_lanjut_code' => 'required',
                 'tindak_lanjut_name' => 'required',
+                'kondisi_saat_pulang' => 'required',
                 'tgl_kontrol_ulang' => 'nullable|string',
                 'rs_rujuk' => 'nullable|string',
                 'rs_rujuk_bagian' => 'nullable|string',
@@ -516,6 +517,8 @@ class RawatInapResumeController extends Controller
                 'alergi' => $newAlergi,
                 'anjuran_diet' => $request->anjuran_diet,
                 'anjuran_edukasi' => $request->anjuran_edukasi,
+                'kondisi_saat_pulang' => $request->kondisi_saat_pulang,
+                'keterangan_kondisi_pulang' => $request->keterangan_kondisi_pulang,
                 // 'status' => 1,
                 'user_validasi' => Auth::id()
             ]);

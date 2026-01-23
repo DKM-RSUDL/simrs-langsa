@@ -426,10 +426,40 @@
                                                 </div>
                                             </div>
                                         </div>
-
                                     </div>
                                 </div>
 
+                                <div class="mt-3">
+                                    <strong class="fw-bold">Kondisi Saat Pulang</strong>
+
+                                    <div class="bg-light p-3 border rounded">
+                                        <div class="row">
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <a href="javascript:void(0)" id="btnMandiri"
+                                                        class="tindak-lanjut-option d-block mb-2 text-decoration-none">
+                                                        <input type="radio" id="mandiri" name="kondisi_saat_pulang"
+                                                            class="form-check-input me-2" value="1" @checked($dataResume->kondisi_saat_pulang == 1)>
+                                                        <label for="mandiri">Mandiri</label>
+                                                    </a>
+                                                </div>
+
+                                                <div class="col-md-6">
+                                                    <a href="javascript:void(0)" id="btnTidakMandiri"
+                                                        class="tindak-lanjut-option d-block mb-2 text-decoration-none">
+                                                        <input type="radio" id="tidakMandiri" name="kondisi_saat_pulang"
+                                                            class="form-check-input me-2" value="2" @checked($dataResume->kondisi_saat_pulang == 2)>
+                                                        <label for="tidakMandiri">Tidak Mandiri
+                                                            <span id="selected-kondisi-pulang-info">
+                                                                {{ !empty($dataResume->keterangan_kondisi_pulang) ? ": $dataResume->keterangan_kondisi_pulang" : '' }}
+                                                            </span>
+                                                        </label>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -448,6 +478,28 @@
             </div>
         </div>
     </div>
+
+
+    {{-- MODAL TIDAK MANDIRI --}}
+    <div class="modal fade" id="modalTidakMandiri" tabindex="-1" aria-labelledby="modalTidakMandiriLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title" id="modalTidakMandiriLabel">Kondisi Pulang Tidak Mandiri</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <label for="rs-rujuk" class="form-label">Keterangan</label>
+                <input type="text" class="form-control" id="keteranganTidakMandiri" name="keterangan_tidak_mandiri"
+                    value="{{ $dataResume->keterangan_kondisi_pulang }}">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="btnSimpanTidakMandiri">Simpan</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 
     @include('unit-pelayanan.rawat-inap.pelayanan.resume.resume-medis.components.modal-create-diagnosi')
@@ -560,6 +612,16 @@
                 return false;
             }
 
+            const kondisiPulangEl = $('input[name="kondisi_saat_pulang"]:checked');
+            if (!kondisiPulangEl.length) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Validasi Error',
+                    text: 'Mohon pilih kondisi saat pulang terlebih dahulu'
+                });
+                return false;
+            }
+
             const resume_id = '{{ $dataResume->id ?? null }}';
 
             // Deklarasi di awal script
@@ -666,6 +728,26 @@
 
             formData.append('anjuran_diet', $('#anjuran_diet').val().trim());
             formData.append('anjuran_edukasi', $('#anjuran_edukasi').val().trim());
+
+
+            // KONDISI SAAT PULANG
+            let kondisiPulangVal = kondisiPulangEl.attr('value');
+            formData.append('kondisi_saat_pulang', kondisiPulangVal);
+            let kondisiPulangKeterangan = '';
+
+            if(kondisiPulangVal == '2') {
+                kondisiPulangKeterangan = $('#keteranganTidakMandiri').val();
+                if (!kondisiPulangKeterangan) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Validasi Error',
+                        text: 'Mohon lengkapi keterangan kondisi saat pulang terlebih dahulu'
+                    });
+                    return false;
+                }
+            }
+
+            formData.append('keterangan_kondisi_pulang', kondisiPulangKeterangan);
 
             formData.append('_method', 'PUT');
 
@@ -792,5 +874,32 @@
             console.log('Radio button changed:', $(this).val());
             console.log('Code:', $(this).data('code'));
         });
+
+        $('#btnTidakMandiri').on('click', function(e) {
+            let $this = $(this);
+            // Check radio button
+            $this.find('input[type="radio"]').prop('checked', true);
+            // Tampilkan modal
+            $('#modalTidakMandiri').modal('show');
+        });
+
+        $('#btnSimpanTidakMandiri').on('click', function() {
+            let keterangan = $('#keteranganTidakMandiri').val();
+
+            if (keterangan) {
+                updateTidakMandiriDisplay(keterangan);
+                $('#modalTidakMandiri').modal('hide');
+            } else {
+                alert('Silahkan lengkapi data Keterangan Tidak Mandiri');
+            }
+        });
+
+        // Fungsi untuk update tampilan rujukan
+            function updateTidakMandiriDisplay(keterangan) {
+                // Update span di modal utama
+                $('#selected-kondisi-pulang-info').text(`: ${keterangan}`);
+                // Check radio button
+                $('#tidakMandiri').prop('checked', true);
+            }
     </script>
 @endpush
