@@ -1,164 +1,139 @@
-<!DOCTYPE html>
-<html lang="id">
+@php
+    // This view is intended to be included inside the berkas-digital `show` page.
+    // To avoid leaking global styles we namespace all selectors under
+    // the `.surat-kematian-print` container and remove global HTML wrapper.
+@endphp
 
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Surat Keterangan Kematian</title>
-    <style>
-        @page {
-            margin: 20px 35px;
-            size: 21cm 29.7cm;
-        }
+<style>
+    /* Namespaced styles to avoid affecting parent layout */
+    .surat-kematian-print .header-table {
+        width: 100%;
+        border-collapse: collapse;
+        background-color: #f0f0f0;
+        padding: 0;
+        margin-bottom: 10px;
+    }
 
-        body {
-            font-family: Arial, sans-serif;
-            font-size: 11pt;
-            line-height: 1.2;
-            margin: 0;
-            padding: 0;
-        }
+    .surat-kematian-print .td-left {
+        width: 20%;
+        text-align: left;
+        vertical-align: middle;
+    }
 
-        /* Header */
-        .header-table {
-            width: 100%;
-            border-collapse: collapse;
-            background-color: #f0f0f0;
-            padding: 0;
-            margin-bottom: 10px;
-        }
+    .surat-kematian-print .td-center {
+        width: 60%;
+        text-align: center;
+        vertical-align: middle;
+    }
 
-        .td-left {
-            width: 20%;
-            text-align: left;
-            vertical-align: middle;
-        }
+    .surat-kematian-print .td-right {
+        width: 20%;
+        text-align: center;
+        vertical-align: middle;
+    }
 
-        .td-center {
-            width: 60%;
-            text-align: center;
-            vertical-align: middle;
-        }
+    .surat-kematian-print .brand-name {
+        font-weight: 700;
+        margin: 0;
+        font-size: 12pt;
+    }
 
-        .td-right {
-            width: 20%;
-            text-align: center;
-            vertical-align: middle;
-        }
+    .surat-kematian-print .brand-info {
+        margin: 0;
+        font-size: 9pt;
+    }
 
-        .brand-name {
-            font-weight: 700;
-            margin: 0;
-            font-size: 12pt;
-        }
+    .surat-kematian-print .title {
+        font-size: 12pt;
+        font-weight: bold;
+        text-align: center;
+        margin: 5px 0 3px 0;
+    }
 
-        .brand-info {
-            margin: 0;
-            font-size: 9pt;
-        }
+    .surat-kematian-print .doc-number {
+        font-size: 10pt;
+        text-align: center;
+        margin-bottom: 5px;
+        font-weight: bold;
+    }
 
-        /* Document Title */
-        .title {
-            font-size: 12pt;
-            font-weight: bold;
-            text-align: center;
-            margin: 5px 0 3px 0;
-        }
+    .surat-kematian-print .content p {
+        text-align: justify;
+        margin: 4px 0;
+        font-size: 12pt;
+    }
 
-        .doc-number {
-            font-size: 10pt;
-            text-align: center;
-            margin-bottom: 5px;
-            font-style: bold;
-            font-weight: bold;
-        }
+    .surat-kematian-print .patient-data {
+        width: 100%;
+        margin: 5px 0 5px 50px;
+        border-collapse: collapse;
+    }
 
-        /* Content Styling */
-        .content p {
-            text-align: justify;
-            margin: 4px 0;
-            font-size: 12pt;
-        }
+    .surat-kematian-print .patient-data td {
+        padding: 3px 0;
+        vertical-align: top;
+        font-size: 12pt;
+    }
 
-        /* Patient Data Table */
-        .patient-data {
-            width: 100%;
-            margin: 5px 0 5px 50px;
-            border-collapse: collapse;
-        }
+    .surat-kematian-print .patient-data td:first-child {
+        width: 120px;
+        padding-left: 15px;
+    }
 
-        .patient-data td {
-            padding: 3px 0;
-            vertical-align: top;
-            font-size: 12pt;
-        }
+    .surat-kematian-print .patient-data td:nth-child(2) {
+        width: 10px;
+        text-align: center;
+    }
 
-        .patient-data td:first-child {
-            width: 120px;
-            padding-left: 15px;
-        }
+    .surat-kematian-print .patient-data td:nth-child(3) {
+        padding-left: 5px;
+    }
 
-        .patient-data td:nth-child(2) {
-            width: 10px;
-            text-align: center;
-        }
+    .surat-kematian-print .diagnosis-table {
+        width: 100%;
+        border-collapse: collapse;
+        border: 1px solid black;
+        margin: 15px 0;
+    }
 
-        .patient-data td:nth-child(3) {
-            padding-left: 5px;
-        }
+    .surat-kematian-print .diagnosis-table th,
+    .surat-kematian-print .diagnosis-table td {
+        border: 1px solid black;
+        padding: 3px 5px;
+        font-size: 10pt;
+        vertical-align: top;
+    }
 
-        /* Diagnosis Table */
-        .diagnosis-table {
-            width: 100%;
-            border-collapse: collapse;
-            border: 1px solid black;
-            margin: 15px 0;
-        }
+    .surat-kematian-print .diagnosis-table th {
+        background-color: #f2f2f2;
+        font-weight: bold;
+    }
 
-        .diagnosis-table th,
-        .diagnosis-table td {
-            border: 1px solid black;
-            padding: 3px 5px;
-            font-size: 10pt;
-            vertical-align: top;
-        }
+    .surat-kematian-print .signature {
+        margin-top: 15px;
+        text-align: right;
+        font-size: 10pt;
+    }
 
-        .diagnosis-table th {
-            background-color: #f2f2f2;
-            font-weight: bold;
-        }
+    .surat-kematian-print .signature p {
+        margin: 2px 0;
+    }
 
-        /* Signature Section */
-        .signature {
-            margin-top: 15px;
-            text-align: right;
-            font-size: 10pt;
-        }
+    .surat-kematian-print .signature-line {
+        margin-top: 50px;
+        border-bottom: 1px solid black;
+        width: 150px;
+        display: inline-block;
+    }
 
-        .signature p {
-            margin: 2px 0;
-        }
+    .surat-kematian-print .footer {
+        font-size: 7pt;
+        text-align: left;
+        width: 100%;
+    }
+</style>
 
-        .signature-line {
-            margin-top: 50px;
-            border-bottom: 1px solid black;
-            width: 150px;
-            display: inline-block;
-        }
-
-        /* Footer */
-        .footer {
-            font-size: 7pt;
-            text-align: left;
-            position: fixed;
-            bottom: 10px;
-            left: 10px;
-            width: 100%;
-        }
-    </style>
-</head>
-
-<body>
+<div class="surat-kematian-print">
     @php
         // Logic Logo
         $logoBase64 = null;
@@ -397,6 +372,4 @@
     <div class="footer">
         <p>NO: B.12/IRM/Rev 0/2017</p>
     </div>
-</body>
-
-</html>
+</div>
