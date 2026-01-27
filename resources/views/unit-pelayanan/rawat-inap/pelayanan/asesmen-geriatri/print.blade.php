@@ -5,7 +5,6 @@
     <meta charset="UTF-8">
     <title>Asesmen Medis Geriatri - {{ $dataMedis->pasien->nama ?? '' }}</title>
     <style>
-        /* Mengikut gaya CSS Psikiatri [cite: 545, 546, 547] */
         @page {
             size: A4;
             margin: 3mm 6mm;
@@ -35,7 +34,6 @@
             vertical-align: top;
         }
 
-        /* Header Table Psikiatri Style [cite: 551, 552, 553, 554] */
         .header-table {
             width: 100%;
             border-collapse: collapse;

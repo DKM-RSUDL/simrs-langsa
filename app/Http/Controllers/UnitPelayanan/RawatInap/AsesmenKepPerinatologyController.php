@@ -40,6 +40,7 @@ use App\Services\BaseService;
 use Illuminate\Support\Facades\Storage;
 use App\Services\CheckResumeService;
 use Exception;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class AsesmenKepPerinatologyController extends Controller
 {
@@ -763,6 +764,91 @@ class AsesmenKepPerinatologyController extends Controller
             return back()->with('error', 'Data tidak ditemukan. Detail: ' . $e->getMessage());
         } catch (Exception $e) {
             return back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
+        }
+    }
+
+    public function generatePDF($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $id)
+    {
+        try {
+            $asesmen = RmeAsesmen::with([
+                'user',
+                'pemeriksaanFisik.itemFisik',
+                'rmeAsesmenPerinatology',
+                'rmeAsesmenPerinatologyFisik',
+                'rmeAsesmenPerinatologyPemeriksaanLanjut',
+                'rmeAsesmenPerinatologyRiwayatIbu',
+                'rmeAsesmenPerinatologyStatusNyeri',
+                'rmeAsesmenPerinatologyRisikoJatuh',
+                'rmeAsesmenPerinatologyResikoDekubitus',
+                'rmeAsesmenPerinatologyGizi',
+                'rmeAsesmenPerinatologyStatusFungsional',
+                'rmeAsesmenPerinatologyRencanaPulang',
+                'rmeAsesmenKepPerinatologyKeperawatan'
+            ])->findOrFail($id);
+
+            $dataMedis = Kunjungan::with(['pasien', 'unit'])
+                ->join('transaksi as t', function ($join) {
+                    $join->on('kunjungan.kd_pasien', '=', 't.kd_pasien');
+                    $join->on('kunjungan.kd_unit', '=', 't.kd_unit');
+                    $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
+                    $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
+                })
+                ->where('kunjungan.kd_unit', $kd_unit)
+                ->where('kunjungan.kd_pasien', $kd_pasien)
+                ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
+                ->where('kunjungan.urut_masuk', $urut_masuk)
+                ->first();
+
+            if (!$dataMedis) {
+                return back()->with('error', 'Data kunjungan tidak ditemukan.');
+            }
+
+            $peri = $asesmen->rmeAsesmenPerinatology;
+
+            $imagesMap = [
+                'kaki_kiri_bayi'   => $peri->sidik_telapak_kaki_kiri,
+                'kaki_kanan_bayi'  => $peri->sidik_telapak_kaki_kanan,
+                'jari_kiri_ibu'    => $peri->sidik_jari_ibu_kiri,
+                'jari_kanan_ibu'   => $peri->sidik_jari_ibu_kanan,
+                'jari_kiri_bayi'   => $peri->sidik_jari_bayi_kiri,
+                'jari_kanan_bayi'  => $peri->sidik_jari_bayi_kanan,
+            ];
+
+            $processedImages = [];
+            foreach ($imagesMap as $key => $path) {
+                $fullPath = public_path($path);
+
+                if ($path && file_exists($fullPath)) {
+                    $fileContent = file_get_contents($fullPath);
+                    $base64 = base64_encode($fileContent);
+                    $mime = mime_content_type($fullPath);
+                    $processedImages[$key] = "data:$mime;base64,$base64";
+                } else {
+                    $processedImages[$key] = null;
+                }
+            }
+
+            $logoPath = public_path('assets/img/logo-rs.png');
+            $logoBase64 = null;
+            if (file_exists($logoPath)) {
+                $logoBase64 = 'data:image/png;base64,' . base64_encode(file_get_contents($logoPath));
+            }
+            $data = [
+                'asesmen'    => $asesmen,
+                'dataMedis'  => $dataMedis,
+                'logoBase64' => $logoBase64,
+                'images'     => $processedImages,
+                'itemFisik'  => MrItemFisik::orderBy('urut')->get(),
+            ];
+            $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView(
+                'unit-pelayanan.rawat-inap.pelayanan.asesmen-perinatology.print',
+                compact('data')
+            );
+            $pdf->setPaper('a4', 'portrait');
+
+            return $pdf->stream('Asesmen_Perinatologi_' . ($dataMedis->pasien->nama ?? 'Pasien') . '.pdf');
+        } catch (\Exception $e) {
+            return back()->with('error', 'Gagal mencetak PDF. Terjadi kesalahan sistem.');
         }
     }
 
