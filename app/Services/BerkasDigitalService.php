@@ -1653,6 +1653,64 @@ class BerkasDigitalService
     }
 
     /**
+     * Get Asesmen Awal Keperawatan Dewasa Rawat Inap data untuk ditampilkan di berkas digital dokumen
+     */
+    public function getAsesmenAwalKeperawatanDewasaData($dataMedis)
+    {
+        // Tentukan tanggal masuk
+        $tglMasuk = isset($dataMedis->tgl_transaksi) ? $dataMedis->tgl_transaksi : $dataMedis->tgl_masuk;
+
+        // Ambil data asesmen awal keperawatan rawat inap (kategori=2, sub_kategori=1)
+        $asesmen = RmeAsesmen::with([
+            'asesmenKetDewasaRanap',
+            'asesmenKetDewasaRanapRiwayatPasien',
+            'asesmenKetDewasaRanapFisik',
+            'asesmenKetDewasaRanapStatusNutrisi',
+            'asesmenKetDewasaRanapSkalaNyeri',
+            'asesmenKetDewasaRanapResikoJatuh',
+            'asesmenKetDewasaRanapPengkajianEdukasi',
+            'asesmenKetDewasaRanapDischargePlanning',
+            'asesmenKetDewasaRanapDietKhusus',
+            'asesmenKetDewasaRanapDiagnosisKeperawatan',
+            'pasien',
+            'user'
+        ])
+            ->where('kd_pasien', $dataMedis->kd_pasien)
+            ->whereDate('tgl_masuk', date('Y-m-d', strtotime($tglMasuk)))
+            ->where('urut_masuk', $dataMedis->urut_masuk)
+            ->where('kategori', 2) // Kategori Keperawatan
+            ->where('sub_kategori', 1) // Sub kategori Pengkajian Awal
+            ->orderBy('waktu_asesmen', 'desc')
+            ->first();
+
+        // Jika tidak ada, return data kosong
+        if (!$asesmen) {
+            return [
+                'asesmen' => null,
+                'dataMedis' => $dataMedis,
+                'masterData' => [
+                    'rmeMasterDiagnosis' => collect([]),
+                    'rmeMasterImplementasi' => collect([]),
+                    'satsetPrognosis' => collect([]),
+                    'alergiPasien' => collect([]),
+                    'dokter' => collect([]),
+                ]
+            ];
+        }
+
+        // Ambil master data yang diperlukan untuk print
+        $masterData = [
+            'rmeMasterDiagnosis' => RmeMasterDiagnosis::all(),
+            'rmeMasterImplementasi' => RmeMasterImplementasi::all(),
+            'satsetPrognosis' => SatsetPrognosis::all(),
+            'alergiPasien' => RmeAlergiPasien::where('kd_pasien', $dataMedis->kd_pasien)->get(),
+            'dokter' => \App\Models\Dokter::where('status', 1)->orderBy('nama_lengkap', 'asc')->get(),
+        ];
+
+        return compact('asesmen', 'dataMedis', 'masterData');
+    }
+
+    /**
      * Get Surat Kematian data untuk ditampilkan di berkas digital dokumen
      * Hanya untuk pasien yang sudah meninggal dunia
      */

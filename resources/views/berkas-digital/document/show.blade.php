@@ -213,6 +213,14 @@
                 <p>Data asesmen keperawatan perinatology tidak ditemukan untuk kunjungan ini.</p>
             @endif
 
+            @if ($asesmenAwalKeperawatanDewasa['asesmen'])
+                @include('unit-pelayanan.rawat-inap.pelayanan.asesmen-umum.print-pdf', [
+                    'data' => $asesmenAwalKeperawatanDewasa,
+                ])
+            @else
+                <p>Data asesmen awal keperawatan dewasa tidak ditemukan untuk kunjungan ini.</p>
+            @endif
+
             @if ($suratKematian)
                 @include('unit-pelayanan.rawat-inap.pelayanan.surat-kematian.print', [
                     'suratKematian' => $suratKematian,

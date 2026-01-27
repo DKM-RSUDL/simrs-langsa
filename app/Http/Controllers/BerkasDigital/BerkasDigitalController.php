@@ -503,6 +503,10 @@ class BerkasDigitalController extends Controller
         $asesmenKepPerinatologyData = $this->berkasDigitalService->getAsesmenKepPerinatologyData($dataMedis);
         $asesmenKepPerinatology = $asesmenKepPerinatologyData['asesmen'] ?? null;
 
+        // Ambil data Asesmen Awal Keperawatan Dewasa (Rawat Inap)
+        $asesmenAwalKeperawatanDewasaData = $this->berkasDigitalService->getAsesmenAwalKeperawatanDewasaData($dataMedis);
+        $asesmenAwalKeperawatanDewasa = $asesmenAwalKeperawatanDewasaData;
+
         // Ambil data Surat Kematian (hanya untuk pasien meninggal)
         $suratKematianData = $this->berkasDigitalService->getSuratKematianData($dataMedis);
         $suratKematian = $suratKematianData['suratKematian'];
@@ -624,6 +628,7 @@ class BerkasDigitalController extends Controller
             'alergiPasienMedisNeonatologi',
             'asesmenKepAnak',
             'asesmenKepPerinatology',
+            'asesmenAwalKeperawatanDewasa',
             'suratKematian'
         ));
     }
