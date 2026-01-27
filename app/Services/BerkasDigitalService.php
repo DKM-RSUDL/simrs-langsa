@@ -48,6 +48,18 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Carbon;
 use App\Services\AsesmenService;
 
+use App\Models\RmeAsesmenKepPerinatology;
+use App\Models\RmeAsesmenKepPerinatologyFisik;
+use App\Models\RmeAsesmenKepPerinatologyPemeriksaanLanjut;
+use App\Models\RmeAsesmenKepPerinatologyRiwayatIbu;
+use App\Models\RmeAsesmenKepPerinatologyStatusNyeri;
+use App\Models\RmeAsesmenKepPerinatologyRisikoJatuh;
+use App\Models\RmeAsesmenKepPerinatologyResikoDekubitus;
+use App\Models\RmeAsesmenKepPerinatologyGizi;
+use App\Models\RmeAsesmenKepPerinatologyStatusFungsional;
+use App\Models\RmeAsesmenKepPerinatologyRencanaPulang;
+use App\Models\RmeAsesmenKepPerinatologyKeperawatan;
+
 class BerkasDigitalService
 {
     private $kdUnit = 3; // Gawat Darurat
@@ -1577,6 +1589,61 @@ class BerkasDigitalService
      * Return empty data structure untuk asesmen keperawatan anak
      */
     private function emptyAsesmenKepAnakData($dataMedis)
+    {
+        return [
+            'asesmen' => null,
+            'dataMedis' => $dataMedis,
+        ];
+    }
+
+    /**
+     * Get Asesmen Keperawatan Perinatology (Rawat Inap) data untuk ditampilkan di berkas digital dokumen
+     * Menyusun variabel yang diperlukan oleh blade print asesmen-perinatology
+     */
+    public function getAsesmenKepPerinatologyData($dataMedis)
+    {
+        try {
+            $tglMasuk = isset($dataMedis->tgl_transaksi) ? $dataMedis->tgl_transaksi : $dataMedis->tgl_masuk;
+
+            $asesmen = RmeAsesmen::with([
+                'rmeAsesmenPerinatology',
+                'rmeAsesmenPerinatologyFisik',
+                'rmeAsesmenPerinatologyPemeriksaanLanjut',
+                'rmeAsesmenPerinatologyRiwayatIbu',
+                'rmeAsesmenPerinatologyStatusNyeri',
+                'rmeAsesmenPerinatologyRisikoJatuh',
+                'rmeAsesmenPerinatologyResikoDekubitus',
+                'rmeAsesmenPerinatologyGizi',
+                'rmeAsesmenPerinatologyStatusFungsional',
+                'rmeAsesmenPerinatologyRencanaPulang',
+                'rmeAsesmenKepPerinatologyKeperawatan',
+                'pemeriksaanFisik',
+                'pemeriksaanFisik.itemFisik',
+                'user'
+            ])
+                ->where('kd_unit', $dataMedis->kd_unit)
+                ->where('kd_pasien', $dataMedis->kd_pasien)
+                ->whereDate('tgl_masuk', date('Y-m-d', strtotime($tglMasuk)))
+                ->where('urut_masuk', $dataMedis->urut_masuk)
+                ->where('kategori', 2)
+                ->where('sub_kategori', 2)
+                ->orderBy('waktu_asesmen', 'desc')
+                ->first();
+
+            if (!$asesmen) {
+                return $this->emptyAsesmenKepPerinatologyData($dataMedis);
+            }
+
+            return compact('asesmen', 'dataMedis');
+        } catch (\Exception $e) {
+            return $this->emptyAsesmenKepPerinatologyData($dataMedis);
+        }
+    }
+
+    /**
+     * Return empty data structure untuk asesmen keperawatan perinatology
+     */
+    private function emptyAsesmenKepPerinatologyData($dataMedis)
     {
         return [
             'asesmen' => null,

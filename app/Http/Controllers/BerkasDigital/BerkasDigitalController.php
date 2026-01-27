@@ -499,6 +499,10 @@ class BerkasDigitalController extends Controller
         $asesmenKepAnakData = $this->berkasDigitalService->getAsesmenKepAnakData($dataMedis);
         $asesmenKepAnak = $asesmenKepAnakData['asesmen'] ?? null;
 
+        // Ambil data Asesmen Keperawatan Perinatology (Rawat Inap)
+        $asesmenKepPerinatologyData = $this->berkasDigitalService->getAsesmenKepPerinatologyData($dataMedis);
+        $asesmenKepPerinatology = $asesmenKepPerinatologyData['asesmen'] ?? null;
+
         return view('berkas-digital.document.show', compact(
             'listDokumen',
             'dataMedis',
@@ -614,7 +618,8 @@ class BerkasDigitalController extends Controller
             'rmeMasterImplementasiMedisNeonatologi',
             'satsetPrognosisMedisNeonatologi',
             'alergiPasienMedisNeonatologi',
-            'asesmenKepAnak'
+            'asesmenKepAnak',
+            'asesmenKepPerinatology'
         ));
     }
 
