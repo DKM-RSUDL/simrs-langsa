@@ -516,6 +516,11 @@ class BerkasDigitalController extends Controller
         $ewsRecords = $ewsPasienDewasaData['ewsRecords'];
         $ewsPasienDewasa = $ewsPasienDewasaData['ewsPasienDewasa'];
 
+        // Ambil data EWS Pasien Anak
+        $ewsPasienAnakData = $this->berkasDigitalService->getEWSPasienAnakData($dataMedis);
+        $ewsRecordsAnak = $ewsPasienAnakData['ewsRecords'];
+        $ewsPasienAnak = $ewsPasienAnakData['ewsPasienAnak'];
+
         return view('berkas-digital.document.show', compact(
             'listDokumen',
             'dataMedis',
@@ -636,7 +641,9 @@ class BerkasDigitalController extends Controller
             'asesmenAwalKeperawatanDewasa',
             'suratKematian',
             'ewsRecords',
-            'ewsPasienDewasa'
+            'ewsPasienDewasa',
+            'ewsRecordsAnak',
+            'ewsPasienAnak'
         ));
     }
 

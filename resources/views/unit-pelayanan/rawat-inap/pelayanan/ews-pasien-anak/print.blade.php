@@ -7,111 +7,171 @@
     <title>Early Warning System (EWS) Pasien Anak</title>
     <style>
         @page {
-            margin: 0.5cm;
-            size: A4 portrait;
-            /* Sesuai controller: landscape */
+            size: A4;
+            margin: 3mm 6mm;
         }
 
-        body {
-            font-family: 'DejaVu Sans', Arial, sans-serif;
+        .a4 {
             margin: 0;
             padding: 0;
-            font-size: 8pt;
-            line-height: 1.2;
+            box-sizing: border-box;
+            font-family: "DejaVu Sans", "Helvetica", "Arial", sans-serif !important;
+            font-size: 8.5pt;
+            width: 100%;
+            max-width: 100%;
         }
 
-        .container {
+        table {
             width: 100%;
+            border-collapse: collapse;
+        }
+
+        td,
+        th {
+            padding: 4px 6px;
+            vertical-align: top;
+        }
+
+        .header-table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: #f0f0f0;
+            padding: 0;
             position: relative;
         }
 
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 5px;
+        .td-left {
+            width: 40%;
+            text-align: left;
+            vertical-align: middle;
         }
 
-        .logo-rs {
-            display: flex;
-            align-items: center;
+        .td-center {
+            width: 40%;
+            text-align: center;
+            vertical-align: middle;
         }
 
-        .logo {
-            width: 50px;
-            height: 50px;
-            margin-right: 8px;
+        .td-right {
+            width: 20%;
+            text-align: center;
+            vertical-align: middle;
         }
 
-        .hospital-info {
-            font-size: 9pt;
+        .brand-table {
+            border-collapse: collapse;
+            background-color: transparent;
         }
 
-        .hospital-name {
-            font-size: 12pt;
+        .va-middle {
+            vertical-align: middle;
+        }
+
+        .brand-name {
+            font-weight: 700;
+            margin: 0;
+            font-size: 14px;
+        }
+
+        .brand-info {
+            margin: 0;
+            font-size: 7px;
+        }
+
+        .title-main {
+            display: block;
+            font-size: 16px;
             font-weight: bold;
             margin: 0;
         }
 
-        .hospital-address {
-            margin: 2px 0;
-        }
-
-        .patient-info {
-            border: 1px solid #000;
-            padding: 5px;
-            width: 250px;
-            font-size: 9pt;
-            position: absolute;
-            top: 0;
-            right: 0;
-        }
-
-        .patient-row {
-            display: flex;
-            margin-bottom: 4px;
-        }
-
-        .patient-label {
-            width: 80px;
-            font-weight: normal;
-        }
-
-        .patient-value {
-            flex: 1;
-        }
-
-        .border-line {
-            border-bottom: 2px solid black;
-            margin: 5px 0;
-        }
-
-        .title {
-            text-align: center;
-            font-size: 12pt;
+        .title-sub {
+            display: block;
+            font-size: 14px;
             font-weight: bold;
-            margin: 10px 0;
+            margin: 0;
         }
 
-        table.ews-table {
+        .unit-box {
+            background-color: #bbbbbb;
+            padding: 15px 0px;
+            width: 100%;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .unit-text {
+            font-size: 18px;
+            font-weight: bold;
+            color: #ffffff;
+        }
+
+        .patient-table {
+            width: 100%;
+            margin-top: 15px;
+            border-collapse: collapse;
+        }
+
+        .patient-table th,
+        .patient-table td {
+            border: 1px solid #ccc;
+            padding: 5px 7px;
+            font-size: 9pt;
+        }
+
+        .patient-table th {
+            background-color: #f2f2f2;
+            text-align: left;
+            width: 130px;
+        }
+
+        .section-title {
+            font-weight: bold;
+            font-size: 11pt;
+            padding-top: 12px;
+        }
+
+        .label {
+            font-weight: bold;
+            width: 38%;
+            padding-right: 8px;
+        }
+
+        .value {
+            border-bottom: 1px solid #000;
+            min-height: 22px;
+        }
+
+        .value.tall {
+            min-height: 32px;
+        }
+
+        .value.empty-space {
+            min-height: 60px;
+        }
+
+        .checkbox-group label {
+            margin-right: 28px;
+            display: inline-block;
+        }
+
+        /* EWS specific styles */
+        .ews-table {
             width: 100%;
             border-collapse: collapse;
             font-size: 6pt;
-            table-layout: fixed;
-            /* Memastikan kolom proporsional */
+            margin-top: 10px;
         }
 
-        table.ews-table th,
-        table.ews-table td {
+        .ews-table th,
+        .ews-table td {
             border: 1px solid #000;
             padding: 2px;
             text-align: center;
             height: 14px;
-            word-wrap: break-word;
-            /* Memastikan teks panjang terputus */
         }
 
-        table.ews-table th {
+        .ews-table th {
             background-color: #f2f2f2;
             font-weight: bold;
         }
@@ -125,21 +185,11 @@
         }
 
         .nilai-col {
-            width: 150px;
-            /* Diperlebar untuk penilaian panjang */
-            text-align: left !important;
-            padding-left: 4px !important;
+            width: 60px;
         }
 
         .skor-col {
             width: 20px;
-        }
-
-        .record-col {
-            width: 40px;
-            /* Lebar kolom record */
-            min-width: 40px;
-            /* Pastikan kolom tidak menyusut terlalu kecil */
         }
 
         .cell-green {
@@ -185,13 +235,75 @@
             background-color: #FF6347;
         }
 
-        .notes-section {
-            margin-top: 8px;
-            font-size: 6pt;
+        .intervention-page {
+            font-size: 8pt;
+            margin-top: 20px;
         }
 
-        .notes-section p {
-            margin: 2px 0;
+        .intervention-title {
+            text-align: center;
+            font-size: 14pt;
+            font-weight: bold;
+            margin: 20px 0;
+        }
+
+        .risk-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 15px;
+        }
+
+        .risk-table td {
+            border: 2px solid #000;
+            padding: 8px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 10pt;
+        }
+
+        .risk-low {
+            background-color: #90EE90;
+        }
+
+        .risk-medium {
+            background-color: #FFFF00;
+        }
+
+        .risk-high {
+            background-color: #FF6347;
+            color: white;
+        }
+
+        .avpu-explanation {
+            margin: 15px 0;
+            font-size: 9pt;
+        }
+
+        .avpu-explanation p {
+            margin: 3px 0;
+        }
+
+        .intervention-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        .intervention-table th,
+        .intervention-table td {
+            border: 1px solid #000;
+            padding: 6px;
+            font-size: 8pt;
+        }
+
+        .intervention-table th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .intervention-table td {
+            vertical-align: top;
         }
 
         .footer {
@@ -204,165 +316,97 @@
             font-size: 5pt;
         }
 
-        .page-break {
-            page-break-before: always;
-        }
-
-        /* Print-specific styles */
+        /* Print specific */
         @media print {
             .page-break {
                 page-break-before: always;
             }
         }
-
-        /* Styles untuk halaman kedua - Protocol */
-        .protocol-title {
-            text-align: center;
-            font-size: 12pt;
-            font-weight: bold;
-            margin: 20px 0;
-        }
-
-        .protocol-section {
-            margin-top: 10px;
-            margin-bottom: 20px;
-        }
-
-        .protocol-table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 7pt;
-        }
-
-        .protocol-table td {
-            border: 1px solid #000;
-            padding: 6px;
-            text-align: left;
-            vertical-align: top;
-        }
-
-        .skor-0-2 {
-            background-color: #28a745;
-            color: white;
-            font-weight: bold;
-            text-align: center;
-            width: 100px;
-        }
-
-        .skor-3-4 {
-            background-color: #ffc107;
-            color: #000;
-            font-weight: bold;
-            text-align: center;
-            width: 100px;
-        }
-
-        .skor-5-plus {
-            background-color: #dc3545;
-            color: white;
-            font-weight: bold;
-            text-align: center;
-            width: 100px;
-        }
-
-        .skor-henti {
-            background-color: #007bff;
-            color: white;
-            font-weight: bold;
-            text-align: center;
-            width: 100px;
-        }
-
-        .protocol-text {
-            font-size: 7pt;
-            line-height: 1.3;
-        }
-
-        .vital-signs-section {
-            margin-top: 15px;
-        }
-
-        .vital-signs-table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 7pt;
-        }
-
-        .vital-signs-table th,
-        .vital-signs-table td {
-            border: 1px solid #000;
-            padding: 4px;
-            text-align: center;
-        }
-
-        .vital-signs-table th {
-            background-color: #f8f9fa;
-            font-weight: bold;
-        }
-
-        .kategori-header,
-        .usia-header,
-        .nadi-header,
-        .nafas-header {
-            font-weight: bold;
-            text-align: center;
-        }
-
-        .kategori-cell {
-            font-weight: bold;
-            text-align: center;
-            width: 80px;
-        }
-
-        .data-cell {
-            text-align: center;
-        }
     </style>
 </head>
 
 <body>
-    <div class="container">
-        <div class="header">
-            <div class="logo-rs">
-                <img src="{{ public_path('assets/img/Logo-RSUD-Langsa-1.png') }}" alt="Logo RSUD Langsa" class="logo">
-                <div class="hospital-info">
-                    <p class="hospital-name">RSUD LANGSA</p>
-                    <p class="hospital-address">Jl. Jend. A. Yani, Kota Langsa</p>
-                    <p class="hospital-address">Telp: 0641-22051</p>
-                    <p class="hospital-address">Email: rsudlangsa.aceh@gmail.com</p>
-                </div>
-            </div>
-            <div class="patient-info">
-                <div class="patient-row">
-                    <span class="patient-label">No RM:</span>
-                    <span class="patient-value">{{ $dataMedis->pasien->kd_pasien ?? '-' }}</span>
-                </div>
-                <div class="patient-row">
-                    <span class="patient-label">Nama:</span>
-                    <span class="patient-value">{{ $dataMedis->pasien->nama ?? '-' }}</span>
-                </div>
-                <div class="patient-row">
-                    <span class="patient-label">Jenis Kelamin:</span>
-                    <span
-                        class="patient-value">{{ $dataMedis->pasien->jenis_kelamin == 1 ? 'Laki-laki' : ($dataMedis->pasien->jenis_kelamin == 0 ? 'Perempuan' : '-') }}</span>
-                </div>
-                <div class="patient-row">
-                    <span class="patient-label">Tanggal Lahir:</span>
-                    <span class="patient-value">
-                        {{ $dataMedis->pasien->umur ?? '-' }} Thn
-                        ({{ $dataMedis->pasien->tgl_lahir ? \Carbon\Carbon::parse($dataMedis->pasien->tgl_lahir)->format('d/m/Y') : '-' }})
-                    </span>
-                </div>
-            </div>
-        </div>
+    <div class="a4">
 
-        <div class="border-line"></div>
+        @php
+            // logo base64 (dompdf-friendly)
+            $logoPath = public_path('assets/img/Logo-RSUD-Langsa-1.png');
+            $logoType = pathinfo($logoPath, PATHINFO_EXTENSION);
+            $logoData = @file_get_contents($logoPath);
+            $logoBase64 = $logoData ? 'data:image/' . $logoType . ';base64,' . base64_encode($logoData) : null;
+        @endphp
 
-        <div class="title">
-            EARLY WARNING SYSTEM (EWS)<br>PASIEN ANAK
-        </div>
+        <table class="header-table">
+            <tr>
+                <td class="td-left">
+                    <table class="brand-table">
+                        <tr>
+                            <td class="va-middle">
+                                @if ($logoBase64)
+                                    <img src="{{ $logoBase64 }}" alt="Logo RSUD Langsa"
+                                        style="width: 50px; height: 50px;">
+                                @endif
+                            </td>
+                            <td class="va-middle">
+                                <p class="brand-name">RSUD LANGSA</p>
+                                <p class="brand-info">Jl. Jend. A. Yani, Kota Langsa</p>
+                                <p class="brand-info">Telp: 0641-22051</p>
+                                <p class="brand-info">Email: rsudlangsa.aceh@gmail.com</p>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
 
-        @if($ewsRecords->isEmpty())
+                <td class="td-center">
+                    <span class="title-main">EARLY WARNING SYSTEM (EWS)</span>
+                    <span class="title-sub">PASIEN ANAK</span>
+                </td>
+
+                <td class="td-right">
+                    <div class="unit-box">
+                        <span class="unit-text" style="font-size: 14px; margin-top: 10px;">RAWAT INAP</span>
+                    </div>
+                </td>
+            </tr>
+        </table>
+
+        <table class="patient-table">
+            <tr>
+                <th>No. RM</th>
+                <td>{{ $dataMedis->pasien->kd_pasien ?? '-' }}</td>
+                <th>Tgl. Lahir</th>
+                <td>
+                    {{ !empty($dataMedis->pasien->tgl_lahir) ? date('d M Y', strtotime($dataMedis->pasien->tgl_lahir)) : '-' }}
+                </td>
+            </tr>
+            <tr>
+                <th>Nama Pasien</th>
+                <td>{{ $dataMedis->pasien->nama ?? '-' }}</td>
+                <th>Jenis Kelamin</th>
+                <td>
+                    @php
+                        $gender = '-';
+                        if (isset($dataMedis->pasien->jenis_kelamin)) {
+                            $gender = (string) $dataMedis->pasien->jenis_kelamin === '1' ? 'Laki-Laki' : 'Perempuan';
+                        }
+                    @endphp
+                    {{ $gender }}
+                </td>
+            </tr>
+        </table>
+
+        <br>
+
+        @php
+            // Pastikan ewsRecords diurutkan berdasarkan tanggal dan jam
+            $sortedRecords = $ewsRecords->sortBy(function ($record) {
+                return Carbon\Carbon::parse($record->tanggal)->format('Y-m-d') .
+                    ' ' .
+                    Carbon\Carbon::parse($record->jam_masuk)->format('H:i:s');
+            });
+        @endphp
+
+        @if ($sortedRecords->isEmpty())
             <p style="text-align: center; font-size: 8pt;">Tidak ada data EWS yang tersedia untuk tanggal
                 {{ \Carbon\Carbon::parse($recordDate)->format('d/m/Y') }}.</p>
         @else
@@ -371,20 +415,20 @@
                     <tr>
                         <th rowspan="3" class="parameter-col">PARAMETER</th>
                         <th colspan="2" rowspan="2">Tanggal & Jam</th>
-                        @foreach($ewsRecords as $record)
-                            <th class="record-col">{{ \Carbon\Carbon::parse($record->tanggal)->format('d/m/Y') }}</th>
+                        @foreach ($sortedRecords as $record)
+                            <th>{{ \Carbon\Carbon::parse($record->tanggal)->format('d/m/Y') }}</th>
                         @endforeach
                     </tr>
                     <tr>
-                        @foreach($ewsRecords as $record)
-                            <th class="record-col">{{ \Carbon\Carbon::parse($record->jam_masuk)->format('H:i') }}</th>
+                        @foreach ($sortedRecords as $record)
+                            <th>{{ \Carbon\Carbon::parse($record->jam_masuk)->format('H:i') }}</th>
                         @endforeach
                     </tr>
                     <tr>
                         <th class="nilai-col">Penilaian</th>
                         <th class="skor-col">Skor</th>
-                        @foreach($ewsRecords as $record)
-                            <th class="record-col"></th>
+                        @foreach ($sortedRecords as $record)
+                            <th></th>
                         @endforeach
                     </tr>
                 </thead>
@@ -394,7 +438,7 @@
                         <td rowspan="4" class="parameter-col">KEADAAN UMUM</td>
                         <td class="nilai-col">Interaksi biasa</td>
                         <td class="skor-col cell-green">0</td>
-                        @foreach($ewsRecords as $record)
+                        @foreach ($ewsRecords as $record)
                             <td class="record-col {{ $record->keadaan_umum == 0 ? 'cell-green' : '' }}">
                                 {{ $record->keadaan_umum == 0 ? '0' : '' }}</td>
                         @endforeach
@@ -402,7 +446,7 @@
                     <tr>
                         <td class="nilai-col">Somnolen</td>
                         <td class="skor-col cell-yellow">1</td>
-                        @foreach($ewsRecords as $record)
+                        @foreach ($ewsRecords as $record)
                             <td class="record-col {{ $record->keadaan_umum == 1 ? 'cell-yellow' : '' }}">
                                 {{ $record->keadaan_umum == 1 ? '1' : '' }}</td>
                         @endforeach
@@ -410,7 +454,7 @@
                     <tr>
                         <td class="nilai-col">Iritabel, tidak dapat ditenangkan</td>
                         <td class="skor-col cell-yellow">2</td>
-                        @foreach($ewsRecords as $record)
+                        @foreach ($ewsRecords as $record)
                             <td class="record-col {{ $record->keadaan_umum == 2 ? 'cell-yellow' : '' }}">
                                 {{ $record->keadaan_umum == 2 ? '2' : '' }}</td>
                         @endforeach
@@ -418,7 +462,7 @@
                     <tr>
                         <td class="nilai-col">Letargi, gelisah, penurunan respon terhadap nyeri</td>
                         <td class="skor-col cell-red">3</td>
-                        @foreach($ewsRecords as $record)
+                        @foreach ($ewsRecords as $record)
                             <td class="record-col {{ $record->keadaan_umum == 3 ? 'cell-red' : '' }}">
                                 {{ $record->keadaan_umum == 3 ? '3' : '' }}</td>
                         @endforeach
@@ -429,7 +473,7 @@
                         <td rowspan="4" class="parameter-col">KARDIOVASKULAR</td>
                         <td class="nilai-col">Tidak sianosis ATAU pengisian kapiler < 2 detik</td>
                         <td class="skor-col cell-green">0</td>
-                        @foreach($ewsRecords as $record)
+                        @foreach ($ewsRecords as $record)
                             <td class="record-col {{ $record->kardiovaskular == 0 ? 'cell-green' : '' }}">
                                 {{ $record->kardiovaskular == 0 ? '0' : '' }}</td>
                         @endforeach
@@ -437,25 +481,27 @@
                     <tr>
                         <td class="nilai-col">Tampak pucat ATAU pengisian kapiler 2 detik</td>
                         <td class="skor-col cell-yellow">1</td>
-                        @foreach($ewsRecords as $record)
+                        @foreach ($ewsRecords as $record)
                             <td class="record-col {{ $record->kardiovaskular == 1 ? 'cell-yellow' : '' }}">
                                 {{ $record->kardiovaskular == 1 ? '1' : '' }}</td>
                         @endforeach
                     </tr>
                     <tr>
-                        <td class="nilai-col">Tampak sianotik ATAU pengisian kapiler >2 detik ATAU Takikardi >20 × di atas
+                        <td class="nilai-col">Tampak sianotik ATAU pengisian kapiler >2 detik ATAU Takikardi >20 × di
+                            atas
                             parameter HR sesuai usia/menit</td>
                         <td class="skor-col cell-yellow">2</td>
-                        @foreach($ewsRecords as $record)
+                        @foreach ($ewsRecords as $record)
                             <td class="record-col {{ $record->kardiovaskular == 2 ? 'cell-yellow' : '' }}">
                                 {{ $record->kardiovaskular == 2 ? '2' : '' }}</td>
                         @endforeach
                     </tr>
                     <tr>
-                        <td class="nilai-col">Sianotik dan motlet, ATAU pengisian kapiler >5 detik, ATAU Takikardi >30x di
+                        <td class="nilai-col">Sianotik dan motlet, ATAU pengisian kapiler >5 detik, ATAU Takikardi >30x
+                            di
                             atas parameter HR sesuai usia/menit ATAU Bradikardia sesuai usia</td>
                         <td class="skor-col cell-red">3</td>
-                        @foreach($ewsRecords as $record)
+                        @foreach ($ewsRecords as $record)
                             <td class="record-col {{ $record->kardiovaskular == 3 ? 'cell-red' : '' }}">
                                 {{ $record->kardiovaskular == 3 ? '3' : '' }}</td>
                         @endforeach
@@ -466,35 +512,39 @@
                         <td rowspan="4" class="parameter-col">RESPIRASI</td>
                         <td class="nilai-col">Respirasi dalam parameter normal, tidak terdapat retraksi</td>
                         <td class="skor-col cell-green">0</td>
-                        @foreach($ewsRecords as $record)
+                        @foreach ($ewsRecords as $record)
                             <td class="record-col {{ $record->respirasi == 0 ? 'cell-green' : '' }}">
                                 {{ $record->respirasi == 0 ? '0' : '' }}</td>
                         @endforeach
                     </tr>
                     <tr>
-                        <td class="nilai-col">Takipnea >10x di atas parameter RR sesuai usia/menit, ATAU Menggunakan otot
+                        <td class="nilai-col">Takipnea >10x di atas parameter RR sesuai usia/menit, ATAU Menggunakan
+                            otot
                             alat bantu napas, ATAU menggunakan FiO2 lebih dari 30%</td>
                         <td class="skor-col cell-yellow">1</td>
-                        @foreach($ewsRecords as $record)
+                        @foreach ($ewsRecords as $record)
                             <td class="record-col {{ $record->respirasi == 1 ? 'cell-yellow' : '' }}">
                                 {{ $record->respirasi == 1 ? '1' : '' }}</td>
                         @endforeach
                     </tr>
                     <tr>
-                        <td class="nilai-col">Takipnea >20x di atas parameter RR sesuai usia/menit, ATAU Ada retraksi, ATAU
+                        <td class="nilai-col">Takipnea >20x di atas parameter RR sesuai usia/menit, ATAU Ada retraksi,
+                            ATAU
                             menggunakan FiO2 lebih dari 40%</td>
                         <td class="skor-col cell-yellow">2</td>
-                        @foreach($ewsRecords as $record)
+                        @foreach ($ewsRecords as $record)
                             <td class="record-col {{ $record->respirasi == 2 ? 'cell-yellow' : '' }}">
                                 {{ $record->respirasi == 2 ? '2' : '' }}</td>
                         @endforeach
                     </tr>
                     <tr>
-                        <td class="nilai-col">Laju respirasi >30x di atas parameter normal ATAU Bradipneu di mana frekuensi
-                            nafas lebih rendah 5 atau lebih, sesuai usia, disertai dengan retraksi berat ATAU menggunakan
+                        <td class="nilai-col">Laju respirasi >30x di atas parameter normal ATAU Bradipneu di mana
+                            frekuensi
+                            nafas lebih rendah 5 atau lebih, sesuai usia, disertai dengan retraksi berat ATAU
+                            menggunakan
                             FiO2 lebih dari 50% (NRM 8 liter/menit)</td>
                         <td class="skor-col cell-red">3</td>
-                        @foreach($ewsRecords as $record)
+                        @foreach ($ewsRecords as $record)
                             <td class="record-col {{ $record->respirasi == 3 ? 'cell-red' : '' }}">
                                 {{ $record->respirasi == 3 ? '3' : '' }}</td>
                         @endforeach
@@ -504,8 +554,8 @@
                     <tr>
                         <td colspan="2" style="text-align: center; font-weight: bold;">TOTAL SKOR</td>
                         <td class="skor-col"></td>
-                        @foreach($ewsRecords as $record)
-                            <td class="record-col" style="font-weight: bold;">{{ $record->total_skor ?? '-' }}</td>
+                        @foreach ($ewsRecords as $record)
+                            <td style="font-weight: bold;">{{ $record->total_skor ?? '-' }}</td>
                         @endforeach
                     </tr>
                 </tbody>
@@ -524,26 +574,34 @@
                 if ($totalSkor >= 5) {
                     $kategoriHasil = 'Skor ≥ 5: PERUBAHAN SIGNIFIKAN';
                     $classHasil = 'hasil-high';
-                    $keteranganDetail = 'Ada perubahan yang signifikan, lakukan resusitasi, monitoring secara kontinyu, aktivasi code blue kegawatan medis, respon Tim Medis Emergency (TME) segera, maksimal 10 menit, informasikan dan konsultasikan ke DPJP.';
+                    $keteranganDetail =
+                        'Ada perubahan yang signifikan, lakukan resusitasi, monitoring secara kontinyu, aktivasi code blue kegawatan medis, respon Tim Medis Emergency (TME) segera, maksimal 10 menit, informasikan dan konsultasikan ke DPJP.';
                 } elseif ($totalSkor >= 3) {
                     $kategoriHasil = 'Skor 3-4 atau Skor 3 pada Satu Parameter: PENURUNAN KONDISI';
                     $classHasil = 'hasil-medium';
-                    $keteranganDetail = 'Ada peningkatan kondisi pasien, assessment oleh dokter jaga bangsal. Lakukan evaluasi ulang setiap 2 jam atau lebih cepat, konsultasi ke DPJP, lakukan terapi sesuai instruksi, jika diperlukan dipindahkan ke area dengan monitoring yang sesuai.';
+                    $keteranganDetail =
+                        'Ada peningkatan kondisi pasien, assessment oleh dokter jaga bangsal. Lakukan evaluasi ulang setiap 2 jam atau lebih cepat, konsultasi ke DPJP, lakukan terapi sesuai instruksi, jika diperlukan dipindahkan ke area dengan monitoring yang sesuai.';
                 } else {
                     $kategoriHasil = 'Skor 0-2: PASIEN STABIL';
                     $classHasil = 'hasil-low';
-                    $keteranganDetail = 'Pasien dalam keadaan stabil, jika skor 0 lakukan evaluasi secara rutin tiap 8 jam, jika skor naik 1 atau 2, lakukan evaluasi setiap 4 jam, jika diperlukan assessment oleh dokter jaga bangsal.';
+                    $keteranganDetail =
+                        'Pasien dalam keadaan stabil, jika skor 0 lakukan evaluasi secara rutin tiap 8 jam, jika skor naik 1 atau 2, lakukan evaluasi setiap 4 jam, jika diperlukan assessment oleh dokter jaga bangsal.';
                 }
 
                 // Cek apakah ada parameter dengan skor 3 (kondisi khusus)
                 $hasParameterSkor3 = false;
                 if ($latestRecord) {
-                    if ($latestRecord->keadaan_umum == 3 || $latestRecord->kardiovaskular == 3 || $latestRecord->respirasi == 3) {
+                    if (
+                        $latestRecord->keadaan_umum == 3 ||
+                        $latestRecord->kardiovaskular == 3 ||
+                        $latestRecord->respirasi == 3
+                    ) {
                         $hasParameterSkor3 = true;
                         if ($totalSkor < 5) {
                             $kategoriHasil = 'Skor 3-4 atau Skor 3 pada Satu Parameter: PENURUNAN KONDISI';
                             $classHasil = 'hasil-medium';
-                            $keteranganDetail = 'Ada peningkatan kondisi pasien, assessment oleh dokter jaga bangsal. Lakukan evaluasi ulang setiap 2 jam atau lebih cepat, konsultasi ke DPJP, lakukan terapi sesuai instruksi, jika diperlukan dipindahkan ke area dengan monitoring yang sesuai.';
+                            $keteranganDetail =
+                                'Ada peningkatan kondisi pasien, assessment oleh dokter jaga bangsal. Lakukan evaluasi ulang setiap 2 jam atau lebih cepat, konsultasi ke DPJP, lakukan terapi sesuai instruksi, jika diperlukan dipindahkan ke area dengan monitoring yang sesuai.';
                         }
                     }
                 }
@@ -562,9 +620,14 @@
         @endif
 
         <div class="footer">
-            <p style="font-size: 12px;">Nama dan Paraf:</p>
-            <p style="margin-top: 30px; font-size: 12px;">{{ str()->title($eWSPasienAnak->userCreate->name ?? '-') }}</p>
-            <p class="small-text" style="font-size: 12px;">Dicetak pada: {{ now()->format('d/m/Y H:i:s') }}</p>
+            <p style="font-size: 12px">Nama dan Paraf:</p>
+            <p style="margin-top: 40px; font-size: 12px;">
+                {{ str()->title($ewsPasienAnak->userCreate->name ?? '-') }}</p>
+            <p class="small-text" style="font-size: 12px">Dicetak pada: {{ now()->format('d/m/Y H:i:s') }}
+            </p>
+            @if (isset($ewsPasienAnak) && $ewsPasienAnak->userCreate && $ewsPasienAnak->userCreate->jabatan)
+                <p>{{ $ewsPasienAnak->userCreate->jabatan }}</p>
+            @endif
         </div>
 
         <!-- Halaman Kedua: Protokol dan Tabel Vital Signs -->
