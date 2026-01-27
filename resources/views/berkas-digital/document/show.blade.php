@@ -212,6 +212,15 @@
             @else
                 <p>Data asesmen keperawatan perinatology tidak ditemukan untuk kunjungan ini.</p>
             @endif
+
+            @if ($suratKematian)
+                @include('unit-pelayanan.rawat-inap.pelayanan.surat-kematian.print', [
+                    'suratKematian' => $suratKematian,
+                    'dataMedis' => $dataMedis,
+                ])
+            @else
+                <p>Data surat kematian tidak ditemukan untuk kunjungan ini.</p>
+            @endif
         </div>
     </x-content-card>
     <x-content-card>

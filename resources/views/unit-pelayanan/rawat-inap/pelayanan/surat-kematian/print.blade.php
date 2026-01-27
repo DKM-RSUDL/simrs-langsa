@@ -20,45 +20,41 @@
         }
 
         /* Header */
-        .header-container {
-            position: relative;
+        .header-table {
             width: 100%;
-            height: 105px;
-            border-bottom: 1.5px solid black;
-            margin-bottom: 12px;
+            border-collapse: collapse;
+            background-color: #f0f0f0;
+            padding: 0;
+            margin-bottom: 10px;
         }
 
-        .logo-container {
-            position: absolute;
-            top: 0;
-            left: 20pt;
-            width: 80px;
+        .td-left {
+            width: 20%;
+            text-align: left;
+            vertical-align: middle;
         }
 
-        .header-content {
-            margin-left: 75px;
+        .td-center {
+            width: 60%;
             text-align: center;
+            vertical-align: middle;
         }
 
-        .header-title {
+        .td-right {
+            width: 20%;
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        .brand-name {
+            font-weight: 700;
+            margin: 0;
             font-size: 12pt;
-            font-weight: bold;
-            margin: 0;
-            padding: 0;
         }
 
-        .header-subtitle {
-            font-size: 16pt;
-            font-weight: bold;
+        .brand-info {
             margin: 0;
-            padding: 0;
-        }
-
-        .header-address {
             font-size: 9pt;
-            margin: 2px;
-            padding: 0;
-            line-height: 1.0;
         }
 
         /* Document Title */
@@ -163,21 +159,39 @@
 </head>
 
 <body>
-    <!-- Header with Logo -->
-    <div class="header-container">
-        <div class="logo-container">
-            <img src="data:image/png;base64,{{ base64_encode(file_get_contents(public_path('assets/img/logo-kota-langsa.png'))) }}"
-                width="100" height="100" alt="Logo">
-        </div>
-        <div class="header-content">
-            <p class="header-title">PEMERINTAH KOTA LANGSA</p>
-            <p class="header-subtitle">RUMAH SAKIT UMUM DAERAH LANGSA</p>
-            <p class="header-address">Alamat : Jln. Jend. A. Yani No.1 Kota Langsa – Provinsi Aceh</p>
-            <p class="header-address">Telp. (0641) 21457 – 22800 (IGD) - 21009 (Farmasi) Fax. (0641) 22051</p>
-            <p class="header-address">E-mail : rsudlangsa.aceh@gmail.com, website: www.rsud.langsakota.go.id</p>
-            <p class="header-address">KOTA LANGSA</p>
-        </div>
-    </div>
+    @php
+        // Logic Logo
+        $logoBase64 = null;
+        if (!$logoBase64) {
+            $logoPath = public_path('assets/img/logo-kota-langsa.png');
+            $logoData = @file_get_contents($logoPath);
+            $logoBase64 = $logoData ? 'data:image/png;base64,' . base64_encode($logoData) : null;
+        }
+    @endphp
+
+    {{-- HEADER --}}
+    <table class="header-table">
+        <tr>
+            <td class="td-left">
+                @if ($logoBase64)
+                    <img src="{{ $logoBase64 }}" width="80" height="80" alt="Logo">
+                @endif
+            </td>
+
+            <td class="td-center">
+                <p class="brand-name">PEMERINTAH KOTA LANGSA</p>
+                <p class="brand-name">RUMAH SAKIT UMUM DAERAH LANGSA</p>
+                <p class="brand-info">Alamat : Jln. Jend. A. Yani No.1 Kota Langsa – Provinsi Aceh</p>
+                <p class="brand-info">Telp. (0641) 21457 – 22800 (IGD) - 21009 (Farmasi) Fax. (0641) 22051</p>
+                <p class="brand-info">E-mail : rsudlangsa.aceh@gmail.com, website: www.rsud.langsakota.go.id</p>
+                <p class="brand-info">KOTA LANGSA</p>
+            </td>
+
+            <td class="td-right">
+                {{-- Kosongkan atau tambah QR jika perlu --}}
+            </td>
+        </tr>
+    </table>
 
     <!-- Document Title -->
     <div class="title">SURAT KETERANGAN KEDOKTERAN<br>TENTANG SEBAB KEMATIAN</div>

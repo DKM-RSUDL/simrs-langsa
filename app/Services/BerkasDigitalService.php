@@ -44,6 +44,7 @@ use App\Models\RmeAsesmenGeriatri;
 use App\Models\RmeAsesmenGeriatriRencanaPulang;
 use App\Models\RmeAsesmenPsikiatri;
 use App\Models\RmeAsesmenPsikiatriDtl;
+use App\Models\RmeSuratKematian;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Carbon;
 use App\Services\AsesmenService;
@@ -1649,5 +1650,22 @@ class BerkasDigitalService
             'asesmen' => null,
             'dataMedis' => $dataMedis,
         ];
+    }
+
+    /**
+     * Get Surat Kematian data untuk ditampilkan di berkas digital dokumen
+     * Hanya untuk pasien yang sudah meninggal dunia
+     */
+    public function getSuratKematianData($dataMedis)
+    {
+        // Ambil data surat kematian berdasarkan kunjungan
+        $suratKematian = RmeSuratKematian::where('kd_pasien', $dataMedis->kd_pasien)
+            ->where('kd_unit', $dataMedis->kd_unit)
+            ->where('tgl_masuk', $dataMedis->tgl_masuk)
+            ->where('urut_masuk', $dataMedis->urut_masuk)
+            ->with(['detailType1', 'detailType2', 'dokter'])
+            ->first();
+
+        return compact('suratKematian');
     }
 }
