@@ -28,32 +28,32 @@ use App\Models\RmeKualitasNyeri;
 use App\Models\RmeMasterDiagnosis;
 use App\Models\RmeMasterImplementasi;
 use App\Models\RmeMenjalar;
-use App\Models\RMEResume;
-use App\Models\RmeResumeDtl;
 use App\Models\SatsetPrognosis;
-use App\Models\Transaksi;
+use App\Services\AsesmenService;
+use App\Services\BaseService;
+use App\Services\CheckResumeService;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
+use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use App\Services\AsesmenService;
-use App\Services\BaseService;
-use App\Services\CheckResumeService;
-use Exception;
 
 class AsesmenKetDewasaRanapController extends Controller
 {
     protected $asesmenService;
+
     protected $checkResumeService;
+
     private $baseService;
 
     public function __construct()
     {
         $this->middleware('can:read unit-pelayanan/rawat-inap');
-        $this->asesmenService = new AsesmenService();
-        $this->checkResumeService = new CheckResumeService();
-        $this->baseService = new BaseService();
+        $this->asesmenService = new AsesmenService;
+        $this->checkResumeService = new CheckResumeService;
+        $this->baseService = new BaseService;
     }
 
     private function getDataMedis($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
@@ -82,8 +82,6 @@ class AsesmenKetDewasaRanapController extends Controller
         return $dataMedis;
     }
 
-
-
     private function getMasterData($kd_pasien)
     {
         return [
@@ -98,15 +96,16 @@ class AsesmenKetDewasaRanapController extends Controller
     private function saveDiagnosisToMaster($diagnosisList)
     {
         foreach ($diagnosisList as $diagnosa) {
-            if (!empty($diagnosa)) {
+            if (! empty($diagnosa)) {
                 RmeMasterDiagnosis::firstOrCreate(['nama_diagnosis' => $diagnosa]);
             }
         }
     }
+
     private function saveImplementasiToMaster($dataList, $column)
     {
         foreach ($dataList as $item) {
-            if (!empty($item)) {
+            if (! empty($item)) {
                 RmeMasterImplementasi::firstOrCreate([$column => $item]);
             }
         }
@@ -116,17 +115,17 @@ class AsesmenKetDewasaRanapController extends Controller
     {
         $alergiData = json_decode($request->alergis, true);
 
-        if (!empty($alergiData)) {
+        if (! empty($alergiData)) {
             RmeAlergiPasien::where('kd_pasien', $kd_pasien)->delete();
 
             foreach ($alergiData as $alergi) {
-                if (!empty($alergi['jenis_alergi']) || !empty($alergi['alergen'])) {
+                if (! empty($alergi['jenis_alergi']) || ! empty($alergi['alergen'])) {
                     RmeAlergiPasien::create([
                         'kd_pasien' => $kd_pasien,
                         'jenis_alergi' => $alergi['jenis_alergi'],
                         'nama_alergi' => $alergi['alergen'],
                         'reaksi' => $alergi['reaksi'],
-                        'tingkat_keparahan' => $alergi['tingkat_keparahan']
+                        'tingkat_keparahan' => $alergi['tingkat_keparahan'],
                     ]);
                 }
             }
@@ -156,7 +155,7 @@ class AsesmenKetDewasaRanapController extends Controller
      */
     private function formatJsonForDatabase($data)
     {
-        if (empty($data) || !is_array($data)) {
+        if (empty($data) || ! is_array($data)) {
             return null;
         }
 
@@ -182,8 +181,13 @@ class AsesmenKetDewasaRanapController extends Controller
     // helper kecil di dalam controller class
     private function ensureArray($value)
     {
-        if (is_null($value)) return [];
-        if (is_array($value)) return array_values($value);
+        if (is_null($value)) {
+            return [];
+        }
+        if (is_array($value)) {
+            return array_values($value);
+        }
+
         // jika string (mis. single value), bungkus jadi array
         return [$value];
     }
@@ -192,7 +196,7 @@ class AsesmenKetDewasaRanapController extends Controller
     {
         $dataMedis = $this->getDataMedis($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
 
-        if (!$dataMedis) {
+        if (! $dataMedis) {
             abort(404, 'Data tidak ditemukan');
         }
 
@@ -220,13 +224,15 @@ class AsesmenKetDewasaRanapController extends Controller
         try {
 
             $dataMedis = $this->baseService->getDataMedis($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
-            if (empty($dataMedis)) throw new Exception('Data kunjungan tidak ditemukan !');
+            if (empty($dataMedis)) {
+                throw new Exception('Data kunjungan tidak ditemukan !');
+            }
 
             $formatDate = date('Y-m-d', strtotime($request->tanggal));
             $formatTime = date('H:i:s', strtotime($request->jam));
 
             // 1. Buat record RmeAsesmen
-            $asesmen = new RmeAsesmen();
+            $asesmen = new RmeAsesmen;
             $asesmen->kd_pasien = $dataMedis->kd_pasien;
             $asesmen->kd_unit = $dataMedis->kd_unit;
             $asesmen->tgl_masuk = $dataMedis->tgl_masuk;
@@ -239,13 +245,13 @@ class AsesmenKetDewasaRanapController extends Controller
 
             // Data vital sign untuk disimpan
             $vitalSignData = [
-                'sistole' => $request->sistole ? (int)$request->sistole : null,
-                'diastole' => $request->distole ? (int)$request->distole : null,
-                'nadi' => $request->nadi ? (int)$request->nadi : null,
-                'respiration' => $request->nafas ? (int)$request->nafas : null,
-                'suhu' => $request->suhu ? (float)$request->suhu : null,
-                'spo2_tanpa_o2' => $request->sao2 ? (int)$request->sao2 : null,
-                'tinggi_badan' => $request->tb ? (int)$request->tb : null,
+                'sistole' => $request->sistole ? (int) $request->sistole : null,
+                'diastole' => $request->distole ? (int) $request->distole : null,
+                'nadi' => $request->nadi ? (int) $request->nadi : null,
+                'respiration' => $request->nafas ? (int) $request->nafas : null,
+                'suhu' => $request->suhu ? (float) $request->suhu : null,
+                'spo2_tanpa_o2' => $request->sao2 ? (int) $request->sao2 : null,
+                'tinggi_badan' => $request->tb ? (int) $request->tb : null,
                 'berat_badan' => $request->bb ? (int) $request->bb : null,
             ];
 
@@ -275,7 +281,7 @@ class AsesmenKetDewasaRanapController extends Controller
                 'barang_berharga_lainnya' => $request->barang_berharga_lainnya,
                 'data_umum_alat_bantu' => $request->data_umum_alat_bantu ?? [],
                 'user_create' => Auth::id(),
-                'tingkat_kesadaran' => $request->disability_kesadaran
+                'tingkat_kesadaran' => $request->disability_kesadaran,
             ]);
 
             // Simpan ke tabel RmeAsesmenKetDewasaRanapRiwayatPasien
@@ -312,7 +318,7 @@ class AsesmenKetDewasaRanapController extends Controller
                 'psikososial_aktivitas' => $request->psikososial_aktivitas,
                 'psikososial_aktivitas_lain' => $request->psikososial_aktivitas_lain,
                 'psikososial_aktivitas_lainnya2' => $request->psikososial_aktivitas_lainnya2,
-                'user_create' => Auth::id()
+                'user_create' => Auth::id(),
             ]);
 
             // Simpan ke tabel RmeAsesmenKetDewasaRanapFisik
@@ -342,7 +348,7 @@ class AsesmenKetDewasaRanapController extends Controller
                 'kesadaran' => $request->disability_kesadaran ?? [],
                 'vital_sign' => $this->formatJsonForDatabase($vitalSignData),
                 'pemeriksaan_kardiovaskular_catatan' => $request->pemeriksaan_kardiovaskular_catatan,
-                'user_create' => Auth::id()
+                'user_create' => Auth::id(),
             ]);
 
             // Simpan ke tabel RmeAsesmenKetDewasaRanapStatusNutrisi
@@ -356,7 +362,7 @@ class AsesmenKetDewasaRanapController extends Controller
                 'diagnosa_khusus' => $request->diagnosa_khusus,
                 'status_nutrisi_lainnya' => $request->status_nutrisi_lainnya,
                 'status_nutrisi_total' => $request->status_nutrisi_total,
-                'user_create' => Auth::id()
+                'user_create' => Auth::id(),
             ]);
 
             // Simpan ke tabel RmeAsesmenKetDewasaRanapSkalaNyeri
@@ -378,7 +384,7 @@ class AsesmenKetDewasaRanapController extends Controller
                 'faktor_peringan_lainnya_text' => $request->faktor_peringan_lainnya_text,
                 'efek_nyeri' => $request->efek_nyeri ?? [],
                 'efek_nyeri_lainnya_text' => $request->efek_nyeri_lainnya_text,
-                'user_create' => Auth::id()
+                'user_create' => Auth::id(),
             ]);
 
             // Simpan ke tabel RmeAsesmenKetDewasaRanapResikoJatuh
@@ -429,7 +435,7 @@ class AsesmenKetDewasaRanapController extends Controller
                 'adl_berjalan' => $request->adl_berjalan,
                 'adl_mandi' => $request->adl_mandi,
                 'adl_kesimpulan' => $request->adl_kesimpulan,
-                'user_create' => Auth::id()
+                'user_create' => Auth::id(),
             ]);
 
             // Simpan ke tabel RmeAsesmenKetDewasaRanapPengkajianEdukasi
@@ -452,7 +458,7 @@ class AsesmenKetDewasaRanapController extends Controller
                 'potensi_pembelajaran' => $request->potensi_pembelajaran ?? [],
                 'potensi_pembelajaran_lainnya' => $request->potensi_pembelajaran_lainnya,
                 'catatan_khusus' => $request->catatan_khusus,
-                'user_create' => Auth::id()
+                'user_create' => Auth::id(),
             ]);
 
             // Simpan ke tabel RmeAsesmenKetDewasaRanapDischargePlanning
@@ -469,7 +475,7 @@ class AsesmenKetDewasaRanapController extends Controller
                 'rencana_lama_perawatan' => $request->rencana_lama_perawatan,
                 'rencana_tgl_pulang' => $request->rencana_tgl_pulang,
                 'kesimpulan_planing' => $request->kesimpulan_planing,
-                'user_create' => Auth::id()
+                'user_create' => Auth::id(),
             ]);
 
             // Simpan ke tabel RmeAsesmenKetDewasaRanapDietKhusus
@@ -500,7 +506,7 @@ class AsesmenKetDewasaRanapController extends Controller
                 'dirujuk_komunitas' => $request->dirujuk_komunitas,
                 'dirujuk_jelaskan' => $request->dirujuk_jelaskan,
                 'catatan_khusus_diet' => $request->catatan_khusus_diet,
-                'user_create' => Auth::id()
+                'user_create' => Auth::id(),
             ]);
 
             // Simpan ke tabel RmeAsesmenKetDewasaRanapDiagnosisKeperawatan
@@ -524,7 +530,7 @@ class AsesmenKetDewasaRanapController extends Controller
                 'rencana_konstipasi' => $request->rencana_konstipasi ?? [],
                 'rencana_resiko_jatuh' => $request->rencana_resiko_jatuh ?? [],
                 'rencana_gangguan_integritas_kulit' => $request->rencana_gangguan_integritas_kulit ?? [],
-                'user_create' => Auth::id()
+                'user_create' => Auth::id(),
             ]);
 
             // Process diagnosis data
@@ -532,46 +538,44 @@ class AsesmenKetDewasaRanapController extends Controller
             $diagnosisKerja = $this->processJsonData($request->diagnosis_kerja);
 
             // Handle diagnosis ke master
-            if (!empty($diagnosisBanding) && is_array($diagnosisBanding)) {
+            if (! empty($diagnosisBanding) && is_array($diagnosisBanding)) {
                 $this->saveDiagnosisToMaster($diagnosisBanding);
             }
 
-            if (!empty($diagnosisKerja) && is_array($diagnosisKerja)) {
+            if (! empty($diagnosisKerja) && is_array($diagnosisKerja)) {
                 $this->saveDiagnosisToMaster($diagnosisKerja);
             }
 
             // Handle alergi
             $this->handleAlergiData($request, $kd_pasien);
 
-
             // create resume
             $resumeData = [
-                'anamnesis'             => $request->keluhan_utama,
+                'anamnesis' => $request->keluhan_utama,
 
-                'konpas'                =>
-                [
-                    'sistole'   => [
-                        'hasil' => $vitalSignData['sistole'] ?? null
+                'konpas' => [
+                    'sistole' => [
+                        'hasil' => $vitalSignData['sistole'] ?? null,
                     ],
-                    'distole'   => [
-                        'hasil' => $vitalSignData['diastole'] ?? null
+                    'distole' => [
+                        'hasil' => $vitalSignData['diastole'] ?? null,
                     ],
-                    'respiration_rate'   => [
-                        'hasil' => $vitalSignData['respiration'] ?? null
+                    'respiration_rate' => [
+                        'hasil' => $vitalSignData['respiration'] ?? null,
                     ],
-                    'suhu'   => [
-                        'hasil' => $vitalSignData['suhu'] ?? null
+                    'suhu' => [
+                        'hasil' => $vitalSignData['suhu'] ?? null,
                     ],
-                    'nadi'   => [
-                        'hasil' => $vitalSignData['nadi'] ?? null
+                    'nadi' => [
+                        'hasil' => $vitalSignData['nadi'] ?? null,
                     ],
-                    'tinggi_badan'   => [
-                        'hasil' => $vitalSignData['tinggi_badan'] ?? null
+                    'tinggi_badan' => [
+                        'hasil' => $vitalSignData['tinggi_badan'] ?? null,
                     ],
-                    'berat_badan'   => [
-                        'hasil' => $vitalSignData['berat_badan'] ?? null
-                    ]
-                ]
+                    'berat_badan' => [
+                        'hasil' => $vitalSignData['berat_badan'] ?? null,
+                    ],
+                ],
             ];
 
             $this->baseService->updateResumeMedis($dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk, $resumeData);
@@ -583,18 +587,19 @@ class AsesmenKetDewasaRanapController extends Controller
                     'kd_unit' => $kd_unit,
                     'kd_pasien' => $kd_pasien,
                     'tgl_masuk' => $tgl_masuk,
-                    'urut_masuk' => $urut_masuk
+                    'urut_masuk' => $urut_masuk,
                 ])
                 ->with('success', 'Data Asesmen Awal Keperawatan Rawat Inap Dewasa');
         } catch (Exception $e) {
             DB::rollback();
+
             return back()
                 ->withInput()
-                ->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
+                ->with('error', 'Terjadi kesalahan: '.$e->getMessage());
         }
     }
 
-    public function show(Request $request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $id)
+    public function show(Request $request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $id, $print = false)
     {
         try {
             $asesmen = RmeAsesmen::with(
@@ -608,7 +613,7 @@ class AsesmenKetDewasaRanapController extends Controller
                     'asesmenKetDewasaRanapPengkajianEdukasi',
                     'asesmenKetDewasaRanapDischargePlanning',
                     'asesmenKetDewasaRanapDietKhusus',
-                    'asesmenKetDewasaRanapDiagnosisKeperawatan'
+                    'asesmenKetDewasaRanapDiagnosisKeperawatan',
                 ]
             )->findOrFail($id);
         } catch (Exception $e) {
@@ -617,22 +622,29 @@ class AsesmenKetDewasaRanapController extends Controller
 
         $dataMedis = $this->getDataMedis($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
 
-        if (!$dataMedis) {
+        if (! $dataMedis) {
             abort(404, 'Data tidak ditemukan');
         }
 
         $masterData = $this->getMasterData($kd_pasien);
 
+        $data = array_merge([
+            'kd_unit' => $kd_unit,
+            'kd_pasien' => $kd_pasien,
+            'tgl_masuk' => $tgl_masuk,
+            'urut_masuk' => $urut_masuk,
+            'dataMedis' => $dataMedis,
+            'asesmen' => $asesmen,
+            'masterData'=>$masterData
+        ]);
+
+        if ($print) {
+            return $data;
+        }
+
         return view(
             'unit-pelayanan.rawat-inap.pelayanan.asesmen-umum.show',
-            array_merge([
-                'kd_unit' => $kd_unit,
-                'kd_pasien' => $kd_pasien,
-                'tgl_masuk' => $tgl_masuk,
-                'urut_masuk' => $urut_masuk,
-                'dataMedis' => $dataMedis,
-                'asesmen' => $asesmen,
-            ], $masterData)
+            $data, $masterData
         );
     }
 
@@ -650,7 +662,7 @@ class AsesmenKetDewasaRanapController extends Controller
                     'asesmenKetDewasaRanapPengkajianEdukasi',
                     'asesmenKetDewasaRanapDischargePlanning',
                     'asesmenKetDewasaRanapDietKhusus',
-                    'asesmenKetDewasaRanapDiagnosisKeperawatan'
+                    'asesmenKetDewasaRanapDiagnosisKeperawatan',
                 ]
             )->findOrFail($id);
         } catch (Exception $e) {
@@ -659,7 +671,7 @@ class AsesmenKetDewasaRanapController extends Controller
 
         $dataMedis = $this->getDataMedis($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
 
-        if (!$dataMedis) {
+        if (! $dataMedis) {
             abort(404, 'Data tidak ditemukan');
         }
 
@@ -684,7 +696,9 @@ class AsesmenKetDewasaRanapController extends Controller
         try {
 
             $dataMedis = $this->baseService->getDataMedis($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
-            if (empty($dataMedis)) throw new Exception('Data kunjungan tidak ditemukan !');
+            if (empty($dataMedis)) {
+                throw new Exception('Data kunjungan tidak ditemukan !');
+            }
 
             $formatDate = date('Y-m-d', strtotime($request->tanggal));
             $formatTime = date('H:i:s', strtotime($request->jam));
@@ -703,13 +717,13 @@ class AsesmenKetDewasaRanapController extends Controller
 
             // Data vital sign untuk disimpan
             $vitalSignData = [
-                'sistole' => $request->sistole ? (int)$request->sistole : null,
-                'diastole' => $request->distole ? (int)$request->distole : null,
-                'nadi' => $request->nadi ? (int)$request->nadi : null,
-                'respiration' => $request->nafas ? (int)$request->nafas : null,
-                'suhu' => $request->suhu ? (float)$request->suhu : null,
-                'spo2_tanpa_o2' => $request->sao2 ? (int)$request->sao2 : null,
-                'tinggi_badan' => $request->tb ? (int)$request->tb : null,
+                'sistole' => $request->sistole ? (int) $request->sistole : null,
+                'diastole' => $request->distole ? (int) $request->distole : null,
+                'nadi' => $request->nadi ? (int) $request->nadi : null,
+                'respiration' => $request->nafas ? (int) $request->nafas : null,
+                'suhu' => $request->suhu ? (float) $request->suhu : null,
+                'spo2_tanpa_o2' => $request->sao2 ? (int) $request->sao2 : null,
+                'tinggi_badan' => $request->tb ? (int) $request->tb : null,
                 'berat_badan' => $request->bb ? (int) $request->bb : null,
             ];
 
@@ -1003,11 +1017,11 @@ class AsesmenKetDewasaRanapController extends Controller
             $diagnosisKerja = $this->processJsonData($request->diagnosis_kerja);
 
             // Handle diagnosis ke master
-            if (!empty($diagnosisBanding) && is_array($diagnosisBanding)) {
+            if (! empty($diagnosisBanding) && is_array($diagnosisBanding)) {
                 $this->saveDiagnosisToMaster($diagnosisBanding);
             }
 
-            if (!empty($diagnosisKerja) && is_array($diagnosisKerja)) {
+            if (! empty($diagnosisKerja) && is_array($diagnosisKerja)) {
                 $this->saveDiagnosisToMaster($diagnosisKerja);
             }
 
@@ -1016,32 +1030,31 @@ class AsesmenKetDewasaRanapController extends Controller
 
             // create resume
             $resumeData = [
-                'anamnesis'             => $request->keluhan_utama,
+                'anamnesis' => $request->keluhan_utama,
 
-                'konpas'                =>
-                [
-                    'sistole'   => [
-                        'hasil' => $vitalSignData['sistole'] ?? null
+                'konpas' => [
+                    'sistole' => [
+                        'hasil' => $vitalSignData['sistole'] ?? null,
                     ],
-                    'distole'   => [
-                        'hasil' => $vitalSignData['diastole'] ?? null
+                    'distole' => [
+                        'hasil' => $vitalSignData['diastole'] ?? null,
                     ],
-                    'respiration_rate'   => [
-                        'hasil' => $vitalSignData['respiration'] ?? null
+                    'respiration_rate' => [
+                        'hasil' => $vitalSignData['respiration'] ?? null,
                     ],
-                    'suhu'   => [
-                        'hasil' => $vitalSignData['suhu'] ?? null
+                    'suhu' => [
+                        'hasil' => $vitalSignData['suhu'] ?? null,
                     ],
-                    'nadi'   => [
-                        'hasil' => $vitalSignData['nadi'] ?? null
+                    'nadi' => [
+                        'hasil' => $vitalSignData['nadi'] ?? null,
                     ],
-                    'tinggi_badan'   => [
-                        'hasil' => $vitalSignData['tinggi_badan'] ?? null
+                    'tinggi_badan' => [
+                        'hasil' => $vitalSignData['tinggi_badan'] ?? null,
                     ],
-                    'berat_badan'   => [
-                        'hasil' => $vitalSignData['berat_badan'] ?? null
-                    ]
-                ]
+                    'berat_badan' => [
+                        'hasil' => $vitalSignData['berat_badan'] ?? null,
+                    ],
+                ],
             ];
 
             $this->baseService->updateResumeMedis($dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk, $resumeData);
@@ -1053,14 +1066,15 @@ class AsesmenKetDewasaRanapController extends Controller
                     'kd_unit' => $kd_unit,
                     'kd_pasien' => $kd_pasien,
                     'tgl_masuk' => $tgl_masuk,
-                    'urut_masuk' => $urut_masuk
+                    'urut_masuk' => $urut_masuk,
                 ])
                 ->with('success', 'Data asesmen medis anak berhasil diperbarui');
         } catch (Exception $e) {
             DB::rollback();
+
             return back()
                 ->withInput()
-                ->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
+                ->with('error', 'Terjadi kesalahan: '.$e->getMessage());
         }
     }
 
@@ -1078,7 +1092,7 @@ class AsesmenKetDewasaRanapController extends Controller
                 'asesmenKepUmumSkalaNyeri',
                 'asesmenKepUmumRisikoJatuh',
                 'asesmenKepUmumSosialEkonomi',
-                'asesmenKepUmumGizi'
+                'asesmenKepUmumGizi',
             ])
                 ->where('id', $id)
                 ->where('kd_pasien', $kd_pasien)
@@ -1091,7 +1105,7 @@ class AsesmenKetDewasaRanapController extends Controller
                 ->whereDate('tgl_masuk', $tgl_masuk)
                 ->first();
 
-            if (!$dataMedis) {
+            if (! $dataMedis) {
                 return back()->with('error', 'Data medis tidak ditemukan untuk pasien ini.');
             }
 
@@ -1129,5 +1143,23 @@ class AsesmenKetDewasaRanapController extends Controller
         } catch (Exception $e) {
             return back()->with('error', 'Terjadi kesalahan saat memuat data asesmen.');
         }
+    }
+
+    public function generatePDF(Request $request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $id)
+    {
+        $data = $this->show($request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $id, true);
+
+       
+
+        $pdf = PDF::loadView(
+            'unit-pelayanan.rawat-inap.pelayanan.asesmen-umum.print-pdf',
+            ['data' => $data]
+        )->setPaper('a4', 'portrait');
+
+        $nama = $dataMedis->pasien->nama ?? 'Pasien_Anak';
+
+        return $pdf->stream('keperawatanUmum'.$nama.'_'.date('YmdHis').'.pdf');
+
+        
     }
 }
