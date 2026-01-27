@@ -35,6 +35,7 @@ use App\Services\AsesmenService;
 
 use App\Models\EWSPasienDewasa;
 use App\Models\EWSPasienAnak;
+use App\Models\EwsPasienObstetrik;
 
 class BerkasDigitalService
 {
@@ -1786,5 +1787,24 @@ class BerkasDigitalService
         $ewsPasienAnak = $ewsRecords->first();
 
         return compact('ewsRecords', 'ewsPasienAnak');
+    }
+
+    /**
+     * Get EWS Pasien Obstetrik data untuk ditampilkan di berkas digital
+     */
+    public function getEWSPasienObstetrikData($dataMedis)
+    {
+        // Ambil semua data EWS Pasien Obstetrik untuk kunjungan ini
+        $ewsRecords = EwsPasienObstetrik::where('kd_pasien', $dataMedis->kd_pasien)
+            ->where('kd_unit', $dataMedis->kd_unit)
+            ->whereDate('tgl_masuk', $dataMedis->tgl_masuk)
+            ->where('urut_masuk', $dataMedis->urut_masuk)
+            ->orderBy('tanggal', 'desc')
+            ->get();
+
+        // Jika ada records, ambil yang pertama sebagai ewsPasienObstetrik utama (untuk info umum)
+        $ewsPasienObstetrik = $ewsRecords->first();
+
+        return compact('ewsRecords', 'ewsPasienObstetrik');
     }
 }

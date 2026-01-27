@@ -521,6 +521,11 @@ class BerkasDigitalController extends Controller
         $ewsRecordsAnak = $ewsPasienAnakData['ewsRecords'];
         $ewsPasienAnak = $ewsPasienAnakData['ewsPasienAnak'];
 
+        // Ambil data EWS Pasien Obstetrik
+        $ewsPasienObstetrikData = $this->berkasDigitalService->getEWSPasienObstetrikData($dataMedis);
+        $ewsRecordsObstetrik = $ewsPasienObstetrikData['ewsRecords'];
+        $ewsPasienObstetrik = $ewsPasienObstetrikData['ewsPasienObstetrik'];
+
         return view('berkas-digital.document.show', compact(
             'listDokumen',
             'dataMedis',
@@ -643,7 +648,9 @@ class BerkasDigitalController extends Controller
             'ewsRecords',
             'ewsPasienDewasa',
             'ewsRecordsAnak',
-            'ewsPasienAnak'
+            'ewsPasienAnak',
+            'ewsRecordsObstetrik',
+            'ewsPasienObstetrik'
         ));
     }
 

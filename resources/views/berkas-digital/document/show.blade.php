@@ -249,6 +249,16 @@
             @else
                 <p>Data EWS Pasien Anak tidak ditemukan untuk kunjungan ini.</p>
             @endif
+
+            @if ($ewsRecordsObstetrik->isNotEmpty())
+                @include('unit-pelayanan.rawat-inap.pelayanan.ews-pasien-obstetrik.print', [
+                    'ewsRecords' => $ewsRecordsObstetrik,
+                    'ewsPsienObstetrik' => $ewsPasienObstetrik,
+                    'dataMedis' => $dataMedis,
+                ])
+            @else
+                <p>Data EWS Pasien Obstetrik tidak ditemukan untuk kunjungan ini.</p>
+            @endif
         </div>
     </x-content-card>
     <x-content-card>
