@@ -24,22 +24,6 @@ use App\Models\Agama;
 use App\Models\Pendidikan;
 use App\Models\Pekerjaan;
 use App\Models\MrItemFisik;
-use App\Models\RmeAsesmenTht;
-use App\Models\RmeAsesmenThtPemeriksaanFisik;
-use App\Models\RmeAsesmenThtRiwayatKesehatanObatAlergi;
-use App\Models\RmeAsesmenThtDischargePlanning;
-use App\Models\RmeAsesmenthtDiagnosisImplementasi;
-use App\Models\RmeAsesmenParu;
-use App\Models\RmeAsesmenParuRencanaKerja;
-use App\Models\RmeAsesmenParuPerencanaanPulang;
-use App\Models\RmeAsesmenParuDiagnosisImplementasi;
-use App\Models\RmeAsesmenParuPemeriksaanFisik;
-use App\Models\RmeAsesmenGinekologik;
-use App\Models\RmeAsesmenGinekologikTandaVital;
-use App\Models\RmeAsesmenGinekologikPemeriksaanFisik;
-use App\Models\RmeAsesmenGinekologikEkstremitasGinekologik;
-use App\Models\RmeAsesmenGinekologikPemeriksaanDischarge;
-use App\Models\RmeAsesmenGinekologikDiagnosisImplementasi;
 use App\Models\RmeAsesmenGeriatri;
 use App\Models\RmeAsesmenGeriatriRencanaPulang;
 use App\Models\RmeAsesmenPsikiatri;
@@ -49,17 +33,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Carbon;
 use App\Services\AsesmenService;
 
-use App\Models\RmeAsesmenKepPerinatology;
-use App\Models\RmeAsesmenKepPerinatologyFisik;
-use App\Models\RmeAsesmenKepPerinatologyPemeriksaanLanjut;
-use App\Models\RmeAsesmenKepPerinatologyRiwayatIbu;
-use App\Models\RmeAsesmenKepPerinatologyStatusNyeri;
-use App\Models\RmeAsesmenKepPerinatologyRisikoJatuh;
-use App\Models\RmeAsesmenKepPerinatologyResikoDekubitus;
-use App\Models\RmeAsesmenKepPerinatologyGizi;
-use App\Models\RmeAsesmenKepPerinatologyStatusFungsional;
-use App\Models\RmeAsesmenKepPerinatologyRencanaPulang;
-use App\Models\RmeAsesmenKepPerinatologyKeperawatan;
+use App\Models\EWSPasienDewasa;
 
 class BerkasDigitalService
 {
@@ -1725,5 +1699,72 @@ class BerkasDigitalService
             ->first();
 
         return compact('suratKematian');
+    }
+
+    /**
+     * Get EWS Pasien Dewasa data untuk ditampilkan di berkas digital dokumen
+     */
+    public function getEWSPasienDewasaData($dataMedis)
+    {
+        // Ambil semua data EWS Pasien Dewasa untuk kunjungan ini
+        $ewsRecords = EWSPasienDewasa::where('kd_pasien', $dataMedis->kd_pasien)
+            ->where('kd_unit', $dataMedis->kd_unit)
+            ->whereDate('tgl_masuk', $dataMedis->tgl_masuk)
+            ->where('urut_masuk', $dataMedis->urut_masuk)
+            ->orderBy('tanggal', 'desc')
+            ->orderBy('jam_masuk', 'desc')
+            ->get();
+
+        // Jika ada records, ambil yang pertama sebagai ewsPasienDewasa utama (untuk info umum)
+        $ewsPasienDewasa = $ewsRecords->first();
+
+        // Hitung skor total dan risiko untuk setiap record
+        $ewsRecords->transform(function ($record) {
+            $skor = 0;
+
+            // Hitung skor berdasarkan parameter
+            if ($record->avpu == 'P' || $record->avpu == 'U') $skor += 3;
+            if ($record->saturasi_o2 >= 96) $skor += 0;
+            elseif ($record->saturasi_o2 >= 94) $skor += 1;
+            elseif ($record->saturasi_o2 >= 92) $skor += 2;
+            else $skor += 3;
+
+            $sistolik = explode('/', $record->tekanan_darah)[0] ?? 0;
+            if ($sistolik <= 90 || $sistolik >= 220) $skor += 3;
+            elseif ($sistolik <= 100 || $sistolik >= 200) $skor += 2;
+            elseif ($sistolik <= 110 || $sistolik >= 180) $skor += 1;
+
+            if ($record->nadi <= 40 || $record->nadi >= 130) $skor += 3;
+            elseif ($record->nadi <= 50 || $record->nadi >= 120) $skor += 2;
+            elseif ($record->nadi <= 60 || $record->nadi >= 100) $skor += 1;
+
+            if ($record->nafas <= 8 || $record->nafas >= 30) $skor += 3;
+            elseif ($record->nafas <= 10 || $record->nafas >= 25) $skor += 2;
+            elseif ($record->nafas <= 12 || $record->nafas >= 21) $skor += 1;
+
+            if ($record->temperatur <= 35.0 || $record->temperatur >= 39.1) $skor += 3;
+            elseif (($record->temperatur >= 35.1 && $record->temperatur <= 35.9) || ($record->temperatur >= 38.1 && $record->temperatur <= 39.0)) $skor += 1;
+
+            $record->total_skor = $skor;
+
+            // Tentukan risiko
+            if ($skor >= 7) {
+                $record->risiko = 'Tinggi';
+                $record->risk_class = 'hasil-high';
+                $record->risk_text = 'RISIKO TINGGI';
+            } elseif ($skor >= 5 || ($skor >= 3 && in_array($record->avpu, ['P', 'U']))) {
+                $record->risiko = 'Sedang';
+                $record->risk_class = 'hasil-medium';
+                $record->risk_text = 'RISIKO SEDANG';
+            } else {
+                $record->risiko = 'Rendah';
+                $record->risk_class = 'hasil-low';
+                $record->risk_text = 'RISIKO RENDAH';
+            }
+
+            return $record;
+        });
+
+        return compact('ewsRecords', 'ewsPasienDewasa');
     }
 }

@@ -229,6 +229,16 @@
             @else
                 <p>Data surat kematian tidak ditemukan untuk kunjungan ini.</p>
             @endif
+
+            @if ($ewsRecords->isNotEmpty())
+                @include('unit-pelayanan.rawat-inap.pelayanan.ews-pasien-dewasa.print', [
+                    'ewsRecords' => $ewsRecords,
+                    'ewsPasienDewasa' => $ewsPasienDewasa,
+                    'dataMedis' => $dataMedis,
+                ])
+            @else
+                <p>Data EWS Pasien Dewasa tidak ditemukan untuk kunjungan ini.</p>
+            @endif
         </div>
     </x-content-card>
     <x-content-card>
