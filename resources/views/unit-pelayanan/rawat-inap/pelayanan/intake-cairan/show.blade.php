@@ -287,7 +287,10 @@
                                     <div class="col-md-6">
                                         <div class="data-row">
                                             <span class="data-label">Waktu input:</span>
-                                            <span class="data-value">{{ $intake->created_at ? $intake->created_at->format('d/m/Y H:i') : '-' }}</span>
+                                            <span class="data-value">{{ $intake->created_at 
+    ? \Carbon\Carbon::parse($intake->created_at)->format('d/m/Y H:i') 
+    : '-' 
+}}</span>
                                         </div>
                                     </div>
                                 </div>
