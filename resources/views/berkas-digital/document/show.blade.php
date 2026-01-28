@@ -213,6 +213,14 @@
                 <p>Data asesmen keperawatan perinatology tidak ditemukan untuk kunjungan ini.</p>
             @endif
 
+            @if ($asesmenKeperawatanTerminal['asesmen'])
+                @include('unit-pelayanan.rawat-inap.pelayanan.asesmen-terminal.print', [
+                    'data' => $asesmenKeperawatanTerminal,
+                ])
+            @else
+                <p>Data asesmen keperawatan terminal tidak ditemukan untuk kunjungan ini.</p>
+            @endif
+
             @if ($asesmenAwalKeperawatanDewasa['asesmen'])
                 @include('unit-pelayanan.rawat-inap.pelayanan.asesmen-umum.print-pdf', [
                     'data' => $asesmenAwalKeperawatanDewasa,

@@ -31,6 +31,10 @@ use App\Models\RmeAsesmenPsikiatriDtl;
 use App\Models\RmeSuratKematian;
 use App\Models\RmePaps;
 use App\Models\PernyataanDPJP;
+use App\Models\RmeAsesmenTerminal;
+use App\Models\RmeAsesmenTerminalFmo;
+use App\Models\RmeAsesmenTerminalUsk;
+use App\Models\RmeAsesmenTerminalAf;
 use Illuminate\Support\Carbon;
 use App\Services\AsesmenService;
 
@@ -1623,6 +1627,47 @@ class BerkasDigitalService
      * Return empty data structure untuk asesmen keperawatan perinatology
      */
     private function emptyAsesmenKepPerinatologyData($dataMedis)
+    {
+        return [
+            'asesmen' => null,
+            'dataMedis' => $dataMedis,
+        ];
+    }
+
+    /**
+     * Get Asesmen Keperawatan Terminal data
+     */
+    public function getAsesmenKeperawatanTerminalData($dataMedis)
+    {
+        $tglMasuk = isset($dataMedis->tgl_transaksi) ? $dataMedis->tgl_transaksi : $dataMedis->tgl_masuk;
+
+        $asesmen = RmeAsesmen::with([
+            'rmeAsesmenTerminal',
+            'rmeAsesmenTerminalFmo',
+            'rmeAsesmenTerminalUsk',
+            'rmeAsesmenTerminalAf',
+            'user.karyawan'
+        ])
+            ->where('kd_pasien', $dataMedis->kd_pasien)
+            ->where('kd_unit', $dataMedis->kd_unit)
+            ->whereDate('tgl_masuk', $tglMasuk)
+            ->where('urut_masuk', $dataMedis->urut_masuk)
+            ->where('kategori', 2)
+            ->where('sub_kategori', 13) // Asesmen Terminal
+            ->orderBy('waktu_asesmen', 'desc')
+            ->first();
+
+        if (!$asesmen) {
+            return $this->emptyAsesmenKeperawatanTerminalData($dataMedis);
+        }
+
+        return compact('asesmen', 'dataMedis');
+    }
+
+    /**
+     * Return empty data structure untuk asesmen keperawatan terminal
+     */
+    private function emptyAsesmenKeperawatanTerminalData($dataMedis)
     {
         return [
             'asesmen' => null,

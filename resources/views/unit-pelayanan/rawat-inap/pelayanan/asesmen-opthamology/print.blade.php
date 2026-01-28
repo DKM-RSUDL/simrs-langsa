@@ -269,9 +269,9 @@
             </tr>
         </table>
 
-        @php
+        {{-- @php
             dd($data);
-        @endphp
+        @endphp --}}
 
 
         <table style="margin-top : 20px;">

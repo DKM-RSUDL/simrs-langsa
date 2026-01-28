@@ -1,79 +1,66 @@
-<!DOCTYPE html>
-<html lang="id">
+@php
+    $asesmen = $data['asesmen'] ?? null;
+@endphp
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pengkajian Keperawatan Gawat Darurat - IGD</title>
-
+<div class="terminal-print-wrapper">
     <style>
-        @page {
-            size: A4;
-            margin: 3mm 3mm;
-        }
-
-        body {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        .terminal-print-wrapper {
             font-family: "DejaVu Sans", "Helvetica", "Arial", sans-serif !important;
             font-size: 8pt;
+            padding: 10px;
+            background: white;
         }
 
-        .a4 {
+        .terminal-print-wrapper .a4 {
             width: 100%;
             max-width: 100%;
         }
 
-        table {
+        .terminal-print-wrapper table {
             width: 100%;
             border-collapse: collapse;
         }
 
-        td,
-        th {
+        .terminal-print-wrapper td,
+        .terminal-print-wrapper th {
             padding: 4px 6px;
             vertical-align: top;
         }
 
-        .label {
+        .terminal-print-wrapper .label {
             font-weight: bold;
             width: 38%;
             padding-right: 8px;
         }
 
-        .value {
+        .terminal-print-wrapper .value {
             border-bottom: 1px solid #000;
             min-height: 22px;
         }
 
-        .value.tall {
+        .terminal-print-wrapper .value.tall {
             min-height: 32px;
         }
 
-        .value.empty-space {
+        .terminal-print-wrapper .value.empty-space {
             min-height: 60px;
-            /* ruang tulis tangan jika kosong */
         }
 
-        .checkbox-group {
+        .terminal-print-wrapper .checkbox-group {
             font-family: "DejaVu Sans", sans-serif !important;
         }
 
-        .checkbox-group label {
+        .terminal-print-wrapper .checkbox-group label {
             margin-right: 28px;
             display: inline-block;
         }
 
-
-
-        input[type="checkbox"]:checked {
+        .terminal-print-wrapper input[type="checkbox"]:checked {
             background: #fff;
         }
 
-        input[type="checkbox"]:checked::after {
+        .terminal-print-wrapper input[type="checkbox"]:checked::after {
             content: "";
-            /* Unicode checkmark yang support di DejaVu Sans */
             position: absolute;
             top: -10px;
             left: 1px;
@@ -82,13 +69,13 @@
             line-height: 1;
         }
 
-        .obat-item {
+        .terminal-print-wrapper .obat-item {
             border-bottom: 1px dotted #666;
             padding: 2px 6px;
             margin-bottom: 2px;
         }
 
-        .header {
+        .terminal-print-wrapper .header {
             display: flex;
             align-items: stretch;
             margin-bottom: 10mm;
@@ -96,26 +83,26 @@
             width: 100%;
         }
 
-        .patient-table {
+        .terminal-print-wrapper .patient-table {
             width: 100%;
             margin-top: 15px;
             border-collapse: collapse;
         }
 
-        .patient-table th,
-        .patient-table td {
+        .terminal-print-wrapper .patient-table th,
+        .terminal-print-wrapper .patient-table td {
             border: 1px solid #ccc;
             padding: 5px 7px;
             font-size: 9pt;
         }
 
-        .patient-table th {
+        .terminal-print-wrapper .patient-table th {
             background-color: #f2f2f2;
             text-align: left;
             width: 130px;
         }
 
-        .header-table {
+        .terminal-print-wrapper .header-table {
             width: 100%;
             border-collapse: collapse;
             background-color: #f0f0f0;
@@ -123,63 +110,59 @@
             position: relative;
         }
 
-        .td-left {
+        .terminal-print-wrapper .td-left {
             width: 40%;
             text-align: left;
             vertical-align: middle;
         }
 
-        .td-center {
+        .terminal-print-wrapper .td-center {
             width: 40%;
             text-align: center;
             vertical-align: middle;
         }
 
-
-
-        .brand-table {
+        .terminal-print-wrapper .brand-table {
             border-collapse: collapse;
             background-color: transparent;
         }
 
-        .va-middle {
+        .terminal-print-wrapper .va-middle {
             vertical-align: middle;
         }
 
-        .brand-logo {
+        .terminal-print-wrapper .brand-logo {
             width: 60px;
             height: auto;
             margin-right: 2px;
         }
 
-        .brand-name {
+        .terminal-print-wrapper .brand-name {
             font-weight: 700;
             margin: 0;
             font-size: 14px;
         }
 
-        .brand-info {
+        .terminal-print-wrapper .brand-info {
             margin: 0;
             font-size: 7px;
         }
 
-        .title-main {
+        .terminal-print-wrapper .title-main {
             display: block;
             font-size: 16px;
             font-weight: bold;
             margin: 0;
         }
 
-        .title-sub {
+        .terminal-print-wrapper .title-sub {
             display: block;
             font-size: 14px;
             font-weight: bold;
             margin: 0;
         }
 
-
-
-        .unit-box {
+        .terminal-print-wrapper .unit-box {
             background-color: #bbbbbb;
             padding: 15px 0px;
             width: 100%;
@@ -187,17 +170,17 @@
             text-align: center;
         }
 
-        .unit-text {
+        .terminal-print-wrapper .unit-text {
             font-size: 18px;
             font-weight: bold;
             color: #ffffff;
         }
 
-        .page-break {
+        .terminal-print-wrapper .page-break {
             page-break-before: always;
         }
 
-        .cb {
+        .terminal-print-wrapper .cb {
             display: flex;
             align-items: center;
             gap: 20px;
@@ -205,7 +188,7 @@
             margin-bottom: 2px;
         }
 
-        .cb input[type="checkbox"] {
+        .terminal-print-wrapper .cb input[type="checkbox"] {
             margin: 0;
             width: 25px;
             height: 15px;
@@ -213,27 +196,6 @@
             top: -1px;
         }
     </style>
-</head>
-
-<body>
-    @php
-
-        $asesmen = $data['asesmen'] ?? null;
-
-        // $asesmen_kep_ophtamology = $asesmen->rmeAsesmenKepOphtamology;
-        // $riwayat_penyakit_keluarga = json_decode($asesmen_kep_ophtamology->riwayat_penyakit_keluarga ?? '[]', true);
-        // $penyakit_yang_diderita = json_decode($asesmen_kep_ophtamology->penyakit_yang_diderita ?? '[]', true);
-        // $riwayat_penggunaan_obat = json_decode($asesmen_kep_ophtamology->riwayat_penggunaan_obat ?? '[]', true);
-        // $riwayat_alergi = json_decode($asesmen->riwayat_alergi ?? '[]', true);
-        // $ophtamology_komprehensif = $asesmen->rmeAsesmenKepOphtamologyKomprehensif;
-
-        // $rencanaPulang = $data['asesmen']->rmeAsesmenKepOphtamologyRencanaPulang;
-
-        // $rmeAsesmenKepOphtamology = $data['asesmen']->rmeAsesmenKepOphtamology;
-
-        // $statusPresent = $data['asesmen']->rmeAsesmenKepOphtamologyFisik;
-
-    @endphp
 
     <table class="header-table">
         <tr>
@@ -285,9 +247,8 @@
             <th>Umur</th>
             <td>
                 {{ $data['dataMedis']->pasien->tgl_lahir
-    ? \Carbon\Carbon::parse($data['dataMedis']->pasien->tgl_lahir)->age . ' tahun'
-    : '-' 
-    }}
+                    ? \Carbon\Carbon::parse($data['dataMedis']->pasien->tgl_lahir)->age . ' tahun'
+                    : '-' }}
             </td>
         </tr>
     </table>
@@ -302,18 +263,29 @@
             <td class="value">
                 <div style="display:flex; gap:40px;">
                     <div>
-                        <div class="cb"><input type="checkbox" {{ $asesmen->rmeAsesmenTerminal->dyspnoe ? 'checked' : '' }}><span>Dyspnoe</span></div>
-                        <div class="cb"><input type="checkbox" {{ $asesmen->rmeAsesmenTerminal->nafas_tak_teratur ? 'checked' : '' }}><span>Nafas tak teratur</span></div>
-                        <div class="cb"><input type="checkbox" {{ $asesmen->rmeAsesmenTerminal->nafas_tak_teratur ? 'checked' : '' }}><span>Ada sekret</span></div>
+                        <div class="cb"><input type="checkbox"
+                                {{ $asesmen->rmeAsesmenTerminal->dyspnoe ? 'checked' : '' }}><span>Dyspnoe</span></div>
+                        <div class="cb"><input type="checkbox"
+                                {{ $asesmen->rmeAsesmenTerminal->nafas_tak_teratur ? 'checked' : '' }}><span>Nafas tak
+                                teratur</span></div>
+                        <div class="cb"><input type="checkbox"
+                                {{ $asesmen->rmeAsesmenTerminal->nafas_tak_teratur ? 'checked' : '' }}><span>Ada
+                                sekret</span></div>
                     </div>
                 </div>
             </td>
             <td class="value">
                 <div style="display:flex; gap:40px;">
                     <div>
-                        <div class="cb"><input type="checkbox" {{ $asesmen->rmeAsesmenTerminal->nafas_cepat_dangkal ? 'checked' : '' }}><span>Nafas cepat dan dangkal</span></div>
-                        <div class="cb"><input type="checkbox" {{ $asesmen->rmeAsesmenTerminal->nafas_melalui_mulut ? 'checked' : '' }}><span>Nafas melalui mulut</span></div>
-                        <div class="cb"><input type="checkbox" {{ $asesmen->rmeAsesmenTerminal->spo2_normal ? 'checked' : '' }}><span>SpO<sub>2</sub> &lt; normal</span></div>
+                        <div class="cb"><input type="checkbox"
+                                {{ $asesmen->rmeAsesmenTerminal->nafas_cepat_dangkal ? 'checked' : '' }}><span>Nafas
+                                cepat dan dangkal</span></div>
+                        <div class="cb"><input type="checkbox"
+                                {{ $asesmen->rmeAsesmenTerminal->nafas_melalui_mulut ? 'checked' : '' }}><span>Nafas
+                                melalui mulut</span></div>
+                        <div class="cb"><input type="checkbox"
+                                {{ $asesmen->rmeAsesmenTerminal->spo2_normal ? 'checked' : '' }}><span>SpO<sub>2</sub>
+                                &lt; normal</span></div>
                     </div>
                 </div>
 
@@ -321,9 +293,14 @@
             <td class="value">
                 <div style="display:flex; gap:40px;">
                     <div>
-                        <div class="cb"><input type="checkbox" {{ $asesmen->rmeAsesmenTerminal->nafas_lambat ? 'checked' : '' }}><span>Nafas lambat</span></div>
-                        <div class="cb"><input type="checkbox" {{ $asesmen->rmeAsesmenTerminal->mukosa_oral_kering ? 'checked' : '' }}><span>Mukosa oral kering</span></div>
-                        <div class="cb"><input type="checkbox" {{ $asesmen->rmeAsesmenTerminal->tak ? 'checked' : '' }}><span>T.A.K</span></div>
+                        <div class="cb"><input type="checkbox"
+                                {{ $asesmen->rmeAsesmenTerminal->nafas_lambat ? 'checked' : '' }}><span>Nafas
+                                lambat</span></div>
+                        <div class="cb"><input type="checkbox"
+                                {{ $asesmen->rmeAsesmenTerminal->mukosa_oral_kering ? 'checked' : '' }}><span>Mukosa
+                                oral kering</span></div>
+                        <div class="cb"><input type="checkbox"
+                                {{ $asesmen->rmeAsesmenTerminal->tak ? 'checked' : '' }}><span>T.A.K</span></div>
                     </div>
                 </div>
 
@@ -335,18 +312,29 @@
             <td class="value">
                 <div style="display:flex; gap:40px;">
                     <div>
-                        <div class="cb"><input type="checkbox" {{ $asesmen->rmeAsesmenTerminal->mual ? 'checked' : '' }}><span>Mual</span></div>
-                        <div class="cb"><input type="checkbox" {{ $asesmen->rmeAsesmenTerminal->sulit_menelan ? 'checked' : '' }}><span>Sulit menelan</span></div>
-                        <div class="cb"><input type="checkbox" {{ $asesmen->rmeAsesmenTerminal->inkontinensia_alvi ? 'checked' : '' }}><span>Inkontinensia alvi</span></div>
+                        <div class="cb"><input type="checkbox"
+                                {{ $asesmen->rmeAsesmenTerminal->mual ? 'checked' : '' }}><span>Mual</span></div>
+                        <div class="cb"><input type="checkbox"
+                                {{ $asesmen->rmeAsesmenTerminal->sulit_menelan ? 'checked' : '' }}><span>Sulit
+                                menelan</span></div>
+                        <div class="cb"><input type="checkbox"
+                                {{ $asesmen->rmeAsesmenTerminal->inkontinensia_alvi ? 'checked' : '' }}><span>Inkontinensia
+                                alvi</span></div>
                     </div>
                 </div>
             </td>
             <td class="value">
                 <div style="display:flex; gap:40px;">
                     <div>
-                        <div class="cb"><input type="checkbox" {{ $asesmen->rmeAsesmenTerminal->penurunan_pergerakan ? 'checked' : '' }}><span>Penurunan pergerakan tubuh</span></div>
-                        <div class="cb"><input type="checkbox" {{ $asesmen->rmeAsesmenTerminal->distensi_abdomen ? 'checked' : '' }}><span>Distensi abdomen</span></div>
-                        <div class="cb"><input type="checkbox" {{ $asesmen->rmeAsesmenTerminal->sulit_berbicara ? 'checked' : '' }}><span>Sulit berbicara</span></div>
+                        <div class="cb"><input type="checkbox"
+                                {{ $asesmen->rmeAsesmenTerminal->penurunan_pergerakan ? 'checked' : '' }}><span>Penurunan
+                                pergerakan tubuh</span></div>
+                        <div class="cb"><input type="checkbox"
+                                {{ $asesmen->rmeAsesmenTerminal->distensi_abdomen ? 'checked' : '' }}><span>Distensi
+                                abdomen</span></div>
+                        <div class="cb"><input type="checkbox"
+                                {{ $asesmen->rmeAsesmenTerminal->sulit_berbicara ? 'checked' : '' }}><span>Sulit
+                                berbicara</span></div>
                     </div>
                 </div>
 
@@ -363,7 +351,8 @@
             <td class="label">1.3. Nyeri:</td>
             <td class="value" colspan="3">
                 <div style="display:flex; gap:30px;">
-                    <div class="cb"><input type="checkbox" {{ !$asesmen->rmeAsesmenTerminal->nyeri ? 'checked' : '' }}><span>Tidak</span>
+                    <div class="cb"><input type="checkbox"
+                            {{ !$asesmen->rmeAsesmenTerminal->nyeri ? 'checked' : '' }}><span>Tidak</span>
                     </div>
                     <div class="cb">
                         <input type="checkbox" {{ $asesmen->rmeAsesmenTerminal->nyeri ? 'checked' : '' }}>
@@ -382,18 +371,27 @@
             <td colspan="2"><strong>1.4. Perlambatan Sirkulasi :</strong></td>
             <td>
                 <div style="display:flex; gap:30px;">
-                    <div class="cb"> <input type="checkbox" {{ $asesmen->rmeAsesmenTerminal->bercerak_sianosis ? 'checked' : '' }}> Berak darah sianosis pada ekstremitas</div>
-                    <div class="cb"><input type="checkbox" {{ $asesmen->rmeAsesmenTerminal->gelisah ? 'checked' : '' }}>
+                    <div class="cb"> <input type="checkbox"
+                            {{ $asesmen->rmeAsesmenTerminal->bercerak_sianosis ? 'checked' : '' }}> Berak darah
+                        sianosis pada ekstremitas</div>
+                    <div class="cb"><input type="checkbox"
+                            {{ $asesmen->rmeAsesmenTerminal->gelisah ? 'checked' : '' }}>
                         Gelisah </div>
-                    <div class="cb"><input type="checkbox" {{ $asesmen->rmeAsesmenTerminal->lemas ? 'checked' : '' }}>
+                    <div class="cb"><input type="checkbox"
+                            {{ $asesmen->rmeAsesmenTerminal->lemas ? 'checked' : '' }}>
                         Lemas</div>
                 </div>
             </td>
             <td>
                 <div style="display:flex; gap:30px;">
-                    <div class="cb"> <input type="checkbox" {{ $asesmen->rmeAsesmenTerminal->kulit_dingin ? 'checked' : '' }}>Kulit dingin dan berkeringat </div>
-                    <div class="cb"> <input type="checkbox" {{ $asesmen->rmeAsesmenTerminal->tekanan_darah ? 'checked' : '' }}> Nadi lambat dan lemah </div>
-                    <div class="cb"> <input type="checkbox" {{ $asesmen->rmeAsesmenTerminal->tak3 ? 'checked' : '' }}>
+                    <div class="cb"> <input type="checkbox"
+                            {{ $asesmen->rmeAsesmenTerminal->kulit_dingin ? 'checked' : '' }}>Kulit dingin dan
+                        berkeringat </div>
+                    <div class="cb"> <input type="checkbox"
+                            {{ $asesmen->rmeAsesmenTerminal->tekanan_darah ? 'checked' : '' }}> Nadi lambat dan lemah
+                    </div>
+                    <div class="cb"> <input type="checkbox"
+                            {{ $asesmen->rmeAsesmenTerminal->tak3 ? 'checked' : '' }}>
                         T.A.K</div>
                 </div>
             </td>
@@ -404,23 +402,28 @@
         <tr>
             <td colspan="2">
                 <div style="display:flex; gap:30px;">
-                    <div class="cb"> <input type="checkbox" {{ $asesmen->rmeAsesmenTerminalFmo->melakukan_aktivitas ? 'checked' : '' }}> Melakukan Aktifitas Fisik</div>
+                    <div class="cb"> <input type="checkbox"
+                            {{ $asesmen->rmeAsesmenTerminalFmo->melakukan_aktivitas ? 'checked' : '' }}> Melakukan
+                        Aktifitas Fisik</div>
                 </div>
             </td>
             <td>
                 <div style="display:flex; gap:30px;">
-                    <div class="cb"> <input type="checkbox" {{ $asesmen->rmeAsesmenTerminalFmo->pindah_posisi ? 'checked' : '' }}> Pindah Posisi</div>
+                    <div class="cb"> <input type="checkbox"
+                            {{ $asesmen->rmeAsesmenTerminalFmo->pindah_posisi ? 'checked' : '' }}> Pindah Posisi</div>
                 </div>
             </td>
             <td>
                 <div style="display:flex; gap:30px;">
-                    <div class="cb"> <input type="checkbox">{{ $asesmen->rmeAsesmenTerminalFmo->faktor_lainnya ?? '' }}
+                    <div class="cb"> <input
+                            type="checkbox">{{ $asesmen->rmeAsesmenTerminalFmo->faktor_lainnya ?? '' }}
                     </div>
                 </div>
             </td>
         </tr>
         <tr>
-            <td colspan="4"><strong>3. Manajemen gejala saat ini dan respon pasien : <br> Masalah Keperawatan </strong>
+            <td colspan="4"><strong>3. Manajemen gejala saat ini dan respon pasien : <br> Masalah Keperawatan
+                </strong>
             </td>
         </tr>
         <tr>
@@ -431,11 +434,13 @@
                         <span>Mual</span>
                     </div>
                     <div class="cb">
-                        <input type="checkbox" {{ $asesmen->rmeAsesmenTerminalFmo->masalah_perubahan_persepsi ? 'checked' : '' }}>
+                        <input type="checkbox"
+                            {{ $asesmen->rmeAsesmenTerminalFmo->masalah_perubahan_persepsi ? 'checked' : '' }}>
                         <span>Perubahan persepsi sensori</span>
                     </div>
                     <div class="cb">
-                        <input type="checkbox" {{ $asesmen->rmeAsesmenTerminalFmo->masalah_pola_nafas ? 'checked' : '' }}">
+                        <input type="checkbox"
+                            {{ $asesmen->rmeAsesmenTerminalFmo->masalah_pola_nafas ? 'checked' : '' }}">
                         <span>Pola nafas tidak efektif</span>
                     </div>
                 </div>
@@ -444,11 +449,13 @@
             <td>
                 <div style="display:flex; gap:30px;">
                     <div class="cb">
-                        <input type="checkbox" {{ $asesmen->rmeAsesmenTerminalFmo->masalah_nyeri_akut ? 'checked' : '' }}>
+                        <input type="checkbox"
+                            {{ $asesmen->rmeAsesmenTerminalFmo->masalah_nyeri_akut ? 'checked' : '' }}>
                         <span> Nyeri akut</span>
                     </div>
                     <div class="cb">
-                        <input type="checkbox" {{ $asesmen->rmeAsesmenTerminalFmo->masalah_konstipasi ? 'checked' : '' }}">
+                        <input type="checkbox"
+                            {{ $asesmen->rmeAsesmenTerminalFmo->masalah_konstipasi ? 'checked' : '' }}">
                         <span>Konstipasi</span>
                     </div>
                     {{-- <div class="cb">
@@ -465,7 +472,8 @@
                         <span>Bersihan jalan nafas tidak efektif</span>
                     </div> --}}
                     <div class="cb">
-                        <input type="checkbox" {{ $asesmen->rmeAsesmenTerminalFmo->masalah_defisit_perawatan ? 'checked' : '' }}>
+                        <input type="checkbox"
+                            {{ $asesmen->rmeAsesmenTerminalFmo->masalah_defisit_perawatan ? 'checked' : '' }}>
                         <span>Defisit perawatan diri</span>
                     </div>
                 </div>
@@ -483,7 +491,8 @@
             <td colspan="1">
                 <div style="display:flex; gap:30px;">
                     <div class="cb">
-                        <input type="checkbox" {{ !$asesmen->rmeAsesmenTerminalFmo->perlu_pelayanan_spiritual ? 'checked' : '' }}>
+                        <input type="checkbox"
+                            {{ !$asesmen->rmeAsesmenTerminalFmo->perlu_pelayanan_spiritual ? 'checked' : '' }}>
                         Tidak
                     </div>
                 </div>
@@ -492,7 +501,8 @@
             <td colspan="1">
                 <div style="display:flex; gap:30px;">
                     <div class="cb">
-                        <input type="checkbox" {{ $asesmen->rmeAsesmenTerminalFmo->perlu_pelayanan_spiritual ? 'checked' : '' }}>
+                        <input type="checkbox"
+                            {{ $asesmen->rmeAsesmenTerminalFmo->perlu_pelayanan_spiritual ? 'checked' : '' }}>
                         Ya
                     </div>
                 </div>
@@ -510,7 +520,8 @@
             <td colspan="1">
                 <div style="display:flex; gap:30px;">
                     <div class="cb">
-                        <input type="checkbox" {{ !$asesmen->rmeAsesmenTerminalUsk->perlu_didoakan ? 'checked' : '' }}>
+                        <input type="checkbox"
+                            {{ !$asesmen->rmeAsesmenTerminalUsk->perlu_didoakan ? 'checked' : '' }}>
                         Tidak
                     </div>
                 </div>
@@ -532,7 +543,8 @@
             <td colspan="1">
                 <div style="display:flex; gap:30px;">
                     <div class="cb">
-                        <input type="checkbox" {{ !$asesmen->rmeAsesmenTerminalUsk->perlu_bimbingan_rohani ? 'checked' : '' }}>
+                        <input type="checkbox"
+                            {{ !$asesmen->rmeAsesmenTerminalUsk->perlu_bimbingan_rohani ? 'checked' : '' }}>
                         Tidak
                     </div>
                 </div>
@@ -541,7 +553,8 @@
             <td colspan="1">
                 <div style="display:flex; gap:30px;">
                     <div class="cb">
-                        <input type="checkbox" {{ $asesmen->rmeAsesmenTerminalUsk->perlu_bimbingan_rohani ? 'checked' : '' }}>
+                        <input type="checkbox"
+                            {{ $asesmen->rmeAsesmenTerminalUsk->perlu_bimbingan_rohani ? 'checked' : '' }}>
                         Ya
                     </div>
                 </div>
@@ -549,14 +562,17 @@
         </tr>
 
         <tr>
-            <td colspan="4"><strong>6. Status Psikososial dan keluarga : <br> 6.1 Apakah Ada Orang Yang Ingin Dihubungi
-                    Saat Ini ? <input type="checkbox" {{ !$asesmen->rmeAsesmenTerminalUsk->orang_dihubungi ? 'checked' : '' }}> Tidak
+            <td colspan="4"><strong>6. Status Psikososial dan keluarga : <br> 6.1 Apakah Ada Orang Yang Ingin
+                    Dihubungi
+                    Saat Ini ? <input type="checkbox"
+                        {{ !$asesmen->rmeAsesmenTerminalUsk->orang_dihubungi ? 'checked' : '' }}> Tidak
             </td>
         </tr>
         <tr>
             <td colspan="4">
                 <div class="cb">
-                    <input type="checkbox" {{ $asesmen->rmeAsesmenTerminalUsk->orang_dihubungi ? 'checked' : '' }}> Ya,
+                    <input type="checkbox" {{ $asesmen->rmeAsesmenTerminalUsk->orang_dihubungi ? 'checked' : '' }}>
+                    Ya,
                     Siapa <span></span> Hubungan dengan Pasien Sebagai :
                     <span>{{ $asesmen->rmeAsesmenTerminalUsk->hubungan_pasien ?? '' }}</span> <br>
                     Nama : <span>{{ $asesmen->rmeAsesmenTerminalUsk->dinama ?? '' }} </span> Dimana :
@@ -598,12 +614,14 @@
             </td>
             <td colspan="">
                 <div class="cb">
-                    <input type="checkbox" {{ $asesmen->rmeAsesmenTerminalUsk->lingkungan_rumah_siap ? 'checked' : '' }}> Ya
+                    <input type="checkbox"
+                        {{ $asesmen->rmeAsesmenTerminalUsk->lingkungan_rumah_siap ? 'checked' : '' }}> Ya
                 </div>
             </td>
             <td colspan="">
                 <div class="cb">
-                    <input type="checkbox" {{ !$asesmen->rmeAsesmenTerminalUsk->lingkungan_rumah_siap ? 'checked' : '' }}>Tidak
+                    <input type="checkbox"
+                        {{ !$asesmen->rmeAsesmenTerminalUsk->lingkungan_rumah_siap ? 'checked' : '' }}>Tidak
                 </div>
             </td>
         </tr>
@@ -615,12 +633,15 @@
             </td>
             <td>
                 <div class="cb">
-                    <input type="checkbox" {{ $asesmen->rmeAsesmenTerminalUsk->mampu_merawat_rumah ? 'checked' : '' }}>Ya. Oleh : <span>{{ $asesmen->rmeAsesmenTerminalUsk->perawat_rumah_oleh ?? '' }}</span>
+                    <input type="checkbox"
+                        {{ $asesmen->rmeAsesmenTerminalUsk->mampu_merawat_rumah ? 'checked' : '' }}>Ya. Oleh :
+                    <span>{{ $asesmen->rmeAsesmenTerminalUsk->perawat_rumah_oleh ?? '' }}</span>
                 </div>
             </td>
             <td>
                 <div class="cb">
-                    <input type="checkbox" {{ !$asesmen->rmeAsesmenTerminalUsk->mampu_merawat_rumah ? 'checked' : '' }}>Tidak<span></span>
+                    <input type="checkbox"
+                        {{ !$asesmen->rmeAsesmenTerminalUsk->mampu_merawat_rumah ? 'checked' : '' }}>Tidak<span></span>
                 </div>
             </td>
         </tr>
@@ -638,7 +659,8 @@
             </td>
             <td>
                 <div class="cb">
-                    <input type="checkbox" {{ !$asesmen->rmeAsesmenTerminalUsk->perlu_home_care ? 'checked' : '' }}>Tidak<span></span>
+                    <input type="checkbox"
+                        {{ !$asesmen->rmeAsesmenTerminalUsk->perlu_home_care ? 'checked' : '' }}>Tidak<span></span>
                 </div>
             </td>
         </tr>
@@ -655,18 +677,30 @@
             <td class="value" colspan="2">
                 <div style="display:flex; gap:40px;">
                     <div>
-                        <div class="cb"><input type="checkbox" {{ $asesmen->rmeAsesmenTerminalUsk->reaksi_menyangkal ? 'checked' : '' }}><span>Menyangkal</span></div>
-                        <div class="cb"><input type="checkbox" {{ $asesmen->rmeAsesmenTerminalUsk->reaksi_marah ? 'checked' : '' }}><span>Marah</span></div>
-                        <div class="cb"><input type="checkbox" {{ $asesmen->rmeAsesmenTerminalUsk->reaksi_takut ? 'checked' : '' }}><span>Takut</span></div>
+                        <div class="cb"><input type="checkbox"
+                                {{ $asesmen->rmeAsesmenTerminalUsk->reaksi_menyangkal ? 'checked' : '' }}><span>Menyangkal</span>
+                        </div>
+                        <div class="cb"><input type="checkbox"
+                                {{ $asesmen->rmeAsesmenTerminalUsk->reaksi_marah ? 'checked' : '' }}><span>Marah</span>
+                        </div>
+                        <div class="cb"><input type="checkbox"
+                                {{ $asesmen->rmeAsesmenTerminalUsk->reaksi_takut ? 'checked' : '' }}><span>Takut</span>
+                        </div>
                     </div>
                 </div>
             </td>
             <td class="value" colspan="2">
                 <div style="display:flex; gap:40px;">
                     <div>
-                        <div class="cb"><input type="checkbox" {{ $asesmen->rmeAsesmenTerminalUsk->reaksi_sedih_menangis ? 'checked' : '' }}><span>Sedih / Menangis</span></div>
-                        <div class="cb"><input type="checkbox" {{ $asesmen->rmeAsesmenTerminalUsk->reaksi_rasa_bersalah ? 'checked' : '' }}><span>Rasa bersalah</span></div>
-                        <div class="cb"><input type="checkbox" {{ $asesmen->rmeAsesmenTerminalUsk->reaksi_ketidak_berdayaan ? 'checked' : '' }}"><span>Ketidak Berdayaan</span></div>
+                        <div class="cb"><input type="checkbox"
+                                {{ $asesmen->rmeAsesmenTerminalUsk->reaksi_sedih_menangis ? 'checked' : '' }}><span>Sedih
+                                / Menangis</span></div>
+                        <div class="cb"><input type="checkbox"
+                                {{ $asesmen->rmeAsesmenTerminalUsk->reaksi_rasa_bersalah ? 'checked' : '' }}><span>Rasa
+                                bersalah</span></div>
+                        <div class="cb"><input type="checkbox"
+                                {{ $asesmen->rmeAsesmenTerminalUsk->reaksi_ketidak_berdayaan ? 'checked' : '' }}"><span>Ketidak
+                                Berdayaan</span></div>
                     </div>
                 </div>
 
@@ -685,7 +719,9 @@
             <td class="value" colspan="2">
                 <div style="display:flex; gap:40px;">
                     <div>
-                        <div class="cb"><input type="checkbox" {{ $asesmen->rmeAsesmenTerminalUsk->reaksi_anxietas ? 'checked' : '' }}><span>Anxietas</span></div>
+                        <div class="cb"><input type="checkbox"
+                                {{ $asesmen->rmeAsesmenTerminalUsk->reaksi_anxietas ? 'checked' : '' }}><span>Anxietas</span>
+                        </div>
 
                     </div>
                 </div>
@@ -693,7 +729,9 @@
             <td class="value" colspan="2">
                 <div style="display:flex; gap:40px;">
                     <div>
-                        <div class="cb"><input type="checkbox" {{ $asesmen->rmeAsesmenTerminalUsk->reaksi_distress_spiritual ? 'checked' : '' }}><span>Disstres Spiritual</span></div>
+                        <div class="cb"><input type="checkbox"
+                                {{ $asesmen->rmeAsesmenTerminalUsk->reaksi_distress_spiritual ? 'checked' : '' }}><span>Disstres
+                                Spiritual</span></div>
 
                     </div>
                 </div>
@@ -713,12 +751,14 @@
                 <div style="display:flex; gap:40px;">
                     <div>
                         <div class="cb">
-                            <input type="checkbox" name="keluarga_marah" id="keluarga_marah" value="1" {{ $asesmen->rmeAsesmenTerminalUsk->keluarga_marah ? 'checked' : '' }} disabled>
+                            <input type="checkbox" name="keluarga_marah" id="keluarga_marah" value="1"
+                                {{ $asesmen->rmeAsesmenTerminalUsk->keluarga_marah ? 'checked' : '' }} disabled>
                             <label for="keluarga_marah">Marah</label>
                         </div>
 
                         <div class="cb">
-                            <input type="checkbox" name="keluarga_gangguan_tidur" id="keluarga_gangguan_tidur" value="1"
+                            <input type="checkbox" name="keluarga_gangguan_tidur" id="keluarga_gangguan_tidur"
+                                value="1"
                                 {{ $asesmen->rmeAsesmenTerminalUsk->keluarga_gangguan_tidur ? 'checked' : '' }}
                                 disabled>
                             <label for="keluarga_gangguan_tidur">Gangguan tidur</label>
@@ -726,14 +766,17 @@
 
                         <div class="cb">
                             <input type="checkbox" name="keluarga_penurunan_konsentrasi"
-                                id="keluarga_penurunan_konsentrasi" value="1" {{ $asesmen->rmeAsesmenTerminalUsk->keluarga_penurunan_konsentrasi ? 'checked' : '' }}
+                                id="keluarga_penurunan_konsentrasi" value="1"
+                                {{ $asesmen->rmeAsesmenTerminalUsk->keluarga_penurunan_konsentrasi ? 'checked' : '' }}
                                 disabled>
                             <label for="keluarga_penurunan_konsentrasi">Penurunan Konsentrasi</label>
                         </div>
 
                         <div class="cb">
                             <input type="checkbox" name="keluarga_ketidakmampuan_memenuhi_peran"
-                                id="keluarga_ketidakmampuan_memenuhi_peran" value="1" {{ $asesmen->rmeAsesmenTerminalUsk->keluarga_ketidakmampuan_memenuhi_peran ? 'checked' : '' }} disabled>
+                                id="keluarga_ketidakmampuan_memenuhi_peran" value="1"
+                                {{ $asesmen->rmeAsesmenTerminalUsk->keluarga_ketidakmampuan_memenuhi_peran ? 'checked' : '' }}
+                                disabled>
                             <label for="keluarga_ketidakmampuan_memenuhi_peran">
                                 Ketidakmampuan memenuhi peran yang diharapkan
                             </label>
@@ -741,7 +784,8 @@
 
                         <div class="cb">
                             <input type="checkbox" name="keluarga_kurang_berkomunikasi"
-                                id="keluarga_kurang_berkomunikasi" value="1" {{ $asesmen->rmeAsesmenTerminalUsk->keluarga_kurang_berkomunikasi ? 'checked' : '' }}
+                                id="keluarga_kurang_berkomunikasi" value="1"
+                                {{ $asesmen->rmeAsesmenTerminalUsk->keluarga_kurang_berkomunikasi ? 'checked' : '' }}
                                 disabled>
                             <label for="keluarga_kurang_berkomunikasi">
                                 Keluarga kurang berkomunikasi dengan pasien
@@ -756,19 +800,24 @@
                 <div style="display:flex; gap:40px;">
                     <div>
                         <div class="cb">
-                            <input type="checkbox" name="keluarga_leth_lelah" id="keluarga_leth_lelah" value="1" {{ $asesmen->rmeAsesmenTerminalUsk->keluarga_leth_lelah ? 'checked' : '' }} disabled>
+                            <input type="checkbox" name="keluarga_leth_lelah" id="keluarga_leth_lelah"
+                                value="1"
+                                {{ $asesmen->rmeAsesmenTerminalUsk->keluarga_leth_lelah ? 'checked' : '' }} disabled>
                             <label for="keluarga_leth_lelah">Letih / lelah</label>
                         </div>
 
                         <div class="cb">
-                            <input type="checkbox" name="keluarga_rasa_bersalah" id="keluarga_rasa_bersalah" value="1"
-                                {{ $asesmen->rmeAsesmenTerminalUsk->keluarga_rasa_bersalah ? 'checked' : '' }} disabled>
+                            <input type="checkbox" name="keluarga_rasa_bersalah" id="keluarga_rasa_bersalah"
+                                value="1"
+                                {{ $asesmen->rmeAsesmenTerminalUsk->keluarga_rasa_bersalah ? 'checked' : '' }}
+                                disabled>
                             <label for="keluarga_rasa_bersalah">Rasa bersalah</label>
                         </div>
 
                         <div class="cb">
                             <input type="checkbox" name="keluarga_perubahan_pola_komunikasi"
-                                id="keluarga_perubahan_pola_komunikasi" value="1" {{ $asesmen->rmeAsesmenTerminalUsk->keluarga_perubahan_pola_komunikasi ? 'checked' : '' }}
+                                id="keluarga_perubahan_pola_komunikasi" value="1"
+                                {{ $asesmen->rmeAsesmenTerminalUsk->keluarga_perubahan_pola_komunikasi ? 'checked' : '' }}
                                 disabled>
                             <label for="keluarga_perubahan_pola_komunikasi">
                                 Perubahan kebiasaan pola komunikasi
@@ -777,7 +826,8 @@
 
                         <div class="cb">
                             <input type="checkbox" name="keluarga_kurang_berpartisipasi"
-                                id="keluarga_kurang_berpartisipasi" value="1" {{ $asesmen->rmeAsesmenTerminalUsk->keluarga_kurang_berpartisipasi ? 'checked' : '' }}
+                                id="keluarga_kurang_berpartisipasi" value="1"
+                                {{ $asesmen->rmeAsesmenTerminalUsk->keluarga_kurang_berpartisipasi ? 'checked' : '' }}
                                 disabled>
                             <label for="keluarga_kurang_berpartisipasi">
                                 Keluarga kurang berpartisipasi membuat keputusan dalam perawatan pasien
@@ -800,7 +850,9 @@
             <td class="value" colspan="2">
                 <div style="display:flex; gap:40px;">
                     <div>
-                        <div class="cb"><input type="checkbox" {{ $asesmen->rmeAsesmenTerminalUsk->masalah_koping_individu_tidak_efektif ? 'checked' : '' }}><span>Anxietas</span></div>
+                        <div class="cb"><input type="checkbox"
+                                {{ $asesmen->rmeAsesmenTerminalUsk->masalah_koping_individu_tidak_efektif ? 'checked' : '' }}><span>Anxietas</span>
+                        </div>
 
                     </div>
                 </div>
@@ -808,7 +860,9 @@
             <td class="value" colspan="2">
                 <div style="display:flex; gap:40px;">
                     <div>
-                        <div class="cb"><input type="checkbox" {{ $asesmen->rmeAsesmenTerminalUsk->masalah_distress_spiritual ? 'checked' : '' }}><span>Disstres Spiritual</span></div>
+                        <div class="cb"><input type="checkbox"
+                                {{ $asesmen->rmeAsesmenTerminalUsk->masalah_distress_spiritual ? 'checked' : '' }}><span>Disstres
+                                Spiritual</span></div>
 
                     </div>
                 </div>
@@ -829,7 +883,9 @@
             <td class="value" colspan="4">
                 <div style="display:flex; gap:40px;">
                     <div>
-                        <div class="cb"><input type="checkbox" {{ $asesmen->rmeAsesmenTerminalUsk->pasien_perlu_didampingi ? 'checked' : '' }}><span>Pasien Perlu Di dampingi keluarga</span></div>
+                        <div class="cb"><input type="checkbox"
+                                {{ $asesmen->rmeAsesmenTerminalUsk->pasien_perlu_didampingi ? 'checked' : '' }}><span>Pasien
+                                Perlu Di dampingi keluarga</span></div>
 
                     </div>
                 </div>
@@ -840,7 +896,9 @@
             <td class="value" colspan="4">
                 <div style="display:flex; gap:40px;">
                     <div>
-                        <div class="cb"><input type="checkbox" {{ $asesmen->rmeAsesmenTerminalUsk->keluarga_dapat_mengunjungi_luar_waktu ? 'checked' : '' }}><span>Keluarga dapat mengunjungi pasien di luar waktu
+                        <div class="cb"><input type="checkbox"
+                                {{ $asesmen->rmeAsesmenTerminalUsk->keluarga_dapat_mengunjungi_luar_waktu ? 'checked' : '' }}><span>Keluarga
+                                dapat mengunjungi pasien di luar waktu
                                 berkunjung</span></div>
 
                     </div>
@@ -851,7 +909,9 @@
             <td class="value" colspan="4">
                 <div style="display:flex; gap:40px;">
                     <div>
-                        <div class="cb"><input type="checkbox" {{ $asesmen->rmeAsesmenTerminalUsk->sahabat_dapat_mengunjungi ? 'checked' : '' }}"><span>Sahabat dapat mengunjungi pasien di luar waktu
+                        <div class="cb"><input type="checkbox"
+                                {{ $asesmen->rmeAsesmenTerminalUsk->sahabat_dapat_mengunjungi ? 'checked' : '' }}"><span>Sahabat
+                                dapat mengunjungi pasien di luar waktu
                                 berkunjungi</span></div>
                     </div>
                 </div>
@@ -871,8 +931,12 @@
                 <div style="display:flex; gap:40px;">
                     <div>
                         <div class="cb">
-                            <div><input type="checkbox" {{ $asesmen->rmeAsesmenTerminalAf->alternatif_tidak ? 'checked' : '' }}><span>Tidak </span></div>
-                            <div> <input type="checkbox" {{ $asesmen->rmeAsesmenTerminalAf->alternatif_donasi_organ ? 'checked' : '' }}><span>Donasi Organ : </span></div>
+                            <div><input type="checkbox"
+                                    {{ $asesmen->rmeAsesmenTerminalAf->alternatif_tidak ? 'checked' : '' }}><span>Tidak
+                                </span></div>
+                            <div> <input type="checkbox"
+                                    {{ $asesmen->rmeAsesmenTerminalAf->alternatif_donasi_organ ? 'checked' : '' }}><span>Donasi
+                                    Organ : </span></div>
                         </div>
                     </div>
                 </div>
@@ -881,7 +945,9 @@
                 <div style="display:flex; gap:40px;">
                     <div>
                         <div class="cb">
-                            <div> <input type="checkbox" {{ $asesmen->rmeAsesmenTerminalAf->alternatif_autopsi ? 'checked' : '' }}><span>Autopsi </span></div>
+                            <div> <input type="checkbox"
+                                    {{ $asesmen->rmeAsesmenTerminalAf->alternatif_autopsi ? 'checked' : '' }}><span>Autopsi
+                                </span></div>
                             <div>
                                 <span>Keterangan : {{ $asesmen->rmeAsesmenTerminal->nyeri_keterangan ?? '' }}</span>
                             </div>
@@ -906,27 +972,32 @@
                 <div style="display:flex; gap:40px;">
                     <div>
                         <div class="cb">
-                            <input type="checkbox" {{ $asesmen->rmeAsesmenTerminalAf->faktor_resiko_marah ? 'checked' : '' }}disabled>
+                            <input type="checkbox"
+                                {{ $asesmen->rmeAsesmenTerminalAf->faktor_resiko_marah ? 'checked' : '' }}disabled>
                             <span>Marah</span>
                         </div>
 
                         <div class="cb">
-                            <input type="checkbox" {{ $asesmen->rmeAsesmenTerminalAf->faktor_resiko_depresi ? 'checked' : '' }}disabled>
+                            <input type="checkbox"
+                                {{ $asesmen->rmeAsesmenTerminalAf->faktor_resiko_depresi ? 'checked' : '' }}disabled>
                             <span>Depresi</span>
                         </div>
 
                         <div class="cb">
-                            <input type="checkbox" {{ $asesmen->rmeAsesmenTerminalAf->faktor_resiko_rasa_bersalah ? 'checked' : '' }}disabled>
+                            <input type="checkbox"
+                                {{ $asesmen->rmeAsesmenTerminalAf->faktor_resiko_rasa_bersalah ? 'checked' : '' }}disabled>
                             <span>Rasa Bersalah</span>
                         </div>
 
                         <div class="cb">
-                            <input type="checkbox" {{ $asesmen->rmeAsesmenTerminalAf->faktor_resiko_perubahan_kebiasaan ? 'checked' : '' }}disabled>
+                            <input type="checkbox"
+                                {{ $asesmen->rmeAsesmenTerminalAf->faktor_resiko_perubahan_kebiasaan ? 'checked' : '' }}disabled>
                             <span>Perubahan Kebiasaan Pola Komunikasi</span>
                         </div>
 
                         <div class="cb">
-                            <input type="checkbox" {{ $asesmen->rmeAsesmenTerminalAf->faktor_resiko_tidak_mampu_memenuhi ? 'checked' : '' }}disabled>
+                            <input type="checkbox"
+                                {{ $asesmen->rmeAsesmenTerminalAf->faktor_resiko_tidak_mampu_memenuhi ? 'checked' : '' }}disabled>
                             <span>Ketidakmampuan memenuhi peran yang diharapkan</span>
                         </div>
                     </div>
@@ -937,22 +1008,29 @@
                 <div style="display:flex; gap:40px;">
                     <div>
                         <div class="cb">
-                            <input type="checkbox" {{ $asesmen->rmeAsesmenTerminalAf->faktor_resiko_leth_lelah ? 'checked' : '' }} disabled>
+                            <input type="checkbox"
+                                {{ $asesmen->rmeAsesmenTerminalAf->faktor_resiko_leth_lelah ? 'checked' : '' }}
+                                disabled>
                             <span>Letih / Lelah</span>
                         </div>
 
                         <div class="cb">
-                            <input type="checkbox" {{ $asesmen->rmeAsesmenTerminalAf->faktor_resiko_gangguan_tidur ? 'checked' : '' }} disabled>
+                            <input type="checkbox"
+                                {{ $asesmen->rmeAsesmenTerminalAf->faktor_resiko_gangguan_tidur ? 'checked' : '' }}
+                                disabled>
                             <span>Gangguan Tidur</span>
                         </div>
 
                         <div class="cb">
-                            <input type="checkbox" {{ $asesmen->rmeAsesmenTerminalAf->faktor_resiko_sedih_menangis ? 'checked' : '' }} disabled>
+                            <input type="checkbox"
+                                {{ $asesmen->rmeAsesmenTerminalAf->faktor_resiko_sedih_menangis ? 'checked' : '' }}
+                                disabled>
                             <span>Sedih / Menangis</span>
                         </div>
 
                         <div class="cb">
-                            <input type="checkbox" {{ $asesmen->rmeAsesmenTerminalAf->faktor_resiko_penurunan_konsentrasi ? 'checked' : '' }}
+                            <input type="checkbox"
+                                {{ $asesmen->rmeAsesmenTerminalAf->faktor_resiko_penurunan_konsentrasi ? 'checked' : '' }}
                                 disabled>
                             <span>Penurunan Konsentrasi</span>
                         </div>
@@ -972,14 +1050,18 @@
         <tr>
             <td class="value" colspan="2">
                 <div class="cb">
-                    <input type="checkbox" {{ $asesmen->rmeAsesmenTerminalAf->masalah_koping_keluarga_tidak_efektif ? 'checked' : '' }} disabled>
+                    <input type="checkbox"
+                        {{ $asesmen->rmeAsesmenTerminalAf->masalah_koping_keluarga_tidak_efektif ? 'checked' : '' }}
+                        disabled>
                     <span>Koping keluarga tidak efektif</span>
                 </div>
             </td>
 
             <td class="value" colspan="2">
                 <div class="cb">
-                    <input type="checkbox" {{ $asesmen->rmeAsesmenTerminalAf->masalah_distress_spiritual_keluarga ? 'checked' : '' }} disabled>
+                    <input type="checkbox"
+                        {{ $asesmen->rmeAsesmenTerminalAf->masalah_distress_spiritual_keluarga ? 'checked' : '' }}
+                        disabled>
                     <span>Distress Spiritual</span>
                 </div>
             </td>
@@ -994,16 +1076,14 @@
                 <p>
                     Tanggal :
                     {{ optional($asesmen->rmeAsesmenParu)->tanggal
-    ? date('d/m/Y', strtotime($asesmen->rmeAsesmenParu->tanggal))
-    : '.............................'
-                }}
+                        ? date('d/m/Y', strtotime($asesmen->rmeAsesmenParu->tanggal))
+                        : '.............................' }}
                 </p>
                 <p>
                     Jam :
                     {{ optional($asesmen->rmeAsesmenParu)->jam_masuk
-    ? date('H:i', strtotime($asesmen->rmeAsesmenParu->jam_masuk))
-    : '.............................'
-                }}
+                        ? date('H:i', strtotime($asesmen->rmeAsesmenParu->jam_masuk))
+                        : '.............................' }}
                 </p>
             </td>
 
@@ -1013,25 +1093,29 @@
                     <p>Dokter yang memeriksa</p>
 
                     <img src="{{ generateQrCode(
-    trim(
-        ($asesmen->user->karyawan->gelar_depan ?? '') . ' ' .
-        str()->title($asesmen->user->karyawan->nama ?? '') . ' ' .
-        ($asesmen->user->karyawan->gelar_belakang ?? '')
-    ),
-    100,
-    'svg_datauri'
-) }}" alt="QR Petugas" style="margin:6px 0;">
+                        trim(
+                            ($asesmen->user->karyawan->gelar_depan ?? '') .
+                                ' ' .
+                                str()->title($asesmen->user->karyawan->nama ?? '') .
+                                ' ' .
+                                ($asesmen->user->karyawan->gelar_belakang ?? ''),
+                        ),
+                        100,
+                        'svg_datauri',
+                    ) }}"
+                        alt="QR Petugas" style="margin:6px 0;">
 
                     <p>
                         {{ trim(
-    ($asesmen->user->karyawan->gelar_depan ?? '') . ' ' .
-    str()->title($asesmen->user->karyawan->nama ?? '') . ' ' .
-    ($asesmen->user->karyawan->gelar_belakang ?? '')
-) }}
+                            ($asesmen->user->karyawan->gelar_depan ?? '') .
+                                ' ' .
+                                str()->title($asesmen->user->karyawan->nama ?? '') .
+                                ' ' .
+                                ($asesmen->user->karyawan->gelar_belakang ?? ''),
+                        ) }}
                     </p>
                 </div>
             </td>
         </tr>
     </table>
-
-</body>
+</div>
