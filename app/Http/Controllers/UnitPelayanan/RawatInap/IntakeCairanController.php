@@ -163,6 +163,8 @@ class IntakeCairanController extends Controller
                 'created_at'     => now(),
             ];
 
+          
+
             // Simpan data
             RmeIntakeOutputCairan::create($data);
 
