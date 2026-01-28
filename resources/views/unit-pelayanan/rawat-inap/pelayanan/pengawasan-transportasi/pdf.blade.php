@@ -98,7 +98,7 @@
         }
 
         footer div .name-konsulen {
-            margin: 80px 0 0 0;
+            margin: 30px 0 0 0;
             font-weight: 600;
             text-decoration: underline;
         }
@@ -563,6 +563,7 @@
     <footer>
         <div>
             <p>Petugas Penerima Pasien</p>
+            <img src="{{ generateQrCode($pengawasan->petugas_penerima, 100, 'svg_datauri') }}" alt="QR">
             <p class="name-konsulen">
                 {{ $pengawasan->petugas_penerima }}
             </p>
@@ -570,6 +571,8 @@
 
         <div>
             <p>Petugas Transportasi</p>
+            <img src="{{ generateQrCode($pengawasan->userCreate->karyawan->nama, 100, 'svg_datauri') }}"
+                alt="QR">
             <p class="name-konsulen">
                 {{ $pengawasan->userCreate->karyawan->gelar_depan ?? '' }}
                 {{ str()->title($pengawasan->userCreate->karyawan->nama ?? '') }}

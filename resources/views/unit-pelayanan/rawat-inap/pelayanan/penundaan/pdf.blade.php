@@ -98,7 +98,13 @@
         }
 
         footer div .name-konsulen {
-            margin: 80px 0 0 0;
+            margin: 110px 0 0 0;
+            font-weight: 600;
+            text-decoration: underline;
+        }
+
+        footer div .label-konsulen {
+            margin: 10px 0 0 0;
             font-weight: 600;
             text-decoration: underline;
         }
@@ -313,14 +319,16 @@
 
         <div class="">
             <p>Mengetahui DPJP</p>
-            <p class="name-konsulen">{{ $penundaan->dokter->nama_lengkap }}</p>
+            <img src="{{ generateQrCode($penundaan->dokter->nama_lengkap, 100, 'svg_datauri') }}" alt="QR">
+            <p class="label-konsulen">{{ $penundaan->dokter->nama_lengkap }}</p>
         </div>
 
         <div class="">
             <p style="margin: 0;">Kota Langsa, {{ date('d-m-Y', strtotime($penundaan->tanggal)) }} Pukul:
                 {{ date('H:i', strtotime($penundaan->jam)) }} WIB</p>
             <p style="margin: 0;">Pemberi Informasi</p>
-            <p class="name-konsulen">
+            <img src="{{ generateQrCode($penundaan->userCreate->karyawan->nama, 100, 'svg_datauri') }}" alt="QR">
+            <p class="label-konsulen">
                 {{ $penundaan->userCreate->karyawan->gelar_depan . ' ' . str()->title($penundaan->userCreate->karyawan->nama) . ' ' . $penundaan->userCreate->karyawan->gelar_belakang }}
             </p>
         </div>

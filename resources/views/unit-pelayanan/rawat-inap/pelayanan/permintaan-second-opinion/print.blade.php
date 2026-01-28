@@ -195,8 +195,8 @@
         }
 
         .signature-space {
-            min-height: 40px;
-            margin-bottom: 5px;
+            min-height: 90px;
+            margin-bottom: 15px;
         }
 
         .signature-line {
@@ -418,7 +418,8 @@
                 <div class="signature-row">
                     <div class="signature-box">
                         <div class="signature-title">PPA</div>
-                        <div class="signature-space"></div>
+                        <img src="{{ generateQrCode($secondOpinion->userCreate->name, 100, 'svg_datauri') }}"
+                            alt="QR">
                         <div class="signature-line">
                             ({{ $secondOpinion->userCreate->name ?? '........................................' }})
                         </div>

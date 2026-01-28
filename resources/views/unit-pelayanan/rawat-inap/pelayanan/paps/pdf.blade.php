@@ -98,7 +98,13 @@
         }
 
         footer div .name-konsulen {
-            margin: 80px 0 0 0;
+            margin: 110px 0 0 0;
+            font-weight: 600;
+            text-decoration: underline;
+        }
+
+        footer div .label-konsulen {
+            margin: 10px 0 0 0;
             font-weight: 600;
             text-decoration: underline;
         }
@@ -291,7 +297,8 @@
 
         <div class="center-column">
             <p>Dokter yang merawat</p>
-            <p class="name-konsulen">{{ $paps->dokter->nama_lengkap }}</p>
+            <img src="{{ generateQrCode($paps->dokter->nama_lengkap, 100, 'svg_datauri') }}" alt="QR">
+            <p class="label-konsulen">{{ $paps->dokter->nama_lengkap }}</p>
             <p class="identity-num">
                 @php
                     $identityNum = 'Id Peg. ' . $paps->dokter->kd_karyawan;

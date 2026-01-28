@@ -208,7 +208,11 @@
                     <td>{{ date('H:i', strtotime($pernyataan->jam_keluar)) }} WIB</td>
                     <td>{{ date('d-m-Y', strtotime($pernyataan->tgl_masuk_kembali)) }}</td>
                     <td>{{ date('H:i', strtotime($pernyataan->jam_masuk_kembali)) }} WIB</td>
-                    <td style="padding-top: 80px;">{{ $pernyataan->dokter->nama_lengkap }}</td>
+                    <td style="padding-top: 80px;">
+                        <img src="{{ generateQrCode($pernyataan->dokter->nama_lengkap, 100, 'svg_datauri') }}"
+                            alt="QR">
+                        {{ $pernyataan->dokter->nama_lengkap }}
+                    </td>
                 </tr>
             </tbody>
         </table>

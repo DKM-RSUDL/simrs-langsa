@@ -393,7 +393,7 @@
             <div class="signature-city">Langsa {{ $tanggalLengkap }}</div>
             <div class="signature-title">Yang membuat pernyataan;</div>
             <br>
-            <img src="data:image/png;base64,{{ $qrCode }}" alt="QR Code">
+            <img src="{{ generateQrCode($pernyataanDPJP->dokter->nama_lengkap, 100, 'svg_datauri') }}" alt="QR">
             {{-- <div class="signature-name">&nbsp;</div> --}}
             <div>({{ $pernyataanDPJP->dokter->nama_lengkap ?? '' }})</div>
         </div>

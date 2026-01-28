@@ -104,6 +104,12 @@
             text-decoration: underline;
         }
 
+        footer div .label-barcode {
+            margin: 10px 0 0 0;
+            font-weight: 600;
+            text-decoration: underline;
+        }
+
         footer div .identity-num {
             margin: 0;
         }
@@ -302,7 +308,8 @@
     <footer>
         <div class="">
             <p style="margin: 0;">Dokter</p>
-            <p class="name-konsulen">{{ $anestesi->dokter->nama_lengkap }}</p>
+            <img src="{{ generateQrCode($anestesi->dokter->nama_lengkap, 100, 'svg_datauri') }}" alt="QR">
+            <p class="label-barcode">{{ $anestesi->dokter->nama_lengkap }}</p>
         </div>
 
         <div class="">
