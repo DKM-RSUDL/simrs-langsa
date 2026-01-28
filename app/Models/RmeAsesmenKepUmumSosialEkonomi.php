@@ -13,4 +13,9 @@ class RmeAsesmenKepUmumSosialEkonomi extends Model
     public $timestamps = false;
 
     protected $guarded = ['id'];
+
+    public function pekerjaan()
+    {
+        return $this->belongsTo(Pekerjaan::class, 'sosial_ekonomi_pekerjaan', 'kd_pekerjaan');
+    }
 }

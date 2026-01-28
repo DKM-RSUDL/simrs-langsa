@@ -1,8 +1,8 @@
 <div class="modal fade" id="modal-create-kontrol-ulang" tabindex="-1" aria-labelledby="smallModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-sm">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="smallModalLabel">Kontrol Ulang</h5>
+                <h5 class="modal-title" id="smallModalLabel">Poli Pengobatan Lanjutan</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -28,9 +28,8 @@
             }
 
             // Handler modal
-            $('#btn-tgl-kontrol-ulang').on('click', function(e) {
-                e.preventDefault();
-                $(this).find('input[type="radio"]').prop('checked', true);
+            $('#btnPoliLanjutan').on('click', function() {
+                // $(this).find('input[type="radio"]').prop('checked', true);
                 $('#modal-create-kontrol-ulang').modal('show');
             });
 

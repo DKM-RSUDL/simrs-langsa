@@ -1085,15 +1085,7 @@
     </h2>
 
     @php
-        $pekerjaan = match ($asesmenSosialEkonomi->sosial_ekonomi_pekerjaan ?? null) {
-            '1' => 'Tidak bekerja',
-            '2' => 'PNS/TNI/POLRI',
-            '3' => 'Pegawai Swasta',
-            '4' => 'Wiraswasta',
-            '5' => 'Pelajar/Mahasiswa',
-            '6' => 'Lainnya',
-            default => '–',
-        };
+        $pekerjaan = $asesmenSosialEkonomi->pekerjaan->pekerjaan;
 
         $tingkatPenghasilan = $asesmenSosialEkonomi->sosial_ekonomi_tingkat_penghasilan ?? '–';
 
@@ -1105,7 +1097,7 @@
             default => '–',
         };
 
-        $statusPendidikan = $pendidikanData[$asesmenSosialEkonomi->sosial_ekonomi_status_pendidikan];
+        $statusPendidikan = $pendidikanData[$asesmenSosialEkonomi->sosial_ekonomi_status_pendidikan ?? 0];
 
         $tempatTinggal = $asesmenSosialEkonomi->sosial_ekonomi_tempat_tinggal ?? '–';
         $tinggalDenganKeluarga = $asesmenSosialEkonomi->sosial_ekonomi_tinggal_dengan_keluarga ?? '–';

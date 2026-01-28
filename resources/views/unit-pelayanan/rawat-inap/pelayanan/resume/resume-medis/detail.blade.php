@@ -460,6 +460,51 @@
                                         </div>
                                     </div>
                                 </div>
+
+                                <div class="mt-3">
+                                    <strong class="fw-bold">Pengobatan Lanjutan</strong>
+
+                                    <div class="bg-light p-3 border rounded">
+                                        <div class="row">
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <a href="javascript:void(0)" id="btnPoliLanjutan"
+                                                        class="pengobatan-lanjutan d-block mb-2 text-decoration-none">
+                                                        <input type="radio" id="poli-lanjutan" name="pengobatan_lanjutan"
+                                                            class="form-check-input me-2" value="1" @checked($dataResume->pengobatan_lanjutan == 1)>
+                                                        <label for="poli-lanjutan">Poli
+                                                            <span id="poli-lanjutan-info">
+                                                                {{ !empty($dataResume->keterangan_kondisi_pulang) ? ": $dataResume->keterangan_kondisi_pulang" : '' }}
+                                                            </span>
+                                                        </label>
+                                                    </a>
+                                                </div>
+
+                                                <div class="col-md-6">
+                                                    <a href="javascript:void(0)" id="btnPuskesmas"
+                                                        class="pengobatan-lanjutan d-block mb-2 text-decoration-none">
+                                                        <input type="radio" id="puskesmas-lanjutan" name="pengobatan_lanjutan"
+                                                            class="form-check-input me-2" value="2" @checked($dataResume->pengobatan_lanjutan == 2)>
+                                                        <label for="puskesmas-lanjutan">Puskesmas</label>
+                                                    </a>
+                                                </div>
+
+                                                <div class="col-md-6">
+                                                    <a href="javascript:void(0)" id="btnRSlain"
+                                                        class="pengobatan-lanjutan d-block mb-2 text-decoration-none">
+                                                        <input type="radio" id="rslain-lanjutan" name="pengobatan_lanjutan"
+                                                            class="form-check-input me-2" value="3" @checked($dataResume->pengobatan_lanjutan == 3)>
+                                                        <label for="rslain-lanjutan">RS Lain
+                                                            <span id="rs-lain-info">
+                                                                {{ !empty($dataResume->keterangan_kondisi_pulang) ? ": $dataResume->keterangan_kondisi_pulang" : '' }}
+                                                            </span>
+                                                        </label>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -509,7 +554,7 @@
     {{-- @include('unit-pelayanan.rawat-inap.pelayanan.resume.resume-medis.components.modal-konsul-rujukan') --}}
     {{-- @include('unit-pelayanan.rawat-inap.pelayanan.resume.resume-medis.components.modal-create-alergi') --}}
     @include('unit-pelayanan.rawat-inap.pelayanan.resume.resume-medis.components.modal-view-labor-create')
-    {{-- @include('unit-pelayanan.rawat-inap.pelayanan.resume.resume-medis.components.modal-kontrol-ulang') --}}
+    @include('unit-pelayanan.rawat-inap.pelayanan.resume.resume-medis.components.modal-kontrol-ulang')
     @include('unit-pelayanan.rawat-inap.pelayanan.resume.resume-medis.components.modal-rs-rujuk-bagian')
 @endsection
 

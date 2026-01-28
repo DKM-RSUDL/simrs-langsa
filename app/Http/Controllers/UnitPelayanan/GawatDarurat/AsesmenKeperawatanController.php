@@ -1188,7 +1188,7 @@ class AsesmenKeperawatanController extends Controller
 
     public function generatePDF(Request $request , $kd_pasien, $tgl_masuk, $urut_masuk, $id)
     {
-        try {
+        // try {
             // Ambil data asesmen dengan eager loading
             $asesmen = RmeAsesmen::with([
                 'user',
@@ -1202,7 +1202,7 @@ class AsesmenKeperawatanController extends Controller
                 'asesmenKepUmumSosialEkonomi',
                 'asesmenKepUmumGizi'
             ])->where('id', $id)->first();
-          
+
 
             // Ambil data pasien dan kunjungan
             $dataMedis = Kunjungan::with('pasien')
@@ -1247,7 +1247,6 @@ class AsesmenKeperawatanController extends Controller
                 return Pendidikan::select('kd_pendidikan', 'pendidikan')->pluck('pendidikan', 'kd_pendidikan');
             });
 
-           
 
             // dd([
             //     'asesmen' => $asesmen,
@@ -1286,7 +1285,7 @@ class AsesmenKeperawatanController extends Controller
             $tglMasukFormatted = $dataMedis->tgl_masuk ?? now();
 
 
-         
+
             // Generate PDF with null checks
             $pdf = PDF::loadView('unit-pelayanan.gawat-darurat.action-gawat-darurat.asesmen-keperawatan.print-pdf', [
                 'asesmen' => $asesmen ?? null,
@@ -1324,11 +1323,11 @@ class AsesmenKeperawatanController extends Controller
             ]);
 
             return $pdf->stream("asesmen-keperawatan-{$id}-print-pdf.pdf");
-        } catch (\Exception $e) {
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Gagal generate PDF: ' . $e->getMessage()
-            ], 500);
-        }
+        // } catch (\Exception $e) {
+        //     return response()->json([
+        //         'status' => 'error',
+        //         'message' => 'Gagal generate PDF: ' . $e->getMessage()
+        //     ], 500);
+        // }
     }
 }
