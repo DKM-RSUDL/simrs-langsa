@@ -103,6 +103,12 @@
             text-decoration: underline;
         }
 
+        footer div .label-konsulen {
+            margin: 10px 0 0 0;
+            font-weight: 600;
+            text-decoration: underline;
+        }
+
         footer div .identity-num {
             margin: 0;
         }
@@ -244,7 +250,8 @@
 
         <div class="">
             <p>PPA Yang menyetujui</p>
-            <p class="name-konsulen">
+            <img src="{{ generateQrCode($rohani->penyetuju->nama, 100, 'svg_datauri') }}" alt="QR">
+            <p class="label-konsulen">
                 {{ $rohani->penyetuju->gelar_depan . ' ' . str()->title($rohani->penyetuju->nama) . ' ' . $rohani->penyetuju->gelar_belakang }}
             </p>
         </div>

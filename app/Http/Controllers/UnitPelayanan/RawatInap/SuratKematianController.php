@@ -428,13 +428,10 @@ class SuratKematianController extends Controller
             ->orderBy('id', 'asc')
             ->get();
 
-        $qrCode = base64_encode(QrCode::format('png')->size(100)->errorCorrection('H')->generate($suratKematian->dokter->nama_lengkap));
-
         // Persiapkan data untuk PDF
         $data = [
             'dataMedis' => $dataMedis,
             'suratKematian' => $suratKematian,
-            'qrCode'    => $qrCode
         ];
 
         // Generate PDF dengan DomPDF

@@ -375,7 +375,7 @@
     <div class="signature">
         <p>Kota Langsa, {{ \Carbon\Carbon::now()->format('d/m/Y') }}</p>
         <p>Dokter yang menerangkan</p>
-        <img src="data:image/png;base64,{{ $qrCode }}" alt="QR Code">
+        <img src="{{ generateQrCode($suratKematian->dokter->nama_lengkap, 100, 'svg_datauri') }}" alt="QR">
         <p>({{ $suratKematian->dokter->nama_lengkap ?? '.............................' }})</p>
     </div>
 

@@ -7,7 +7,8 @@
     <title>Covid 19 - {{ $dataMedis->pasien->nama ?? 'Pasien' }}</title>
     <style>
         @page {
-            size: 8.5in 13in; /* Letter/F4 size */
+            size: 8.5in 13in;
+            /* Letter/F4 size */
             margin: 10mm 12mm 10mm 12mm;
         }
 
@@ -465,7 +466,13 @@
         }
 
         .signature-box-page2 {
-            height: 40px;
+            height: 110px;
+            border-bottom: 1px solid #000;
+            margin: 8px 0 5px 0;
+        }
+
+        .label-barcode {
+            height: 10px;
             border-bottom: 1px solid #000;
             margin: 8px 0 5px 0;
         }
@@ -474,15 +481,15 @@
         .no-border-left {
             border-left: none !important;
         }
-        
+
         .no-border-right {
             border-right: none !important;
         }
-        
+
         .no-border-top {
             border-top: none !important;
         }
-        
+
         .no-border-bottom {
             border-bottom: none !important;
         }
@@ -496,7 +503,7 @@
         <div class="header-content">
             <div class="logo-section">
                 <div class="logo-box">
-                    @if(file_exists(public_path('assets/img/Logo-RSUD-Langsa-1.png')))
+                    @if (file_exists(public_path('assets/img/Logo-RSUD-Langsa-1.png')))
                         <img src="data:image/png;base64,{{ base64_encode(file_get_contents(public_path('assets/img/Logo-RSUD-Langsa-1.png'))) }}"
                             style="width: 50px; height: 50px;" alt="Logo RSUD Langsa">
                     @else
@@ -528,7 +535,7 @@
                     <tr>
                         <td class="label">Jenis Kelamin</td>
                         <td>
-                            @if(isset($dataMedis->pasien->jenis_kelamin))
+                            @if (isset($dataMedis->pasien->jenis_kelamin))
                                 {{ $dataMedis->pasien->jenis_kelamin == 1 ? 'Laki-laki' : 'Perempuan' }}
                             @else
                                 Laki-laki / Perempuan *
@@ -537,7 +544,8 @@
                     </tr>
                     <tr>
                         <td class="label">Tanggal Lahir</td>
-                        <td>{{ $dataMedis->pasien->tgl_lahir ? date('d/m/Y', strtotime($dataMedis->pasien->tgl_lahir)) : '' }}</td>
+                        <td>{{ $dataMedis->pasien->tgl_lahir ? date('d/m/Y', strtotime($dataMedis->pasien->tgl_lahir)) : '' }}
+                        </td>
                     </tr>
                 </table>
             </div>
@@ -568,22 +576,25 @@
                         'ispa' => 'Batuk/Pilek/Nyeri tenggorokan/Sesak Nafas (ISPA)',
                         'sakit_kepala' => 'Sakit kepala/ Lemah (Malaise)/ Nyeri otot',
                         'ispa_berat' => 'ISPA Berat/ Pneumonia Berat',
-                        'gejala_lain' => 'Gejala lainnya: Gangguan pemciuman/ Gangguan pengecapan/ Mual/ Muntah/ Nyeri perut/ Diare'
+                        'gejala_lain' =>
+                            'Gejala lainnya: Gangguan pemciuman/ Gangguan pengecapan/ Mual/ Muntah/ Nyeri perut/ Diare',
                     ];
                     $gejalaData = $covidData->gejala_decoded ?? [];
                 @endphp
 
-                @foreach($gejalaList as $key => $label)
-                <tr>
-                    <td class="no-col">{{ $loop->iteration }}</td>
-                    <td class="item-col">{{ $label }}</td>
-                    <td class="ya-col">
-                        <span class="checkbox {{ isset($gejalaData[$key]) && $gejalaData[$key] == 1 ? 'checked' : '' }}"></span>
-                    </td>
-                    <td class="tidak-col">
-                        <span class="checkbox {{ !isset($gejalaData[$key]) || $gejalaData[$key] != 1 ? 'checked' : '' }}"></span>
-                    </td>
-                </tr>
+                @foreach ($gejalaList as $key => $label)
+                    <tr>
+                        <td class="no-col">{{ $loop->iteration }}</td>
+                        <td class="item-col">{{ $label }}</td>
+                        <td class="ya-col">
+                            <span
+                                class="checkbox {{ isset($gejalaData[$key]) && $gejalaData[$key] == 1 ? 'checked' : '' }}"></span>
+                        </td>
+                        <td class="tidak-col">
+                            <span
+                                class="checkbox {{ !isset($gejalaData[$key]) || $gejalaData[$key] != 1 ? 'checked' : '' }}"></span>
+                        </td>
+                    </tr>
                 @endforeach
             </tbody>
         </table>
@@ -609,33 +620,39 @@
             <tbody>
                 @php
                     $risikoList = [
-                        'perjalanan' => 'Riwayat perjalanan/ tinggal di daerah transmisi lokal dalam < 14 hari terakhir',
-                        'kontak_erat' => 'Kontak erat* dengan kasus konformasi** /Suspek***/Probable**** COVID-19 dalam 14 hari terakhir'
+                        'perjalanan' =>
+                            'Riwayat perjalanan/ tinggal di daerah transmisi lokal dalam < 14 hari terakhir',
+                        'kontak_erat' =>
+                            'Kontak erat* dengan kasus konformasi** /Suspek***/Probable**** COVID-19 dalam 14 hari terakhir',
                     ];
                     $risikoData = $covidData->faktor_risiko_decoded ?? [];
                 @endphp
 
-                @foreach($risikoList as $key => $label)
-                <tr>
-                    <td class="no-col">{{ $loop->iteration }}</td>
-                    <td class="item-col">
-                        {{ $label }}
-                        @if($key == 'perjalanan')
-                            <br><strong>Sebutkan Negara/ Propinsi/ Kota:</strong> {{ $covidData->lokasi_perjalanan ?? '................................' }}
-                        @endif
-                    </td>
-                    <td class="ya-col">
-                        <span class="checkbox {{ isset($risikoData[$key]) && $risikoData[$key] == 1 ? 'checked' : '' }}"></span>
-                    </td>
-                    <td class="tidak-col">
-                        <span class="checkbox {{ !isset($risikoData[$key]) || $risikoData[$key] != 1 ? 'checked' : '' }}"></span>
-                    </td>
-                </tr>
+                @foreach ($risikoList as $key => $label)
+                    <tr>
+                        <td class="no-col">{{ $loop->iteration }}</td>
+                        <td class="item-col">
+                            {{ $label }}
+                            @if ($key == 'perjalanan')
+                                <br><strong>Sebutkan Negara/ Propinsi/ Kota:</strong>
+                                {{ $covidData->lokasi_perjalanan ?? '................................' }}
+                            @endif
+                        </td>
+                        <td class="ya-col">
+                            <span
+                                class="checkbox {{ isset($risikoData[$key]) && $risikoData[$key] == 1 ? 'checked' : '' }}"></span>
+                        </td>
+                        <td class="tidak-col">
+                            <span
+                                class="checkbox {{ !isset($risikoData[$key]) || $risikoData[$key] != 1 ? 'checked' : '' }}"></span>
+                        </td>
+                    </tr>
                 @endforeach
 
                 <!-- Header Faktor Komorbid -->
                 <tr>
-                    <td colspan="4" style="background-color: #f5f5f5; font-weight: bold; text-align: left; padding: 6px;">
+                    <td colspan="4"
+                        style="background-color: #f5f5f5; font-weight: bold; text-align: left; padding: 6px;">
                         <strong>FAKTOR KOMORBID</strong>
                     </td>
                 </tr>
@@ -652,31 +669,33 @@
                         'jantung' => 'Jantung',
                         'ginjal' => 'Ginjal',
                         'hemodialisis' => 'Riwayat hemodialisis',
-                        'usia_50' => 'Usia > 50 Tahun'
+                        'usia_50' => 'Usia > 50 Tahun',
                     ];
                     $komorbidData = $covidData->komorbid_decoded ?? [];
                 @endphp
 
-                @foreach($komorbidList as $key => $label)
-                <tr>
-                    <td class="no-col">{{ $loop->iteration }}</td>
-                    <td class="no-border-left no-border-right" style="text-align: left; padding: 4px 8px;">
-                        • {{ $label }}
-                    </td>
-                    <td class="no-col" style="text-align: center;">
-                        <span class="checkbox {{ isset($komorbidData[$key]) && $komorbidData[$key] == 1 ? 'checked' : '' }}"></span>
-                    </td>
-                    <td style="text-align: center;">
-                        <span class="checkbox {{ !isset($komorbidData[$key]) || $komorbidData[$key] != 1 ? 'checked' : '' }}"></span>
-                    </td>
-                </tr>
+                @foreach ($komorbidList as $key => $label)
+                    <tr>
+                        <td class="no-col">{{ $loop->iteration }}</td>
+                        <td class="no-border-left no-border-right" style="text-align: left; padding: 4px 8px;">
+                            • {{ $label }}
+                        </td>
+                        <td class="no-col" style="text-align: center;">
+                            <span
+                                class="checkbox {{ isset($komorbidData[$key]) && $komorbidData[$key] == 1 ? 'checked' : '' }}"></span>
+                        </td>
+                        <td style="text-align: center;">
+                            <span
+                                class="checkbox {{ !isset($komorbidData[$key]) || $komorbidData[$key] != 1 ? 'checked' : '' }}"></span>
+                        </td>
+                    </tr>
                 @endforeach
 
-        @media print {
-            .page-break {
+                @media print {
+                .page-break {
                 page-break-before: always;
-            }
-        }
+                }
+                }
             </tbody>
         </table>
 
@@ -739,18 +758,22 @@
             <div class="tindak-lanjut-title">TINDAK LANJUT:</div>
             <div class="tindak-lanjut-item"><strong>Kontak erat</strong> : Rujuk ke pelayanan COVID-19 (IGD PIE)</div>
             <div class="tindak-lanjut-item"><strong>SUSPEK</strong> : Rujuk ke pelayanan COVID-19 (IGD PIE)</div>
-            <div class="tindak-lanjut-item"><strong>NON SUSPEK</strong>: Lanjut ke pelayanan Non COVID-19 (IGD/Poliklinik/ Rawat Inap Non PIE)</div>
+            <div class="tindak-lanjut-item"><strong>NON SUSPEK</strong>: Lanjut ke pelayanan Non COVID-19
+                (IGD/Poliklinik/ Rawat Inap Non PIE)</div>
         </div>
 
         <!-- Declaration -->
         <div class="declaration">
-            Demikian pernyataan ini saya sampaikan dengan sebenar-benarnya. Saya menyadari pemberian informasi yang tidak sesuai dengan yang sebenarnya dapat dikenakan sa
+            Demikian pernyataan ini saya sampaikan dengan sebenar-benarnya. Saya menyadari pemberian informasi yang
+            tidak sesuai dengan yang sebenarnya dapat dikenakan sa
         </div>
 
         <!-- Location and Date -->
         <div class="location-date">
-            Kota Langsa, <span class="underline">{{ $covidData->tanggal ? $covidData->tanggal->format('d') : '.....' }}</span>,
-            <span class="underline">{{ $covidData->tanggal ? $covidData->tanggal->format('F') : '............' }}</span>,
+            Kota Langsa, <span
+                class="underline">{{ $covidData->tanggal ? $covidData->tanggal->format('d') : '.....' }}</span>,
+            <span
+                class="underline">{{ $covidData->tanggal ? $covidData->tanggal->format('F') : '............' }}</span>,
             <span class="underline">{{ $covidData->tanggal ? $covidData->tanggal->format('Y') : '20....' }}</span>
         </div>
 
@@ -758,14 +781,14 @@
         <table class="signature-table">
             <tr>
                 <td>
-                    @if($covidData->persetujuan_untuk == 'keluarga')
+                    @if ($covidData->persetujuan_untuk == 'keluarga')
                         <div class="signature-label">Keluarga pasien</div>
                     @else
                         <div class="signature-label">Pasien/pendamping</div>
                     @endif
                     <div class="signature-box"></div>
                     <div class="signature-name">
-                        @if($covidData->persetujuan_untuk == 'keluarga' && $covidData->nama_keluarga)
+                        @if ($covidData->persetujuan_untuk == 'keluarga' && $covidData->nama_keluarga)
                             ({{ $covidData->nama_keluarga }})
                         @else
                             ({{ $dataMedis->pasien->nama ?? '.....................................' }})
@@ -787,8 +810,10 @@
         <!-- Notes -->
         <div class="note-section" style="font-size: 10px;">
             <div class="note-title">Ket:</div>
-            <div><strong>Kasus konfirmasi:</strong> Seseorang yang dinyatakan positif virus COVID-19 berdasarkan pemeriksaan laboratorium RT-PCR.</div>
-            <div><strong>Kasus Probable :</strong> Kasus suspek ISPA/ARDS/meninggal dengan gambaran klinis yang meyakinkan COVID-19 dan belum ada hasil pemeriksaan.</div>
+            <div><strong>Kasus konfirmasi:</strong> Seseorang yang dinyatakan positif virus COVID-19 berdasarkan
+                pemeriksaan laboratorium RT-PCR.</div>
+            <div><strong>Kasus Probable :</strong> Kasus suspek ISPA/ARDS/meninggal dengan gambaran klinis yang
+                meyakinkan COVID-19 dan belum ada hasil pemeriksaan.</div>
         </div>
     </div>
 
@@ -799,12 +824,12 @@
             <div class="header-content">
                 <div class="logo-section">
                     <div class="logo-box">
-                    @if(file_exists(public_path('assets/img/Logo-RSUD-Langsa-1.png')))
-                        <img src="data:image/png;base64,{{ base64_encode(file_get_contents(public_path('assets/img/Logo-RSUD-Langsa-1.png'))) }}"
-                            style="width: 50px; height: 50px;" alt="Logo RSUD Langsa">
-                    @else
-                        LOGO
-                    @endif
+                        @if (file_exists(public_path('assets/img/Logo-RSUD-Langsa-1.png')))
+                            <img src="data:image/png;base64,{{ base64_encode(file_get_contents(public_path('assets/img/Logo-RSUD-Langsa-1.png'))) }}"
+                                style="width: 50px; height: 50px;" alt="Logo RSUD Langsa">
+                        @else
+                            LOGO
+                        @endif
                     </div>
                     <div class="hospital-name">RSUD LANGSA</div>
                     <div class="hospital-address">
@@ -831,7 +856,7 @@
                         <tr>
                             <td class="label">Jenis Kelamin</td>
                             <td>
-                                @if(isset($dataMedis->pasien->jenis_kelamin))
+                                @if (isset($dataMedis->pasien->jenis_kelamin))
                                     {{ $dataMedis->pasien->jenis_kelamin == 1 ? 'Laki-laki' : 'Perempuan' }}
                                 @else
                                     Laki-laki / Perempuan *
@@ -840,7 +865,8 @@
                         </tr>
                         <tr>
                             <td class="label">Tanggal Lahir</td>
-                            <td>{{ $dataMedis->pasien->tgl_lahir ? date('d/m/Y', strtotime($dataMedis->pasien->tgl_lahir)) : '' }}</td>
+                            <td>{{ $dataMedis->pasien->tgl_lahir ? date('d/m/Y', strtotime($dataMedis->pasien->tgl_lahir)) : '' }}
+                            </td>
                         </tr>
                     </table>
                 </div>
@@ -852,55 +878,73 @@
             <div class="dasar-section">
                 <div class="dasar-title" style="font-size: 12px;">Dasar:</div>
                 <ol class="dasar-list" style="font-size: 12px;">
-                    <li>Instruksi Presiden Republik Indonesia Indonesia Nomor 6 Tahun 2020 tentang Peningkatan Disiplin dan Penegakan Hukum Protokol Kesehatan dalam Pencegahan dan Pengendalian Corona Virus Disease 2019;</li>
-                    <li>Keputusan Menteri Kesehatan No.HK.01.07 /MENKES/413/2020 tentang Pedoman Pencegahan dan Pengendalian COVID-19;</li>
-                    <li>Keputusan Gubernur Aceh Nomor 360/969/2020 tentang Penetapan Status Tanggap Darurat Skala Provinsi untuk Penanganan Corona Virus Disease 2019;</li>
-                    <li>Peraturan Walikota Langsa Nomor 31 Tentang Penerapan Disiplin dan Penegakan Hukum Protokol Kesehatan Sebagai Upaya Pencegehan dan Pengendalian Corona Virus Disease 2019 di Kota Langsa</li>
+                    <li>Instruksi Presiden Republik Indonesia Indonesia Nomor 6 Tahun 2020 tentang Peningkatan Disiplin
+                        dan Penegakan Hukum Protokol Kesehatan dalam Pencegahan dan Pengendalian Corona Virus Disease
+                        2019;</li>
+                    <li>Keputusan Menteri Kesehatan No.HK.01.07 /MENKES/413/2020 tentang Pedoman Pencegahan dan
+                        Pengendalian COVID-19;</li>
+                    <li>Keputusan Gubernur Aceh Nomor 360/969/2020 tentang Penetapan Status Tanggap Darurat Skala
+                        Provinsi untuk Penanganan Corona Virus Disease 2019;</li>
+                    <li>Peraturan Walikota Langsa Nomor 31 Tentang Penerapan Disiplin dan Penegakan Hukum Protokol
+                        Kesehatan Sebagai Upaya Pencegehan dan Pengendalian Corona Virus Disease 2019 di Kota Langsa
+                    </li>
                 </ol>
             </div>
 
             <div class="maka-section">
                 <div class="maka-title" style="font-size: 12px;">Maka:</div>
                 <div class="maka-content" style="font-size: 12px;">
-                    Dalam rangka menindaklanjuti Kebijakan Pemerintah untuk Penegakan Protokol Kesehatan dalam Pencegahan dan Pengendalian COVID-19, maka RSUD Kota Langsa akan melakukan Skrining (penapisan) COVID-19 yang terdiri dari anamnesa, pemeriksaan laboratorium dan radiologi bagi semua pasien yang akan dilayani. Bila dari hasil pemeriksaan tersebut, pasien diduga terinfeksi COVID-19 maka:
+                    Dalam rangka menindaklanjuti Kebijakan Pemerintah untuk Penegakan Protokol Kesehatan dalam
+                    Pencegahan dan Pengendalian COVID-19, maka RSUD Kota Langsa akan melakukan Skrining (penapisan)
+                    COVID-19 yang terdiri dari anamnesa, pemeriksaan laboratorium dan radiologi bagi semua pasien yang
+                    akan dilayani. Bila dari hasil pemeriksaan tersebut, pasien diduga terinfeksi COVID-19 maka:
                 </div>
                 <ol class="maka-list" style="font-size: 12px;">
-                    <li>Akan dilakukan pemeriksaan SWAB RT-PCR yang akan dikirim ke Laboratorium yang mampu melakukan pemeriksaan RT-PCR;</li>
+                    <li>Akan dilakukan pemeriksaan SWAB RT-PCR yang akan dikirim ke Laboratorium yang mampu melakukan
+                        pemeriksaan RT-PCR;</li>
                     <li>Selama menunggu hasil, pasien akan dirawat di Ruang PINERE;</li>
-                    <li>TIDAK BOLEH didampingi/dibesuk, kecuali bagi pasien dengan kondisi tidak dapat mandiri dapat didampingi 1 (satu) orang keluarga yang sehat;</li>
-                    <li>Pendamping juga ikut diisolasi bersama pasien di kamar dan tidak boleh keluar masuk selama pasien dirawat;</li>
-                    <li>Jika Pasien meninggal selama perawatan meskipun hasil SWAB Test belum keluar, pasien akan dimakamkan secara Protokol Covid-19;</li>
-                    <li>Dalam proses Pemulasaran Jenazah, jika Keluarga ingin berpartisipasi dalam kegiatan tersebutkeluarga dekat (sehat) dapat mengikuti proses tersebut dengan menggunakan APO Level 3 yang disediakan Ru mah Sakit maksimal 2 (dua) orang</li>
+                    <li>TIDAK BOLEH didampingi/dibesuk, kecuali bagi pasien dengan kondisi tidak dapat mandiri dapat
+                        didampingi 1 (satu) orang keluarga yang sehat;</li>
+                    <li>Pendamping juga ikut diisolasi bersama pasien di kamar dan tidak boleh keluar masuk selama
+                        pasien dirawat;</li>
+                    <li>Jika Pasien meninggal selama perawatan meskipun hasil SWAB Test belum keluar, pasien akan
+                        dimakamkan secara Protokol Covid-19;</li>
+                    <li>Dalam proses Pemulasaran Jenazah, jika Keluarga ingin berpartisipasi dalam kegiatan
+                        tersebutkeluarga dekat (sehat) dapat mengikuti proses tersebut dengan menggunakan APO Level 3
+                        yang disediakan Ru mah Sakit maksimal 2 (dua) orang</li>
                 </ol>
             </div>
 
             <div class="persetujuan-section" style="font-size: 12px;">
-                Dengan ini Saya dan telah menendapat penjelasan dan memahami penjelasan tersebut di atas dan menyatakan <strong>{{ $covidData->persetujuan === 'setuju' ? 'SETUJU' : 'TIDAK SETUJU' }}</strong> untuk setiap hal yang ditetapkan RSUD Langsa di atas.
+                Dengan ini Saya dan telah menendapat penjelasan dan memahami penjelasan tersebut di atas dan menyatakan
+                <strong>{{ $covidData->persetujuan === 'setuju' ? 'SETUJU' : 'TIDAK SETUJU' }}</strong> untuk setiap
+                hal yang ditetapkan RSUD Langsa di atas.
             </div>
 
             <!-- Signature Section for Page 2 -->
             <div class="location-date" style="font-size: 12px;">
-                Langsa, tanggal: <span class="underline">{{ $covidData->tanggal ? $covidData->tanggal->format('d/m/Y') : '................' }}</span>
-                Jam: <span class="underline">{{ $covidData->jam_formatted ? $covidData->jam_formatted : '........' }}</span>
+                Langsa, tanggal: <span
+                    class="underline">{{ $covidData->tanggal ? $covidData->tanggal->format('d/m/Y') : '................' }}</span>
+                Jam: <span
+                    class="underline">{{ $covidData->jam_formatted ? $covidData->jam_formatted : '........' }}</span>
             </div>
 
             <table class="signature-table-page2">
                 <tr>
                     <td>
-                        @if($covidData->persetujuan_untuk == 'keluarga')
+                        @if ($covidData->persetujuan_untuk == 'keluarga')
                             <div class="signature-label" style="font-size: 12px;">Keluarga pasien:</div>
                         @else
                             <div class="signature-label" style="font-size: 12px;">Pasien:</div>
                         @endif
                         <div class="signature-box-page2"></div>
                         <div class="signature-name" style="font-size: 12px;">
-                            @if($covidData->persetujuan_untuk == 'keluarga' && $covidData->nama_keluarga)
+                            @if ($covidData->persetujuan_untuk == 'keluarga' && $covidData->nama_keluarga)
                                 ({{ $covidData->nama_keluarga }})
                             @else
                                 ({{ $dataMedis->pasien->nama ?? '.....................................' }})
                             @endif
                         </div>
-                        <div style="font-size: 7px; font-size: 12px;">Ttd dan nama jelas</div>
                     </td>
                     <td>
                         <div class="signature-label" style="font-size: 12px;">Saksi:</div>
@@ -908,15 +952,15 @@
                         <div class="signature-name" style="font-size: 12px;">
                             ({{ $covidData->nama_saksi1 ?? '.....................................' }})
                         </div>
-                        <div style="font-size: 7px; font-size: 12px;">Ttd dan nama jelas</div>
                     </td>
                     <td>
                         <div class="signature-label" style="font-size: 12px;">Yang menjelaskan:</div>
-                        <div class="signature-box-page2"></div>
+                        <img src="{{ generateQrCode($covidData->userCreate->name, 100, 'svg_datauri') }}"
+                            alt="QR">
+                        <div class="label-barcode"></div>
                         <div class="signature-name" style="font-size: 12px;">
                             ({{ $covidData->userCreate->name ?? '.....................................' }})
                         </div>
-                        <div style="font-size: 7px; font-size: 12px;">Ttd dan nama jelas</div>
                     </td>
                 </tr>
             </table>
@@ -924,4 +968,5 @@
         </div>
     </div>
 </body>
+
 </html>

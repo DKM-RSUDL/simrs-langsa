@@ -8,7 +8,6 @@ use App\Http\Controllers\UnitPelayanan\Operasi\PraInduksitController;
 use App\Http\Controllers\UnitPelayanan\Operasi\CeklistKeselamatanController;
 use App\Http\Controllers\UnitPelayanan\Operasi\EdukasiAnestesiController;
 use App\Http\Controllers\UnitPelayanan\Operasi\LaporanAnastesiController;
-use App\Http\Controllers\UnitPelayanan\Operasi\LaporanOperatifController;
 use App\Http\Controllers\UnitPelayanan\Operasi\PraAnestesiMedisController;
 use App\Http\Controllers\UnitPelayanan\Operasi\LaporanOperasiController;
 use App\Http\Controllers\UnitPelayanan\Operasi\PraAnestesiPerawatController;

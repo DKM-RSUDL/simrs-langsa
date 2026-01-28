@@ -152,7 +152,7 @@
     <main>
         <p class="letter-title">
             FORMULIR PENOLAKAN RESUSITASI <br>
-            DO NOT RESUSCITATE (DNR)
+            DO NOT RESUSCITATE (DNR)rr
         </p>
 
         <p>
@@ -258,7 +258,7 @@
         <div class="">
             <p style="margin: 0;">Langsa, {{ date('d-m-Y', strtotime($dnr->tanggal)) }}</p>
             <p style="margin: 0;">Dokter yg menyatakan</p>
-            <img src="data:image/png;base64,{{ $qrCode }}" alt="QR Code">
+            <img src="{{ generateQrCode($dnr->dokter->nama_lengkap, 100, 'svg_datauri') }}" alt="QR">
             <p class="name-konsulen">{{ $dnr->dokter->nama_lengkap }}</p>
         </div>
     </footer>

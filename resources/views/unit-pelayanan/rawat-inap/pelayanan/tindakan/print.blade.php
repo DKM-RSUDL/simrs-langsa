@@ -182,7 +182,12 @@
         }
 
         .sig-name {
-            margin-top: 60px;
+            margin-top: 100px;
+            font-weight: bold;
+        }
+
+        .sig-label {
+            margin-top: 10px;
             font-weight: bold;
         }
     </style>
@@ -397,14 +402,15 @@
 
             <div class="signature-block">
                 <div class="sig-left">
-                    TANDA TANGAN PASIEN
+                    <div class="sig-name">TANDA TANGAN PASIEN</div>
                     <div class="sig-name">
                         ({{ $dataMedis->pasien->nama }})
                     </div>
                 </div>
                 <div class="sig-right">
-                    TANDA TANGAN DOKTER
-                    <div class="sig-name">
+                    <div class="sig-name">TANDA TANGAN DOKTER</div>
+                    <img src="{{ generateQrCode($tdk->ppa->nama_lengkap, 100, 'svg_datauri') }}" alt="QR">
+                    <div class="sig-label">
                         ({{ $tdk->ppa->nama_lengkap }})
                     </div>
                 </div>
