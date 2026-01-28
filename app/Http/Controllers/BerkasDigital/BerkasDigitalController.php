@@ -363,6 +363,10 @@ class BerkasDigitalController extends Controller
         $asesmenOpthamology = $asesmenOpthamologyData['asesmenOpthamology'];
         $faktorpemberatOpthamology = $asesmenOpthamologyData['faktorpemberat'];
         $menjalarOpthamology = $asesmenOpthamologyData['menjalar'];
+
+        // Ambil data Asesmen Keperawatan Anak (Rawat Inap)
+        $asesmenKepAnakData = $this->berkasDigitalService->getAsesmenKepAnakData($dataMedis);
+        $asesmenKepAnak = $asesmenKepAnakData['asesmen'] ?? null;
         $frekuensinyeriOpthamology = $asesmenOpthamologyData['frekuensinyeri'];
         $kualitasnyeriOpthamology = $asesmenOpthamologyData['kualitasnyeri'];
         $faktorperinganOpthamology = $asesmenOpthamologyData['faktorperingan'];
@@ -491,6 +495,46 @@ class BerkasDigitalController extends Controller
             $alergiPasienMedisNeonatologi = collect([]);
         }
 
+        // Ambil data Asesmen Keperawatan Anak (Rawat Inap)
+        $asesmenKepAnakData = $this->berkasDigitalService->getAsesmenKepAnakData($dataMedis);
+        $asesmenKepAnak = $asesmenKepAnakData['asesmen'] ?? null;
+
+        // Ambil data Asesmen Keperawatan Perinatology (Rawat Inap)
+        $asesmenKepPerinatologyData = $this->berkasDigitalService->getAsesmenKepPerinatologyData($dataMedis);
+        $asesmenKepPerinatology = $asesmenKepPerinatologyData['asesmen'] ?? null;
+
+        // Ambil data Asesmen Awal Keperawatan Dewasa (Rawat Inap)
+        $asesmenAwalKeperawatanDewasaData = $this->berkasDigitalService->getAsesmenAwalKeperawatanDewasaData($dataMedis);
+        $asesmenAwalKeperawatanDewasa = $asesmenAwalKeperawatanDewasaData;
+
+        // Ambil data Surat Kematian (hanya untuk pasien meninggal)
+        $suratKematianData = $this->berkasDigitalService->getSuratKematianData($dataMedis);
+        $suratKematian = $suratKematianData['suratKematian'];
+
+        // Ambil data PAPS
+        $paps = $this->berkasDigitalService->getPapsData($dataMedis);
+
+        // Ambil data Meninggalkan Perawatan
+        $meninggalkanPerawatan = $this->berkasDigitalService->getMeninggalkanPerawatanData($dataMedis);
+
+        // Ambil data Pernyataan DPJP
+        $pernyataanDPJP = $this->berkasDigitalService->getPernyataanDPJPData($dataMedis);
+
+        // Ambil data EWS Pasien Dewasa
+        $ewsPasienDewasaData = $this->berkasDigitalService->getEWSPasienDewasaData($dataMedis);
+        $ewsRecords = $ewsPasienDewasaData['ewsRecords'];
+        $ewsPasienDewasa = $ewsPasienDewasaData['ewsPasienDewasa'];
+
+        // Ambil data EWS Pasien Anak
+        $ewsPasienAnakData = $this->berkasDigitalService->getEWSPasienAnakData($dataMedis);
+        $ewsRecordsAnak = $ewsPasienAnakData['ewsRecords'];
+        $ewsPasienAnak = $ewsPasienAnakData['ewsPasienAnak'];
+
+        // Ambil data EWS Pasien Obstetrik
+        $ewsPasienObstetrikData = $this->berkasDigitalService->getEWSPasienObstetrikData($dataMedis);
+        $ewsRecordsObstetrik = $ewsPasienObstetrikData['ewsRecords'];
+        $ewsPasienObstetrik = $ewsPasienObstetrikData['ewsPasienObstetrik'];
+
         return view('berkas-digital.document.show', compact(
             'listDokumen',
             'dataMedis',
@@ -605,7 +649,20 @@ class BerkasDigitalController extends Controller
             'rmeMasterDiagnosisMedisNeonatologi',
             'rmeMasterImplementasiMedisNeonatologi',
             'satsetPrognosisMedisNeonatologi',
-            'alergiPasienMedisNeonatologi'
+            'alergiPasienMedisNeonatologi',
+            'asesmenKepAnak',
+            'asesmenKepPerinatology',
+            'asesmenAwalKeperawatanDewasa',
+            'suratKematian',
+            'pernyataanDPJP',
+            'paps',
+            'meninggalkanPerawatan',
+            'ewsRecords',
+            'ewsPasienDewasa',
+            'ewsRecordsAnak',
+            'ewsPasienAnak',
+            'ewsRecordsObstetrik',
+            'ewsPasienObstetrik'
         ));
     }
 

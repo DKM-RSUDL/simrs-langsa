@@ -1,183 +1,172 @@
-<!DOCTYPE html>
-<html lang="id">
+@php
+    // This view is intended to be included inside the berkas-digital `show` page.
+    // To avoid leaking global styles we namespace all selectors under
+    // the `.surat-kematian-print` container and remove global HTML wrapper.
+@endphp
 
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Surat Keterangan Kematian</title>
-    <style>
-        @page {
-            margin: 20px 35px;
-            size: 21cm 29.7cm;
+<style>
+    /* Namespaced styles to avoid affecting parent layout */
+    .surat-kematian-print .header-table {
+        width: 100%;
+        border-collapse: collapse;
+        background-color: #f0f0f0;
+        padding: 0;
+        margin-bottom: 10px;
+    }
+
+    .surat-kematian-print .td-left {
+        width: 20%;
+        text-align: left;
+        vertical-align: middle;
+    }
+
+    .surat-kematian-print .td-center {
+        width: 60%;
+        text-align: center;
+        vertical-align: middle;
+    }
+
+    .surat-kematian-print .td-right {
+        width: 20%;
+        text-align: center;
+        vertical-align: middle;
+    }
+
+    .surat-kematian-print .brand-name {
+        font-weight: 700;
+        margin: 0;
+        font-size: 12pt;
+    }
+
+    .surat-kematian-print .brand-info {
+        margin: 0;
+        font-size: 9pt;
+    }
+
+    .surat-kematian-print .title {
+        font-size: 12pt;
+        font-weight: bold;
+        text-align: center;
+        margin: 5px 0 3px 0;
+    }
+
+    .surat-kematian-print .doc-number {
+        font-size: 10pt;
+        text-align: center;
+        margin-bottom: 5px;
+        font-weight: bold;
+    }
+
+    .surat-kematian-print .content p {
+        text-align: justify;
+        margin: 4px 0;
+        font-size: 12pt;
+    }
+
+    .surat-kematian-print .patient-data {
+        width: 100%;
+        margin: 5px 0 5px 50px;
+        border-collapse: collapse;
+    }
+
+    .surat-kematian-print .patient-data td {
+        padding: 3px 0;
+        vertical-align: top;
+        font-size: 12pt;
+    }
+
+    .surat-kematian-print .patient-data td:first-child {
+        width: 120px;
+        padding-left: 15px;
+    }
+
+    .surat-kematian-print .patient-data td:nth-child(2) {
+        width: 10px;
+        text-align: center;
+    }
+
+    .surat-kematian-print .patient-data td:nth-child(3) {
+        padding-left: 5px;
+    }
+
+    .surat-kematian-print .diagnosis-table {
+        width: 100%;
+        border-collapse: collapse;
+        border: 1px solid black;
+        margin: 15px 0;
+    }
+
+    .surat-kematian-print .diagnosis-table th,
+    .surat-kematian-print .diagnosis-table td {
+        border: 1px solid black;
+        padding: 3px 5px;
+        font-size: 10pt;
+        vertical-align: top;
+    }
+
+    .surat-kematian-print .diagnosis-table th {
+        background-color: #f2f2f2;
+        font-weight: bold;
+    }
+
+    .surat-kematian-print .signature {
+        margin-top: 15px;
+        text-align: right;
+        font-size: 10pt;
+    }
+
+    .surat-kematian-print .signature p {
+        margin: 2px 0;
+    }
+
+    .surat-kematian-print .signature-line {
+        margin-top: 50px;
+        border-bottom: 1px solid black;
+        width: 150px;
+        display: inline-block;
+    }
+
+    .surat-kematian-print .footer {
+        font-size: 7pt;
+        text-align: left;
+        width: 100%;
+    }
+</style>
+
+<div class="surat-kematian-print">
+    @php
+        // Logic Logo
+        $logoBase64 = null;
+        if (!$logoBase64) {
+            $logoPath = public_path('assets/img/logo-kota-langsa.png');
+            $logoData = @file_get_contents($logoPath);
+            $logoBase64 = $logoData ? 'data:image/png;base64,' . base64_encode($logoData) : null;
         }
+    @endphp
 
-        body {
-            font-family: Arial, sans-serif;
-            font-size: 11pt;
-            line-height: 1.2;
-            margin: 0;
-            padding: 0;
-        }
+    {{-- HEADER --}}
+    <table class="header-table">
+        <tr>
+            <td class="td-left">
+                @if ($logoBase64)
+                    <img src="{{ $logoBase64 }}" width="80" height="80" alt="Logo">
+                @endif
+            </td>
 
-        /* Header */
-        .header-container {
-            position: relative;
-            width: 100%;
-            height: 105px;
-            border-bottom: 1.5px solid black;
-            margin-bottom: 12px;
-        }
+            <td class="td-center">
+                <p class="brand-name">PEMERINTAH KOTA LANGSA</p>
+                <p class="brand-name">RUMAH SAKIT UMUM DAERAH LANGSA</p>
+                <p class="brand-info">Alamat : Jln. Jend. A. Yani No.1 Kota Langsa – Provinsi Aceh</p>
+                <p class="brand-info">Telp. (0641) 21457 – 22800 (IGD) - 21009 (Farmasi) Fax. (0641) 22051</p>
+                <p class="brand-info">E-mail : rsudlangsa.aceh@gmail.com, website: www.rsud.langsakota.go.id</p>
+                <p class="brand-info">KOTA LANGSA</p>
+            </td>
 
-        .logo-container {
-            position: absolute;
-            top: 0;
-            left: 20pt;
-            width: 80px;
-        }
-
-        .header-content {
-            margin-left: 75px;
-            text-align: center;
-        }
-
-        .header-title {
-            font-size: 12pt;
-            font-weight: bold;
-            margin: 0;
-            padding: 0;
-        }
-
-        .header-subtitle {
-            font-size: 16pt;
-            font-weight: bold;
-            margin: 0;
-            padding: 0;
-        }
-
-        .header-address {
-            font-size: 9pt;
-            margin: 2px;
-            padding: 0;
-            line-height: 1.0;
-        }
-
-        /* Document Title */
-        .title {
-            font-size: 12pt;
-            font-weight: bold;
-            text-align: center;
-            margin: 5px 0 3px 0;
-        }
-
-        .doc-number {
-            font-size: 10pt;
-            text-align: center;
-            margin-bottom: 5px;
-            font-style: bold;
-            font-weight: bold;
-        }
-
-        /* Content Styling */
-        .content p {
-            text-align: justify;
-            margin: 4px 0;
-            font-size: 12pt;
-        }
-
-        /* Patient Data Table */
-        .patient-data {
-            width: 100%;
-            margin: 5px 0 5px 50px;
-            border-collapse: collapse;
-        }
-
-        .patient-data td {
-            padding: 3px 0;
-            vertical-align: top;
-            font-size: 12pt;
-        }
-
-        .patient-data td:first-child {
-            width: 120px;
-            padding-left: 15px;
-        }
-
-        .patient-data td:nth-child(2) {
-            width: 10px;
-            text-align: center;
-        }
-
-        .patient-data td:nth-child(3) {
-            padding-left: 5px;
-        }
-
-        /* Diagnosis Table */
-        .diagnosis-table {
-            width: 100%;
-            border-collapse: collapse;
-            border: 1px solid black;
-            margin: 15px 0;
-        }
-
-        .diagnosis-table th,
-        .diagnosis-table td {
-            border: 1px solid black;
-            padding: 3px 5px;
-            font-size: 10pt;
-            vertical-align: top;
-        }
-
-        .diagnosis-table th {
-            background-color: #f2f2f2;
-            font-weight: bold;
-        }
-
-        /* Signature Section */
-        .signature {
-            margin-top: 15px;
-            text-align: right;
-            font-size: 10pt;
-        }
-
-        .signature p {
-            margin: 2px 0;
-        }
-
-        .signature-line {
-            margin-top: 50px;
-            border-bottom: 1px solid black;
-            width: 150px;
-            display: inline-block;
-        }
-
-        /* Footer */
-        .footer {
-            font-size: 7pt;
-            text-align: left;
-            position: fixed;
-            bottom: 10px;
-            left: 10px;
-            width: 100%;
-        }
-    </style>
-</head>
-
-<body>
-    <!-- Header with Logo -->
-    <div class="header-container">
-        <div class="logo-container">
-            <img src="data:image/png;base64,{{ base64_encode(file_get_contents(public_path('assets/img/logo-kota-langsa.png'))) }}"
-                width="100" height="100" alt="Logo">
-        </div>
-        <div class="header-content">
-            <p class="header-title">PEMERINTAH KOTA LANGSA</p>
-            <p class="header-subtitle">RUMAH SAKIT UMUM DAERAH LANGSA</p>
-            <p class="header-address">Alamat : Jln. Jend. A. Yani No.1 Kota Langsa – Provinsi Aceh</p>
-            <p class="header-address">Telp. (0641) 21457 – 22800 (IGD) - 21009 (Farmasi) Fax. (0641) 22051</p>
-            <p class="header-address">E-mail : rsudlangsa.aceh@gmail.com, website: www.rsud.langsakota.go.id</p>
-            <p class="header-address">KOTA LANGSA</p>
-        </div>
-    </div>
+            <td class="td-right">
+                {{-- Kosongkan atau tambah QR jika perlu --}}
+            </td>
+        </tr>
+    </table>
 
     <!-- Document Title -->
     <div class="title">SURAT KETERANGAN KEDOKTERAN<br>TENTANG SEBAB KEMATIAN</div>
@@ -375,7 +364,7 @@
     <div class="signature">
         <p>Kota Langsa, {{ \Carbon\Carbon::now()->format('d/m/Y') }}</p>
         <p>Dokter yang menerangkan</p>
-        {{-- <img src="data:image/png;base64,{{ $qrCode }}" alt="QR Code"> --}}
+        <img src="{{ generateQrCode($suratKematian->dokter->nama_lengkap, 100, 'svg_datauri') }}" alt="QR">
         <p>({{ $suratKematian->dokter->nama_lengkap ?? '.............................' }})</p>
     </div>
 
@@ -383,6 +372,4 @@
     <div class="footer">
         <p>NO: B.12/IRM/Rev 0/2017</p>
     </div>
-</body>
-
-</html>
+</div>

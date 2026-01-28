@@ -5,10 +5,8 @@
     <meta charset="UTF-8">
     <title>Asesmen Medis Neonatologi - {{ $dataMedis->pasien->nama ?? '' }}</title>
     <style>
-        <<<<<<< HEAD=======
-
         /* CSS Standard Rekam Medis */
-        >>>>>>>791089ad70a916defe9bbf1efa62847accee6524 @page {
+        @page {
             size: A4;
             margin: 5mm 10mm;
         }

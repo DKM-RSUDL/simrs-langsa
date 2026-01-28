@@ -24,29 +24,20 @@ use App\Models\Agama;
 use App\Models\Pendidikan;
 use App\Models\Pekerjaan;
 use App\Models\MrItemFisik;
-use App\Models\RmeAsesmenTht;
-use App\Models\RmeAsesmenThtPemeriksaanFisik;
-use App\Models\RmeAsesmenThtRiwayatKesehatanObatAlergi;
-use App\Models\RmeAsesmenThtDischargePlanning;
-use App\Models\RmeAsesmenthtDiagnosisImplementasi;
-use App\Models\RmeAsesmenParu;
-use App\Models\RmeAsesmenParuRencanaKerja;
-use App\Models\RmeAsesmenParuPerencanaanPulang;
-use App\Models\RmeAsesmenParuDiagnosisImplementasi;
-use App\Models\RmeAsesmenParuPemeriksaanFisik;
-use App\Models\RmeAsesmenGinekologik;
-use App\Models\RmeAsesmenGinekologikTandaVital;
-use App\Models\RmeAsesmenGinekologikPemeriksaanFisik;
-use App\Models\RmeAsesmenGinekologikEkstremitasGinekologik;
-use App\Models\RmeAsesmenGinekologikPemeriksaanDischarge;
-use App\Models\RmeAsesmenGinekologikDiagnosisImplementasi;
 use App\Models\RmeAsesmenGeriatri;
 use App\Models\RmeAsesmenGeriatriRencanaPulang;
 use App\Models\RmeAsesmenPsikiatri;
 use App\Models\RmeAsesmenPsikiatriDtl;
-use Illuminate\Support\Facades\DB;
+use App\Models\RmeSuratKematian;
+use App\Models\RmePaps;
+use App\Models\PernyataanDPJP;
 use Illuminate\Support\Carbon;
 use App\Services\AsesmenService;
+
+use App\Models\EWSPasienDewasa;
+use App\Models\EWSPasienAnak;
+use App\Models\EwsPasienObstetrik;
+use Illuminate\Support\Facades\DB;
 
 class BerkasDigitalService
 {
@@ -1527,5 +1518,333 @@ class BerkasDigitalService
             'satsetPrognosis',
             'alergiPasien'
         );
+    }
+
+    /**
+     * Get Asesmen Keperawatan Anak (Rawat Inap) data untuk ditampilkan di berkas digital dokumen
+     * Menyusun variabel yang diperlukan oleh blade print asesmen-anak
+     */
+    public function getAsesmenKepAnakData($dataMedis)
+    {
+        try {
+            $tglMasuk = isset($dataMedis->tgl_transaksi) ? $dataMedis->tgl_transaksi : $dataMedis->tgl_masuk;
+
+            $asesmen = RmeAsesmen::with([
+                'rmeAsesmenKepAnak',
+                'rmeAsesmenKepAnakFisik',
+                'rmeAsesmenKepAnakStatusNyeri',
+                'rmeAsesmenKepAnakRiwayatKesehatan',
+                'rmeAsesmenKepAnakRisikoJatuh',
+                'rmeAsesmenKepAnakResikoDekubitus',
+                'rmeAsesmenKepAnakStatusPsikologis',
+                'rmeAsesmenKepAnakSosialEkonomi',
+                'rmeAsesmenKepAnakGizi',
+                'rmeAsesmenKepAnakStatusFungsional',
+                'rmeAsesmenKepAnakRencanaPulang',
+                'rmeAsesmenKepAnakKeperawatan',
+                'pemeriksaanFisik',
+                'pemeriksaanFisik.itemFisik',
+                'user'
+            ])
+                ->where('kd_pasien', $dataMedis->kd_pasien)
+                ->whereDate('tgl_masuk', date('Y-m-d', strtotime($tglMasuk)))
+                ->where('urut_masuk', $dataMedis->urut_masuk)
+                ->where('kategori', 2)
+                ->where('sub_kategori', 7)
+                ->orderBy('waktu_asesmen', 'desc')
+                ->first();
+
+            if (!$asesmen) {
+                return $this->emptyAsesmenKepAnakData($dataMedis);
+            }
+
+            return compact('asesmen', 'dataMedis');
+        } catch (\Exception $e) {
+            return $this->emptyAsesmenKepAnakData($dataMedis);
+        }
+    }
+
+    /**
+     * Return empty data structure untuk asesmen keperawatan anak
+     */
+    private function emptyAsesmenKepAnakData($dataMedis)
+    {
+        return [
+            'asesmen' => null,
+            'dataMedis' => $dataMedis,
+        ];
+    }
+
+    /**
+     * Get Asesmen Keperawatan Perinatology (Rawat Inap) data untuk ditampilkan di berkas digital dokumen
+     * Menyusun variabel yang diperlukan oleh blade print asesmen-perinatology
+     */
+    public function getAsesmenKepPerinatologyData($dataMedis)
+    {
+        try {
+            $tglMasuk = isset($dataMedis->tgl_transaksi) ? $dataMedis->tgl_transaksi : $dataMedis->tgl_masuk;
+
+            $asesmen = RmeAsesmen::with([
+                'rmeAsesmenPerinatology',
+                'rmeAsesmenPerinatologyFisik',
+                'rmeAsesmenPerinatologyPemeriksaanLanjut',
+                'rmeAsesmenPerinatologyRiwayatIbu',
+                'rmeAsesmenPerinatologyStatusNyeri',
+                'rmeAsesmenPerinatologyRisikoJatuh',
+                'rmeAsesmenPerinatologyResikoDekubitus',
+                'rmeAsesmenPerinatologyGizi',
+                'rmeAsesmenPerinatologyStatusFungsional',
+                'rmeAsesmenPerinatologyRencanaPulang',
+                'rmeAsesmenKepPerinatologyKeperawatan',
+                'pemeriksaanFisik',
+                'pemeriksaanFisik.itemFisik',
+                'user'
+            ])
+                ->where('kd_unit', $dataMedis->kd_unit)
+                ->where('kd_pasien', $dataMedis->kd_pasien)
+                ->whereDate('tgl_masuk', date('Y-m-d', strtotime($tglMasuk)))
+                ->where('urut_masuk', $dataMedis->urut_masuk)
+                ->where('kategori', 2)
+                ->where('sub_kategori', 2)
+                ->orderBy('waktu_asesmen', 'desc')
+                ->first();
+
+            if (!$asesmen) {
+                return $this->emptyAsesmenKepPerinatologyData($dataMedis);
+            }
+
+            return compact('asesmen', 'dataMedis');
+        } catch (\Exception $e) {
+            return $this->emptyAsesmenKepPerinatologyData($dataMedis);
+        }
+    }
+
+    /**
+     * Return empty data structure untuk asesmen keperawatan perinatology
+     */
+    private function emptyAsesmenKepPerinatologyData($dataMedis)
+    {
+        return [
+            'asesmen' => null,
+            'dataMedis' => $dataMedis,
+        ];
+    }
+
+    /**
+     * Get Asesmen Awal Keperawatan Dewasa Rawat Inap data untuk ditampilkan di berkas digital dokumen
+     */
+    public function getAsesmenAwalKeperawatanDewasaData($dataMedis)
+    {
+        // Tentukan tanggal masuk
+        $tglMasuk = isset($dataMedis->tgl_transaksi) ? $dataMedis->tgl_transaksi : $dataMedis->tgl_masuk;
+
+        // Ambil data asesmen awal keperawatan rawat inap (kategori=2, sub_kategori=1)
+        $asesmen = RmeAsesmen::with([
+            'asesmenKetDewasaRanap',
+            'asesmenKetDewasaRanapRiwayatPasien',
+            'asesmenKetDewasaRanapFisik',
+            'asesmenKetDewasaRanapStatusNutrisi',
+            'asesmenKetDewasaRanapSkalaNyeri',
+            'asesmenKetDewasaRanapResikoJatuh',
+            'asesmenKetDewasaRanapPengkajianEdukasi',
+            'asesmenKetDewasaRanapDischargePlanning',
+            'asesmenKetDewasaRanapDietKhusus',
+            'asesmenKetDewasaRanapDiagnosisKeperawatan',
+            'pasien',
+            'user'
+        ])
+            ->where('kd_pasien', $dataMedis->kd_pasien)
+            ->whereDate('tgl_masuk', date('Y-m-d', strtotime($tglMasuk)))
+            ->where('urut_masuk', $dataMedis->urut_masuk)
+            ->where('kategori', 2) // Kategori Keperawatan
+            ->where('sub_kategori', 1) // Sub kategori Pengkajian Awal
+            ->orderBy('waktu_asesmen', 'desc')
+            ->first();
+
+        // Jika tidak ada, return data kosong
+        if (!$asesmen) {
+            return [
+                'asesmen' => null,
+                'dataMedis' => $dataMedis,
+                'masterData' => [
+                    'rmeMasterDiagnosis' => collect([]),
+                    'rmeMasterImplementasi' => collect([]),
+                    'satsetPrognosis' => collect([]),
+                    'alergiPasien' => collect([]),
+                    'dokter' => collect([]),
+                ]
+            ];
+        }
+
+        // Ambil master data yang diperlukan untuk print
+        $masterData = [
+            'rmeMasterDiagnosis' => RmeMasterDiagnosis::all(),
+            'rmeMasterImplementasi' => RmeMasterImplementasi::all(),
+            'satsetPrognosis' => SatsetPrognosis::all(),
+            'alergiPasien' => RmeAlergiPasien::where('kd_pasien', $dataMedis->kd_pasien)->get(),
+            'dokter' => \App\Models\Dokter::where('status', 1)->orderBy('nama_lengkap', 'asc')->get(),
+        ];
+
+        return compact('asesmen', 'dataMedis', 'masterData');
+    }
+
+    /**
+     * Get Surat Kematian data untuk ditampilkan di berkas digital dokumen
+     * Hanya untuk pasien yang sudah meninggal dunia
+     */
+    public function getSuratKematianData($dataMedis)
+    {
+        // Ambil data surat kematian berdasarkan kunjungan
+        $suratKematian = RmeSuratKematian::where('kd_pasien', $dataMedis->kd_pasien)
+            ->where('kd_unit', $dataMedis->kd_unit)
+            ->where('tgl_masuk', $dataMedis->tgl_masuk)
+            ->where('urut_masuk', $dataMedis->urut_masuk)
+            ->with(['detailType1', 'detailType2', 'dokter'])
+            ->first();
+
+        return compact('suratKematian');
+    }
+
+    /**
+     * Get EWS Pasien Dewasa data untuk ditampilkan di berkas digital dokumen
+     */
+    public function getEWSPasienDewasaData($dataMedis)
+    {
+        // Ambil semua data EWS Pasien Dewasa untuk kunjungan ini
+        $ewsRecords = EWSPasienDewasa::where('kd_pasien', $dataMedis->kd_pasien)
+            ->where('kd_unit', $dataMedis->kd_unit)
+            ->whereDate('tgl_masuk', $dataMedis->tgl_masuk)
+            ->where('urut_masuk', $dataMedis->urut_masuk)
+            ->orderBy('tanggal', 'desc')
+            ->orderBy('jam_masuk', 'desc')
+            ->get();
+
+        // Jika ada records, ambil yang pertama sebagai ewsPasienDewasa utama (untuk info umum)
+        $ewsPasienDewasa = $ewsRecords->first();
+
+        // Hitung skor total dan risiko untuk setiap record
+        $ewsRecords->transform(function ($record) {
+            $skor = 0;
+
+            // Hitung skor berdasarkan parameter
+            if ($record->avpu == 'P' || $record->avpu == 'U') $skor += 3;
+            if ($record->saturasi_o2 >= 96) $skor += 0;
+            elseif ($record->saturasi_o2 >= 94) $skor += 1;
+            elseif ($record->saturasi_o2 >= 92) $skor += 2;
+            else $skor += 3;
+
+            $sistolik = explode('/', $record->tekanan_darah)[0] ?? 0;
+            if ($sistolik <= 90 || $sistolik >= 220) $skor += 3;
+            elseif ($sistolik <= 100 || $sistolik >= 200) $skor += 2;
+            elseif ($sistolik <= 110 || $sistolik >= 180) $skor += 1;
+
+            if ($record->nadi <= 40 || $record->nadi >= 130) $skor += 3;
+            elseif ($record->nadi <= 50 || $record->nadi >= 120) $skor += 2;
+            elseif ($record->nadi <= 60 || $record->nadi >= 100) $skor += 1;
+
+            if ($record->nafas <= 8 || $record->nafas >= 30) $skor += 3;
+            elseif ($record->nafas <= 10 || $record->nafas >= 25) $skor += 2;
+            elseif ($record->nafas <= 12 || $record->nafas >= 21) $skor += 1;
+
+            if ($record->temperatur <= 35.0 || $record->temperatur >= 39.1) $skor += 3;
+            elseif (($record->temperatur >= 35.1 && $record->temperatur <= 35.9) || ($record->temperatur >= 38.1 && $record->temperatur <= 39.0)) $skor += 1;
+
+            $record->total_skor = $skor;
+
+            // Tentukan risiko
+            if ($skor >= 7) {
+                $record->risiko = 'Tinggi';
+                $record->risk_class = 'hasil-high';
+                $record->risk_text = 'RISIKO TINGGI';
+            } elseif ($skor >= 5 || ($skor >= 3 && in_array($record->avpu, ['P', 'U']))) {
+                $record->risiko = 'Sedang';
+                $record->risk_class = 'hasil-medium';
+                $record->risk_text = 'RISIKO SEDANG';
+            } else {
+                $record->risiko = 'Rendah';
+                $record->risk_class = 'hasil-low';
+                $record->risk_text = 'RISIKO RENDAH';
+            }
+
+            return $record;
+        });
+
+        return compact('ewsRecords', 'ewsPasienDewasa');
+    }
+
+    /**
+     * Get EWS Pasien Anak data untuk ditampilkan di berkas digital
+     */
+    public function getEWSPasienAnakData($dataMedis)
+    {
+        // Ambil semua data EWS Pasien Anak untuk kunjungan ini
+        $ewsRecords = EWSPasienAnak::where('kd_pasien', $dataMedis->kd_pasien)
+            ->where('kd_unit', $dataMedis->kd_unit)
+            ->whereDate('tgl_masuk', $dataMedis->tgl_masuk)
+            ->where('urut_masuk', $dataMedis->urut_masuk)
+            ->orderBy('tanggal', 'desc')
+            ->get();
+
+        // Jika ada records, ambil yang pertama sebagai ewsPasienAnak utama (untuk info umum)
+        $ewsPasienAnak = $ewsRecords->first();
+
+        return compact('ewsRecords', 'ewsPasienAnak');
+    }
+
+    /**
+     * Get EWS Pasien Obstetrik data untuk ditampilkan di berkas digital
+     */
+    public function getEWSPasienObstetrikData($dataMedis)
+    {
+        // Ambil semua data EWS Pasien Obstetrik untuk kunjungan ini
+        $ewsRecords = EwsPasienObstetrik::where('kd_pasien', $dataMedis->kd_pasien)
+            ->where('kd_unit', $dataMedis->kd_unit)
+            ->whereDate('tgl_masuk', $dataMedis->tgl_masuk)
+            ->where('urut_masuk', $dataMedis->urut_masuk)
+            ->orderBy('tanggal', 'desc')
+            ->get();
+
+        // Jika ada records, ambil yang pertama sebagai ewsPasienObstetrik utama (untuk info umum)
+        $ewsPasienObstetrik = $ewsRecords->first();
+
+        return compact('ewsRecords', 'ewsPasienObstetrik');
+    }
+
+    /**
+     * Get Pernyataan DPJP data untuk ditampilkan di berkas digital
+     */
+    public function getPernyataanDPJPData($dataMedis)
+    {
+        return PernyataanDPJP::with('dokter')
+            ->where('kd_pasien', $dataMedis->kd_pasien)
+            ->where('kd_unit', $dataMedis->kd_unit)
+            ->whereDate('tgl_masuk', $dataMedis->tgl_masuk)
+            ->where('urut_masuk', $dataMedis->urut_masuk)
+            ->orderBy('id', 'desc')
+            ->get();
+    }
+
+    /**
+     * Get Meninggalkan Perawatan data untuk ditampilkan di berkas digital
+     */
+    public function getMeninggalkanPerawatanData($dataMedis)
+    {
+        return \App\Models\RmeMeninggalkanPerawatan::with(['dokter'])
+            ->where('kd_pasien', $dataMedis->kd_pasien)
+            ->where('kd_unit', $dataMedis->kd_unit)
+            ->whereDate('tgl_masuk', $dataMedis->tgl_masuk)
+            ->where('urut_masuk', $dataMedis->urut_masuk)
+            ->get();
+    }
+
+    public function getPapsData($dataMedis)
+    {
+        return RmePaps::with('detail')
+            ->where('kd_pasien', $dataMedis->kd_pasien)
+            ->where('kd_unit', $dataMedis->kd_unit)
+            ->whereDate('tgl_masuk', $dataMedis->tgl_masuk)
+            ->where('urut_masuk', $dataMedis->urut_masuk)
+            ->orderBy('tanggal', 'desc')
+            ->get();
     }
 }

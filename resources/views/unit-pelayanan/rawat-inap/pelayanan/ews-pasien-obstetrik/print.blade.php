@@ -1,126 +1,177 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Early Warning System (EWS) Pasien Obstetrik</title>
     <style>
         @page {
-            margin: 0.3cm;
-            size: A4 portrait;
+            size: A4;
+            margin: 3mm 6mm;
         }
 
-        .page-break {
-            page-break-before: always;
-        }
-
-        /* Print-specific styles */
-        @media print {
-            .page-break {
-                page-break-before: always;
-            }
-        }
-
-        * {
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'DejaVu Sans', Arial, sans-serif;
+        .a4 {
             margin: 0;
             padding: 0;
-            font-size: 7.5pt;
-            line-height: 1.1;
+            box-sizing: border-box;
+            font-family: "DejaVu Sans", "Helvetica", "Arial", sans-serif !important;
+            font-size: 8.5pt;
+            width: 100%;
+            max-width: 100%;
         }
 
-        .container {
+        table {
             width: 100%;
+            border-collapse: collapse;
+        }
+
+        td,
+        th {
+            padding: 4px 6px;
+            vertical-align: top;
+        }
+
+        .header-table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: #f0f0f0;
+            padding: 0;
             position: relative;
         }
 
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 4px;
+        .td-left {
+            width: 40%;
+            text-align: left;
+            vertical-align: middle;
         }
 
-        .logo-rs {
-            display: flex;
-            align-items: center;
+        .td-center {
+            width: 40%;
+            text-align: center;
+            vertical-align: middle;
         }
 
-        .logo {
-            width: 45px;
-            height: 45px;
-            margin-right: 6px;
+        .td-right {
+            width: 20%;
+            text-align: center;
+            vertical-align: middle;
         }
 
-        .hospital-info {
-            font-size: 8pt;
+        .brand-table {
+            border-collapse: collapse;
+            background-color: transparent;
         }
 
-        .hospital-name {
-            font-size: 11pt;
+        .va-middle {
+            vertical-align: middle;
+        }
+
+        .brand-name {
+            font-weight: 700;
+            margin: 0;
+            font-size: 14px;
+        }
+
+        .brand-info {
+            margin: 0;
+            font-size: 7px;
+        }
+
+        .title-main {
+            display: block;
+            font-size: 16px;
             font-weight: bold;
             margin: 0;
         }
 
-        .hospital-address {
-            margin: 1px 0;
-        }
-
-        .patient-info {
-            border: 1px solid #000;
-            padding: 4px;
-            width: 220px;
-            font-size: 8pt;
-            position: absolute;
-            top: 0;
-            right: 0;
-        }
-
-        .patient-row {
-            display: flex;
-            margin-bottom: 3px;
-        }
-
-        .patient-label {
-            width: 70px;
-            font-weight: normal;
-        }
-
-        .patient-value {
-            flex: 1;
-        }
-
-        .border-line {
-            border-bottom: 1.5px solid black;
-            margin: 4px 0;
-        }
-
-        .title {
-            text-align: center;
-            font-size: 10pt;
+        .title-sub {
+            display: block;
+            font-size: 14px;
             font-weight: bold;
-            margin: 6px 0;
+            margin: 0;
         }
 
-        table.ews-table {
+        .unit-box {
+            background-color: #bbbbbb;
+            padding: 15px 0px;
+            width: 100%;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .unit-text {
+            font-size: 18px;
+            font-weight: bold;
+            color: #ffffff;
+        }
+
+        .patient-table {
+            width: 100%;
+            margin-top: 15px;
+            border-collapse: collapse;
+        }
+
+        .patient-table th,
+        .patient-table td {
+            border: 1px solid #ccc;
+            padding: 5px 7px;
+            font-size: 9pt;
+        }
+
+        .patient-table th {
+            background-color: #f2f2f2;
+            text-align: left;
+            width: 130px;
+        }
+
+        .section-title {
+            font-weight: bold;
+            font-size: 11pt;
+            padding-top: 12px;
+        }
+
+        .label {
+            font-weight: bold;
+            width: 38%;
+            padding-right: 8px;
+        }
+
+        .value {
+            border-bottom: 1px solid #000;
+            min-height: 22px;
+        }
+
+        .value.tall {
+            min-height: 32px;
+        }
+
+        .value.empty-space {
+            min-height: 60px;
+        }
+
+        .checkbox-group label {
+            margin-right: 28px;
+            display: inline-block;
+        }
+
+        /* EWS specific styles */
+        .ews-table {
             width: 100%;
             border-collapse: collapse;
-            font-size: 5.5pt;
+            font-size: 6pt;
+            margin-top: 10px;
         }
 
-        table.ews-table th,
-        table.ews-table td {
+        .ews-table th,
+        .ews-table td {
             border: 1px solid #000;
-            padding: 1px;
+            padding: 2px;
             text-align: center;
-            height: 11px;
+            height: 14px;
         }
 
-        table.ews-table th {
+        .ews-table th {
             background-color: #f2f2f2;
             font-weight: bold;
         }
@@ -141,11 +192,6 @@
             width: 20px;
         }
 
-        .data-col {
-            width: 50px;
-            white-space: nowrap;
-        }
-
         .cell-green {
             background-color: #90EE90;
         }
@@ -158,34 +204,23 @@
             background-color: #FF6347;
         }
 
-        .cell-dark {
-            background-color: #0d23e9;
-            color: #FFFFFF;
-        }
-
         .hasil-ews {
-            margin-top: 6px;
-            font-size: 6.5pt;
+            margin-top: 8px;
+            font-size: 7pt;
             font-weight: bold;
         }
 
         .hasil-ews-table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 4px;
+            margin-top: 5px;
         }
 
         .hasil-ews-table td {
-            padding: 6px;
+            padding: 4px;
             border: 1px solid #000;
-            font-size: 8pt;
+            font-size: 6pt;
             text-align: center;
-            line-height: 1.2;
-            font-weight: bold;
-        }
-
-        .hasil-no-risk {
-            background-color: #90EE90;
         }
 
         .hasil-low {
@@ -193,137 +228,174 @@
         }
 
         .hasil-medium {
-            background-color: #FFD66B;
+            background-color: #FFFF00;
         }
 
         .hasil-high {
             background-color: #FF6347;
-            color: white;
         }
 
-        .hasil-code-blue {
-            background-color: #3674B5;
-            color: #FFFFFF;
+        .intervention-page {
+            font-size: 8pt;
+            margin-top: 20px;
         }
 
-        .footer {
-            margin-top: 8px;
-            font-size: 5.5pt;
-            text-align: right;
-        }
-
-        .small-text {
-            font-size: 5pt;
-            display: flex;
-            justify-content: start;
-        }
-
-        /* Styles untuk halaman kedua */
-        .protocol-page {
-            font-size: 9pt;
-        }
-
-        .protocol-title {
+        .intervention-title {
             text-align: center;
-            font-size: 12pt;
+            font-size: 14pt;
             font-weight: bold;
             margin: 20px 0;
         }
 
-        .protocol-table {
+        .risk-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 15px;
+        }
+
+        .risk-table td {
+            border: 2px solid #000;
+            padding: 8px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 10pt;
+        }
+
+        .risk-low {
+            background-color: #90EE90;
+        }
+
+        .risk-medium {
+            background-color: #FFFF00;
+        }
+
+        .risk-high {
+            background-color: #FF6347;
+            color: white;
+        }
+
+        .avpu-explanation {
+            margin: 15px 0;
+            font-size: 9pt;
+        }
+
+        .avpu-explanation p {
+            margin: 3px 0;
+        }
+
+        .intervention-table {
             width: 100%;
             border-collapse: collapse;
             margin-top: 15px;
         }
 
-        .protocol-table th,
-        .protocol-table td {
+        .intervention-table th,
+        .intervention-table td {
             border: 1px solid #000;
-            padding: 8px;
-            font-size: 9pt;
+            padding: 6px;
+            font-size: 8pt;
         }
 
-        .protocol-table th {
-            background-color: #333;
-            color: white;
+        .intervention-table th {
+            background-color: #f2f2f2;
             font-weight: bold;
             text-align: center;
         }
 
-        .protocol-table td {
+        .intervention-table td {
             vertical-align: top;
         }
 
-        .protocol-skor-1-4 {
-            background-color: #28a745;
-            color: white;
-            text-align: center;
-            font-weight: bold;
+        .footer {
+            margin-top: 10px;
+            font-size: 6pt;
+            text-align: right;
         }
 
-        .protocol-skor-5-6 {
-            background-color: #FFD66B;
-            color: #333;
-            text-align: center;
-            font-weight: bold;
+        .small-text {
+            font-size: 5pt;
         }
 
-        .protocol-skor-7-plus {
-            background-color: #dc3545;
-            color: white;
-            text-align: center;
-            font-weight: bold;
-        }
-
-        .protocol-code-blue {
-            background-color: #3674B5;
-            color: white;
-            text-align: center;
-            font-weight: bold;
+        /* Print specific */
+        @media print {
+            .page-break {
+                page-break-before: always;
+            }
         }
     </style>
 </head>
+
 <body>
-    <!-- Halaman Pertama: Tabel EWS -->
-    <div class="container">
-        <div class="header">
-            <div class="logo-rs">
-                <img src="{{ public_path('assets/img/Logo-RSUD-Langsa-1.png') }}" alt="Logo RSUD Langsa" class="logo">
-                <div class="hospital-info">
-                    <p class="hospital-name">RSUD LANGSA</p>
-                    <p class="hospital-address">Jl. Jend. A. Yani, Kota Langsa</p>
-                    <p class="hospital-address">Telp: 0641-22051</p>
-                    <p class="hospital-address">Email: rsudlangsa.aceh@gmail.com</p>
-                </div>
-            </div>
-            <div class="patient-info">
-                <div class="patient-row">
-                    <span class="patient-label">No RM:</span>
-                    <span class="patient-value">{{ $dataMedis->pasien->kd_pasien ?? '-' }}</span>
-                </div>
-                <div class="patient-row">
-                    <span class="patient-label">Nama:</span>
-                    <span class="patient-value">{{ $dataMedis->pasien->nama ?? '-' }}</span>
-                </div>
-                <div class="patient-row">
-                    <span class="patient-label">Jenis Kelamin:</span>
-                    <span class="patient-value">{{ $dataMedis->pasien->jenis_kelamin == '0' ? 'Perempuan' : ($dataMedis->pasien->jenis_kelamin == '1' ? 'Laki-laki' : '-') }}</span>
-                </div>
-                <div class="patient-row">
-                    <span class="patient-label">Tanggal Lahir:</span>
-                    <span class="patient-value">
-                        {{ $dataMedis->pasien->umur ?? '-' }} Thn
-                        ({{ $dataMedis->pasien->tgl_lahir ? \Carbon\Carbon::parse($dataMedis->pasien->tgl_lahir)->format('d/m/Y') : '-' }})
-                    </span>
-                </div>
-            </div>
-        </div>
+    <div class="a4">
 
-        <div class="border-line"></div>
+        @php
+            // logo base64 (dompdf-friendly)
+            $logoPath = public_path('assets/img/Logo-RSUD-Langsa-1.png');
+            $logoType = pathinfo($logoPath, PATHINFO_EXTENSION);
+            $logoData = @file_get_contents($logoPath);
+            $logoBase64 = $logoData ? 'data:image/' . $logoType . ';base64,' . base64_encode($logoData) : null;
+        @endphp
 
-        <div class="title">
-            EARLY WARNING SYSTEM (EWS)<br>PASIEN OBSTETRIK
-        </div>
+        <table class="header-table">
+            <tr>
+                <td class="td-left">
+                    <table class="brand-table">
+                        <tr>
+                            <td class="va-middle">
+                                @if ($logoBase64)
+                                    <img src="{{ $logoBase64 }}" alt="Logo RSUD Langsa"
+                                        style="width: 50px; height: 50px;">
+                                @endif
+                            </td>
+                            <td class="va-middle">
+                                <p class="brand-name">RSUD LANGSA</p>
+                                <p class="brand-info">Jl. Jend. A. Yani, Kota Langsa</p>
+                                <p class="brand-info">Telp: 0641-22051</p>
+                                <p class="brand-info">Email: rsudlangsa.aceh@gmail.com</p>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+
+                <td class="td-center">
+                    <span class="title-main">EARLY WARNING SYSTEM (EWS)</span>
+                    <span class="title-sub">PASIEN OBSTETRIK</span>
+                </td>
+
+                <td class="td-right">
+                    <div class="unit-box">
+                        <span class="unit-text" style="font-size: 14px; margin-top: 10px;">RAWAT INAP</span>
+                    </div>
+                </td>
+            </tr>
+        </table>
+
+        <table class="patient-table">
+            <tr>
+                <th>No. RM</th>
+                <td>{{ $dataMedis->pasien->kd_pasien ?? '-' }}</td>
+                <th>Tgl. Lahir</th>
+                <td>
+                    {{ !empty($dataMedis->pasien->tgl_lahir) ? date('d M Y', strtotime($dataMedis->pasien->tgl_lahir)) : '-' }}
+                </td>
+            </tr>
+            <tr>
+                <th>Nama Pasien</th>
+                <td>{{ $dataMedis->pasien->nama ?? '-' }}</td>
+                <th>Jenis Kelamin</th>
+                <td>
+                    @php
+                        $gender = '-';
+                        if (isset($dataMedis->pasien->jenis_kelamin)) {
+                            $gender = (string) $dataMedis->pasien->jenis_kelamin === '1' ? 'Laki-Laki' : 'Perempuan';
+                        }
+                    @endphp
+                    {{ $gender }}
+                </td>
+            </tr>
+        </table>
+
+        <br>
 
         @php
             // Matches for handling database value variations
@@ -378,12 +450,14 @@
             ];
 
             // Sort and limit records to 10 to prevent overflow
-            $sortedRecords = $ewsRecords->sortBy(function ($record) {
-                return \Carbon\Carbon::parse($record->tanggal . ' ' . $record->jam_masuk);
-            })->take(10);
+            $sortedRecords = $ewsRecords
+                ->sortBy(function ($record) {
+                    return \Carbon\Carbon::parse($record->tanggal . ' ' . $record->jam_masuk);
+                })
+                ->take(10);
         @endphp
 
-        @if($sortedRecords->isEmpty())
+        @if ($sortedRecords->isEmpty())
             <p style="text-align: center; font-size: 7.5pt;">Tidak ada data EWS yang tersedia.</p>
         @else
             <table class="ews-table">
@@ -391,19 +465,19 @@
                     <tr>
                         <th rowspan="3" class="parameter-col">PARAMETER</th>
                         <th colspan="2" rowspan="2">Penilaian & Skor</th>
-                        @foreach($sortedRecords as $record)
+                        @foreach ($sortedRecords as $record)
                             <th class="data-col">{{ \Carbon\Carbon::parse($record->tanggal)->format('d/m/Y') }}</th>
                         @endforeach
                     </tr>
                     <tr>
-                        @foreach($sortedRecords as $record)
+                        @foreach ($sortedRecords as $record)
                             <th class="data-col">{{ \Carbon\Carbon::parse($record->jam_masuk)->format('H:i') }}</th>
                         @endforeach
                     </tr>
                     <tr>
                         <th class="nilai-col">Penilaian</th>
                         <th class="skor-col">Skor</th>
-                        @foreach($sortedRecords as $record)
+                        @foreach ($sortedRecords as $record)
                             <th></th>
                         @endforeach
                     </tr>
@@ -414,7 +488,7 @@
                         <td rowspan="4" class="parameter-col">Respirasi (per menit)</td>
                         <td>>25</td>
                         <td>3</td>
-                        @foreach($sortedRecords as $record)
+                        @foreach ($sortedRecords as $record)
                             <td class="{{ in_array($record->respirasi, $respirasiMatches['>25']) ? 'cell-red' : '' }}">
                                 {{ in_array($record->respirasi, $respirasiMatches['>25']) ? '>25' : '' }}
                             </td>
@@ -423,8 +497,9 @@
                     <tr>
                         <td>21-25</td>
                         <td>2</td>
-                        @foreach($sortedRecords as $record)
-                            <td class="{{ in_array($record->respirasi, $respirasiMatches['21-25']) ? 'cell-yellow' : '' }}">
+                        @foreach ($sortedRecords as $record)
+                            <td
+                                class="{{ in_array($record->respirasi, $respirasiMatches['21-25']) ? 'cell-yellow' : '' }}">
                                 {{ in_array($record->respirasi, $respirasiMatches['21-25']) ? '21-25' : '' }}
                             </td>
                         @endforeach
@@ -432,16 +507,17 @@
                     <tr>
                         <td>12-20</td>
                         <td>0</td>
-                        @foreach($sortedRecords as $record)
-                            <td class="{{ in_array($record->respirasi, $respirasiMatches['12-20']) ? 'cell-green' : '' }}">
+                        @foreach ($sortedRecords as $record)
+                            <td
+                                class="{{ in_array($record->respirasi, $respirasiMatches['12-20']) ? 'cell-green' : '' }}">
                                 {{ in_array($record->respirasi, $respirasiMatches['12-20']) ? '12-20' : '' }}
                             </td>
                         @endforeach
                     </tr>
                     <tr>
-                        <td>12<</td>
+                        <td>12<< /td>
                         <td>3</td>
-                        @foreach($sortedRecords as $record)
+                        @foreach ($sortedRecords as $record)
                             <td class="{{ in_array($record->respirasi, $respirasiMatches['<12']) ? 'cell-red' : '' }}">
                                 {{ in_array($record->respirasi, $respirasiMatches['<12']) ? '<12' : '' }}
                             </td>
@@ -453,8 +529,9 @@
                         <td rowspan="3" class="parameter-col">Saturasi O2 (%)</td>
                         <td>≥ 95</td>
                         <td>0</td>
-                        @foreach($sortedRecords as $record)
-                            <td class="{{ in_array($record->saturasi_o2, $saturasiMatches['≥ 95']) ? 'cell-green' : '' }}">
+                        @foreach ($sortedRecords as $record)
+                            <td
+                                class="{{ in_array($record->saturasi_o2, $saturasiMatches['≥ 95']) ? 'cell-green' : '' }}">
                                 {{ in_array($record->saturasi_o2, $saturasiMatches['≥ 95']) ? '≥ 95' : '' }}
                             </td>
                         @endforeach
@@ -462,8 +539,9 @@
                     <tr>
                         <td>92-95</td>
                         <td>1</td>
-                        @foreach($sortedRecords as $record)
-                            <td class="{{ in_array($record->saturasi_o2, $saturasiMatches['92-95']) ? 'cell-yellow' : '' }}">
+                        @foreach ($sortedRecords as $record)
+                            <td
+                                class="{{ in_array($record->saturasi_o2, $saturasiMatches['92-95']) ? 'cell-yellow' : '' }}">
                                 {{ in_array($record->saturasi_o2, $saturasiMatches['92-95']) ? '92-95' : '' }}
                             </td>
                         @endforeach
@@ -471,8 +549,9 @@
                     <tr>
                         <td>≤ 91</td>
                         <td>3</td>
-                        @foreach($sortedRecords as $record)
-                            <td class="{{ in_array($record->saturasi_o2, $saturasiMatches['≤ 91']) ? 'cell-red' : '' }}">
+                        @foreach ($sortedRecords as $record)
+                            <td
+                                class="{{ in_array($record->saturasi_o2, $saturasiMatches['≤ 91']) ? 'cell-red' : '' }}">
                                 {{ in_array($record->saturasi_o2, $saturasiMatches['≤ 91']) ? '≤ 91' : '' }}
                             </td>
                         @endforeach
@@ -483,8 +562,9 @@
                         <td rowspan="2" class="parameter-col">Suplemen O2</td>
                         <td>Tidak</td>
                         <td>0</td>
-                        @foreach($sortedRecords as $record)
-                            <td class="{{ in_array($record->suplemen_o2, $suplemenMatches['Tidak']) ? 'cell-green' : '' }}">
+                        @foreach ($sortedRecords as $record)
+                            <td
+                                class="{{ in_array($record->suplemen_o2, $suplemenMatches['Tidak']) ? 'cell-green' : '' }}">
                                 {{ in_array($record->suplemen_o2, $suplemenMatches['Tidak']) ? 'Tidak' : '' }}
                             </td>
                         @endforeach
@@ -492,8 +572,9 @@
                     <tr>
                         <td>Ya</td>
                         <td>2</td>
-                        @foreach($sortedRecords as $record)
-                            <td class="{{ in_array($record->suplemen_o2, $suplemenMatches['Ya']) ? 'cell-yellow' : '' }}">
+                        @foreach ($sortedRecords as $record)
+                            <td
+                                class="{{ in_array($record->suplemen_o2, $suplemenMatches['Ya']) ? 'cell-yellow' : '' }}">
                                 {{ in_array($record->suplemen_o2, $suplemenMatches['Ya']) ? 'Ya' : '' }}
                             </td>
                         @endforeach
@@ -504,8 +585,9 @@
                         <td rowspan="5" class="parameter-col">Tekanan Darah Sistolik (mmHg)</td>
                         <td>> 160</td>
                         <td>3</td>
-                        @foreach($sortedRecords as $record)
-                            <td class="{{ in_array($record->tekanan_darah, $tekananDarahMatches['> 160']) ? 'cell-red' : '' }}">
+                        @foreach ($sortedRecords as $record)
+                            <td
+                                class="{{ in_array($record->tekanan_darah, $tekananDarahMatches['> 160']) ? 'cell-red' : '' }}">
                                 {{ in_array($record->tekanan_darah, $tekananDarahMatches['> 160']) ? '> 160' : '' }}
                             </td>
                         @endforeach
@@ -513,8 +595,9 @@
                     <tr>
                         <td>151-160</td>
                         <td>2</td>
-                        @foreach($sortedRecords as $record)
-                            <td class="{{ in_array($record->tekanan_darah, $tekananDarahMatches['151-160']) ? 'cell-yellow' : '' }}">
+                        @foreach ($sortedRecords as $record)
+                            <td
+                                class="{{ in_array($record->tekanan_darah, $tekananDarahMatches['151-160']) ? 'cell-yellow' : '' }}">
                                 {{ in_array($record->tekanan_darah, $tekananDarahMatches['151-160']) ? '151-160' : '' }}
                             </td>
                         @endforeach
@@ -522,8 +605,9 @@
                     <tr>
                         <td>141-150</td>
                         <td>1</td>
-                        @foreach($sortedRecords as $record)
-                            <td class="{{ in_array($record->tekanan_darah, $tekananDarahMatches['141-150']) ? 'cell-yellow' : '' }}">
+                        @foreach ($sortedRecords as $record)
+                            <td
+                                class="{{ in_array($record->tekanan_darah, $tekananDarahMatches['141-150']) ? 'cell-yellow' : '' }}">
                                 {{ in_array($record->tekanan_darah, $tekananDarahMatches['141-150']) ? '141-150' : '' }}
                             </td>
                         @endforeach
@@ -531,17 +615,20 @@
                     <tr>
                         <td>91-140</td>
                         <td>0</td>
-                        @foreach($sortedRecords as $record)
-                            <td class="{{ in_array($record->tekanan_darah, $tekananDarahMatches['91-140']) ? 'cell-green' : '' }}">
+                        @foreach ($sortedRecords as $record)
+                            <td
+                                class="{{ in_array($record->tekanan_darah, $tekananDarahMatches['91-140']) ? 'cell-green' : '' }}">
                                 {{ in_array($record->tekanan_darah, $tekananDarahMatches['91-140']) ? '91-140' : '' }}
                             </td>
                         @endforeach
                     </tr>
                     <tr>
-                        <td>< 90</td>
+                        <td>
+                            < 90</td>
                         <td>3</td>
-                        @foreach($sortedRecords as $record)
-                            <td class="{{ in_array($record->tekanan_darah, $tekananDarahMatches['< 90']) ? 'cell-red' : '' }}">
+                        @foreach ($sortedRecords as $record)
+                            <td
+                                class="{{ in_array($record->tekanan_darah, $tekananDarahMatches['< 90']) ? 'cell-red' : '' }}">
                                 {{ in_array($record->tekanan_darah, $tekananDarahMatches['< 90']) ? '< 90' : '' }}
                             </td>
                         @endforeach
@@ -552,8 +639,9 @@
                         <td rowspan="6" class="parameter-col">Detak Jantung (per menit)</td>
                         <td>> 120</td>
                         <td>3</td>
-                        @foreach($sortedRecords as $record)
-                            <td class="{{ in_array($record->detak_jantung, $detakJantungMatches['> 120']) ? 'cell-red' : '' }}">
+                        @foreach ($sortedRecords as $record)
+                            <td
+                                class="{{ in_array($record->detak_jantung, $detakJantungMatches['> 120']) ? 'cell-red' : '' }}">
                                 {{ in_array($record->detak_jantung, $detakJantungMatches['> 120']) ? '> 120' : '' }}
                             </td>
                         @endforeach
@@ -561,8 +649,9 @@
                     <tr>
                         <td>111-120</td>
                         <td>2</td>
-                        @foreach($sortedRecords as $record)
-                            <td class="{{ in_array($record->detak_jantung, $detakJantungMatches['111-120']) ? 'cell-yellow' : '' }}">
+                        @foreach ($sortedRecords as $record)
+                            <td
+                                class="{{ in_array($record->detak_jantung, $detakJantungMatches['111-120']) ? 'cell-yellow' : '' }}">
                                 {{ in_array($record->detak_jantung, $detakJantungMatches['111-120']) ? '111-120' : '' }}
                             </td>
                         @endforeach
@@ -570,8 +659,9 @@
                     <tr>
                         <td>101-110</td>
                         <td>1</td>
-                        @foreach($sortedRecords as $record)
-                            <td class="{{ in_array($record->detak_jantung, $detakJantungMatches['101-110']) ? 'cell-yellow' : '' }}">
+                        @foreach ($sortedRecords as $record)
+                            <td
+                                class="{{ in_array($record->detak_jantung, $detakJantungMatches['101-110']) ? 'cell-yellow' : '' }}">
                                 {{ in_array($record->detak_jantung, $detakJantungMatches['101-110']) ? '101-110' : '' }}
                             </td>
                         @endforeach
@@ -579,8 +669,9 @@
                     <tr>
                         <td>61-100</td>
                         <td>0</td>
-                        @foreach($sortedRecords as $record)
-                            <td class="{{ in_array($record->detak_jantung, $detakJantungMatches['61-100']) ? 'cell-green' : '' }}">
+                        @foreach ($sortedRecords as $record)
+                            <td
+                                class="{{ in_array($record->detak_jantung, $detakJantungMatches['61-100']) ? 'cell-green' : '' }}">
                                 {{ in_array($record->detak_jantung, $detakJantungMatches['61-100']) ? '61-100' : '' }}
                             </td>
                         @endforeach
@@ -588,8 +679,9 @@
                     <tr>
                         <td>50-60</td>
                         <td>2</td>
-                        @foreach($sortedRecords as $record)
-                            <td class="{{ in_array($record->detak_jantung, $detakJantungMatches['50-60']) ? 'cell-yellow' : '' }}">
+                        @foreach ($sortedRecords as $record)
+                            <td
+                                class="{{ in_array($record->detak_jantung, $detakJantungMatches['50-60']) ? 'cell-yellow' : '' }}">
                                 {{ in_array($record->detak_jantung, $detakJantungMatches['50-60']) ? '50-60' : '' }}
                             </td>
                         @endforeach
@@ -597,8 +689,9 @@
                     <tr>
                         <td>≤ 50</td>
                         <td>3</td>
-                        @foreach($sortedRecords as $record)
-                            <td class="{{ in_array($record->detak_jantung, $detakJantungMatches['≤ 50']) ? 'cell-red' : '' }}">
+                        @foreach ($sortedRecords as $record)
+                            <td
+                                class="{{ in_array($record->detak_jantung, $detakJantungMatches['≤ 50']) ? 'cell-red' : '' }}">
                                 {{ in_array($record->detak_jantung, $detakJantungMatches['≤ 50']) ? '≤ 50' : '' }}
                             </td>
                         @endforeach
@@ -609,8 +702,9 @@
                         <td rowspan="3" class="parameter-col">Kesadaran</td>
                         <td>Sadar</td>
                         <td>0</td>
-                        @foreach($sortedRecords as $record)
-                            <td class="{{ in_array($record->kesadaran, $kesadaranMatches['Sadar']) ? 'cell-green' : '' }}">
+                        @foreach ($sortedRecords as $record)
+                            <td
+                                class="{{ in_array($record->kesadaran, $kesadaranMatches['Sadar']) ? 'cell-green' : '' }}">
                                 {{ in_array($record->kesadaran, $kesadaranMatches['Sadar']) ? 'Sadar' : '' }}
                             </td>
                         @endforeach
@@ -618,8 +712,9 @@
                     <tr>
                         <td>Nyeri/Verbal</td>
                         <td>2</td>
-                        @foreach($sortedRecords as $record)
-                            <td class="{{ in_array($record->kesadaran, $kesadaranMatches['Nyeri/Verbal']) ? 'cell-yellow' : '' }}">
+                        @foreach ($sortedRecords as $record)
+                            <td
+                                class="{{ in_array($record->kesadaran, $kesadaranMatches['Nyeri/Verbal']) ? 'cell-yellow' : '' }}">
                                 {{ in_array($record->kesadaran, $kesadaranMatches['Nyeri/Verbal']) ? 'Nyeri/Verbal' : '' }}
                             </td>
                         @endforeach
@@ -627,8 +722,9 @@
                     <tr>
                         <td>Unresponsive</td>
                         <td>Code Blue</td>
-                        @foreach($sortedRecords as $record)
-                            <td class="{{ in_array($record->kesadaran, $kesadaranMatches['Unresponsive']) ? 'cell-dark' : '' }}">
+                        @foreach ($sortedRecords as $record)
+                            <td
+                                class="{{ in_array($record->kesadaran, $kesadaranMatches['Unresponsive']) ? 'cell-dark' : '' }}">
                                 {{ in_array($record->kesadaran, $kesadaranMatches['Unresponsive']) ? 'Unresponsive' : '' }}
                             </td>
                         @endforeach
@@ -639,8 +735,9 @@
                         <td rowspan="4" class="parameter-col">Temperatur (°C)</td>
                         <td>≤ 36</td>
                         <td>2</td>
-                        @foreach($sortedRecords as $record)
-                            <td class="{{ in_array($record->temperatur, $temperaturMatches['≤ 36']) ? 'cell-yellow' : '' }}">
+                        @foreach ($sortedRecords as $record)
+                            <td
+                                class="{{ in_array($record->temperatur, $temperaturMatches['≤ 36']) ? 'cell-yellow' : '' }}">
                                 {{ in_array($record->temperatur, $temperaturMatches['≤ 36']) ? '≤ 36' : '' }}
                             </td>
                         @endforeach
@@ -648,8 +745,9 @@
                     <tr>
                         <td>36.1-37.2</td>
                         <td>0</td>
-                        @foreach($sortedRecords as $record)
-                            <td class="{{ in_array($record->temperatur, $temperaturMatches['36.1-37.2']) ? 'cell-green' : '' }}">
+                        @foreach ($sortedRecords as $record)
+                            <td
+                                class="{{ in_array($record->temperatur, $temperaturMatches['36.1-37.2']) ? 'cell-green' : '' }}">
                                 {{ in_array($record->temperatur, $temperaturMatches['36.1-37.2']) ? '36.1-37.2' : '' }}
                             </td>
                         @endforeach
@@ -657,8 +755,9 @@
                     <tr>
                         <td>37.3-37.7</td>
                         <td>1</td>
-                        @foreach($sortedRecords as $record)
-                            <td class="{{ in_array($record->temperatur, $temperaturMatches['37.3-37.7']) ? 'cell-yellow' : '' }}">
+                        @foreach ($sortedRecords as $record)
+                            <td
+                                class="{{ in_array($record->temperatur, $temperaturMatches['37.3-37.7']) ? 'cell-yellow' : '' }}">
                                 {{ in_array($record->temperatur, $temperaturMatches['37.3-37.7']) ? '37.3-37.7' : '' }}
                             </td>
                         @endforeach
@@ -666,8 +765,9 @@
                     <tr>
                         <td>> 37.7</td>
                         <td>2</td>
-                        @foreach($sortedRecords as $record)
-                            <td class="{{ in_array($record->temperatur, $temperaturMatches['> 37.7']) ? 'cell-yellow' : '' }}">
+                        @foreach ($sortedRecords as $record)
+                            <td
+                                class="{{ in_array($record->temperatur, $temperaturMatches['> 37.7']) ? 'cell-yellow' : '' }}">
                                 {{ in_array($record->temperatur, $temperaturMatches['> 37.7']) ? '> 37.7' : '' }}
                             </td>
                         @endforeach
@@ -678,8 +778,9 @@
                         <td rowspan="2" class="parameter-col">Discharge/Lochia</td>
                         <td>Normal</td>
                         <td>0</td>
-                        @foreach($sortedRecords as $record)
-                            <td class="{{ in_array($record->discharge, $dischargeMatches['Normal']) ? 'cell-green' : '' }}">
+                        @foreach ($sortedRecords as $record)
+                            <td
+                                class="{{ in_array($record->discharge, $dischargeMatches['Normal']) ? 'cell-green' : '' }}">
                                 {{ in_array($record->discharge, $dischargeMatches['Normal']) ? 'Normal' : '' }}
                             </td>
                         @endforeach
@@ -687,8 +788,9 @@
                     <tr>
                         <td>Abnormal</td>
                         <td>2</td>
-                        @foreach($sortedRecords as $record)
-                            <td class="{{ in_array($record->discharge, $dischargeMatches['Abnormal']) ? 'cell-yellow' : '' }}">
+                        @foreach ($sortedRecords as $record)
+                            <td
+                                class="{{ in_array($record->discharge, $dischargeMatches['Abnormal']) ? 'cell-yellow' : '' }}">
                                 {{ in_array($record->discharge, $dischargeMatches['Abnormal']) ? 'Abnormal' : '' }}
                             </td>
                         @endforeach
@@ -699,8 +801,9 @@
                         <td rowspan="2" class="parameter-col">Proteinuria/hari</td>
                         <td>Negatif</td>
                         <td>0</td>
-                        @foreach($sortedRecords as $record)
-                            <td class="{{ in_array($record->proteinuria, $proteinuriaMatches['Negatif']) ? 'cell-green' : '' }}">
+                        @foreach ($sortedRecords as $record)
+                            <td
+                                class="{{ in_array($record->proteinuria, $proteinuriaMatches['Negatif']) ? 'cell-green' : '' }}">
                                 {{ in_array($record->proteinuria, $proteinuriaMatches['Negatif']) ? 'Negatif' : '' }}
                             </td>
                         @endforeach
@@ -708,8 +811,9 @@
                     <tr>
                         <td>≥ 1</td>
                         <td>1</td>
-                        @foreach($sortedRecords as $record)
-                            <td class="{{ in_array($record->proteinuria, $proteinuriaMatches['≥ 1']) ? 'cell-yellow' : '' }}">
+                        @foreach ($sortedRecords as $record)
+                            <td
+                                class="{{ in_array($record->proteinuria, $proteinuriaMatches['≥ 1']) ? 'cell-yellow' : '' }}">
                                 {{ in_array($record->proteinuria, $proteinuriaMatches['≥ 1']) ? '≥ 1' : '' }}
                             </td>
                         @endforeach
@@ -719,20 +823,24 @@
                     <tr>
                         <td colspan="2" style="text-align: center; font-weight: bold;">TOTAL SKOR</td>
                         <td></td>
-                        @foreach($sortedRecords as $record)
+                        @foreach ($sortedRecords as $record)
                             @php
                                 $riskClass = '';
                                 if (in_array($record->kesadaran, $kesadaranMatches['Unresponsive'])) {
                                     $riskClass = 'cell-dark';
                                 } elseif ($record->total_skor >= 7) {
                                     $riskClass = 'cell-red';
-                                } elseif ($record->total_skor >= 5 || in_array($record->kesadaran, $kesadaranMatches['Nyeri/Verbal'])) {
+                                } elseif (
+                                    $record->total_skor >= 5 ||
+                                    in_array($record->kesadaran, $kesadaranMatches['Nyeri/Verbal'])
+                                ) {
                                     $riskClass = 'cell-yellow';
                                 } else {
                                     $riskClass = 'cell-green';
                                 }
                             @endphp
-                            <td style="font-weight: bold;" class="{{ $riskClass }}">{{ $record->total_skor ?? '-' }}</td>
+                            <td style="font-weight: bold;" class="{{ $riskClass }}">
+                                {{ $record->total_skor ?? '-' }}</td>
                         @endforeach
                     </tr>
 
@@ -740,20 +848,33 @@
                     <tr>
                         <td colspan="2" style="text-align: center; font-weight: bold;">LEVEL RISIKO</td>
                         <td></td>
-                        @foreach($sortedRecords as $record)
+                        @foreach ($sortedRecords as $record)
                             @php
                                 $riskText = '';
                                 $riskClass = '';
-                                if (in_array($record->hasil_ews, ['HENTI NAFAS/JANTUNG', 'CODE BLUE - HENTI NAFAS/JANTUNG']) || in_array($record->kesadaran, $kesadaranMatches['Unresponsive'])) {
+                                if (
+                                    in_array($record->hasil_ews, [
+                                        'HENTI NAFAS/JANTUNG',
+                                        'CODE BLUE - HENTI NAFAS/JANTUNG',
+                                    ]) ||
+                                    in_array($record->kesadaran, $kesadaranMatches['Unresponsive'])
+                                ) {
                                     $riskText = 'CODE BLUE';
                                     $riskClass = 'cell-dark';
                                 } elseif ($record->hasil_ews == 'RISIKO TINGGI' || $record->total_skor >= 7) {
                                     $riskText = 'TINGGI';
                                     $riskClass = 'cell-red';
-                                } elseif ($record->hasil_ews == 'RISIKO SEDANG' || $record->total_skor >= 5 || in_array($record->kesadaran, $kesadaranMatches['Nyeri/Verbal'])) {
+                                } elseif (
+                                    $record->hasil_ews == 'RISIKO SEDANG' ||
+                                    $record->total_skor >= 5 ||
+                                    in_array($record->kesadaran, $kesadaranMatches['Nyeri/Verbal'])
+                                ) {
                                     $riskText = 'SEDANG';
                                     $riskClass = 'cell-yellow';
-                                } elseif ($record->hasil_ews == 'RISIKO RENDAH' || ($record->total_skor > 0 && $record->total_skor <= 4)) {
+                                } elseif (
+                                    $record->hasil_ews == 'RISIKO RENDAH' ||
+                                    ($record->total_skor > 0 && $record->total_skor <= 4)
+                                ) {
                                     $riskText = 'RENDAH';
                                     $riskClass = 'cell-green';
                                 } else {
@@ -776,19 +897,27 @@
 
             if ($latestRecord) {
                 if (in_array($latestRecord->kesadaran, $kesadaranMatches['Unresponsive'])) {
-                    $resultText = 'Henti Nafas/Jantung: CODE BLUE<br>Lakukan RJP oleh petugas/tim primer, aktivasi code blue henti jantung, respon Tim Medis Emergency (TME)/tim Code Blue segera (maksimal 5 menit), informasikan dan konsultasikan dengan DPJP.';
+                    $resultText =
+                        'Henti Nafas/Jantung: CODE BLUE<br>Lakukan RJP oleh petugas/tim primer, aktivasi code blue henti jantung, respon Tim Medis Emergency (TME)/tim Code Blue segera (maksimal 5 menit), informasikan dan konsultasikan dengan DPJP.';
                     $resultClass = 'hasil-code-blue';
                 } elseif ($latestRecord->total_skor >= 7) {
-                    $resultText = 'Total Skor ≥ 7: RISIKO TINGGI<br>Resusitasi dan monitoring secara kontinyu oleh dokter jaga dan perawat senior, aktivasi code blue kegawatan medis, respon Tim Medis Emergency (TME)/tim Code Blue segera (maksimal 10 menit), Informasikan dan konsultasikan ke DPJP.';
+                    $resultText =
+                        'Total Skor ≥ 7: RISIKO TINGGI<br>Resusitasi dan monitoring secara kontinyu oleh dokter jaga dan perawat senior, aktivasi code blue kegawatan medis, respon Tim Medis Emergency (TME)/tim Code Blue segera (maksimal 10 menit), Informasikan dan konsultasikan ke DPJP.';
                     $resultClass = 'hasil-high';
-                } elseif ($latestRecord->total_skor >= 5 || in_array($latestRecord->kesadaran, $kesadaranMatches['Nyeri/Verbal'])) {
-                    $resultText = 'Total Skor 5-6: RISIKO SEDANG<br>Assessment segera oleh dokter jaga (respon segera, maks 5 menit), konsultasi DPJP dan spesialis terkait, eksalasi perawatan dan monitoring tiap jam, pertimbangkan perawatan dengan monitoring yang sesuai (HCU).';
+                } elseif (
+                    $latestRecord->total_skor >= 5 ||
+                    in_array($latestRecord->kesadaran, $kesadaranMatches['Nyeri/Verbal'])
+                ) {
+                    $resultText =
+                        'Total Skor 5-6: RISIKO SEDANG<br>Assessment segera oleh dokter jaga (respon segera, maks 5 menit), konsultasi DPJP dan spesialis terkait, eksalasi perawatan dan monitoring tiap jam, pertimbangkan perawatan dengan monitoring yang sesuai (HCU).';
                     $resultClass = 'hasil-medium';
                 } elseif ($latestRecord->total_skor >= 1 && $latestRecord->total_skor <= 4) {
-                    $resultText = 'Total Skor 1-4: RISIKO RENDAH<br>Assessment segera oleh perawat senior, respon segera, maks 5 menit, eskalasi perawatan dan frekuensi monitoring per 4-6 jam, Jika diperlukan assessment oleh dokter jaga bangsal.';
+                    $resultText =
+                        'Total Skor 1-4: RISIKO RENDAH<br>Assessment segera oleh perawat senior, respon segera, maks 5 menit, eskalasi perawatan dan frekuensi monitoring per 4-6 jam, Jika diperlukan assessment oleh dokter jaga bangsal.';
                     $resultClass = 'hasil-low';
                 } else {
-                    $resultText = 'Total Skor 0: TIDAK ADA RISIKO<br>Lanjutkan observasi/monitoring secara rutin/per shift.';
+                    $resultText =
+                        'Total Skor 0: TIDAK ADA RISIKO<br>Lanjutkan observasi/monitoring secara rutin/per shift.';
                     $resultClass = 'hasil-no-risk';
                 }
             }
@@ -805,9 +934,11 @@
 
         <div class="footer">
             <p style="font-size: 12px">Nama dan Paraf:</p>
-            <p style="margin-top: 30px; font-size: 12px">{{ str()->title($ewsPsienObstetrik->userCreate->name ?? '-') }}</p>
-            <p class="small-text" style="font-size: 12px">Dicetak pada: {{ now()->format('d/m/Y H:i:s') }}</p>
-            @if(isset($ewsPsienObstetrik->userCreate->jabatan))
+            <p style="margin-top: 40px; font-size: 12px;">
+                {{ str()->title($ewsPsienObstetrik->userCreate->name ?? '-') }}</p>
+            <p class="small-text" style="font-size: 12px">Dicetak pada: {{ now()->format('d/m/Y H:i:s') }}
+            </p>
+            @if (isset($ewsPsienObstetrik) && $ewsPsienObstetrik->userCreate && $ewsPsienObstetrik->userCreate->jabatan)
                 <p>{{ $ewsPsienObstetrik->userCreate->jabatan }}</p>
             @endif
         </div>
@@ -832,7 +963,8 @@
                             Skor 1-4
                         </td>
                         <td>
-                            Assessment segera oleh perawat senior, respon segera, maks 5 menit, eskalasi perawatan dan frekuensi monitoring per 4-6 jam, Jika diperlukan assessment oleh dokter jaga bangsal.
+                            Assessment segera oleh perawat senior, respon segera, maks 5 menit, eskalasi perawatan dan
+                            frekuensi monitoring per 4-6 jam, Jika diperlukan assessment oleh dokter jaga bangsal.
                         </td>
                     </tr>
                     <tr>
@@ -840,7 +972,9 @@
                             Skor 5-6
                         </td>
                         <td>
-                            Assessment segera oleh dokter jaga (respon segera, maks 5 menit), konsultasi DPJP dan spesialis terkait, eksalasi perawatan dan monitoring tiap jam, pertimbangkan perawatan dengan monitoring yang sesuai (HCU).
+                            Assessment segera oleh dokter jaga (respon segera, maks 5 menit), konsultasi DPJP dan
+                            spesialis terkait, eksalasi perawatan dan monitoring tiap jam, pertimbangkan perawatan
+                            dengan monitoring yang sesuai (HCU).
                         </td>
                     </tr>
                     <tr>
@@ -848,7 +982,9 @@
                             Skor 7 atau Lebih atau Parameter Code Blue (Risiko Tinggi)
                         </td>
                         <td>
-                            Resusitasi dan monitoring secara kontinyu oleh dokter jaga dan perawat senior, Aktivasi code blue kegawatan medis, respon Tim Medis Emergency (TME)/tim Code Blue segera, maksimal 10 menit), Informasikan dan konsultasikan ke DPJP.
+                            Resusitasi dan monitoring secara kontinyu oleh dokter jaga dan perawat senior, Aktivasi code
+                            blue kegawatan medis, respon Tim Medis Emergency (TME)/tim Code Blue segera, maksimal 10
+                            menit), Informasikan dan konsultasikan ke DPJP.
                         </td>
                     </tr>
                     <tr>
@@ -856,7 +992,9 @@
                             HENTI NAFAS/JANTUNG
                         </td>
                         <td>
-                            Lakukan RJP oleh petugas/tim primer, aktivasi code blue henti jantung, respon Tim Medis Emergency (TME) /tim Code Blue segera, maksimal 5 menit, informasikan dan konsultasikan dengan DPJP.
+                            Lakukan RJP oleh petugas/tim primer, aktivasi code blue henti jantung, respon Tim Medis
+                            Emergency (TME) /tim Code Blue segera, maksimal 5 menit, informasikan dan konsultasikan
+                            dengan DPJP.
                         </td>
                     </tr>
                 </tbody>
@@ -864,4 +1002,5 @@
         </div>
     </div>
 </body>
+
 </html>

@@ -73,7 +73,7 @@
     .footer-sign td {
         padding: 5px;
         height: 70px;
-        
+
     }
 
     .header-table {
@@ -203,7 +203,7 @@
 
         <div class="form-label">
             Tanggal Lahir:
-            <span class="normal-text">{{ date("d-m-Y", strtotime($dataMedis->pasien->tgl_lahir)) }}</span>
+            <span class="normal-text">{{ date('d-m-Y', strtotime($dataMedis->pasien->tgl_lahir)) }}</span>
         </div>
 
         <div class="form-label">
@@ -221,8 +221,9 @@
     @php
         function parseList($value)
         {
-            if (!$value)
+            if (!$value) {
                 return [];
+            }
             return json_decode($value, true) ?? [];
         }
 
@@ -234,12 +235,6 @@
         $listPemantauan = parseList($ceklistKesiapanAnesthesi->pemantauan);
         $listLainLain = parseList($ceklistKesiapanAnesthesi->lain_lain);
         $listObat = parseList($ceklistKesiapanAnesthesi->obat_obatan);
-
-        // Centang Unicode langsung
-        function isChecked($array, $key)
-        {
-            return in_array($key, $array) ? '✔' : '';
-        }
 
         // Nama teknik
         $teknik = '';
@@ -255,15 +250,15 @@
     <table>
         <tr>
             <td style="font-size : 10px; font-weight: bold; padding-right: 8px;">Ruangan</td>
-            <td style="font-size : 10px;" >: {{ $ceklistKesiapanAnesthesi->ruangan }}</td>
+            <td style="font-size : 10px;">: {{ $ceklistKesiapanAnesthesi->ruangan }}</td>
         </tr>
         <tr>
             <td style="font-size : 10px; font-weight: bold; padding-right: 8px;">Diagnosis</td>
-            <td style="font-size : 10px;" >: {{ $ceklistKesiapanAnesthesi->diagnosis }}</td>
+            <td style="font-size : 10px;">: {{ $ceklistKesiapanAnesthesi->diagnosis }}</td>
         </tr>
         <tr>
             <td style="font-size : 10px; font-weight: bold; padding-right: 8px;">Teknik Anesthesia</td>
-            <td style="font-size : 10px;" >: {{ $teknik }}</td>
+            <td style="font-size : 10px;">: {{ $teknik }}</td>
         </tr>
     </table>
 
@@ -552,7 +547,7 @@
     @endphp
 
 
-   <table class="footer-sign">
+    <table class="footer-sign">
         <tr>
             <td>
                 Pemeriksa: <strong>{{ $namaPemeriksa }}</strong><br><br><br>

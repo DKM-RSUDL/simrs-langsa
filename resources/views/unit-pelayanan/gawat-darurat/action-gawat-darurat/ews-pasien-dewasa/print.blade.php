@@ -325,40 +325,15 @@
         </div>
 
         @php
-            // Helper function untuk standardize comparison
-            function compareEwsValue($recordValue, $targetValue)
-            {
-                // Standardize comparison for multiple formats
-                $equivalentValues = [
-                    '≥ 95' => ['≥ 95', '>= 95', '= 95', '>=95', '≥95'],
-                    '≥ 220' => ['≥ 220', '>= 220', '= 220', '>=220', '≥220'],
-                    '≥ 131' => ['≥ 131', '>= 131', '= 131', '>=131', '≥131'],
-                    '≥ 25' => ['≥ 25', '>= 25', '= 25', '>=25', '≥25'],
-                    '≥ 39.1' => ['≥ 39.1', '>= 39.1', '= 39.1', '>=39.1', '≥39.1'],
-                    '≤ 91' => ['≤ 91', '<= 91', '= 91', '<=91', '≤91'],
-                    '≤ 90' => ['≤ 90', '<= 90', '= 90', '<=90', '≤90'],
-                    '≤ 40' => ['≤ 40', '<= 40', '= 40', '<=40', '≤40'],
-                    '≤ 8' => ['≤ 8', '<= 8', '= 8', '<=8', '≤8'],
-                    '≤ 35' => ['≤ 35', '<= 35', '= 35', '<=35', '≤35'],
-                ];
-
-                foreach ($equivalentValues as $standard => $variations) {
-                    if (in_array($targetValue, $variations) && in_array($recordValue, $variations)) {
-                        return true;
-                    }
-                }
-
-                return $recordValue == $targetValue;
-            }
-
             // Pastikan ewsRecords diurutkan berdasarkan tanggal dan jam
             $sortedRecords = $ewsRecords->sortBy(function ($record) {
-                return Carbon\Carbon::parse($record->tanggal)->format('Y-m-d') . ' ' .
+                return Carbon\Carbon::parse($record->tanggal)->format('Y-m-d') .
+                    ' ' .
                     Carbon\Carbon::parse($record->jam_masuk)->format('H:i:s');
             });
         @endphp
 
-        @if($sortedRecords->isEmpty())
+        @if ($sortedRecords->isEmpty())
             <p style="text-align: center; font-size: 8pt;">Tidak ada data EWS yang tersedia.</p>
         @else
             <table class="ews-table">
@@ -366,19 +341,19 @@
                     <tr>
                         <th rowspan="3" class="parameter-col">PARAMETER</th>
                         <th colspan="2" rowspan="2">Tanggal & Jam</th>
-                        @foreach($sortedRecords as $record)
+                        @foreach ($sortedRecords as $record)
                             <th>{{ \Carbon\Carbon::parse($record->tanggal)->format('d/m/Y') }}</th>
                         @endforeach
                     </tr>
                     <tr>
-                        @foreach($sortedRecords as $record)
+                        @foreach ($sortedRecords as $record)
                             <th>{{ \Carbon\Carbon::parse($record->jam_masuk)->format('H:i') }}</th>
                         @endforeach
                     </tr>
                     <tr>
                         <th class="nilai-col">Penilaian</th>
                         <th class="skor-col">Skor</th>
-                        @foreach($sortedRecords as $record)
+                        @foreach ($sortedRecords as $record)
                             <th></th>
                         @endforeach
                     </tr>
@@ -389,15 +364,16 @@
                         <td rowspan="2" class="parameter-col">Kesadaran (AVPU)</td>
                         <td>A*</td>
                         <td>0</td>
-                        @foreach($sortedRecords as $record)
-                            <td class="{{ $record->avpu == 'A' ? 'cell-green' : '' }}">{{ $record->avpu == 'A' ? 'A' : '' }}
+                        @foreach ($sortedRecords as $record)
+                            <td class="{{ $record->avpu == 'A' ? 'cell-green' : '' }}">
+                                {{ $record->avpu == 'A' ? 'A' : '' }}
                             </td>
                         @endforeach
                     </tr>
                     <tr>
                         <td>V,P,U*</td>
                         <td>3</td>
-                        @foreach($sortedRecords as $record)
+                        @foreach ($sortedRecords as $record)
                             <td class="{{ in_array($record->avpu, ['V', 'P', 'U']) ? 'cell-red' : '' }}">
                                 {{ in_array($record->avpu, ['V', 'P', 'U']) ? $record->avpu : '' }}
                             </td>
@@ -409,7 +385,7 @@
                         <td rowspan="4" class="parameter-col">Saturasi O2 (%)</td>
                         <td>≥ 95</td>
                         <td>0</td>
-                        @foreach($sortedRecords as $record)
+                        @foreach ($sortedRecords as $record)
                             <td class="{{ compareEwsValue($record->saturasi_o2, '≥ 95') ? 'cell-green' : '' }}">
                                 {{ compareEwsValue($record->saturasi_o2, '≥ 95') ? '≥ 95' : '' }}
                             </td>
@@ -418,7 +394,7 @@
                     <tr>
                         <td>94-95</td>
                         <td>1</td>
-                        @foreach($sortedRecords as $record)
+                        @foreach ($sortedRecords as $record)
                             <td class="{{ $record->saturasi_o2 == '94-95' ? 'cell-yellow' : '' }}">
                                 {{ $record->saturasi_o2 == '94-95' ? '94-95' : '' }}
                             </td>
@@ -427,7 +403,7 @@
                     <tr>
                         <td>92-93</td>
                         <td>2</td>
-                        @foreach($sortedRecords as $record)
+                        @foreach ($sortedRecords as $record)
                             <td class="{{ $record->saturasi_o2 == '92-93' ? 'cell-yellow' : '' }}">
                                 {{ $record->saturasi_o2 == '92-93' ? '92-93' : '' }}
                             </td>
@@ -436,7 +412,7 @@
                     <tr>
                         <td>≤ 91</td>
                         <td>3</td>
-                        @foreach($sortedRecords as $record)
+                        @foreach ($sortedRecords as $record)
                             <td class="{{ compareEwsValue($record->saturasi_o2, '≤ 91') ? 'cell-red' : '' }}">
                                 {{ compareEwsValue($record->saturasi_o2, '≤ 91') ? '≤ 91' : '' }}
                             </td>
@@ -448,7 +424,7 @@
                         <td rowspan="2" class="parameter-col">Dengan Bantuan O2</td>
                         <td>Tidak</td>
                         <td>0</td>
-                        @foreach($sortedRecords as $record)
+                        @foreach ($sortedRecords as $record)
                             <td class="{{ $record->dengan_bantuan == 'Tidak' ? 'cell-green' : '' }}">
                                 {{ $record->dengan_bantuan == 'Tidak' ? 'Tidak' : '' }}
                             </td>
@@ -457,7 +433,7 @@
                     <tr>
                         <td>Ya</td>
                         <td>2</td>
-                        @foreach($sortedRecords as $record)
+                        @foreach ($sortedRecords as $record)
                             <td class="{{ $record->dengan_bantuan == 'Ya' ? 'cell-yellow' : '' }}">
                                 {{ $record->dengan_bantuan == 'Ya' ? 'Ya' : '' }}
                             </td>
@@ -469,7 +445,7 @@
                         <td rowspan="5" class="parameter-col">Tekanan Darah Sistolik (mmHg)</td>
                         <td>≥ 220</td>
                         <td>3</td>
-                        @foreach($sortedRecords as $record)
+                        @foreach ($sortedRecords as $record)
                             <td class="{{ compareEwsValue($record->tekanan_darah, '≥ 220') ? 'cell-red' : '' }}">
                                 {{ compareEwsValue($record->tekanan_darah, '≥ 220') ? '≥ 220' : '' }}
                             </td>
@@ -478,7 +454,7 @@
                     <tr>
                         <td>111-219</td>
                         <td>0</td>
-                        @foreach($sortedRecords as $record)
+                        @foreach ($sortedRecords as $record)
                             <td class="{{ $record->tekanan_darah == '111-219' ? 'cell-green' : '' }}">
                                 {{ $record->tekanan_darah == '111-219' ? '111-219' : '' }}
                             </td>
@@ -487,7 +463,7 @@
                     <tr>
                         <td>101-110</td>
                         <td>1</td>
-                        @foreach($sortedRecords as $record)
+                        @foreach ($sortedRecords as $record)
                             <td class="{{ $record->tekanan_darah == '101-110' ? 'cell-yellow' : '' }}">
                                 {{ $record->tekanan_darah == '101-110' ? '101-110' : '' }}
                             </td>
@@ -496,7 +472,7 @@
                     <tr>
                         <td>91-100</td>
                         <td>2</td>
-                        @foreach($sortedRecords as $record)
+                        @foreach ($sortedRecords as $record)
                             <td class="{{ $record->tekanan_darah == '91-100' ? 'cell-yellow' : '' }}">
                                 {{ $record->tekanan_darah == '91-100' ? '91-100' : '' }}
                             </td>
@@ -505,7 +481,7 @@
                     <tr>
                         <td>≤ 90</td>
                         <td>3</td>
-                        @foreach($sortedRecords as $record)
+                        @foreach ($sortedRecords as $record)
                             <td class="{{ compareEwsValue($record->tekanan_darah, '≤ 90') ? 'cell-red' : '' }}">
                                 {{ compareEwsValue($record->tekanan_darah, '≤ 90') ? '≤ 90' : '' }}
                             </td>
@@ -517,7 +493,7 @@
                         <td rowspan="6" class="parameter-col">Nadi (per menit)</td>
                         <td>≥ 131</td>
                         <td>3</td>
-                        @foreach($sortedRecords as $record)
+                        @foreach ($sortedRecords as $record)
                             <td class="{{ compareEwsValue($record->nadi, '≥ 131') ? 'cell-red' : '' }}">
                                 {{ compareEwsValue($record->nadi, '≥ 131') ? '≥ 131' : '' }}
                             </td>
@@ -526,7 +502,7 @@
                     <tr>
                         <td>111-130</td>
                         <td>2</td>
-                        @foreach($sortedRecords as $record)
+                        @foreach ($sortedRecords as $record)
                             <td class="{{ $record->nadi == '111-130' ? 'cell-yellow' : '' }}">
                                 {{ $record->nadi == '111-130' ? '111-130' : '' }}
                             </td>
@@ -535,7 +511,7 @@
                     <tr>
                         <td>91-110</td>
                         <td>1</td>
-                        @foreach($sortedRecords as $record)
+                        @foreach ($sortedRecords as $record)
                             <td class="{{ $record->nadi == '91-110' ? 'cell-yellow' : '' }}">
                                 {{ $record->nadi == '91-110' ? '91-110' : '' }}
                             </td>
@@ -544,7 +520,7 @@
                     <tr>
                         <td>51-90</td>
                         <td>0</td>
-                        @foreach($sortedRecords as $record)
+                        @foreach ($sortedRecords as $record)
                             <td class="{{ $record->nadi == '51-90' ? 'cell-green' : '' }}">
                                 {{ $record->nadi == '51-90' ? '51-90' : '' }}
                             </td>
@@ -553,7 +529,7 @@
                     <tr>
                         <td>41-50</td>
                         <td>1</td>
-                        @foreach($sortedRecords as $record)
+                        @foreach ($sortedRecords as $record)
                             <td class="{{ $record->nadi == '41-50' ? 'cell-yellow' : '' }}">
                                 {{ $record->nadi == '41-50' ? '41-50' : '' }}
                             </td>
@@ -562,7 +538,7 @@
                     <tr>
                         <td>≤ 40</td>
                         <td>3</td>
-                        @foreach($sortedRecords as $record)
+                        @foreach ($sortedRecords as $record)
                             <td class="{{ compareEwsValue($record->nadi, '≤ 40') ? 'cell-red' : '' }}">
                                 {{ compareEwsValue($record->nadi, '≤ 40') ? '≤ 40' : '' }}
                             </td>
@@ -574,7 +550,7 @@
                         <td rowspan="5" class="parameter-col">Nafas (per menit)</td>
                         <td>≥ 25</td>
                         <td>3</td>
-                        @foreach($sortedRecords as $record)
+                        @foreach ($sortedRecords as $record)
                             <td class="{{ compareEwsValue($record->nafas, '≥ 25') ? 'cell-red' : '' }}">
                                 {{ compareEwsValue($record->nafas, '≥ 25') ? '≥ 25' : '' }}
                             </td>
@@ -583,7 +559,7 @@
                     <tr>
                         <td>21-24</td>
                         <td>2</td>
-                        @foreach($sortedRecords as $record)
+                        @foreach ($sortedRecords as $record)
                             <td class="{{ $record->nafas == '21-24' ? 'cell-yellow' : '' }}">
                                 {{ $record->nafas == '21-24' ? '21-24' : '' }}
                             </td>
@@ -592,7 +568,7 @@
                     <tr>
                         <td>12-20</td>
                         <td>0</td>
-                        @foreach($sortedRecords as $record)
+                        @foreach ($sortedRecords as $record)
                             <td class="{{ $record->nafas == '12-20' ? 'cell-green' : '' }}">
                                 {{ $record->nafas == '12-20' ? '12-20' : '' }}
                             </td>
@@ -601,7 +577,7 @@
                     <tr>
                         <td>9-11</td>
                         <td>1</td>
-                        @foreach($sortedRecords as $record)
+                        @foreach ($sortedRecords as $record)
                             <td class="{{ $record->nafas == '9-11' ? 'cell-yellow' : '' }}">
                                 {{ $record->nafas == '9-11' ? '9-11' : '' }}
                             </td>
@@ -610,7 +586,7 @@
                     <tr>
                         <td>≤ 8</td>
                         <td>3</td>
-                        @foreach($sortedRecords as $record)
+                        @foreach ($sortedRecords as $record)
                             <td class="{{ compareEwsValue($record->nafas, '≤ 8') ? 'cell-red' : '' }}">
                                 {{ compareEwsValue($record->nafas, '≤ 8') ? '≤ 8' : '' }}
                             </td>
@@ -622,7 +598,7 @@
                         <td rowspan="5" class="parameter-col">Temperatur (°C)</td>
                         <td>≥ 39.1</td>
                         <td>2</td>
-                        @foreach($sortedRecords as $record)
+                        @foreach ($sortedRecords as $record)
                             <td class="{{ compareEwsValue($record->temperatur, '≥ 39.1') ? 'cell-yellow' : '' }}">
                                 {{ compareEwsValue($record->temperatur, '≥ 39.1') ? '≥ 39.1' : '' }}
                             </td>
@@ -631,7 +607,7 @@
                     <tr>
                         <td>38.1-39.0</td>
                         <td>1</td>
-                        @foreach($sortedRecords as $record)
+                        @foreach ($sortedRecords as $record)
                             <td class="{{ $record->temperatur == '38.1-39.0' ? 'cell-yellow' : '' }}">
                                 {{ $record->temperatur == '38.1-39.0' ? '38.1-39.0' : '' }}
                             </td>
@@ -640,7 +616,7 @@
                     <tr>
                         <td>36.1-38.0</td>
                         <td>0</td>
-                        @foreach($sortedRecords as $record)
+                        @foreach ($sortedRecords as $record)
                             <td class="{{ $record->temperatur == '36.1-38.0' ? 'cell-green' : '' }}">
                                 {{ $record->temperatur == '36.1-38.0' ? '36.1-38.0' : '' }}
                             </td>
@@ -649,7 +625,7 @@
                     <tr>
                         <td>35.1-36.0</td>
                         <td>1</td>
-                        @foreach($sortedRecords as $record)
+                        @foreach ($sortedRecords as $record)
                             <td class="{{ $record->temperatur == '35.1-36.0' ? 'cell-yellow' : '' }}">
                                 {{ $record->temperatur == '35.1-36.0' ? '35.1-36.0' : '' }}
                             </td>
@@ -658,7 +634,7 @@
                     <tr>
                         <td>≤ 35</td>
                         <td>3</td>
-                        @foreach($sortedRecords as $record)
+                        @foreach ($sortedRecords as $record)
                             <td class="{{ compareEwsValue($record->temperatur, '≤ 35') ? 'cell-red' : '' }}">
                                 {{ compareEwsValue($record->temperatur, '≤ 35') ? '≤ 35' : '' }}
                             </td>
@@ -669,7 +645,7 @@
                     <tr>
                         <td colspan="2" style="text-align: center; font-weight: bold;">TOTAL SKOR</td>
                         <td></td>
-                        @foreach($sortedRecords as $record)
+                        @foreach ($sortedRecords as $record)
                             @php
                                 $riskClass = '';
                                 if ($record->total_skor >= 7) {
@@ -690,7 +666,8 @@
                                     $riskClass = 'cell-green';
                                 }
                             @endphp
-                            <td style="font-weight: bold;" class="{{ $riskClass }}">{{ $record->total_skor ?? '-' }}</td>
+                            <td style="font-weight: bold;" class="{{ $riskClass }}">
+                                {{ $record->total_skor ?? '-' }}</td>
                         @endforeach
                     </tr>
 
@@ -698,7 +675,7 @@
                     <tr>
                         <td colspan="2" style="text-align: center; font-weight: bold;">LEVEL RISIKO</td>
                         <td></td>
-                        @foreach($sortedRecords as $record)
+                        @foreach ($sortedRecords as $record)
                             @php
                                 $riskText = '';
                                 $riskClass = '';
@@ -707,7 +684,8 @@
                                     $riskText = 'TINGGI';
                                     $riskClass = 'cell-red';
                                 } elseif (
-                                    $record->hasil_ews == 'RISIKO SEDANG' || $record->total_skor >= 5 ||
+                                    $record->hasil_ews == 'RISIKO SEDANG' ||
+                                    $record->total_skor >= 5 ||
                                     (in_array($record->avpu, ['V', 'P', 'U']) && $record->avpu != null) ||
                                     compareEwsValue($record->saturasi_o2, '≤ 91') ||
                                     compareEwsValue($record->tekanan_darah, '≤ 90') ||
@@ -773,9 +751,10 @@
 
         <div class="footer">
             <p style="font-size: 12px">Nama dan Paraf:</p>
-            <p style="margin-top: 40px; font-size: 12px;">{{ str()->title($ewsPasienDewasa->userCreate->name ?? '-') }}</p>
+            <p style="margin-top: 40px; font-size: 12px;">{{ str()->title($ewsPasienDewasa->userCreate->name ?? '-') }}
+            </p>
             <p class="small-text" style="font-size: 12px">Dicetak pada: {{ now()->format('d/m/Y H:i:s') }}</p>
-            @if(isset($ewsPasienDewasa) && $ewsPasienDewasa->userCreate && $ewsPasienDewasa->userCreate->jabatan)
+            @if (isset($ewsPasienDewasa) && $ewsPasienDewasa->userCreate && $ewsPasienDewasa->userCreate->jabatan)
                 <p>{{ $ewsPasienDewasa->userCreate->jabatan }}</p>
             @endif
         </div>

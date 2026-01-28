@@ -190,6 +190,110 @@
             @else
                 <p>Data asesmen medis neonatologi tidak ditemukan untuk kunjungan ini.</p>
             @endif
+
+            @if ($asesmenKepAnak)
+                @include('unit-pelayanan.rawat-inap.pelayanan.asesmen-anak.print', [
+                    'data' => [
+                        'asesmen' => $asesmenKepAnak,
+                        'dataMedis' => $dataMedis,
+                    ],
+                ])
+            @else
+                <p>Data asesmen keperawatan anak tidak ditemukan untuk kunjungan ini.</p>
+            @endif
+
+            @if ($asesmenKepPerinatology)
+                @include('unit-pelayanan.rawat-inap.pelayanan.asesmen-perinatology.print', [
+                    'data' => [
+                        'asesmen' => $asesmenKepPerinatology,
+                        'dataMedis' => $dataMedis,
+                    ],
+                ])
+            @else
+                <p>Data asesmen keperawatan perinatology tidak ditemukan untuk kunjungan ini.</p>
+            @endif
+
+            @if ($asesmenAwalKeperawatanDewasa['asesmen'])
+                @include('unit-pelayanan.rawat-inap.pelayanan.asesmen-umum.print-pdf', [
+                    'data' => $asesmenAwalKeperawatanDewasa,
+                ])
+            @else
+                <p>Data asesmen awal keperawatan dewasa tidak ditemukan untuk kunjungan ini.</p>
+            @endif
+
+            @if ($ewsRecords->isNotEmpty())
+                @include('unit-pelayanan.rawat-inap.pelayanan.ews-pasien-dewasa.print', [
+                    'ewsRecords' => $ewsRecords,
+                    'ewsPasienDewasa' => $ewsPasienDewasa,
+                    'dataMedis' => $dataMedis,
+                ])
+            @else
+                <p>Data EWS Pasien Dewasa tidak ditemukan untuk kunjungan ini.</p>
+            @endif
+
+            @if ($ewsRecordsAnak->isNotEmpty())
+                @include('unit-pelayanan.rawat-inap.pelayanan.ews-pasien-anak.print', [
+                    'ewsRecords' => $ewsRecordsAnak,
+                    'eWSPasienAnak' => $ewsPasienAnak,
+                    'dataMedis' => $dataMedis,
+                ])
+            @else
+                <p>Data EWS Pasien Anak tidak ditemukan untuk kunjungan ini.</p>
+            @endif
+
+            @if ($ewsRecordsObstetrik->isNotEmpty())
+                @include('unit-pelayanan.rawat-inap.pelayanan.ews-pasien-obstetrik.print', [
+                    'ewsRecords' => $ewsRecordsObstetrik,
+                    'ewsPsienObstetrik' => $ewsPasienObstetrik,
+                    'dataMedis' => $dataMedis,
+                ])
+            @else
+                <p>Data EWS Pasien Obstetrik tidak ditemukan untuk kunjungan ini.</p>
+            @endif
+
+
+            {{-- Surat-surat menu lainnya --}}
+            @if ($suratKematian)
+                @include('unit-pelayanan.rawat-inap.pelayanan.surat-kematian.print', [
+                    'suratKematian' => $suratKematian,
+                    'dataMedis' => $dataMedis,
+                ])
+            @else
+                <p>Data surat kematian tidak ditemukan untuk kunjungan ini.</p>
+            @endif
+
+            @if ($pernyataanDPJP->isNotEmpty())
+                @foreach ($pernyataanDPJP as $dpjpItem)
+                    @include('unit-pelayanan.rawat-inap.pelayanan.pernyataan-bpjp.print', [
+                        'pernyataanDPJP' => $dpjpItem,
+                        'dataMedis' => $dataMedis,
+                        'tanggalLengkap' => \Illuminate\Support\Carbon::now()->locale('id')->translatedFormat('d F Y'),
+                    ])
+                @endforeach
+            @else
+                <p>Data pernyataan DPJP tidak ditemukan untuk kunjungan ini.</p>
+            @endif
+
+            @if ($paps->isNotEmpty())
+                @foreach ($paps as $papsItem)
+                    @include('unit-pelayanan.rawat-inap.pelayanan.paps.pdf', [
+                        'paps' => $papsItem,
+                        'dataMedis' => $dataMedis,
+                    ])
+                @endforeach
+            @else
+                <p>Data PAPS tidak ditemukan untuk kunjungan ini.</p>
+            @endif
+            @if (isset($meninggalkanPerawatan) && $meninggalkanPerawatan->isNotEmpty())
+                @foreach ($meninggalkanPerawatan as $pernyataan)
+                    @include('unit-pelayanan.rawat-inap.pelayanan.meninggalkan-perawatan.pdf', [
+                        'pernyataan' => $pernyataan,
+                        'dataMedis' => $dataMedis,
+                    ])
+                @endforeach
+            @else
+                <p>Data surat meninggalkan perawatan tidak ditemukan untuk kunjungan ini.</p>
+            @endif
         </div>
     </x-content-card>
     <x-content-card>

@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Orientasi Pasien Baru</title>
-<style>
+    <style>
         @page {
             margin: 1cm 1cm;
             size: A4 portrait;
@@ -175,8 +175,17 @@
             border-bottom: 1px solid #000;
             display: inline-block;
             text-align: center;
+            margin-bottom: 1px;
+            min-height: 30px;
+        }
+
+        .signature-label {
+            width: 150px;
+            border-bottom: 1px solid #000;
+            display: inline-block;
+            text-align: center;
             margin-bottom: 2px;
-            min-height: 15px;
+            min-height: 10px;
         }
 
         /* Patient Info Box */
@@ -255,12 +264,13 @@
                 </div>
                 <div class="patient-info-row">
                     <span class="patient-info-label">Jenis Kelamin</span>
-                    <span class="patient-info-value">: {{ $dataMedis->pasien->jenis_kelamin == 1 ? 'Laki-laki' : ($dataMedis->pasien->jenis_kelamin == 0 ? 'Perempuan' : 'Tidak Diketahui') }}</span>
+                    <span class="patient-info-value">:
+                        {{ $dataMedis->pasien->jenis_kelamin == 1 ? 'Laki-laki' : ($dataMedis->pasien->jenis_kelamin == 0 ? 'Perempuan' : 'Tidak Diketahui') }}</span>
                 </div>
                 <div class="patient-info-row">
                     <span class="patient-info-label">Tanggal Lahir</span>
                     <span class="patient-info-value">: {{ $dataMedis->pasien->umur ?? 'Tidak Diketahui' }} Thn
-            ({{ $dataMedis->pasien->tgl_lahir ? \Carbon\Carbon::parse($dataMedis->pasien->tgl_lahir)->format('d/m/Y') : 'Tidak Diketahui' }})</span>
+                        ({{ $dataMedis->pasien->tgl_lahir ? \Carbon\Carbon::parse($dataMedis->pasien->tgl_lahir)->format('d/m/Y') : 'Tidak Diketahui' }})</span>
                 </div>
             </div>
         </div>
@@ -280,14 +290,17 @@
                 <div class="form-group">
                     <span class="form-label">Nama</span>
                     <span class="form-value">:
-                        {{ $dataMedis->pasien->nama }}, {{ $dataMedis->pasien->jenis_kelamin == 1 ? 'L' : ($dataMedis->pasien->jenis_kelamin == 0 ? 'P' : '') }}, Usia:
+                        {{ $dataMedis->pasien->nama }},
+                        {{ $dataMedis->pasien->jenis_kelamin == 1 ? 'L' : ($dataMedis->pasien->jenis_kelamin == 0 ? 'P' : '') }},
+                        Usia:
                         {{ $dataMedis->pasien->umur ?? 'Tidak Diketahui' }} Thn
                     </span>
                 </div>
                 <div class="form-group" style="width: 100%">
                     <span class="form-label">Jenis Kelamin</span>
                     <span class="form-value">:
-                        {{ $dataMedis->pasien->jenis_kelamin == 1 ? 'Laki-laki' : ($dataMedis->pasien->jenis_kelamin == 0 ? 'Perempuan' : 'Tidak Diketahui') }}, Hub dengan
+                        {{ $dataMedis->pasien->jenis_kelamin == 1 ? 'Laki-laki' : ($dataMedis->pasien->jenis_kelamin == 0 ? 'Perempuan' : 'Tidak Diketahui') }},
+                        Hub dengan
                         pasien:
                         {{ $orientasiPasienBaru->hubungan ?? 'aya (pasien) sendiri, Ayah, Ibu, Suami, Istri, Anak, Lain2.................' }}</span>
                 </div>
@@ -304,19 +317,25 @@
                     <tr>
                         <td class="col-1-3">
                             <div class="checkbox-item">
-                                <input type="checkbox" {{ in_array('jam_berkunjung', $orientasiPasienBaru->tata_tertib ?? []) ? 'checked' : '' }} disabled>
+                                <input type="checkbox"
+                                    {{ in_array('jam_berkunjung', $orientasiPasienBaru->tata_tertib ?? []) ? 'checked' : '' }}
+                                    disabled>
                                 <span class="checkbox-text">Jam berkunjung</span>
                             </div>
                         </td>
                         <td class="col-1-3">
                             <div class="checkbox-item">
-                                <input type="checkbox" {{ in_array('dilarang_merokok', $orientasiPasienBaru->tata_tertib ?? []) ? 'checked' : '' }} disabled>
+                                <input type="checkbox"
+                                    {{ in_array('dilarang_merokok', $orientasiPasienBaru->tata_tertib ?? []) ? 'checked' : '' }}
+                                    disabled>
                                 <span class="checkbox-text">Dilarang merokok</span>
                             </div>
                         </td>
                         <td class="col-1-3">
                             <div class="checkbox-item">
-                                <input type="checkbox" {{ in_array('izin_keluar', $orientasiPasienBaru->tata_tertib ?? []) ? 'checked' : '' }} disabled>
+                                <input type="checkbox"
+                                    {{ in_array('izin_keluar', $orientasiPasienBaru->tata_tertib ?? []) ? 'checked' : '' }}
+                                    disabled>
                                 <span class="checkbox-text">Izin keluar kamar / rumah sakit</span>
                             </div>
                         </td>
@@ -324,19 +343,25 @@
                     <tr>
                         <td class="col-1-3">
                             <div class="checkbox-item">
-                                <input type="checkbox" {{ in_array('peraturan_menunggu_pasien', $orientasiPasienBaru->tata_tertib ?? []) ? 'checked' : '' }} disabled>
+                                <input type="checkbox"
+                                    {{ in_array('peraturan_menunggu_pasien', $orientasiPasienBaru->tata_tertib ?? []) ? 'checked' : '' }}
+                                    disabled>
                                 <span class="checkbox-text">Peraturan menunggu pasien</span>
                             </div>
                         </td>
                         <td class="col-1-3">
                             <div class="checkbox-item">
-                                <input type="checkbox" {{ in_array('menyimpan_barang', $orientasiPasienBaru->tata_tertib ?? []) ? 'checked' : '' }} disabled>
+                                <input type="checkbox"
+                                    {{ in_array('menyimpan_barang', $orientasiPasienBaru->tata_tertib ?? []) ? 'checked' : '' }}
+                                    disabled>
                                 <span class="checkbox-text">Menyimpan barang-barang milik pasien / keluarga</span>
                             </div>
                         </td>
                         <td class="col-1-3">
                             <div class="checkbox-item">
-                                <input type="checkbox" {{ in_array('kebersihan_ruangan', $orientasiPasienBaru->tata_tertib ?? []) ? 'checked' : '' }} disabled>
+                                <input type="checkbox"
+                                    {{ in_array('kebersihan_ruangan', $orientasiPasienBaru->tata_tertib ?? []) ? 'checked' : '' }}
+                                    disabled>
                                 <span class="checkbox-text">Kebersihan dan kerapian ruangan</span>
                             </div>
                         </td>
@@ -353,19 +378,25 @@
                     <tr>
                         <td class="col-1-3">
                             <div class="checkbox-item">
-                                <input type="checkbox" {{ in_array('bel_pasien', $orientasiPasienBaru->fasilitas ?? []) ? 'checked' : '' }} disabled>
+                                <input type="checkbox"
+                                    {{ in_array('bel_pasien', $orientasiPasienBaru->fasilitas ?? []) ? 'checked' : '' }}
+                                    disabled>
                                 <span class="checkbox-text">Bel Pasien</span>
                             </div>
                         </td>
                         <td class="col-1-3">
                             <div class="checkbox-item">
-                                <input type="checkbox" {{ in_array('ac_kipas', $orientasiPasienBaru->fasilitas ?? []) ? 'checked' : '' }} disabled>
+                                <input type="checkbox"
+                                    {{ in_array('ac_kipas', $orientasiPasienBaru->fasilitas ?? []) ? 'checked' : '' }}
+                                    disabled>
                                 <span class="checkbox-text">Air Conditioner (AC) / kipas angin</span>
                             </div>
                         </td>
                         <td class="col-1-3">
                             <div class="checkbox-item">
-                                <input type="checkbox" {{ in_array('tv_lampu_kulkas', $orientasiPasienBaru->fasilitas ?? []) ? 'checked' : '' }} disabled>
+                                <input type="checkbox"
+                                    {{ in_array('tv_lampu_kulkas', $orientasiPasienBaru->fasilitas ?? []) ? 'checked' : '' }}
+                                    disabled>
                                 <span class="checkbox-text">Televisi/Lampu/Kulkas</span>
                             </div>
                         </td>
@@ -373,19 +404,25 @@
                     <tr>
                         <td class="col-1-3">
                             <div class="checkbox-item">
-                                <input type="checkbox" {{ in_array('tempat_tidur', $orientasiPasienBaru->fasilitas ?? []) ? 'checked' : '' }} disabled>
+                                <input type="checkbox"
+                                    {{ in_array('tempat_tidur', $orientasiPasienBaru->fasilitas ?? []) ? 'checked' : '' }}
+                                    disabled>
                                 <span class="checkbox-text">Tempat tidur</span>
                             </div>
                         </td>
                         <td class="col-1-3">
                             <div class="checkbox-item">
-                                <input type="checkbox" {{ in_array('peralatan_makan', $orientasiPasienBaru->fasilitas ?? []) ? 'checked' : '' }} disabled>
+                                <input type="checkbox"
+                                    {{ in_array('peralatan_makan', $orientasiPasienBaru->fasilitas ?? []) ? 'checked' : '' }}
+                                    disabled>
                                 <span class="checkbox-text">Peralatan makan / meja makan pasien</span>
                             </div>
                         </td>
                         <td class="col-1-3">
                             <div class="checkbox-item">
-                                <input type="checkbox" {{ in_array('kamar_mandi', $orientasiPasienBaru->fasilitas ?? []) ? 'checked' : '' }} disabled>
+                                <input type="checkbox"
+                                    {{ in_array('kamar_mandi', $orientasiPasienBaru->fasilitas ?? []) ? 'checked' : '' }}
+                                    disabled>
                                 <span class="checkbox-text">Kamar mandi (kloset, dll)</span>
                             </div>
                         </td>
@@ -393,19 +430,25 @@
                     <tr>
                         <td class="col-1-3">
                             <div class="checkbox-item">
-                                <input type="checkbox" {{ in_array('lemari_baju', $orientasiPasienBaru->fasilitas ?? []) ? 'checked' : '' }} disabled>
+                                <input type="checkbox"
+                                    {{ in_array('lemari_baju', $orientasiPasienBaru->fasilitas ?? []) ? 'checked' : '' }}
+                                    disabled>
                                 <span class="checkbox-text">Lemari baju dan nakas (bed side cabinet)</span>
                             </div>
                         </td>
                         <td class="col-1-3">
                             <div class="checkbox-item">
-                                <input type="checkbox" {{ in_array('sofa_kursi', $orientasiPasienBaru->fasilitas ?? []) ? 'checked' : '' }} disabled>
+                                <input type="checkbox"
+                                    {{ in_array('sofa_kursi', $orientasiPasienBaru->fasilitas ?? []) ? 'checked' : '' }}
+                                    disabled>
                                 <span class="checkbox-text">Sofa dan kursi</span>
                             </div>
                         </td>
                         <td class="col-1-3">
                             <div class="checkbox-item">
-                                <input type="checkbox" {{ in_array('fasilitas_lainnya', $orientasiPasienBaru->fasilitas ?? []) ? 'checked' : '' }} disabled>
+                                <input type="checkbox"
+                                    {{ in_array('fasilitas_lainnya', $orientasiPasienBaru->fasilitas ?? []) ? 'checked' : '' }}
+                                    disabled>
                                 <span class="checkbox-text">Lain2
                                     {{ $orientasiPasienBaru->fasilitas_lainnya_text ?? '..............' }}</span>
                             </div>
@@ -423,13 +466,17 @@
                     <tr>
                         <td style="width: 50%">
                             <div class="checkbox-item">
-                                <input type="checkbox" {{ in_array('dokter_ruangan', $orientasiPasienBaru->tenaga_medis ?? []) ? 'checked' : '' }} disabled>
+                                <input type="checkbox"
+                                    {{ in_array('dokter_ruangan', $orientasiPasienBaru->tenaga_medis ?? []) ? 'checked' : '' }}
+                                    disabled>
                                 <span class="checkbox-text">Dokter ruangan</span>
                             </div>
                         </td>
                         <td style="width: 50%">
                             <div class="checkbox-item">
-                                <input type="checkbox" {{ in_array('dokter_spesialis', $orientasiPasienBaru->tenaga_medis ?? []) ? 'checked' : '' }} disabled>
+                                <input type="checkbox"
+                                    {{ in_array('dokter_spesialis', $orientasiPasienBaru->tenaga_medis ?? []) ? 'checked' : '' }}
+                                    disabled>
                                 <span class="checkbox-text">Dokter spesialis</span>
                             </div>
                         </td>
@@ -437,13 +484,17 @@
                     <tr>
                         <td style="width: 50%">
                             <div class="checkbox-item">
-                                <input type="checkbox" {{ in_array('waktu_visit', $orientasiPasienBaru->tenaga_medis ?? []) ? 'checked' : '' }} disabled>
+                                <input type="checkbox"
+                                    {{ in_array('waktu_visit', $orientasiPasienBaru->tenaga_medis ?? []) ? 'checked' : '' }}
+                                    disabled>
                                 <span class="checkbox-text">Waktu visit dokter</span>
                             </div>
                         </td>
                         <td style="width: 50%">
                             <div class="checkbox-item">
-                                <input type="checkbox" {{ in_array('perawat', $orientasiPasienBaru->tenaga_medis ?? []) ? 'checked' : '' }} disabled>
+                                <input type="checkbox"
+                                    {{ in_array('perawat', $orientasiPasienBaru->tenaga_medis ?? []) ? 'checked' : '' }}
+                                    disabled>
                                 <span class="checkbox-text">Perawat</span>
                             </div>
                         </td>
@@ -460,19 +511,25 @@
                     <tr>
                         <td class="col-1-3">
                             <div class="checkbox-item">
-                                <input type="checkbox" {{ in_array('aktivitas_rutin', $orientasiPasienBaru->kegiatan ?? []) ? 'checked' : '' }} disabled>
+                                <input type="checkbox"
+                                    {{ in_array('aktivitas_rutin', $orientasiPasienBaru->kegiatan ?? []) ? 'checked' : '' }}
+                                    disabled>
                                 <span class="checkbox-text">Aktifitas rutin (hand over, visite)</span>
                             </div>
                         </td>
                         <td class="col-1-3">
                             <div class="checkbox-item">
-                                <input type="checkbox" {{ in_array('waktu_pergantian_dinas', $orientasiPasienBaru->kegiatan ?? []) ? 'checked' : '' }} disabled>
+                                <input type="checkbox"
+                                    {{ in_array('waktu_pergantian_dinas', $orientasiPasienBaru->kegiatan ?? []) ? 'checked' : '' }}
+                                    disabled>
                                 <span class="checkbox-text">Waktu pergantian dinas</span>
                             </div>
                         </td>
                         <td class="col-1-3">
                             <div class="checkbox-item">
-                                <input type="checkbox" {{ in_array('pemeriksaan_radiologi', $orientasiPasienBaru->kegiatan ?? []) ? 'checked' : '' }} disabled>
+                                <input type="checkbox"
+                                    {{ in_array('pemeriksaan_radiologi', $orientasiPasienBaru->kegiatan ?? []) ? 'checked' : '' }}
+                                    disabled>
                                 <span class="checkbox-text">Pemeriksaan radiologi</span>
                             </div>
                         </td>
@@ -480,19 +537,25 @@
                     <tr>
                         <td class="col-1-3">
                             <div class="checkbox-item">
-                                <input type="checkbox" {{ in_array('info_pasien_pulang', $orientasiPasienBaru->kegiatan ?? []) ? 'checked' : '' }} disabled>
+                                <input type="checkbox"
+                                    {{ in_array('info_pasien_pulang', $orientasiPasienBaru->kegiatan ?? []) ? 'checked' : '' }}
+                                    disabled>
                                 <span class="checkbox-text">Informasi tentang pasien pulang</span>
                             </div>
                         </td>
                         <td class="col-1-3">
                             <div class="checkbox-item">
-                                <input type="checkbox" {{ in_array('pemeriksaan_laboratorium', $orientasiPasienBaru->kegiatan ?? []) ? 'checked' : '' }} disabled>
+                                <input type="checkbox"
+                                    {{ in_array('pemeriksaan_laboratorium', $orientasiPasienBaru->kegiatan ?? []) ? 'checked' : '' }}
+                                    disabled>
                                 <span class="checkbox-text">Pemeriksaan laboratorium</span>
                             </div>
                         </td>
                         <td class="col-1-3">
                             <div class="checkbox-item">
-                                <input type="checkbox" {{ in_array('kegiatan_lainnya', $orientasiPasienBaru->kegiatan ?? []) ? 'checked' : '' }} disabled>
+                                <input type="checkbox"
+                                    {{ in_array('kegiatan_lainnya', $orientasiPasienBaru->kegiatan ?? []) ? 'checked' : '' }}
+                                    disabled>
                                 <span class="checkbox-text">Lain-lain:
                                     {{ $orientasiPasienBaru->kegiatan_lainnya_text ?? '......................................' }}</span>
                             </div>
@@ -510,23 +573,31 @@
                     <tr>
                         <td class="col-1-3">
                             <div class="checkbox-item">
-                                <input type="checkbox" {{ in_array('nurse_station', $orientasiPasienBaru->lokasi ?? []) ? 'checked' : '' }} disabled>
+                                <input type="checkbox"
+                                    {{ in_array('nurse_station', $orientasiPasienBaru->lokasi ?? []) ? 'checked' : '' }}
+                                    disabled>
                                 <span class="checkbox-text">Nurse station</span>
                             </div>
                         </td>
                         <td class="col-1-3">
                             <div class="checkbox-item">
-                                <input type="checkbox" {{ in_array('kamar_mandi', $orientasiPasienBaru->lokasi ?? []) ? 'checked' : '' }} disabled>
+                                <input type="checkbox"
+                                    {{ in_array('kamar_mandi', $orientasiPasienBaru->lokasi ?? []) ? 'checked' : '' }}
+                                    disabled>
                                 <span class="checkbox-text">Kamar mandi</span>
                             </div>
                         </td>
                         <td class="col-1-3">
                             <div class="checkbox-item">
-                                <input type="checkbox" {{ in_array('musholla', $orientasiPasienBaru->lokasi ?? []) ? 'checked' : '' }} disabled>
+                                <input type="checkbox"
+                                    {{ in_array('musholla', $orientasiPasienBaru->lokasi ?? []) ? 'checked' : '' }}
+                                    disabled>
                                 <span class="checkbox-text">Musholla</span>
                             </div>
                             <div class="checkbox-item">
-                                <input type="checkbox" {{ in_array('lokasi_lainnya', $orientasiPasienBaru->lokasi ?? []) ? 'checked' : '' }} disabled>
+                                <input type="checkbox"
+                                    {{ in_array('lokasi_lainnya', $orientasiPasienBaru->lokasi ?? []) ? 'checked' : '' }}
+                                    disabled>
                                 <span class="checkbox-text">Lain-lain:
                                     {{ $orientasiPasienBaru->lokasi_lainnya_text ?? '..................' }}</span>
                             </div>
@@ -544,19 +615,25 @@
                     <tr>
                         <td class="col-1-3">
                             <div class="checkbox-item">
-                                <input type="checkbox" {{ in_array('pulang_rawat', $orientasiPasienBaru->administrasi ?? []) ? 'checked' : '' }} disabled>
+                                <input type="checkbox"
+                                    {{ in_array('pulang_rawat', $orientasiPasienBaru->administrasi ?? []) ? 'checked' : '' }}
+                                    disabled>
                                 <span class="checkbox-text">Pulang rawat</span>
                             </div>
                         </td>
                         <td class="col-1-3">
                             <div class="checkbox-item">
-                                <input type="checkbox" {{ in_array('selisih_kamar', $orientasiPasienBaru->administrasi ?? []) ? 'checked' : '' }} disabled>
+                                <input type="checkbox"
+                                    {{ in_array('selisih_kamar', $orientasiPasienBaru->administrasi ?? []) ? 'checked' : '' }}
+                                    disabled>
                                 <span class="checkbox-text">Selisih kamar</span>
                             </div>
                         </td>
                         <td class="col-1-3">
                             <div class="checkbox-item">
-                                <input type="checkbox" {{ in_array('pindah_rs', $orientasiPasienBaru->administrasi ?? []) ? 'checked' : '' }} disabled>
+                                <input type="checkbox"
+                                    {{ in_array('pindah_rs', $orientasiPasienBaru->administrasi ?? []) ? 'checked' : '' }}
+                                    disabled>
                                 <span class="checkbox-text">Pindah rumah sakit</span>
                             </div>
                         </td>
@@ -564,19 +641,25 @@
                     <tr>
                         <td class="col-1-3">
                             <div class="checkbox-item">
-                                <input type="checkbox" {{ in_array('pindah_kamar', $orientasiPasienBaru->administrasi ?? []) ? 'checked' : '' }} disabled>
+                                <input type="checkbox"
+                                    {{ in_array('pindah_kamar', $orientasiPasienBaru->administrasi ?? []) ? 'checked' : '' }}
+                                    disabled>
                                 <span class="checkbox-text">Pindah Kamar</span>
                             </div>
                         </td>
                         <td class="col-1-3">
                             <div class="checkbox-item">
-                                <input type="checkbox" {{ in_array('pindah_ruangan', $orientasiPasienBaru->administrasi ?? []) ? 'checked' : '' }} disabled>
+                                <input type="checkbox"
+                                    {{ in_array('pindah_ruangan', $orientasiPasienBaru->administrasi ?? []) ? 'checked' : '' }}
+                                    disabled>
                                 <span class="checkbox-text">Pindah ruangan</span>
                             </div>
                         </td>
                         <td class="col-1-3">
                             <div class="checkbox-item">
-                                <input type="checkbox" {{ in_array('administrasi_lainnya', $orientasiPasienBaru->administrasi ?? []) ? 'checked' : '' }} disabled>
+                                <input type="checkbox"
+                                    {{ in_array('administrasi_lainnya', $orientasiPasienBaru->administrasi ?? []) ? 'checked' : '' }}
+                                    disabled>
                                 <span class="checkbox-text">Lain-lain:
                                     {{ $orientasiPasienBaru->administrasi_lainnya_text ?? '' }}</span>
                             </div>
@@ -594,19 +677,25 @@
                     <tr>
                         <td class="col-1-3">
                             <div class="checkbox-item">
-                                <input type="checkbox" {{ in_array('alat_pendengaran', $orientasiPasienBaru->barang ?? []) ? 'checked' : '' }} disabled>
+                                <input type="checkbox"
+                                    {{ in_array('alat_pendengaran', $orientasiPasienBaru->barang ?? []) ? 'checked' : '' }}
+                                    disabled>
                                 <span class="checkbox-text">Alat pendengaran</span>
                             </div>
                         </td>
                         <td class="col-1-3">
                             <div class="checkbox-item">
-                                <input type="checkbox" {{ in_array('gigi_palsu', $orientasiPasienBaru->barang ?? []) ? 'checked' : '' }} disabled>
+                                <input type="checkbox"
+                                    {{ in_array('gigi_palsu', $orientasiPasienBaru->barang ?? []) ? 'checked' : '' }}
+                                    disabled>
                                 <span class="checkbox-text">Gigi palsu</span>
                             </div>
                         </td>
                         <td class="col-1-3">
                             <div class="checkbox-item">
-                                <input type="checkbox" {{ in_array('perhiasan', $orientasiPasienBaru->barang ?? []) ? 'checked' : '' }} disabled>
+                                <input type="checkbox"
+                                    {{ in_array('perhiasan', $orientasiPasienBaru->barang ?? []) ? 'checked' : '' }}
+                                    disabled>
                                 <span class="checkbox-text">Perhiasan</span>
                             </div>
                         </td>
@@ -614,19 +703,25 @@
                     <tr>
                         <td class="col-1-3">
                             <div class="checkbox-item">
-                                <input type="checkbox" {{ in_array('alat_pembayaran', $orientasiPasienBaru->barang ?? []) ? 'checked' : '' }} disabled>
+                                <input type="checkbox"
+                                    {{ in_array('alat_pembayaran', $orientasiPasienBaru->barang ?? []) ? 'checked' : '' }}
+                                    disabled>
                                 <span class="checkbox-text">Alat pembayaran</span>
                             </div>
                         </td>
                         <td class="col-1-3">
                             <div class="checkbox-item">
-                                <input type="checkbox" {{ in_array('kacamata', $orientasiPasienBaru->barang ?? []) ? 'checked' : '' }} disabled>
+                                <input type="checkbox"
+                                    {{ in_array('kacamata', $orientasiPasienBaru->barang ?? []) ? 'checked' : '' }}
+                                    disabled>
                                 <span class="checkbox-text">Kacamata</span>
                             </div>
                         </td>
                         <td class="col-1-3">
                             <div class="checkbox-item">
-                                <input type="checkbox" {{ in_array('alat_komunikasi', $orientasiPasienBaru->barang ?? []) ? 'checked' : '' }} disabled>
+                                <input type="checkbox"
+                                    {{ in_array('alat_komunikasi', $orientasiPasienBaru->barang ?? []) ? 'checked' : '' }}
+                                    disabled>
                                 <span class="checkbox-text">Alat komunikasi</span>
                             </div>
                         </td>
@@ -634,19 +729,25 @@
                     <tr>
                         <td class="col-1-3">
                             <div class="checkbox-item">
-                                <input type="checkbox" {{ in_array('contact_lens', $orientasiPasienBaru->barang ?? []) ? 'checked' : '' }} disabled>
+                                <input type="checkbox"
+                                    {{ in_array('contact_lens', $orientasiPasienBaru->barang ?? []) ? 'checked' : '' }}
+                                    disabled>
                                 <span class="checkbox-text">Contact lens</span>
                             </div>
                         </td>
                         <td class="col-1-3">
                             <div class="checkbox-item">
-                                <input type="checkbox" {{ in_array('jam_tangan', $orientasiPasienBaru->barang ?? []) ? 'checked' : '' }} disabled>
+                                <input type="checkbox"
+                                    {{ in_array('jam_tangan', $orientasiPasienBaru->barang ?? []) ? 'checked' : '' }}
+                                    disabled>
                                 <span class="checkbox-text">Jam tangan</span>
                             </div>
                         </td>
                         <td class="col-1-3">
                             <div class="checkbox-item">
-                                <input type="checkbox" {{ in_array('laptop', $orientasiPasienBaru->barang ?? []) ? 'checked' : '' }} disabled>
+                                <input type="checkbox"
+                                    {{ in_array('laptop', $orientasiPasienBaru->barang ?? []) ? 'checked' : '' }}
+                                    disabled>
                                 <span class="checkbox-text">Laptop</span>
                             </div>
                         </td>
@@ -654,21 +755,27 @@
                     <tr>
                         <td class="col-1-3">
                             <div class="checkbox-item">
-                                <input type="checkbox" {{ in_array('barang_lainnya_1', $orientasiPasienBaru->barang ?? []) ? 'checked' : '' }} disabled>
+                                <input type="checkbox"
+                                    {{ in_array('barang_lainnya_1', $orientasiPasienBaru->barang ?? []) ? 'checked' : '' }}
+                                    disabled>
                                 <span class="checkbox-text">Lain-lain:
                                     {{ $orientasiPasienBaru->barang_lainnya_1_text ?? '....................' }}</span>
                             </div>
                         </td>
                         <td class="col-1-3">
                             <div class="checkbox-item">
-                                <input type="checkbox" {{ in_array('barang_lainnya_2', $orientasiPasienBaru->barang ?? []) ? 'checked' : '' }} disabled>
+                                <input type="checkbox"
+                                    {{ in_array('barang_lainnya_2', $orientasiPasienBaru->barang ?? []) ? 'checked' : '' }}
+                                    disabled>
                                 <span class="checkbox-text">Lain-lain:
                                     {{ $orientasiPasienBaru->barang_lainnya_2_text ?? '....................' }}</span>
                             </div>
                         </td>
                         <td class="col-1-3">
                             <div class="checkbox-item">
-                                <input type="checkbox" {{ in_array('barang_lainnya_3', $orientasiPasienBaru->barang ?? []) ? 'checked' : '' }} disabled>
+                                <input type="checkbox"
+                                    {{ in_array('barang_lainnya_3', $orientasiPasienBaru->barang ?? []) ? 'checked' : '' }}
+                                    disabled>
                                 <span class="checkbox-text">Lain-lain:
                                     {{ $orientasiPasienBaru->barang_lainnya_3_text ?? '....................' }}</span>
                             </div>
@@ -686,7 +793,9 @@
                     <tr>
                         <td>
                             <div class="checkbox-item">
-                                <input type="checkbox" {{ in_array('menutup_pengaman', $orientasiPasienBaru->informasi_lainnya ?? []) ? 'checked' : '' }} disabled>
+                                <input type="checkbox"
+                                    {{ in_array('menutup_pengaman', $orientasiPasienBaru->informasi_lainnya ?? []) ? 'checked' : '' }}
+                                    disabled>
                                 <span class="checkbox-text">Selalu menutup pengaman tempat tidur</span>
                             </div>
                         </td>
@@ -694,8 +803,11 @@
                     <tr>
                         <td>
                             <div class="checkbox-item">
-                                <input type="checkbox" {{ in_array('tanggung_jawab_barang', $orientasiPasienBaru->informasi_lainnya ?? []) ? 'checked' : '' }} disabled>
-                                <span class="checkbox-text">Pasien dan keluarga bertanggung jawab penuh atas barang yang
+                                <input type="checkbox"
+                                    {{ in_array('tanggung_jawab_barang', $orientasiPasienBaru->informasi_lainnya ?? []) ? 'checked' : '' }}
+                                    disabled>
+                                <span class="checkbox-text">Pasien dan keluarga bertanggung jawab penuh atas barang
+                                    yang
                                     dibawa ke Rumah Sakit</span>
                             </div>
                         </td>
@@ -703,7 +815,9 @@
                     <tr>
                         <td>
                             <div class="checkbox-item">
-                                <input type="checkbox" {{ in_array('barang_tidak_perlu', $orientasiPasienBaru->informasi_lainnya ?? []) ? 'checked' : '' }} disabled>
+                                <input type="checkbox"
+                                    {{ in_array('barang_tidak_perlu', $orientasiPasienBaru->informasi_lainnya ?? []) ? 'checked' : '' }}
+                                    disabled>
                                 <span class="checkbox-text">Barang yang tidak berhubungan dengan perawatan sebaiknya
                                     tidak perlu dibawa</span>
                             </div>
@@ -712,8 +826,11 @@
                     <tr>
                         <td>
                             <div class="checkbox-item">
-                                <input type="checkbox" {{ in_array('tidak_merekam', $orientasiPasienBaru->informasi_lainnya ?? []) ? 'checked' : '' }} disabled>
-                                <span class="checkbox-text">Tidak merekam / mengambil gambar di lokasi Rumah Sakit tanpa
+                                <input type="checkbox"
+                                    {{ in_array('tidak_merekam', $orientasiPasienBaru->informasi_lainnya ?? []) ? 'checked' : '' }}
+                                    disabled>
+                                <span class="checkbox-text">Tidak merekam / mengambil gambar di lokasi Rumah Sakit
+                                    tanpa
                                     izin pihak Rumah Sakit</span>
                             </div>
                         </td>
@@ -730,13 +847,17 @@
                     <tr>
                         <td style="width: 50%">
                             <div class="checkbox-item">
-                                <input type="checkbox" {{ in_array('kebakaran_gempa', $orientasiPasienBaru->kegawatdaruratan ?? []) ? 'checked' : '' }} disabled>
+                                <input type="checkbox"
+                                    {{ in_array('kebakaran_gempa', $orientasiPasienBaru->kegawatdaruratan ?? []) ? 'checked' : '' }}
+                                    disabled>
                                 <span class="checkbox-text">Kebakaran, gempa dan bencana lainnya</span>
                             </div>
                         </td>
                         <td style="width: 50%">
                             <div class="checkbox-item">
-                                <input type="checkbox" {{ in_array('jalur_evakuasi', $orientasiPasienBaru->kegawatdaruratan ?? []) ? 'checked' : '' }} disabled>
+                                <input type="checkbox"
+                                    {{ in_array('jalur_evakuasi', $orientasiPasienBaru->kegawatdaruratan ?? []) ? 'checked' : '' }}
+                                    disabled>
                                 <span class="checkbox-text">Jalur evakuasi dan titik kumpul</span>
                             </div>
                         </td>
@@ -756,8 +877,9 @@
                         </td>
                         <td style="width: 50%; text-align: center">
                             <p class="signature-title">Yang memberikan informasi</p>
-                            <br><br>
-                            <p class="signature-name">{{ $orientasiPasienBaru->userCreate->name ?? '' }}</p>
+                            <img src="{{ generateQrCode($orientasiPasienBaru->userCreate->name, 100, 'svg_datauri') }}"
+                                alt="QR"> <br>
+                            <p class="signature-label">{{ $orientasiPasienBaru->userCreate->name ?? '' }}</p>
                         </td>
                     </tr>
                 </table>

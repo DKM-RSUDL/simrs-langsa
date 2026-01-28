@@ -208,10 +208,6 @@
             $map = ['1' => 'Ya', '0' => 'Tidak'];
             return $map[$code] ?? '-';
         }
-        function isChecked($item, $savedArray)
-        {
-            return in_array($item, $savedArray) ? '✔' : '';
-        }
         // Variabel $perawat harus tersedia di print view, yang berasal dari controller.
         $id_penerima = $asesmenPerawat->id_perawat_penerima ?? null;
         $perawatPenerimaData = null;
