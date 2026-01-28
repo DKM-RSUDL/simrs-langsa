@@ -29,13 +29,14 @@ use App\Models\RmeAsesmenGeriatriRencanaPulang;
 use App\Models\RmeAsesmenPsikiatri;
 use App\Models\RmeAsesmenPsikiatriDtl;
 use App\Models\RmeSuratKematian;
-use Illuminate\Support\Facades\DB;
+use App\Models\RmePaps;
 use Illuminate\Support\Carbon;
 use App\Services\AsesmenService;
 
 use App\Models\EWSPasienDewasa;
 use App\Models\EWSPasienAnak;
 use App\Models\EwsPasienObstetrik;
+use Illuminate\Support\Facades\DB;
 
 class BerkasDigitalService
 {
@@ -1806,5 +1807,19 @@ class BerkasDigitalService
         $ewsPasienObstetrik = $ewsRecords->first();
 
         return compact('ewsRecords', 'ewsPasienObstetrik');
+    }
+
+    /**
+     * Get PAPS (Pernyataan Pulang Atas Permintaan Sendiri) data untuk ditampilkan di berkas digital
+     */
+    public function getPapsData($dataMedis)
+    {
+        return RmePaps::with('detail')
+            ->where('kd_pasien', $dataMedis->kd_pasien)
+            ->where('kd_unit', $dataMedis->kd_unit)
+            ->whereDate('tgl_masuk', $dataMedis->tgl_masuk)
+            ->where('urut_masuk', $dataMedis->urut_masuk)
+            ->orderBy('tanggal', 'desc')
+            ->get();
     }
 }
