@@ -269,6 +269,10 @@
             </tr>
         </table>
 
+        @php
+            dd($data);
+        @endphp
+
 
         <table style="margin-top : 20px;">
             <!-- Header Anamnesis -->

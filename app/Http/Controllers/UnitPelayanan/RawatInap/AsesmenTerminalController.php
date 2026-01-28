@@ -10,8 +10,8 @@ use App\Models\RmeAsesmenTerminalAf;
 use App\Models\RmeAsesmenTerminalFmo;
 use App\Models\RmeAsesmenTerminalUsk;
 use App\Services\BaseService;
-use Carbon\Carbon;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
@@ -25,7 +25,7 @@ class AsesmenTerminalController extends Controller
     public function __construct()
     {
         $this->middleware('can:read unit-pelayanan/rawat-inap');
-        $this->baseService = new BaseService();
+        $this->baseService = new BaseService;
     }
 
     public function index(Request $request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
@@ -47,7 +47,7 @@ class AsesmenTerminalController extends Controller
             ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
             ->first();
 
-        if (!$dataMedis) {
+        if (! $dataMedis) {
             abort(404, 'Data not found');
         }
 
@@ -66,7 +66,7 @@ class AsesmenTerminalController extends Controller
             $dataMedis->riwayat_alergi = [];
         }
 
-        $dataMedis->waktu_masuk = Carbon::parse($dataMedis->TGL_MASUK . ' ' . $dataMedis->JAM_MASUK)->format('Y-m-d H:i:s');
+        $dataMedis->waktu_masuk = Carbon::parse($dataMedis->TGL_MASUK.' '.$dataMedis->JAM_MASUK)->format('Y-m-d H:i:s');
 
         return view('unit-pelayanan.rawat-inap.pelayanan.asesmen-terminal.create', compact(
             'kd_unit',
@@ -85,15 +85,16 @@ class AsesmenTerminalController extends Controller
         try {
 
             $dataMedis = $this->baseService->getDataMedis($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
-            if (empty($dataMedis)) throw new Exception('Data kunjungan tidak ditemukan !');
-
+            if (empty($dataMedis)) {
+                throw new Exception('Data kunjungan tidak ditemukan !');
+            }
 
             // Ambil tanggal dan jam dari form
             $formatDate = date('Y-m-d', strtotime($request->tanggal));
             $formatTime = date('H:i:s', strtotime($request->jam_masuk));
 
             // 1. record RmeAsesmen
-            $asesmen = new RmeAsesmen();
+            $asesmen = new RmeAsesmen;
             $asesmen->kd_pasien = $dataMedis->kd_pasien;
             $asesmen->kd_unit = $dataMedis->kd_unit;
             $asesmen->tgl_masuk = $dataMedis->tgl_masuk;
@@ -105,7 +106,7 @@ class AsesmenTerminalController extends Controller
             $asesmen->save();
 
             // 2. RmeAsesmen terminal (section 1)
-            $asesmenTerminal = new RmeAsesmenTerminal();
+            $asesmenTerminal = new RmeAsesmenTerminal;
             $asesmenTerminal->id_asesmen = $asesmen->id;
             $asesmenTerminal->user_create = Auth::id();
             $asesmenTerminal->tanggal = Carbon::parse($request->tanggal);
@@ -144,7 +145,7 @@ class AsesmenTerminalController extends Controller
             $asesmenTerminal->save();
 
             // 3. RmeAsesmen FMO (section 2,3,4)
-            $asesmenTerminalFmo = new RmeAsesmenTerminalFmo();
+            $asesmenTerminalFmo = new RmeAsesmenTerminalFmo;
             $asesmenTerminalFmo->id_asesmen = $asesmen->id;
             // section 2
             $asesmenTerminalFmo->melakukan_aktivitas = $request->melakukan_aktivitas ? 1 : 0;
@@ -166,7 +167,7 @@ class AsesmenTerminalController extends Controller
             $asesmenTerminalFmo->save();
 
             // 3 RmeAsesmen USK (section 5,6,7)
-            $asesmenterminalUsk = new RmeAsesmenTerminalUsk();
+            $asesmenterminalUsk = new RmeAsesmenTerminalUsk;
             $asesmenterminalUsk->id_asesmen = $asesmen->id;
             // section 5
             $asesmenterminalUsk->perlu_didoakan = $request->perlu_didoakan ? 1 : 0;
@@ -211,7 +212,7 @@ class AsesmenTerminalController extends Controller
             $asesmenterminalUsk->save();
 
             // 4. RmeAsesmen AF (section 8,9)
-            $asesmenTerminalAF = new RmeAsesmenTerminalAf();
+            $asesmenTerminalAF = new RmeAsesmenTerminalAf;
             $asesmenTerminalAF->id_asesmen = $asesmen->id;
             // section 8
             $asesmenTerminalAF->alternatif_tidak = $request->alternatif_tidak ? 0 : 1;
@@ -233,24 +234,24 @@ class AsesmenTerminalController extends Controller
             $asesmenTerminalAF->masalah_distress_spiritual_keluarga = $request->masalah_distress_spiritual_keluarga ? 1 : 0;
             $asesmenTerminalAF->save();
 
-
             // create resume
             $resumeData = [];
             $this->baseService->updateResumeMedis($dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk, $resumeData);
 
             DB::commit();
+
             return redirect()->route('rawat-inap.asesmen.medis.umum.index', [
                 'kd_unit' => $kd_unit,
                 'kd_pasien' => $kd_pasien,
                 'tgl_masuk' => $tgl_masuk,
-                'urut_masuk' => $urut_masuk
+                'urut_masuk' => $urut_masuk,
             ])->with('success', 'Data berhasil disimpan');
         } catch (\Throwable $th) {
-            return redirect()->back()->with('error', 'Gagal menyimpan data: ' . $th->getMessage());
+            return redirect()->back()->with('error', 'Gagal menyimpan data: '.$th->getMessage());
         }
     }
 
-    public function show($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $id)
+    public function show($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $id, $print = false)
     {
         try {
             // Ambil data asesmen beserta relasinya
@@ -269,14 +270,20 @@ class AsesmenTerminalController extends Controller
                 ->where('urut_masuk', $urut_masuk)
                 ->firstOrFail();
 
-            return view('unit-pelayanan.rawat-inap.pelayanan.asesmen-terminal.show', compact(
+            $data = compact(
                 'asesmen',
-                'dataMedis',
-            ));
+                'dataMedis'
+            );
+
+            if ($print) {
+                return $data;
+            }
+
+            return view('unit-pelayanan.rawat-inap.pelayanan.asesmen-terminal.show', $data);
         } catch (ModelNotFoundException $e) {
-            return back()->with('error', 'Data tidak ditemukan. Detail: ' . $e->getMessage());
+            return back()->with('error', 'Data tidak ditemukan. Detail: '.$e->getMessage());
         } catch (Exception $e) {
-            return back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
+            return back()->with('error', 'Terjadi kesalahan: '.$e->getMessage());
         }
     }
 
@@ -304,9 +311,9 @@ class AsesmenTerminalController extends Controller
                 'dataMedis',
             ));
         } catch (ModelNotFoundException $e) {
-            return back()->with('error', 'Data tidak ditemukan. Detail: ' . $e->getMessage());
+            return back()->with('error', 'Data tidak ditemukan. Detail: '.$e->getMessage());
         } catch (Exception $e) {
-            return back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
+            return back()->with('error', 'Terjadi kesalahan: '.$e->getMessage());
         }
     }
 
@@ -317,7 +324,9 @@ class AsesmenTerminalController extends Controller
         try {
 
             $dataMedis = $this->baseService->getDataMedis($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
-            if (empty($dataMedis)) throw new Exception('Data kunjungan tidak ditemukan !');
+            if (empty($dataMedis)) {
+                throw new Exception('Data kunjungan tidak ditemukan !');
+            }
 
             // Ambil tanggal dan jam dari form
             $formatDate = date('Y-m-d', strtotime($request->tanggal));
@@ -464,20 +473,37 @@ class AsesmenTerminalController extends Controller
             $asesmenTerminalAF->masalah_distress_spiritual_keluarga = $request->masalah_distress_spiritual_keluarga ? 1 : 0;
             $asesmenTerminalAF->save();
 
-
             // create resume
             $resumeData = [];
             $this->baseService->updateResumeMedis($dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk, $resumeData);
 
             DB::commit();
+
             return redirect()->route('rawat-inap.asesmen.medis.umum.index', [
                 'kd_unit' => $kd_unit,
                 'kd_pasien' => $kd_pasien,
                 'tgl_masuk' => $tgl_masuk,
-                'urut_masuk' => $urut_masuk
+                'urut_masuk' => $urut_masuk,
             ])->with('success', 'Data berhasil disimpan');
         } catch (\Throwable $th) {
-            return redirect()->back()->with('error', 'Gagal menyimpan data: ' . $th->getMessage());
+            return redirect()->back()->with('error', 'Gagal menyimpan data: '.$th->getMessage());
         }
+    }
+
+    public function generatePDF($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $id)
+    {
+        $data = $this->show($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $id, true);
+       
+        $pdf = Pdf::loadView('unit-pelayanan.rawat-inap.pelayanan.asesmen-terminal.print', ['data'=> $data]);
+
+        $pdf->setPaper('a4', 'portrait');
+        $pdf->setOptions([
+            'isHtml5ParserEnabled' => true,
+            'isRemoteEnabled' => true,
+            'defaultFont' => 'sans-serif',
+        ]);
+
+        return $pdf->stream("keperawatan-teerminal-{$id}-print-pdf.pdf");
+
     }
 }
