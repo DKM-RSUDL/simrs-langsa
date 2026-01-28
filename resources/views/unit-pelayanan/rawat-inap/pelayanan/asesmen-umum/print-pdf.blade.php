@@ -2360,21 +2360,6 @@
         <tr>
             <td colspan="4" class="label" style=" font-size: 10pt;">PENGKAJIAN STATUS NYERI</td>
         </tr>
-        @php
-            function image_to_base64($relativePath)
-            {
-                $path = public_path($relativePath);
-
-                if (!file_exists($path)) {
-                    return null;
-                }
-
-                $type = pathinfo($path, PATHINFO_EXTENSION);
-                $data = file_get_contents($path);
-
-                return 'data:image/' . $type . ';base64,' . base64_encode($data);
-            }
-        @endphp
         <tr>
             <td colspan="2">
                 <table border="1" class="table table-bordered">

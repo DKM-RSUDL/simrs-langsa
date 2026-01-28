@@ -511,6 +511,9 @@ class BerkasDigitalController extends Controller
         $suratKematianData = $this->berkasDigitalService->getSuratKematianData($dataMedis);
         $suratKematian = $suratKematianData['suratKematian'];
 
+        // Ambil data Pernyataan DPJP
+        $pernyataanDPJP = $this->berkasDigitalService->getPernyataanDPJPData($dataMedis);
+
         // Ambil data PAPS
         $paps = $this->berkasDigitalService->getPapsData($dataMedis);
 
@@ -648,6 +651,7 @@ class BerkasDigitalController extends Controller
             'asesmenKepPerinatology',
             'asesmenAwalKeperawatanDewasa',
             'suratKematian',
+            'pernyataanDPJP',
             'paps',
             'ewsRecords',
             'ewsPasienDewasa',

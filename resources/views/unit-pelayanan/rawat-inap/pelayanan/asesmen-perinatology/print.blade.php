@@ -171,11 +171,6 @@
             $logoBase64 = $logoData ? 'data:image/png;base64,' . base64_encode($logoData) : null;
         }
 
-        function check($val)
-        {
-            return $val ? '&#9745;' : '&#9744;';
-        }
-
         // --- Mapping Data Perinatologi ---
         $nyeri = $asesmen->rmeAsesmenPerinatologyStatusNyeri;
         $mapJenisNyeri = ['1' => 'Nyeri Akut', '2' => 'Nyeri Kronis'];

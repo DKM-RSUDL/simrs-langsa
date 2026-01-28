@@ -169,12 +169,6 @@
         $logoPath = public_path('assets/img/Logo-RSUD-Langsa-1.png');
         $logoData = @file_get_contents($logoPath);
         $logoBase64 = $logoData ? 'data:image/png;base64,' . base64_encode($logoData) : null;
-
-        // Helper Function untuk Checkbox
-        function cb($condition)
-        {
-            return $condition ? '<span class="cb-symbol">☑</span>' : '<span class="cb-symbol">☐</span>';
-        }
     @endphp
 
     {{-- KOP SURAT --}}
@@ -565,11 +559,6 @@
                     $imunisasi = is_array($rawImun) ? $rawImun : json_decode($rawImun, true);
                 }
                 $imunisasi = is_array($imunisasi) ? $imunisasi : [];
-
-                function isChecked($val, $arr)
-                {
-                    return in_array($val, $arr) ? '☑' : '☐';
-                }
             @endphp
             <table style="width: 100%; font-size: 8pt;">
                 <tr>
@@ -676,28 +665,6 @@
             {{-- 11. DIAGNOSIS --}}
             <div class="section-title">11. DIAGNOSIS</div>
             @php
-                // Helper untuk memformat diagnosis
-                function formatDiagnosis($raw)
-                {
-                    if (empty($raw)) {
-                        return '-';
-                    }
-
-                    if (is_array($raw)) {
-                        return implode(', ', $raw);
-                    }
-
-                    if (is_string($raw)) {
-                        $decoded = json_decode($raw, true);
-
-                        if (json_last_error() === JSON_ERROR_NONE && is_array($decoded)) {
-                            return implode(', ', $decoded);
-                        }
-                    }
-
-                    return $raw;
-                }
-
                 $strDB = formatDiagnosis($dtl->diagnosis_banding ?? null);
                 $strDK = formatDiagnosis($dtl->diagnosis_kerja ?? null);
             @endphp
@@ -792,7 +759,7 @@
                         Dokter Penanggung Jawab Pelayanan (DPJP)
                         <br>
                         <img src="{{ generateQrCode(($asesmen->user->karyawan->gelar_depan ?? '') . ' ' . str()->title($asesmen->user->karyawan->nama ?? '') . ' ' . ($asesmen->user->karyawan->gelar_belakang ?? ''), 100, 'svg_datauri') }}"
-                                    alt="QR Petugas">
+                            alt="QR Petugas">
                         <br>
                         {{ ($asesmen->user->karyawan->gelar_depan ?? '') . ' ' . str()->title($asesmen->user->karyawan->nama ?? '') . ' ' . ($asesmen->user->karyawan->gelar_belakang ?? '') }}
                     </td>

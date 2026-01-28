@@ -196,12 +196,6 @@
             $logoData = @file_get_contents($logoPath);
             $logoBase64 = $logoData ? 'data:image/png;base64,' . base64_encode($logoData) : null;
         }
-
-        // Helper Checkbox
-        function checkbox($val)
-        {
-            return $val ? '&#9745;' : '&#9744;';
-        }
     @endphp
 
     {{-- KOP SURAT --}}

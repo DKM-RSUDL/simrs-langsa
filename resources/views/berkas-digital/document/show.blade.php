@@ -262,6 +262,18 @@
                 <p>Data surat kematian tidak ditemukan untuk kunjungan ini.</p>
             @endif
 
+            @if ($pernyataanDPJP->isNotEmpty())
+                @foreach ($pernyataanDPJP as $dpjpItem)
+                    @include('unit-pelayanan.rawat-inap.pelayanan.pernyataan-bpjp.print', [
+                        'pernyataanDPJP' => $dpjpItem,
+                        'dataMedis' => $dataMedis,
+                        'tanggalLengkap' => \Illuminate\Support\Carbon::now()->locale('id')->translatedFormat('d F Y'),
+                    ])
+                @endforeach
+            @else
+                <p>Data pernyataan DPJP tidak ditemukan untuk kunjungan ini.</p>
+            @endif
+
             @if ($paps->isNotEmpty())
                 @foreach ($paps as $papsItem)
                     @include('unit-pelayanan.rawat-inap.pelayanan.paps.pdf', [

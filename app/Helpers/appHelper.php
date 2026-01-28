@@ -677,3 +677,140 @@ if (!function_exists('generateQrCode')) {
         }
     }
 }
+
+if (!function_exists('statusDiagLabel')) {
+    function statusDiagLabel($status)
+    {
+        $label = '-';
+        switch ($status) {
+            case 0:
+                $label = 'Utama';
+                break;
+            case 1:
+                $label = 'Diagnosa Awal';
+                break;
+            case 2:
+                $label = 'Komplikasi';
+                break;
+            case 3:
+                $label = 'Sekunder';
+                break;
+        }
+        return $label;
+    }
+}
+
+if (!function_exists('kasusLabel')) {
+    function kasusLabel($kasus)
+    {
+        $label = '-';
+        switch ($kasus) {
+            case 0:
+                $label = 'Baru';
+                break;
+            case 1:
+                $label = 'Lama';
+                break;
+        }
+        return $label;
+    }
+}
+
+if (!function_exists('cb')) {
+    function cb($condition)
+    {
+        return $condition ? '<span class="cb-symbol">☑</span>' : '<span class="cb-symbol">☐</span>';
+    }
+}
+
+if (!function_exists('isChecked')) {
+    function isChecked($val, $arr)
+    {
+        // Handle both array of values and associative arrays
+        if (is_array($arr)) {
+            return in_array($val, $arr) ? '☑' : '☐';
+        }
+        // If arr is a single value for comparison
+        return $val == $arr ? '☑' : '☐';
+    }
+}
+
+if (!function_exists('formatDiagnosis')) {
+    function formatDiagnosis($raw)
+    {
+        if (empty($raw)) {
+            return '-';
+        }
+
+        if (is_array($raw)) {
+            return implode(', ', $raw);
+        }
+
+        if (is_string($raw)) {
+            $decoded = json_decode($raw, true);
+
+            if (json_last_error() === JSON_ERROR_NONE && is_array($decoded)) {
+                return implode(', ', $decoded);
+            }
+        }
+
+        return $raw;
+    }
+}
+
+if (!function_exists('checkbox')) {
+    function checkbox($val)
+    {
+        return $val ? '&#9745;' : '&#9744;';
+    }
+}
+
+if (!function_exists('check')) {
+    function check($val)
+    {
+        return $val ? '&#9745;' : '&#9744;';
+    }
+}
+
+if (!function_exists('image_to_base64')) {
+    function image_to_base64($relativePath)
+    {
+        $path = public_path($relativePath);
+
+        if (!file_exists($path)) {
+            return null;
+        }
+
+        $type = pathinfo($path, PATHINFO_EXTENSION);
+        $data = file_get_contents($path);
+
+        return 'data:image/' . $type . ';base64,' . base64_encode($data);
+    }
+}
+
+if (!function_exists('compareEwsValue')) {
+    function compareEwsValue($recordValue, $targetValue)
+    {
+        // Standardize comparison for multiple formats
+        $equivalentValues = [
+            '≥ 95' => ['≥ 95', '>= 95', '= 95', '>=95', '≥95'],
+            '≥ 220' => ['≥ 220', '>= 220', '= 220', '>=220', '≥220'],
+            '≥ 131' => ['≥ 131', '>= 131', '= 131', '>=131', '≥131'],
+            '≥ 25' => ['≥ 25', '>= 25', '= 25', '>=25', '≥25'],
+            '≥ 39.1' => ['≥ 39.1', '>= 39.1', '= 39.1', '>=39.1', '≥39.1'],
+            '≤ 91' => ['≤ 91', '<= 91', '= 91', '<=91', '≤91'],
+            '≤ 90' => ['≤ 90', '<= 90', '= 90', '<=90', '≤90'],
+            '≤ 40' => ['≤ 40', '<= 40', '= 40', '<=40', '≤40'],
+            '≤ 8' => ['≤ 8', '<= 8', '= 8', '<=8', '≤8'],
+            '≤ 35' => ['≤ 35', '<= 35', '= 35', '<=35', '≤35'],
+        ];
+
+        foreach ($equivalentValues as $standard => $variations) {
+            if (in_array($targetValue, $variations) && in_array($recordValue, $variations)) {
+                return true;
+            }
+        }
+
+        return $recordValue == $targetValue;
+    }
+}

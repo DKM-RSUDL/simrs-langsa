@@ -325,32 +325,6 @@
         </div>
 
         @php
-            // Helper function untuk standardize comparison
-            function compareEwsValue($recordValue, $targetValue)
-            {
-                // Standardize comparison for multiple formats
-                $equivalentValues = [
-                    '≥ 95' => ['≥ 95', '>= 95', '= 95', '>=95', '≥95'],
-                    '≥ 220' => ['≥ 220', '>= 220', '= 220', '>=220', '≥220'],
-                    '≥ 131' => ['≥ 131', '>= 131', '= 131', '>=131', '≥131'],
-                    '≥ 25' => ['≥ 25', '>= 25', '= 25', '>=25', '≥25'],
-                    '≥ 39.1' => ['≥ 39.1', '>= 39.1', '= 39.1', '>=39.1', '≥39.1'],
-                    '≤ 91' => ['≤ 91', '<= 91', '= 91', '<=91', '≤91'],
-                    '≤ 90' => ['≤ 90', '<= 90', '= 90', '<=90', '≤90'],
-                    '≤ 40' => ['≤ 40', '<= 40', '= 40', '<=40', '≤40'],
-                    '≤ 8' => ['≤ 8', '<= 8', '= 8', '<=8', '≤8'],
-                    '≤ 35' => ['≤ 35', '<= 35', '= 35', '<=35', '≤35'],
-                ];
-
-                foreach ($equivalentValues as $standard => $variations) {
-                    if (in_array($targetValue, $variations) && in_array($recordValue, $variations)) {
-                        return true;
-                    }
-                }
-
-                return $recordValue == $targetValue;
-            }
-
             // Pastikan ewsRecords diurutkan berdasarkan tanggal dan jam
             $sortedRecords = $ewsRecords->sortBy(function ($record) {
                 return Carbon\Carbon::parse($record->tanggal)->format('Y-m-d') . ' ' .

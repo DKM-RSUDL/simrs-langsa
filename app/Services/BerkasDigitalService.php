@@ -30,6 +30,7 @@ use App\Models\RmeAsesmenPsikiatri;
 use App\Models\RmeAsesmenPsikiatriDtl;
 use App\Models\RmeSuratKematian;
 use App\Models\RmePaps;
+use App\Models\PernyataanDPJP;
 use Illuminate\Support\Carbon;
 use App\Services\AsesmenService;
 
@@ -1810,8 +1811,19 @@ class BerkasDigitalService
     }
 
     /**
-     * Get PAPS (Pernyataan Pulang Atas Permintaan Sendiri) data untuk ditampilkan di berkas digital
+     * Get Pernyataan DPJP data untuk ditampilkan di berkas digital
      */
+    public function getPernyataanDPJPData($dataMedis)
+    {
+        return PernyataanDPJP::with('dokter')
+            ->where('kd_pasien', $dataMedis->kd_pasien)
+            ->where('kd_unit', $dataMedis->kd_unit)
+            ->whereDate('tgl_masuk', $dataMedis->tgl_masuk)
+            ->where('urut_masuk', $dataMedis->urut_masuk)
+            ->orderBy('id', 'desc')
+            ->get();
+    }
+
     public function getPapsData($dataMedis)
     {
         return RmePaps::with('detail')
