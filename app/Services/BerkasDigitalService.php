@@ -1824,6 +1824,19 @@ class BerkasDigitalService
             ->get();
     }
 
+    /**
+     * Get Meninggalkan Perawatan data untuk ditampilkan di berkas digital
+     */
+    public function getMeninggalkanPerawatanData($dataMedis)
+    {
+        return \App\Models\RmeMeninggalkanPerawatan::with(['dokter'])
+            ->where('kd_pasien', $dataMedis->kd_pasien)
+            ->where('kd_unit', $dataMedis->kd_unit)
+            ->whereDate('tgl_masuk', $dataMedis->tgl_masuk)
+            ->where('urut_masuk', $dataMedis->urut_masuk)
+            ->get();
+    }
+
     public function getPapsData($dataMedis)
     {
         return RmePaps::with('detail')

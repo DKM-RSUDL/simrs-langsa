@@ -284,6 +284,16 @@
             @else
                 <p>Data PAPS tidak ditemukan untuk kunjungan ini.</p>
             @endif
+            @if (isset($meninggalkanPerawatan) && $meninggalkanPerawatan->isNotEmpty())
+                @foreach ($meninggalkanPerawatan as $pernyataan)
+                    @include('unit-pelayanan.rawat-inap.pelayanan.meninggalkan-perawatan.pdf', [
+                        'pernyataan' => $pernyataan,
+                        'dataMedis' => $dataMedis,
+                    ])
+                @endforeach
+            @else
+                <p>Data surat meninggalkan perawatan tidak ditemukan untuk kunjungan ini.</p>
+            @endif
         </div>
     </x-content-card>
     <x-content-card>

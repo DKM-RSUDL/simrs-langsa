@@ -511,11 +511,14 @@ class BerkasDigitalController extends Controller
         $suratKematianData = $this->berkasDigitalService->getSuratKematianData($dataMedis);
         $suratKematian = $suratKematianData['suratKematian'];
 
-        // Ambil data Pernyataan DPJP
-        $pernyataanDPJP = $this->berkasDigitalService->getPernyataanDPJPData($dataMedis);
-
         // Ambil data PAPS
         $paps = $this->berkasDigitalService->getPapsData($dataMedis);
+
+        // Ambil data Meninggalkan Perawatan
+        $meninggalkanPerawatan = $this->berkasDigitalService->getMeninggalkanPerawatanData($dataMedis);
+
+        // Ambil data Pernyataan DPJP
+        $pernyataanDPJP = $this->berkasDigitalService->getPernyataanDPJPData($dataMedis);
 
         // Ambil data EWS Pasien Dewasa
         $ewsPasienDewasaData = $this->berkasDigitalService->getEWSPasienDewasaData($dataMedis);
@@ -653,6 +656,7 @@ class BerkasDigitalController extends Controller
             'suratKematian',
             'pernyataanDPJP',
             'paps',
+            'meninggalkanPerawatan',
             'ewsRecords',
             'ewsPasienDewasa',
             'ewsRecordsAnak',
