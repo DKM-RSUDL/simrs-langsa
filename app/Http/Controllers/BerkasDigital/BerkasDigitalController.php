@@ -533,6 +533,9 @@ class BerkasDigitalController extends Controller
         // Ambil data Penundaan Pelayanan
         $penundaanPelayanan = $this->berkasDigitalService->getPenundaanPelayananData($dataMedis);
 
+        // Ambil data Penolakan Resusitasi (DNR)
+        $dnr = $this->berkasDigitalService->getDnrData($dataMedis);
+
         // Ambil data EWS Pasien Dewasa
         $ewsPasienDewasaData = $this->berkasDigitalService->getEWSPasienDewasaData($dataMedis);
         $ewsRecords = $ewsPasienDewasaData['ewsRecords'];
@@ -670,6 +673,7 @@ class BerkasDigitalController extends Controller
             'suratKematian',
             'pernyataanDPJP',
             'penundaanPelayanan',
+            'dnr',
             'paps',
             'meninggalkanPerawatan',
             'rohani',

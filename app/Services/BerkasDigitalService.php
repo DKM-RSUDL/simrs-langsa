@@ -38,6 +38,7 @@ use App\Models\RmeAsesmenTerminalUsk;
 use App\Models\RmeAsesmenTerminalAf;
 use App\Models\RmePermintaanPrivasi;
 use App\Models\RmePenundaanPelayanan;
+use App\Models\RmeDnr;
 use Illuminate\Support\Carbon;
 use App\Services\AsesmenService;
 
@@ -1948,5 +1949,23 @@ class BerkasDigitalService
             ->get();
 
         return $penundaan;
+    }
+
+    /**
+     * Get Penolakan Resusitasi (DNR) data untuk ditampilkan di berkas digital
+     * Menampilkan semua surat penolakan resusitasi untuk pasien ini
+     */
+    public function getDnrData($dataMedis)
+    {
+        $tglMasuk = isset($dataMedis->tgl_transaksi) ? $dataMedis->tgl_transaksi : $dataMedis->tgl_masuk;
+
+        $dnr = RmeDnr::with(['dokter'])
+            ->where('kd_pasien', $dataMedis->kd_pasien)
+            ->where('kd_unit', $dataMedis->kd_unit)
+            ->where('urut_masuk', $dataMedis->urut_masuk)
+            ->whereDate('tgl_masuk', $tglMasuk)
+            ->get();
+
+        return $dnr;
     }
 }

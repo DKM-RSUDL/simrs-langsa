@@ -293,6 +293,17 @@
                 <p>Data penundaan pelayanan tidak ditemukan untuk kunjungan ini.</p>
             @endif
 
+            @if ($dnr->isNotEmpty())
+                @foreach ($dnr as $dnrItem)
+                    @include('unit-pelayanan.rawat-inap.pelayanan.dnr.pdf', [
+                        'dnr' => $dnrItem,
+                        'dataMedis' => $dataMedis,
+                    ])
+                @endforeach
+            @else
+                <p>Data penolakan resusitasi tidak ditemukan untuk kunjungan ini.</p>
+            @endif
+
             @if ($paps->isNotEmpty())
                 @foreach ($paps as $papsItem)
                     @include('unit-pelayanan.rawat-inap.pelayanan.paps.pdf', [
