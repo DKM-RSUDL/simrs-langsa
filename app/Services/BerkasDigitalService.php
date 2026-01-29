@@ -37,6 +37,7 @@ use App\Models\RmeAsesmenTerminalFmo;
 use App\Models\RmeAsesmenTerminalUsk;
 use App\Models\RmeAsesmenTerminalAf;
 use App\Models\RmePermintaanPrivasi;
+use App\Models\RmePenundaanPelayanan;
 use Illuminate\Support\Carbon;
 use App\Services\AsesmenService;
 
@@ -1929,5 +1930,23 @@ class BerkasDigitalService
             ->get();
 
         return $privasi;
+    }
+
+    /**
+     * Get Penundaan Pelayanan data untuk ditampilkan di berkas digital
+     * Menampilkan semua surat penundaan pelayanan untuk pasien ini
+     */
+    public function getPenundaanPelayananData($dataMedis)
+    {
+        $tglMasuk = isset($dataMedis->tgl_transaksi) ? $dataMedis->tgl_transaksi : $dataMedis->tgl_masuk;
+
+        $penundaan = RmePenundaanPelayanan::with(['userCreate', 'dokter'])
+            ->where('kd_pasien', $dataMedis->kd_pasien)
+            ->where('kd_unit', $dataMedis->kd_unit)
+            ->where('urut_masuk', $dataMedis->urut_masuk)
+            ->whereDate('tgl_masuk', $tglMasuk)
+            ->get();
+
+        return $penundaan;
     }
 }

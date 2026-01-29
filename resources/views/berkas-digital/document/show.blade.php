@@ -282,6 +282,17 @@
                 <p>Data pernyataan DPJP tidak ditemukan untuk kunjungan ini.</p>
             @endif
 
+            @if ($penundaanPelayanan->isNotEmpty())
+                @foreach ($penundaanPelayanan as $penundaanItem)
+                    @include('unit-pelayanan.rawat-inap.pelayanan.penundaan.pdf', [
+                        'penundaan' => $penundaanItem,
+                        'dataMedis' => $dataMedis,
+                    ])
+                @endforeach
+            @else
+                <p>Data penundaan pelayanan tidak ditemukan untuk kunjungan ini.</p>
+            @endif
+
             @if ($paps->isNotEmpty())
                 @foreach ($paps as $papsItem)
                     @include('unit-pelayanan.rawat-inap.pelayanan.paps.pdf', [
