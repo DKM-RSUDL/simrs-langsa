@@ -31,6 +31,7 @@ use App\Models\RmeAsesmenPsikiatriDtl;
 use App\Models\RmeSuratKematian;
 use App\Models\RmePaps;
 use App\Models\PernyataanDPJP;
+use App\Models\RmeRohani;
 use App\Models\RmeAsesmenTerminal;
 use App\Models\RmeAsesmenTerminalFmo;
 use App\Models\RmeAsesmenTerminalUsk;
@@ -1891,5 +1892,23 @@ class BerkasDigitalService
             ->where('urut_masuk', $dataMedis->urut_masuk)
             ->orderBy('tanggal', 'desc')
             ->get();
+    }
+
+    /**
+     * Get Data Permintaan Pelayanan Rohani
+     * Multiple data bisa ada untuk 1 pasien dalam 1 kunjungan
+     */
+    public function getRohaniData($dataMedis)
+    {
+        $tglMasuk = isset($dataMedis->tgl_transaksi) ? $dataMedis->tgl_transaksi : $dataMedis->tgl_masuk;
+
+        $rohani = RmeRohani::with(['penyetuju', 'keluargaAgama'])
+            ->where('kd_pasien', $dataMedis->kd_pasien)
+            ->where('kd_unit', $dataMedis->kd_unit)
+            ->where('urut_masuk', $dataMedis->urut_masuk)
+            ->whereDate('tgl_masuk', $tglMasuk)
+            ->get();
+
+        return $rohani;
     }
 }

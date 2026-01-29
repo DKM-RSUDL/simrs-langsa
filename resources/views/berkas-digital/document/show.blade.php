@@ -302,6 +302,17 @@
             @else
                 <p>Data surat meninggalkan perawatan tidak ditemukan untuk kunjungan ini.</p>
             @endif
+
+            @if ($rohani->isNotEmpty())
+                @foreach ($rohani as $rohaniItem)
+                    @include('unit-pelayanan.rawat-inap.pelayanan.rohani.pdf', [
+                        'rohani' => $rohaniItem,
+                        'dataMedis' => $dataMedis,
+                    ])
+                @endforeach
+            @else
+                <p>Data permintaan pelayanan rohani tidak ditemukan untuk kunjungan ini.</p>
+            @endif
         </div>
     </x-content-card>
     <x-content-card>
