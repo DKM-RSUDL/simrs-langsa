@@ -39,6 +39,7 @@ use App\Models\RmeAsesmenTerminalAf;
 use App\Models\RmePermintaanPrivasi;
 use App\Models\RmePenundaanPelayanan;
 use App\Models\RmeDnr;
+use App\Models\PermintaanSecondOpinion;
 use Illuminate\Support\Carbon;
 use App\Services\AsesmenService;
 
@@ -1967,5 +1968,23 @@ class BerkasDigitalService
             ->get();
 
         return $dnr;
+    }
+
+    /**
+     * Get Permintaan Second Opinion data untuk ditampilkan di berkas digital
+     * Mengambil semua permintaan second opinion berdasarkan pasien dan kunjungan
+     */
+    public function getPermintaanSecondOpinionData($dataMedis)
+    {
+        $tglMasuk = isset($dataMedis->tgl_transaksi) ? $dataMedis->tgl_transaksi : $dataMedis->tgl_masuk;
+
+        $permintaanSecondOpinion = PermintaanSecondOpinion::where('kd_pasien', $dataMedis->kd_pasien)
+            ->where('kd_unit', $dataMedis->kd_unit)
+            ->where('urut_masuk', $dataMedis->urut_masuk)
+            ->whereDate('tgl_masuk', $tglMasuk)
+            ->orderBy('tanggal', 'desc')
+            ->get();
+
+        return $permintaanSecondOpinion;
     }
 }

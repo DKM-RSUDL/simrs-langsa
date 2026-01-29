@@ -304,6 +304,17 @@
                 <p>Data penolakan resusitasi tidak ditemukan untuk kunjungan ini.</p>
             @endif
 
+            @if ($permintaanSecondOpinion->isNotEmpty())
+                @foreach ($permintaanSecondOpinion as $secondOpinionItem)
+                    @include('unit-pelayanan.rawat-inap.pelayanan.permintaan-second-opinion.print', [
+                        'secondOpinion' => $secondOpinionItem,
+                        'dataMedis' => $dataMedis,
+                    ])
+                @endforeach
+            @else
+                <p>Data permintaan second opinion tidak ditemukan untuk kunjungan ini.</p>
+            @endif
+
             @if ($paps->isNotEmpty())
                 @foreach ($paps as $papsItem)
                     @include('unit-pelayanan.rawat-inap.pelayanan.paps.pdf', [

@@ -551,6 +551,9 @@ class BerkasDigitalController extends Controller
         $ewsRecordsObstetrik = $ewsPasienObstetrikData['ewsRecords'];
         $ewsPasienObstetrik = $ewsPasienObstetrikData['ewsPasienObstetrik'];
 
+        // Ambil data Permintaan Second Opinion
+        $permintaanSecondOpinion = $this->berkasDigitalService->getPermintaanSecondOpinionData($dataMedis);
+
         return view('berkas-digital.document.show', compact(
             'listDokumen',
             'dataMedis',
@@ -678,6 +681,7 @@ class BerkasDigitalController extends Controller
             'meninggalkanPerawatan',
             'rohani',
             'privasi',
+            'permintaanSecondOpinion',
             'ewsRecords',
             'ewsPasienDewasa',
             'ewsRecordsAnak',
