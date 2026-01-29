@@ -524,6 +524,9 @@ class BerkasDigitalController extends Controller
         // Ambil data Permintaan Pelayanan Rohani
         $rohani = $this->berkasDigitalService->getRohaniData($dataMedis);
 
+        // Ambil data Permintaan Privasi
+        $privasi = $this->berkasDigitalService->getPermintaanPrivasiData($dataMedis);
+
         // Ambil data Pernyataan DPJP
         $pernyataanDPJP = $this->berkasDigitalService->getPernyataanDPJPData($dataMedis);
 
@@ -666,6 +669,7 @@ class BerkasDigitalController extends Controller
             'paps',
             'meninggalkanPerawatan',
             'rohani',
+            'privasi',
             'ewsRecords',
             'ewsPasienDewasa',
             'ewsRecordsAnak',

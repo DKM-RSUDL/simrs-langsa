@@ -36,6 +36,7 @@ use App\Models\RmeAsesmenTerminal;
 use App\Models\RmeAsesmenTerminalFmo;
 use App\Models\RmeAsesmenTerminalUsk;
 use App\Models\RmeAsesmenTerminalAf;
+use App\Models\RmePermintaanPrivasi;
 use Illuminate\Support\Carbon;
 use App\Services\AsesmenService;
 
@@ -1910,5 +1911,23 @@ class BerkasDigitalService
             ->get();
 
         return $rohani;
+    }
+
+    /**
+     * Get Data Permintaan Privasi
+     * Multiple data bisa ada untuk 1 pasien dalam 1 kunjungan
+     */
+    public function getPermintaanPrivasiData($dataMedis)
+    {
+        $tglMasuk = isset($dataMedis->tgl_transaksi) ? $dataMedis->tgl_transaksi : $dataMedis->tgl_masuk;
+
+        $privasi = RmePermintaanPrivasi::with(['userCreate'])
+            ->where('kd_pasien', $dataMedis->kd_pasien)
+            ->where('kd_unit', $dataMedis->kd_unit)
+            ->where('urut_masuk', $dataMedis->urut_masuk)
+            ->whereDate('tgl_masuk', $tglMasuk)
+            ->get();
+
+        return $privasi;
     }
 }

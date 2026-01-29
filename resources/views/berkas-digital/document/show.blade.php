@@ -313,6 +313,16 @@
             @else
                 <p>Data permintaan pelayanan rohani tidak ditemukan untuk kunjungan ini.</p>
             @endif
+            @if ($privasi->isNotEmpty())
+                @foreach ($privasi as $privasiItem)
+                    @include('unit-pelayanan.rawat-inap.pelayanan.privasi.pdf', [
+                        'privasi' => $privasiItem,
+                        'dataMedis' => $dataMedis,
+                    ])
+                @endforeach
+            @else
+                <p>Data permintaan privasi tidak ditemukan untuk kunjungan ini.</p>
+            @endif
         </div>
     </x-content-card>
     <x-content-card>
