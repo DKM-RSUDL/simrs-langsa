@@ -32,10 +32,6 @@ use App\Models\RmeSuratKematian;
 use App\Models\RmePaps;
 use App\Models\PernyataanDPJP;
 use App\Models\RmeRohani;
-use App\Models\RmeAsesmenTerminal;
-use App\Models\RmeAsesmenTerminalFmo;
-use App\Models\RmeAsesmenTerminalUsk;
-use App\Models\RmeAsesmenTerminalAf;
 use App\Models\RmePermintaanPrivasi;
 use App\Models\RmePenundaanPelayanan;
 use App\Models\RmeDnr;
@@ -47,6 +43,7 @@ use App\Models\EWSPasienDewasa;
 use App\Models\EWSPasienAnak;
 use App\Models\EwsPasienObstetrik;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Cache;
 
 class BerkasDigitalService
 {
@@ -694,9 +691,15 @@ class BerkasDigitalService
         }
 
         // Ambil master data yang diperlukan untuk print pengkajian awal medis
-        $rmeMasterDiagnosis = RmeMasterDiagnosis::all();
-        $rmeMasterImplementasi = RmeMasterImplementasi::all();
-        $satsetPrognosis = SatsetPrognosis::all();
+        $rmeMasterDiagnosis = Cache::remember('rme_master_diagnosis', 3600, function () {
+            return RmeMasterDiagnosis::all();
+        });
+        $rmeMasterImplementasi = Cache::remember('rme_master_implementasi', 3600, function () {
+            return RmeMasterImplementasi::all();
+        });
+        $satsetPrognosis = Cache::remember('satset_prognosis', 3600, function () {
+            return SatsetPrognosis::all();
+        });
         $alergiPasien = RmeAlergiPasien::where('kd_pasien', $dataMedis->kd_pasien)->get();
 
         return compact(
@@ -939,9 +942,15 @@ class BerkasDigitalService
             }
 
             // Ambil master data yang diperlukan
-            $rmeMasterDiagnosis = RmeMasterDiagnosis::all();
-            $rmeMasterImplementasi = RmeMasterImplementasi::all();
-            $satsetPrognosis = SatsetPrognosis::all();
+            $rmeMasterDiagnosis = Cache::remember('rme_master_diagnosis', 3600, function () {
+                return RmeMasterDiagnosis::all();
+            });
+            $rmeMasterImplementasi = Cache::remember('rme_master_implementasi', 3600, function () {
+                return RmeMasterImplementasi::all();
+            });
+            $satsetPrognosis = Cache::remember('satset_prognosis', 3600, function () {
+                return SatsetPrognosis::all();
+            });
             $alergiPasien = RmeAlergiPasien::where('kd_pasien', $dataMedis->kd_pasien)->get();
             $itemFisik = MrItemFisik::orderby('urut')->get();
 
@@ -1050,17 +1059,37 @@ class BerkasDigitalService
             }
 
             // Ambil data tambahan seperti di controller opthamologi
-            $faktorpemberat = RmeFaktorPemberat::all();
-            $menjalar = RmeMenjalar::all();
-            $frekuensinyeri = RmeFrekuensiNyeri::all();
-            $kualitasnyeri = RmeKualitasNyeri::all();
-            $faktorperingan = RmeFaktorPeringan::all();
-            $efeknyeri = RmeEfekNyeri::all();
-            $jenisnyeri = RmeJenisNyeri::all();
+            $faktorpemberat = Cache::remember('rme_faktor_pemberat', 3600, function () {
+                return RmeFaktorPemberat::all();
+            });
+            $menjalar = Cache::remember('rme_menjalar', 3600, function () {
+                return RmeMenjalar::all();
+            });
+            $frekuensinyeri = Cache::remember('rme_frekuensi_nyeri', 3600, function () {
+                return RmeFrekuensiNyeri::all();
+            });
+            $kualitasnyeri = Cache::remember('rme_kualitas_nyeri', 3600, function () {
+                return RmeKualitasNyeri::all();
+            });
+            $faktorperingan = Cache::remember('rme_faktor_peringan', 3600, function () {
+                return RmeFaktorPeringan::all();
+            });
+            $efeknyeri = Cache::remember('rme_efek_nyeri', 3600, function () {
+                return RmeEfekNyeri::all();
+            });
+            $jenisnyeri = Cache::remember('rme_jenis_nyeri', 3600, function () {
+                return RmeJenisNyeri::all();
+            });
             $itemFisik = MrItemFisik::orderby('urut')->get();
-            $rmeMasterDiagnosis = RmeMasterDiagnosis::all();
-            $rmeMasterImplementasi = RmeMasterImplementasi::all();
-            $satsetPrognosis = SatsetPrognosis::all();
+            $rmeMasterDiagnosis = Cache::remember('rme_master_diagnosis', 3600, function () {
+                return RmeMasterDiagnosis::all();
+            });
+            $rmeMasterImplementasi = Cache::remember('rme_master_implementasi', 3600, function () {
+                return RmeMasterImplementasi::all();
+            });
+            $satsetPrognosis = Cache::remember('satset_prognosis', 3600, function () {
+                return SatsetPrognosis::all();
+            });
 
             return compact(
                 'asesmenOpthamology',
@@ -1132,9 +1161,15 @@ class BerkasDigitalService
         }
 
         // Ambil master data yang diperlukan untuk print asesmen medis anak
-        $rmeMasterDiagnosis = RmeMasterDiagnosis::all();
-        $rmeMasterImplementasi = RmeMasterImplementasi::all();
-        $satsetPrognosis = SatsetPrognosis::all();
+        $rmeMasterDiagnosis = Cache::remember('rme_master_diagnosis', 3600, function () {
+            return RmeMasterDiagnosis::all();
+        });
+        $rmeMasterImplementasi = Cache::remember('rme_master_implementasi', 3600, function () {
+            return RmeMasterImplementasi::all();
+        });
+        $satsetPrognosis = Cache::remember('satset_prognosis', 3600, function () {
+            return SatsetPrognosis::all();
+        });
         $alergiPasien = RmeAlergiPasien::where('kd_pasien', $dataMedis->kd_pasien)->get();
 
         return compact(
@@ -1180,9 +1215,15 @@ class BerkasDigitalService
         }
 
         // Ambil master data yang diperlukan untuk print asesmen obstetri
-        $rmeMasterDiagnosis = RmeMasterDiagnosis::all();
-        $rmeMasterImplementasi = RmeMasterImplementasi::all();
-        $satsetPrognosis = SatsetPrognosis::all();
+        $rmeMasterDiagnosis = Cache::remember('rme_master_diagnosis', 3600, function () {
+            return RmeMasterDiagnosis::all();
+        });
+        $rmeMasterImplementasi = Cache::remember('rme_master_implementasi', 3600, function () {
+            return RmeMasterImplementasi::all();
+        });
+        $satsetPrognosis = Cache::remember('satset_prognosis', 3600, function () {
+            return SatsetPrognosis::all();
+        });
         $alergiPasien = RmeAlergiPasien::where('kd_pasien', $dataMedis->kd_pasien)->get();
 
         return compact(
@@ -1226,9 +1267,15 @@ class BerkasDigitalService
         }
 
         // Ambil master data yang diperlukan untuk print asesmen THT
-        $rmeMasterDiagnosis = RmeMasterDiagnosis::all();
-        $rmeMasterImplementasi = RmeMasterImplementasi::all();
-        $satsetPrognosis = SatsetPrognosis::all();
+        $rmeMasterDiagnosis = Cache::remember('rme_master_diagnosis', 3600, function () {
+            return RmeMasterDiagnosis::all();
+        });
+        $rmeMasterImplementasi = Cache::remember('rme_master_implementasi', 3600, function () {
+            return RmeMasterImplementasi::all();
+        });
+        $satsetPrognosis = Cache::remember('satset_prognosis', 3600, function () {
+            return SatsetPrognosis::all();
+        });
         $alergiPasien = RmeAlergiPasien::where('kd_pasien', $dataMedis->kd_pasien)->get();
         $itemFisik = MrItemFisik::orderby('urut')->get();
 
@@ -1278,7 +1325,9 @@ class BerkasDigitalService
         }
 
         // Ambil master data yang diperlukan untuk print asesmen Paru
-        $satsetPrognosis = SatsetPrognosis::all();
+        $satsetPrognosis = Cache::remember('satset_prognosis', 3600, function () {
+            return SatsetPrognosis::all();
+        });
 
         // Get KebiasaanData (inline logic dari controller)
         $KebiasaanData = [
@@ -1362,7 +1411,9 @@ class BerkasDigitalService
         }
 
         // Ambil master data yang diperlukan untuk print asesmen Ginekologik
-        $satsetPrognosis = SatsetPrognosis::all();
+        $satsetPrognosis = Cache::remember('satset_prognosis', 3600, function () {
+            return SatsetPrognosis::all();
+        });
 
         // Ambil data relasi untuk kemudahan akses di blade
         $rmeAsesmenGinekologik = $asesmenGinekologik->rmeAsesmenGinekologik;
@@ -1514,9 +1565,15 @@ class BerkasDigitalService
         }
 
         // Ambil master data yang diperlukan untuk print asesmen medis neonatologi
-        $rmeMasterDiagnosis = RmeMasterDiagnosis::all();
-        $rmeMasterImplementasi = RmeMasterImplementasi::all();
-        $satsetPrognosis = SatsetPrognosis::all();
+        $rmeMasterDiagnosis = Cache::remember('rme_master_diagnosis', 3600, function () {
+            return RmeMasterDiagnosis::all();
+        });
+        $rmeMasterImplementasi = Cache::remember('rme_master_implementasi', 3600, function () {
+            return RmeMasterImplementasi::all();
+        });
+        $satsetPrognosis = Cache::remember('satset_prognosis', 3600, function () {
+            return SatsetPrognosis::all();
+        });
         $alergiPasien = RmeAlergiPasien::where('kd_pasien', $dataMedis->kd_pasien)->get();
 
         return compact(
