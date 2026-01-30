@@ -8,6 +8,7 @@ use App\Models\RmeKetStatusKunjungan;
 use App\Models\RMEResume;
 use App\Models\RmeResumeDtl;
 use App\Models\Transaksi;
+use Illuminate\Support\Facades\Cache;
 
 class BaseService
 {
@@ -60,18 +61,19 @@ class BaseService
     // Get data medis
     public function getDataMedisbyTransaksi($kd_kasir, $no_transaksi)
     {
-        $dataMedis =  Transaksi::with(['pasien', 'dokter', 'dokter.detail', 'customer', 'unit'])
-            ->join('kunjungan as k', function ($join) {
-                $join->on('k.kd_pasien', '=', 'transaksi.kd_pasien');
-                $join->on('k.kd_unit', '=', 'transaksi.kd_unit');
-                $join->on('k.tgl_masuk', '=', 'transaksi.tgl_transaksi');
-                $join->on('k.urut_masuk', '=', 'transaksi.urut_masuk');
-            })
-            ->where('transaksi.kd_kasir', $kd_kasir)
-            ->where('transaksi.no_transaksi', $no_transaksi)
-            ->first();
-
-        return $dataMedis;
+        $cacheKey = "data_medis_transaksi_{$kd_kasir}_{$no_transaksi}";
+        return Cache::remember($cacheKey, 3600, function () use ($kd_kasir, $no_transaksi) {
+            return Transaksi::with(['pasien', 'dokter', 'dokter.detail', 'customer', 'unit'])
+                ->join('kunjungan as k', function ($join) {
+                    $join->on('k.kd_pasien', '=', 'transaksi.kd_pasien');
+                    $join->on('k.kd_unit', '=', 'transaksi.kd_unit');
+                    $join->on('k.tgl_masuk', '=', 'transaksi.tgl_transaksi');
+                    $join->on('k.urut_masuk', '=', 'transaksi.urut_masuk');
+                })
+                ->where('transaksi.kd_kasir', $kd_kasir)
+                ->where('transaksi.no_transaksi', $no_transaksi)
+                ->first();
+        });
     }
 
     // update status keterangan kunjungan
