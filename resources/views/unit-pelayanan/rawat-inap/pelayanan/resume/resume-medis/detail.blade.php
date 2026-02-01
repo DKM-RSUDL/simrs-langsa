@@ -474,7 +474,7 @@
                                                             class="form-check-input me-2" value="1" @checked($dataResume->pengobatan_lanjutan == 1)>
                                                         <label for="poli-lanjutan">Poli
                                                             <span id="poli-lanjutan-info">
-                                                                {{ !empty($dataResume->keterangan_kondisi_pulang) ? ": $dataResume->keterangan_kondisi_pulang" : '' }}
+                                                                {{ !empty($dataResume->poliPengobatanLanjutan->nama_unit) ? ": $dataResume->tgl_pengobatan_lanjutan -- {$dataResume->poliPengobatanLanjutan->nama_unit}" : '' }}
                                                             </span>
                                                         </label>
                                                     </a>
@@ -496,7 +496,7 @@
                                                             class="form-check-input me-2" value="3" @checked($dataResume->pengobatan_lanjutan == 3)>
                                                         <label for="rslain-lanjutan">RS Lain
                                                             <span id="rs-lain-info">
-                                                                {{ !empty($dataResume->keterangan_kondisi_pulang) ? ": $dataResume->keterangan_kondisi_pulang" : '' }}
+                                                                {{ !empty($dataResume->rs_pengobatan_lanjutan) ? ": $dataResume->rs_pengobatan_lanjutan" : '' }}
                                                             </span>
                                                         </label>
                                                     </a>
@@ -527,24 +527,45 @@
 
     {{-- MODAL TIDAK MANDIRI --}}
     <div class="modal fade" id="modalTidakMandiri" tabindex="-1" aria-labelledby="modalTidakMandiriLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header bg-primary text-white">
-                <h5 class="modal-title" id="modalTidakMandiriLabel">Kondisi Pulang Tidak Mandiri</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <label for="rs-rujuk" class="form-label">Keterangan</label>
-                <input type="text" class="form-control" id="keteranganTidakMandiri" name="keterangan_tidak_mandiri"
-                    value="{{ $dataResume->keterangan_kondisi_pulang }}">
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" id="btnSimpanTidakMandiri">Simpan</button>
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title" id="modalTidakMandiriLabel">Kondisi Pulang Tidak Mandiri</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <label for="rs-rujuk" class="form-label">Keterangan</label>
+                    <input type="text" class="form-control" id="keteranganTidakMandiri" name="keterangan_tidak_mandiri"
+                        value="{{ $dataResume->keterangan_kondisi_pulang }}">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="btnSimpanTidakMandiri">Simpan</button>
+                </div>
             </div>
         </div>
     </div>
-</div>
+
+    {{-- MODAL RS LAIN LANJUTAN --}}
+    <div class="modal fade" id="modalRSlain" tabindex="-1" aria-labelledby="modalRSlainLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title" id="modalRSlainLabel">RS Lain Pengobatan Lanjutan</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <label for="rsPengobatanLanjutan" class="form-label">Nama RS</label>
+                    <input type="text" class="form-control" id="rsPengobatanLanjutan" name="rs_pengobatan_lanjutan"
+                        value="{{ $dataResume->rs_pengobatan_lanjutan }}">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="btnSimpanRsLain">Simpan</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
 
     @include('unit-pelayanan.rawat-inap.pelayanan.resume.resume-medis.components.modal-create-diagnosi')
@@ -658,14 +679,15 @@
             }
 
             const kondisiPulangEl = $('input[name="kondisi_saat_pulang"]:checked');
-            if (!kondisiPulangEl.length) {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Validasi Error',
-                    text: 'Mohon pilih kondisi saat pulang terlebih dahulu'
-                });
-                return false;
-            }
+            const pengobatanLanjutanEl = $('input[name="pengobatan_lanjutan"]:checked');
+            // if (!kondisiPulangEl.length) {
+            //     Swal.fire({
+            //         icon: 'error',
+            //         title: 'Validasi Error',
+            //         text: 'Mohon pilih kondisi saat pulang terlebih dahulu'
+            //     });
+            //     return false;
+            // }
 
             const resume_id = '{{ $dataResume->id ?? null }}';
 
@@ -794,6 +816,15 @@
 
             formData.append('keterangan_kondisi_pulang', kondisiPulangKeterangan);
 
+
+            // PENGOBATAN LANJUTAN
+            let pengobatanLanjutanVal = pengobatanLanjutanEl.attr('value');
+            formData.append('pengobatan_lanjutan', pengobatanLanjutanVal);
+
+            formData.append('rs_pengobatan_lanjutan', $('#rsPengobatanLanjutan').val());
+            formData.append('poli_pengobatan_lanjutan', $('#unit-kontrol').val());
+            formData.append('tgl_pengobatan_lanjutan', $('#kontrol-ulang').val());
+
             formData.append('_method', 'PUT');
 
 
@@ -920,6 +951,8 @@
             console.log('Code:', $(this).data('code'));
         });
 
+        // TIDAK MANDIRI
+
         $('#btnTidakMandiri').on('click', function(e) {
             let $this = $(this);
             // Check radio button
@@ -940,11 +973,28 @@
         });
 
         // Fungsi untuk update tampilan rujukan
-            function updateTidakMandiriDisplay(keterangan) {
+        function updateTidakMandiriDisplay(keterangan) {
+            // Update span di modal utama
+            $('#selected-kondisi-pulang-info').text(`: ${keterangan}`);
+            // Check radio button
+            $('#tidakMandiri').prop('checked', true);
+        }
+
+        // PENGOBATAN LANJUTAN
+        $('#btnRSlain').click(function() {
+            $('#modalRSlain').modal('show');
+        });
+
+        $('#btnSimpanRsLain').click(() => {
+            let keterangan = $('#rsPengobatanLanjutan').val();
+
+            if (keterangan) {
                 // Update span di modal utama
-                $('#selected-kondisi-pulang-info').text(`: ${keterangan}`);
-                // Check radio button
-                $('#tidakMandiri').prop('checked', true);
+                $('#rs-lain-info').text(`: ${keterangan}`);
+                $('#modalRSlain').modal('hide');
+            } else {
+                alert('Silahkan isi RS pengobatan lanjutan !');
             }
+        });
     </script>
 @endpush

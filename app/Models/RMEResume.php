@@ -34,7 +34,11 @@ class RMEResume extends Model
         'anjuran_diet',
         'anjuran_edukasi',
         'kondisi_saat_pulang',
-        'keterangan_kondisi_pulang'
+        'keterangan_kondisi_pulang',
+        'pengobatan_lanjutan',
+        'poli_pengobatan_lanjutan',
+        'tgl_pengobatan_lanjutan',
+        'rs_pengobatan_lanjutan',
     ];
 
     protected $casts = [
@@ -81,5 +85,10 @@ class RMEResume extends Model
     public function konsultasi()
     {
         return $this->belongsTo(Konsultasi::class, 'kd_pasien', 'kd_pasien');
+    }
+
+    public function poliPengobatanLanjutan()
+    {
+        return $this->BelongsTo(Unit::class, 'poli_pengobatan_lanjutan', 'kd_unit');
     }
 }

@@ -210,7 +210,8 @@ class RawatInapResumeController extends Controller
         }
 
         // ambil data Resume
-        $dataResume = RMEResume::where('kd_pasien', $dataMedis->kd_pasien)
+        $dataResume = RMEResume::with(['rmeResumeDet', 'poliPengobatanLanjutan'])
+            ->where('kd_pasien', $dataMedis->kd_pasien)
             ->whereDate('tgl_masuk', $dataMedis->tgl_masuk)
             ->where('urut_masuk', $dataMedis->urut_masuk)
             ->where('kd_unit', $dataMedis->kd_unit)
@@ -464,6 +465,7 @@ class RawatInapResumeController extends Controller
                 'tindak_lanjut_code' => 'required',
                 'tindak_lanjut_name' => 'required',
                 'kondisi_saat_pulang' => 'required',
+                'pengobatan_lanjutan' => 'required',
                 'tgl_kontrol_ulang' => 'nullable|string',
                 'rs_rujuk' => 'nullable|string',
                 'rs_rujuk_bagian' => 'nullable|string',
@@ -519,6 +521,10 @@ class RawatInapResumeController extends Controller
                 'anjuran_edukasi' => $request->anjuran_edukasi,
                 'kondisi_saat_pulang' => $request->kondisi_saat_pulang,
                 'keterangan_kondisi_pulang' => $request->keterangan_kondisi_pulang,
+                'pengobatan_lanjutan' => $request->pengobatan_lanjutan,
+                'poli_pengobatan_lanjutan' => $request->poli_pengobatan_lanjutan,
+                'tgl_pengobatan_lanjutan' => $request->tgl_pengobatan_lanjutan,
+                'rs_pengobatan_lanjutan' => $request->rs_pengobatan_lanjutan,
                 // 'status' => 1,
                 'user_validasi' => Auth::id()
             ]);
