@@ -511,42 +511,32 @@
 
                                     <div class="bg-light p-3 border rounded">
                                         <div class="row">
-                                            <div class="row">
-                                                <div class="col-md-6">
-                                                    <a href="javascript:void(0)" id="btnRsTerdekat"
-                                                        class="kedaruratan d-block mb-2 text-decoration-none">
-                                                        <input type="checkbox" id="rs-terdekat" name="kedaruratan[]"
-                                                            class="form-check-input me-2" value="1" @checked($dataResume->kedaruratan == 1)>
-                                                        <label for="rs-terdekat">RS Terdekat
-                                                            <span id="rs-terdekat-info">
-                                                                {{-- {{ !empty($dataResume->poliPengobatanLanjutan->nama_unit) ? ": $dataResume->tgl_kedaruratan -- {$dataResume->poliPengobatanLanjutan->nama_unit}" : '' }} --}}
-                                                            </span>
-                                                        </label>
-                                                    </a>
-                                                </div>
+                                            <a href="javascript:void(0)" id="btnRsTerdekat"
+                                                class="kedaruratan d-block mb-2 text-decoration-none">
+                                                <input type="checkbox" id="rs-terdekat" name="kedaruratan[]"
+                                                    class="form-check-input me-2" value="1" @checked(in_array(1, json_decode($dataResume->kedaruratan, true) ?? []))>
+                                                <label for="rs-terdekat">RS Terdekat
+                                                    <span id="rs-terdekat-info">
+                                                        {{ !empty($dataResume->kedaruratan_rs_terdekat) ? ": $dataResume->kedaruratan_rs_terdekat" : '' }}
+                                                    </span>
+                                                </label>
+                                            </a>
 
-                                                <div class="col-md-6">
-                                                    <a href="javascript:void(0)" id="btnPuskesmasTerdekat"
-                                                        class="kedaruratan d-block mb-2 text-decoration-none">
-                                                        <input type="checkbox" id="puskesmas-terdekat" name="kedaruratan[]"
-                                                            class="form-check-input me-2" value="2" @checked($dataResume->kedaruratan == 2)>
-                                                        <label for="puskesmas-terdekat">Puskesmas, klinik terdekat</label>
-                                                    </a>
-                                                </div>
+                                            <a href="javascript:void(0)" id="btnPuskesmasTerdekat"
+                                                class="kedaruratan d-block mb-2 text-decoration-none">
+                                                <input type="checkbox" id="puskesmas-terdekat" name="kedaruratan[]"
+                                                    class="form-check-input me-2" value="2" @checked(in_array(2, json_decode($dataResume->kedaruratan, true) ?? []))>
+                                                <label for="puskesmas-terdekat">Puskesmas, klinik terdekat</label>
+                                            </a>
 
-                                                <div class="col-md-6">
-                                                    <a href="javascript:void(0)" id="btnPetugasKesehatan"
-                                                        class="kedaruratan d-block mb-2 text-decoration-none">
-                                                        <input type="checkbox" id="petugasKesTerdekat" name="kedaruratan[]"
-                                                            class="form-check-input me-2" value="3" @checked($dataResume->kedaruratan == 3)>
-                                                        <label for="petugasKesTerdekat">Petugas Kesehatan Terdekat
-                                                            <span id="petugasKesTerdekatInfo">
-                                                                {{ !empty($dataResume->rs_kedaruratan) ? ": $dataResume->rs_kedaruratan" : '' }}
-                                                            </span>
-                                                        </label>
-                                                    </a>
-                                                </div>
-                                            </div>
+                                            <a href="javascript:void(0)" id="btnPetugasKesehatan"
+                                                class="kedaruratan d-block mb-2 text-decoration-none">
+                                                <input type="checkbox" id="petugasKesTerdekat" name="kedaruratan[]"
+                                                    class="form-check-input me-2" value="3" @checked(in_array(3, json_decode($dataResume->kedaruratan, true) ?? []))>
+                                                <label for="petugasKesTerdekat">
+                                                    Petugas Kesehatan Terdekat
+                                                </label>
+                                            </a>
                                         </div>
                                     </div>
                                 </div>
@@ -607,6 +597,27 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                     <button type="button" class="btn btn-primary" id="btnSimpanRsLain">Simpan</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {{-- MODAL RS TERDEKAT --}}
+    <div class="modal fade" id="modalRSTerdekat" tabindex="-1" aria-labelledby="modalRSTerdekatLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title" id="modalRSTerdekatLabel">RS Terdekat</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <label for="rsTerdekat" class="form-label">Nama RS</label>
+                    <input type="text" class="form-control" id="rsTerdekat" name="rs_terdekat"
+                        value="{{ $dataResume->kedaruratan_rs_terdekat }}">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="btnSimpanRsTerdekat">Simpan</button>
                 </div>
             </div>
         </div>
@@ -725,6 +736,8 @@
 
             const kondisiPulangEl = $('input[name="kondisi_saat_pulang"]:checked');
             const pengobatanLanjutanEl = $('input[name="pengobatan_lanjutan"]:checked');
+            const kedaruratanEl = $('input[name="kedaruratan[]"]:checked');
+
             // if (!kondisiPulangEl.length) {
             //     Swal.fire({
             //         icon: 'error',
@@ -824,7 +837,6 @@
 
             // Ambil ID unit dari atribut data-unit-id
             const unitId = $('#selected-unit-tujuan').attr('data-unit-id') || previousUnitRujukInternal;
-            // console.log('Sending unit_rujuk_internal:', unitId);
             formData.append('unit_rujuk_internal', unitId);
 
             // Get Alergi
@@ -869,6 +881,16 @@
             formData.append('rs_pengobatan_lanjutan', $('#rsPengobatanLanjutan').val());
             formData.append('poli_pengobatan_lanjutan', $('#unit-kontrol').val());
             formData.append('tgl_pengobatan_lanjutan', $('#kontrol-ulang').val());
+
+            // KEDARURATAN
+            let kedaruratanVal = [];
+
+            $(kedaruratanEl).each((i, el) => {
+                kedaruratanVal.push($(el).val());
+            });
+
+            formData.append('kedaruratan', JSON.stringify(kedaruratanVal));
+            formData.append('kedaruratan_rs_terdekat', $('#rsTerdekat').val());
 
             formData.append('_method', 'PUT');
 
@@ -991,11 +1013,6 @@
             return input ? input.trim() : '';
         }
 
-        $('input[name="tindak_lanjut_name"]').on('change', function() {
-            console.log('Radio button changed:', $(this).val());
-            console.log('Code:', $(this).data('code'));
-        });
-
         // TIDAK MANDIRI
 
         $('#btnTidakMandiri').on('click', function(e) {
@@ -1039,6 +1056,33 @@
                 $('#modalRSlain').modal('hide');
             } else {
                 alert('Silahkan isi RS pengobatan lanjutan !');
+            }
+        });
+
+        // KEDARURATAN
+        $('#btnRsTerdekat').click((e) => {
+            let isCheck = $('#rs-terdekat').prop('checked');
+
+            if(isCheck) {
+                // Uncheck checkbox
+                $('#rs-terdekat').prop('checked', false);
+            } else {
+                // Check checkbox
+                $('#rs-terdekat').prop('checked', true);
+                $('#modalRSTerdekat').modal('show');
+            }
+        });
+
+        $('#btnSimpanRsTerdekat').click(() => {
+            let keterangan = $('#rsTerdekat').val();
+
+            if (keterangan) {
+                // Update span di modal utama
+                $('#rs-terdekat-info').text(`: ${keterangan}`);
+                $('#btnRsTerdekat input[type="checkbox"]').prop('checked', true);
+                $('#modalRSTerdekat').modal('hide');
+            } else {
+                alert('Silahkan isi RS terdekat !');
             }
         });
     </script>

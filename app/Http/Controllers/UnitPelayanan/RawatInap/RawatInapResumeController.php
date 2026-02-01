@@ -464,8 +464,9 @@ class RawatInapResumeController extends Controller
                 // RmeResumeDtl
                 'tindak_lanjut_code' => 'required',
                 'tindak_lanjut_name' => 'required',
-                'kondisi_saat_pulang' => 'required',
-                'pengobatan_lanjutan' => 'required',
+                'kondisi_saat_pulang' => 'nullable',
+                'pengobatan_lanjutan' => 'nullable',
+                'kedaruratan' => 'nullable',
                 'tgl_kontrol_ulang' => 'nullable|string',
                 'rs_rujuk' => 'nullable|string',
                 'rs_rujuk_bagian' => 'nullable|string',
@@ -525,6 +526,8 @@ class RawatInapResumeController extends Controller
                 'poli_pengobatan_lanjutan' => $request->poli_pengobatan_lanjutan,
                 'tgl_pengobatan_lanjutan' => $request->tgl_pengobatan_lanjutan,
                 'rs_pengobatan_lanjutan' => $request->rs_pengobatan_lanjutan,
+                'kedaruratan' => $request->kedaruratan,
+                'kedaruratan_rs_terdekat' => $request->kedaruratan_rs_terdekat,
                 // 'status' => 1,
                 'user_validasi' => Auth::id()
             ]);

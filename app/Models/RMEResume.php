@@ -39,6 +39,8 @@ class RMEResume extends Model
         'poli_pengobatan_lanjutan',
         'tgl_pengobatan_lanjutan',
         'rs_pengobatan_lanjutan',
+        'kedaruratan',
+        'kedaruratan_rs_terdekat'
     ];
 
     protected $casts = [
@@ -47,6 +49,7 @@ class RMEResume extends Model
         'icd_10' => 'array',
         'icd_9' => 'array',
         'alergi' => 'array',
+        'kedaruratan_rs_terdekat' => 'array',
     ];
 
     public function pasien()
