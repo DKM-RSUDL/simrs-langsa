@@ -367,18 +367,6 @@
                 <th>Alasan Pulang</th>
                 <td>{{ tindakLanjutLabel($resume->rmeResumeDet->tindak_lanjut_code) }}</td>
             </tr>
-            <tr>
-                <th>Kondisi Saat Pulang</th>
-                <td>
-                    @if ($resume->kondisi_saat_pulang == 1)
-                        Mandiri
-                    @endif
-
-                    @if ($resume->kondisi_saat_pulang == 2)
-                        Tidak Mandiri : {{ $resume->keterangan_kondisi_pulang }}
-                    @endif
-                </td>
-            </tr>
 
             @if ($resume->rmeResumeDet->tindak_lanjut_code == 6)
                 <tr>
@@ -444,6 +432,37 @@
                     </td>
                 </tr>
             @endif
+
+
+            <tr>
+                <th>Kondisi Saat Pulang</th>
+                <td>
+                    @if ($resume->kondisi_saat_pulang == 1)
+                        Mandiri
+                    @endif
+
+                    @if ($resume->kondisi_saat_pulang == 2)
+                        Tidak Mandiri : {{ $resume->keterangan_kondisi_pulang }}
+                    @endif
+                </td>
+            </tr>
+
+            <tr>
+                <th>Pengobatan Lanjutan</th>
+                <td>
+                    @if ($resume->pengobatan_lanjutan == 1)
+                        Poli {{ $resume->poliPengobatanLanjutan->nama_unit }}, Tanggal {{ date('d-m-Y', strtotime($resume->tgl_pengobatan_lanjutan)) }}
+                    @endif
+
+                    @if ($resume->pengobatan_lanjutan == 2)
+                        Puskesmas
+                    @endif
+
+                    @if ($resume->pengobatan_lanjutan == 3)
+                        RS Lain : {{ $resume->rs_pengobatan_lanjutan }}
+                    @endif
+                </td>
+            </tr>
         </table>
     </main>
 

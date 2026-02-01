@@ -642,7 +642,7 @@ class RawatInapResumeController extends Controller
     public function pdf($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $idEncrypt)
     {
         $resumeId = decrypt($idEncrypt);
-        $resume = RMEResume::with(['pasien', 'rmeResumeDet', 'unit'])
+        $resume = RMEResume::with(['pasien', 'rmeResumeDet', 'unit', 'poliPengobatanLanjutan'])
             ->where('id', $resumeId)
             ->first();
 

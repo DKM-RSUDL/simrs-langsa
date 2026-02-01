@@ -505,6 +505,51 @@
                                         </div>
                                     </div>
                                 </div>
+
+                                <div class="mt-3">
+                                    <strong class="fw-bold">Terjadi Kedaruratan hubungi :</strong>
+
+                                    <div class="bg-light p-3 border rounded">
+                                        <div class="row">
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <a href="javascript:void(0)" id="btnRsTerdekat"
+                                                        class="kedaruratan d-block mb-2 text-decoration-none">
+                                                        <input type="checkbox" id="rs-terdekat" name="kedaruratan[]"
+                                                            class="form-check-input me-2" value="1" @checked($dataResume->kedaruratan == 1)>
+                                                        <label for="rs-terdekat">RS Terdekat
+                                                            <span id="rs-terdekat-info">
+                                                                {{-- {{ !empty($dataResume->poliPengobatanLanjutan->nama_unit) ? ": $dataResume->tgl_kedaruratan -- {$dataResume->poliPengobatanLanjutan->nama_unit}" : '' }} --}}
+                                                            </span>
+                                                        </label>
+                                                    </a>
+                                                </div>
+
+                                                <div class="col-md-6">
+                                                    <a href="javascript:void(0)" id="btnPuskesmasTerdekat"
+                                                        class="kedaruratan d-block mb-2 text-decoration-none">
+                                                        <input type="checkbox" id="puskesmas-terdekat" name="kedaruratan[]"
+                                                            class="form-check-input me-2" value="2" @checked($dataResume->kedaruratan == 2)>
+                                                        <label for="puskesmas-terdekat">Puskesmas, klinik terdekat</label>
+                                                    </a>
+                                                </div>
+
+                                                <div class="col-md-6">
+                                                    <a href="javascript:void(0)" id="btnPetugasKesehatan"
+                                                        class="kedaruratan d-block mb-2 text-decoration-none">
+                                                        <input type="checkbox" id="petugasKesTerdekat" name="kedaruratan[]"
+                                                            class="form-check-input me-2" value="3" @checked($dataResume->kedaruratan == 3)>
+                                                        <label for="petugasKesTerdekat">Petugas Kesehatan Terdekat
+                                                            <span id="petugasKesTerdekatInfo">
+                                                                {{ !empty($dataResume->rs_kedaruratan) ? ": $dataResume->rs_kedaruratan" : '' }}
+                                                            </span>
+                                                        </label>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
